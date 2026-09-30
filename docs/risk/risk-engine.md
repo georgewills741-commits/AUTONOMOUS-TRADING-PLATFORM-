@@ -84,7 +84,24 @@ Notes:
 - **RSK-029 and RSK-015.** NO NEW POSITIONS is the "new positions" kill-switch scope of RSK-028, and it is also what RESTRICTED and SAFE MODE do for the affected scope.
 - **RSK-030 and RSK-016.** Each Safe Mode trigger is mapped by policy to SAFE MODE or a higher safety level (RSK-016; values register V-14).
 - **Thresholds.** Loss-streak and excessive-trading thresholds are policy values V-30 and V-31 in the [values register](../requirements/values-register.md).
-- **Open conflict CF-14.** Part 2's user policy hierarchy (P2§101, §279) puts USER HARD POLICY above SYSTEM SAFETY, while RSK-004 puts system safety first. RSK-004 stays in force until the owner decides ([findings register](../conflicts/register.md#cf-14--policy-hierarchy-user-hard-policy-above-or-below-system-safety)).
+- **CF-14 (decided).** Part 2's user policy hierarchy (P2§101, §279) put user hard policy above system safety. The owner decided on an immutable safety floor instead (RSK-034 to RSK-039, [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)); RSK-004 is unchanged.
+
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+CF-14 is decided by the owner ([DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md), [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q1): a layered control model with an immutable safety floor. RSK-004 is unchanged: system safety stays at the top.
+
+- **RSK-034** Immutable safety invariants · CONSTRAINT · DEC-026 — The platform's immutable system-safety invariants must never be disabled or bypassed by an AI agent, strategy, policy, administrator, or automatic process. The safety floor must not be confused with ordinary operational limits or configurable policies. These invariants cannot be overridden: never trade on stale or invalid market data; never execute against an unreconciled exchange state; never exceed the platform's absolute risk boundaries; never send an invalid, duplicated, unauthorized, or unsafe order; never trade when required exchange connectivity/integrity checks fail; never allow an AI agent to directly bypass deterministic safety enforcement.
+- **RSK-035** Configurable policy layer · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-026 — The platform uses a layered control model. Capital allocation, strategy limits, exposure limits, execution parameters, opportunity thresholds, and other operational policies may be changed automatically or administratively, but only within the immutable safety envelope.
+- **RSK-036** Adaptive operation · CONFIRMED REQUIREMENT · DEC-026 — The platform may automatically adjust operational limits, execution methods, capital allocation, strategy availability, and opportunity thresholds according to available capital, liquidity, market conditions, system health, historical performance, and verified risk conditions, provided that no immutable safety invariant is violated.
+- **RSK-037** Recovery and fail-safe behavior · CONFIRMED REQUIREMENT · DEC-026 — If a safety condition temporarily blocks an operation, the platform should automatically diagnose the cause, attempt safe recovery where possible, revalidate all required conditions, and resume only when the safety requirements are satisfied.
+- **RSK-038** No deadlock by safety · CONSTRAINT · DEC-026 — A safety rule must prevent unsafe activity, not permanently disable unrelated healthy parts of the platform. The system should isolate the affected component, preserve unaffected operations where safe, and recover automatically when possible.
+- **RSK-039** Explicit change control for invariants · CONSTRAINT · DEC-026 — Any proposed change to an immutable safety invariant must require a formal, versioned, audited human-controlled policy change. AI may analyze and propose such changes, but may never authorize or silently implement them.
+
+How these fit is set out in [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md):
+
+- The safety floor is RSK-034 together with the system safety rules of RSK-010.
+- The HARD LIMIT values in the [values register](../requirements/values-register.md) are the numbers inside the invariants, so changing one is an RSK-039 change.
+- RSK-036's automatic adjustments are operating decisions inside the bounds the operator sets in policy. Widening a bound or an authorization still needs the operator (POL-005).
 
 ## Boundary (§92)
 
@@ -95,4 +112,4 @@ Notes:
 
 ## Findings
 
-Open: CF-14 (Part 2 policy hierarchy vs RSK-004). All earlier findings are resolved: DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).
+All resolved. CF-14 → [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md) (RSK-034 to RSK-039). DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).

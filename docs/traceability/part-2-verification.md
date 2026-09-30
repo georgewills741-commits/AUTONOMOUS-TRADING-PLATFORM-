@@ -3,6 +3,8 @@
 > **Result: VERIFIED for the Part 2 documentation round (2026-09-30), with findings open for the owner.** Handoff Part 2 is preserved, reconciled with Part 1 and every earlier decision, and placed by ownership. Three verification passes were run on the actual files; the defects they found were fixed and re-checked. **Not verified:** any product behavior. Nothing is implemented, and implementation is not authorized (P2§330).
 >
 > Decisions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md), [DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md). Section-by-section trace: [Part 2 reconciliation](part-2-reconciliation.md).
+>
+> **Later changes:** this record is kept as written. The findings it lists as open, and the items it lists as awaiting confirmation, were answered by the owner the same day. See [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), DEC-026 to DEC-030, and the [verification of those decisions](owner-decisions-03-verification.md). The current mapping of every Part 2 section is the [Part 2 reconciliation](part-2-reconciliation.md).
 
 ## Summary
 

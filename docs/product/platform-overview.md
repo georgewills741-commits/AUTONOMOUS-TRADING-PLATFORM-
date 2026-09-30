@@ -79,6 +79,10 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 Part 2 §312 (capital-preservation hierarchy) is PLT-006 and §313's objective is PLT-009, both unchanged. "Failover/standby where approved" in PLT-017 stays conditional: failover is FUTURE until high availability is approved (REC-021).
 
+- **PLT-021** Maximum autonomy inside a deterministic safety envelope · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-026 — The objective is maximum autonomy inside a deterministic safety envelope: the system should be capable of operating 24/7 and recovering intelligently without sacrificing the fundamental safety guarantees of the platform.
+
+PLT-021 comes from the owner's answer to CF-14 ([DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)).
+
 ### Non-negotiable platform principles (P2§174, P2§295; ARCH-028)
 
 Part 2 asks for a central statement of the platform's non-negotiable principles and leaves the name to architecture. This index is that statement. It is called "platform principles", not "constitution", so it is never confused with the [builder constitution](../builder/claude-code-builder-constitution.md), which governs how Claude builds, not how the platform behaves ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md)). Each principle is defined once, in the requirements listed; this table only points to them.
@@ -88,7 +92,7 @@ Part 2 asks for a central statement of the platform's non-negotiable principles 
 | Deterministic core | PLT-016, ARCH-019, ARCH-021, QNT-003, RSK-001, EXE-001 |
 | AI boundary | ARCH-020, ARCH-022, AIL-002, AIL-003, AIV-016 |
 | Capital preservation | PLT-006 |
-| Risk precedence | RSK-004, RSK-005, AIV-009 (the policy hierarchy is an open conflict: CF-14) |
+| Risk precedence and the safety floor | RSK-004, RSK-005, RSK-034, RSK-039, AIV-009 (CF-14 decided by the owner, [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)) |
 | No fixed returns | PLT-005, PLT-007, PLT-008, TNP-014, ARB-015 |
 | True net profitability | TNP-001, TNP-004, TNP-018, TNP-020 |
 | Unknown-state safety | PLT-018, RSK-014, RGM-008, REC-014, REC-016, DSI-004 |
@@ -96,7 +100,8 @@ Part 2 asks for a central statement of the platform's non-negotiable principles 
 | Auditability | AUD-001, AUD-010, AUD-012 |
 | Reconciliation | REC-008, REC-015, LED-009, MIG-018 |
 | No duplicate authorities | ARCH-016, ARCH-027 |
-| Bounded autonomy | PLT-013, PLT-015, PLT-020 |
+| Bounded autonomy | PLT-013, PLT-015, PLT-020, PLT-021, RSK-035, RSK-036 |
+| No deadlock by safety | RSK-037, RSK-038 |
 
 ## Findings (all resolved)
 

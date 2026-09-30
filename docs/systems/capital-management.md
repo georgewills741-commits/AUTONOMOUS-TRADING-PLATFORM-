@@ -62,9 +62,25 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 - **CAP-026** Capital distinctions for compounding · SYSTEM REQUIREMENT · P2§36, P2§227 — The system must distinguish: realized P&L; available capital; authorized trading capital; reserved capital. Realized gains may become available for future trading if authorized. Compounding follows realized capital and policy authorization; it is a capital-management consequence, not a guaranteed strategy outcome.
 - **CAP-027** Atomic capital reservation · CONSTRAINT · P2§38 — Capital reservation must be safe under concurrency. Two strategies must not simultaneously reserve the same capital. Reservation should be atomic or otherwise protected against race conditions.
-- **CAP-028** Arbitrage and reserve capital categories · PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION · P2§92, P2§221 — The Capital Authority may distinguish: available capital; reserved capital; arbitrage capital; directional capital; emergency reserve; venue-specific reserve. The Capital Authority should support dedicated arbitrage reserves where approved. Exact categories require architecture approval.
+- **CAP-028** Arbitrage and reserve capital categories · DEPRECATED / REPLACED · P2§92, P2§221 — The Capital Authority may distinguish: available capital; reserved capital; arbitrage capital; directional capital; emergency reserve; venue-specific reserve. The Capital Authority should support dedicated arbitrage reserves where approved. Exact categories require architecture approval.
 
-P2§37 (one canonical Capital Authority) is CAP-001 and CAP-017. CAP-002 already distinguishes capital allocated to arbitrage, capital held in reserve, and capital by exchange; CAP-028's new categories (directional capital, emergency reserve, venue-specific reserve) wait for the owner's confirmation. Pre-positioned arbitrage inventory (XAR-005) is capital held here per venue, never a hidden arbitrage state (ARB-009). "Authorized trading capital" is the capital the Policy System authorizes (NLP-002 capital authorization).
+P2§37 (one canonical Capital Authority) is CAP-001 and CAP-017. CAP-028 was confirmed by the owner and is replaced by CAP-029 to CAP-033 ([DEC-028](../decisions/DEC-028-capital-buckets-and-progressive-activation.md)); its other categories were already in CAP-002. Pre-positioned arbitrage inventory (XAR-005) is capital held here per venue, never a hidden arbitrage state (ARB-009). "Authorized trading capital" is the capital the Policy System authorizes (NLP-002 capital authorization).
+
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+From [DEC-028](../decisions/DEC-028-capital-buckets-and-progressive-activation.md) ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q6). The owner calls this system the "Capital Allocation & Treasury Engine"; it is the same system, the one capital authority (ARCH-027).
+
+- **CAP-029** Additional capital buckets · SYSTEM REQUIREMENT · DEC-028 — In addition to the categories of CAP-002, the Global Capital Authority maintains: directional trading capital; an emergency reserve; a per-exchange reserve. These must be controlled by policy, not fixed hard-coded amounts.
+- **CAP-030** Dynamic bucket sizing · CONFIRMED REQUIREMENT · DEC-028 — Allocation should dynamically scale with total available capital, risk exposure, liquidity, exchange requirements, active strategies, withdrawal/transfer constraints, and system health.
+- **CAP-031** Automatic bucket rebalancing · CONFIRMED REQUIREMENT · DEC-028 — The system must automatically rebalance these capital buckets when conditions justify it, without requiring the owner to be online or manually approve routine movements. However, all transfers must remain within hard safety, risk, liquidity, and authorization policies.
+- **CAP-032** Progressive capability activation · CONFIRMED REQUIREMENT · DEC-028 — Capital allocation must support progressive capability activation: smaller accounts operate safely within their available capital and do not activate capital-intensive features prematurely. As capital grows and the system proves sufficient capacity and safety, additional capabilities may become eligible automatically.
+- **CAP-033** Capital movements respect the floor and the reserves · CONSTRAINT · DEC-028 — No capital movement may violate the platform's safety floor, emergency reserve requirements, exchange-specific reserves, exposure limits, or reconciliation requirements.
+
+Notes:
+
+- **Eligibility.** Whether a capability is eligible is decided by the [Readiness System](readiness-system.md) (RDY-008), from this system's capital figures. Eligibility never exceeds the operator's authorizations (MODE-003, POL-011, PLT-020).
+- **Withdrawals.** "Withdrawal constraints" means the operator's own withdrawals at venues, which the ledger detects (LED-005); the platform itself withdraws nothing (DEC-006).
+- **Values.** The sizing rules and eligibility thresholds are V-34 and V-35 in the [values register](../requirements/values-register.md).
 
 ## Boundary (§92)
 

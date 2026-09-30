@@ -25,7 +25,7 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 - **OPS-007** Production change control · CONFIRMED REQUIREMENT · P2§164, P2§111 — Production changes should follow: proposal → review → test → approval → deploy → monitor → rollback if required.
 - **OPS-008** Reproducible deployment package · CONFIRMED REQUIREMENT · P2§146, P2§255 — The project should define a reproducible deployment package. The exact technology is an architecture decision; possible approaches include containers, infrastructure configuration, deployment manifests, and environment templates. No implementation technology should be assumed prematurely.
-- **OPS-009** Infrastructure as code · PROPOSED · P2§147, P2§256 — Where approved, infrastructure should be reproducible and version controlled, potentially covering: services; networks; storage; databases; monitoring; queues; environment variables; permissions; resource limits.
+- **OPS-009** Infrastructure as code · DEPRECATED / REPLACED · P2§147, P2§256 — Where approved, infrastructure should be reproducible and version controlled, potentially covering: services; networks; storage; databases; monitoring; queues; environment variables; permissions; resource limits.
 - **OPS-010** Single deployment source of truth · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§148, P2§257 — The repository must contain the authoritative deployment definition. Local and server environments may differ through explicit overrides.
 - **OPS-011** Canary for production changes · CONFIRMED REQUIREMENT · P2§165 — Production strategy/system changes should use canary deployment where appropriate. Canary must have: limited exposure; defined success criteria; defined failure criteria; monitoring; a rollback path.
 - **OPS-012** Deterministic, tested rollback · CONFIRMED REQUIREMENT · P2§166 — Rollback must be deterministic and tested. The system should know: what version was active; what changed; what prior version is valid; how to restore it; how to reconcile state afterward.
@@ -34,10 +34,24 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 Notes:
 
 - **OPS-008 and the technology stack.** [DEC-009](../decisions/DEC-009-technology-stack.md) is the architecture decision OPS-008 asks for: Docker images and Docker Compose (TEC-011). It was made deliberately, under the owner's delegation, not assumed.
-- **OPS-009 stays PROPOSED** until the owner approves infrastructure as code. The Compose definition (TEC-011) already keeps services, networks, storage, environment variables, and resource limits under version control.
+- **OPS-009 is replaced** by OPS-014 to OPS-017. The owner made infrastructure as code mandatory ([DEC-029](../decisions/DEC-029-infrastructure-as-code.md)).
 - **Environments (CF-15).** P2§161 and §236 list development, testing, staging, paper, canary, and production. OPS-004 lists development, testing, research, paper, staging, and production, the same list as constitution Rule 109. Canary cannot be a separate environment: it trades real money, and live credentials must never appear in a lower environment (P2§161). So it is a production stage (OPS-013). Research stays an environment because Part 2 does not remove it. Live credentials never reach lower environments (SEC-004, MODE-006), and paper never touches live accounts (PAP-011).
 - **Live trading gate (P2§163, §235).** Live trading needs explicit authorization and activation. That is the operator raising the platform's maximum mode in policy (MODE-003, POL-005). Within that maximum, individual strategies progress through the readiness gates (STR-019 to STR-022).
 - **Hosting, portability, backup, and migration** are in [Hosting, Backup, and Migration](hosting-and-migration.md) (MIG).
+
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+From [DEC-029](../decisions/DEC-029-infrastructure-as-code.md) ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q7).
+
+- **OPS-014** Infrastructure as code is mandatory · CONFIRMED REQUIREMENT · DEC-029 — Infrastructure as Code is a mandatory production requirement. All production infrastructure must be reproducible and version-controlled as code. This includes compute, containers, networking, databases, storage, monitoring, logging, alerting, deployment, scaling, failover, backup, and disaster-recovery configuration, and also the queues, environment variables, permissions, and resource limits carried forward from OPS-009.
+- **OPS-015** Infrastructure separated from application code · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-029 — Infrastructure must be separated logically from application code and may be placed in a dedicated infrastructure repository when the project structure requires it. The system must not depend on undocumented manual server configuration.
+- **OPS-016** Controlled infrastructure changes · CONSTRAINT · DEC-029 — Infrastructure changes must be validated, tested, reviewed, auditable, and safely deployable/rollbackable. Secrets must never be stored as plaintext in the repository.
+- **OPS-017** Rebuild without the owner · CONFIRMED REQUIREMENT · DEC-029 — The architecture must support automated provisioning, recovery, migration between environments, and rebuilding production infrastructure without relying on the owner's physical availability.
+
+Notes:
+
+- **One source of truth.** If a dedicated infrastructure repository is created (OPS-015), it holds the authoritative deployment definition of OPS-010, and this repository links to it.
+- **Tooling and hosts.** The infrastructure-as-code tool is chosen when OPERATIONALIZATION is planned (DEC-009 delegation). With high availability approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), production runs on at least an active and a standby host (TEC-011 note).
 
 ## Not yet specified
 

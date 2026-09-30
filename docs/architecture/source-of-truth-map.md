@@ -109,4 +109,7 @@ Other Part 2 concepts and where they are defined:
 | Decision lineage | SYS-30 | AUD-012 — [audit-and-event-history.md](../systems/audit-and-event-history.md) |
 | Strategy drift, missed and false opportunities | SYS-21 Performance Controller | PFC-009, PFC-012, PFC-013 — [performance-controller.md](../systems/performance-controller.md) |
 | Loss-streak and excessive-trading protection, NO NEW POSITIONS | SYS-09 Risk Engine | RSK-026 to RSK-029 — [risk-engine.md](../risk/risk-engine.md) |
-| Policy hierarchy (user hard policy vs system safety) | SYS-09 / SYS-12 | RSK-004 in force; **CF-14 OPEN** — [findings register](../conflicts/register.md) |
+| Safety floor (immutable safety invariants) and the layered control model | SYS-09 Risk Engine | RSK-034 to RSK-039 with RSK-004 and RSK-010 — [risk-engine.md](../risk/risk-engine.md) ([DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)) |
+| Capital buckets and progressive capability activation | SYS-07 (buckets), SYS-34 (eligibility) | CAP-029 to CAP-033, RDY-008 — [capital-management.md](../systems/capital-management.md) |
+| High availability and failover | SYS-11 Recovery and Reconciliation | REC-021, REC-023, REC-024 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
+| Infrastructure as code | Deployment and operational readiness | OPS-014 to OPS-017 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |

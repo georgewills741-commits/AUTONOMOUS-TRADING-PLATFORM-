@@ -52,14 +52,23 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 - **REC-019** Split-brain protection across hosts · CONSTRAINT · P2§155, P2§264 — The platform must prevent both local and server instances from simultaneously executing live trades against the same account without authorization. Possible mechanisms: deployment lease; active-instance lock; coordinator; activation token; production ownership state. The exact mechanism requires architecture design.
 - **REC-020** One active execution authority per account · CONSTRAINT · P2§156, P2§265 — For each production account there must be a clearly identifiable active execution authority. Other instances may be standby, read-only, development, paper, or recovery, but not accidentally active.
-- **REC-021** Failover, if high availability is approved · FUTURE · P2§157, P2§266 — If high availability is eventually approved: failover → check instance ownership → check orders → check positions → check capital → check exchange state → reconcile → activate. Failover must begin with reconciliation.
+- **REC-021** Failover, if high availability is approved · CONFIRMED REQUIREMENT · P2§157, P2§266 — If high availability is eventually approved: failover → check instance ownership → check orders → check positions → check capital → check exchange state → reconcile → activate. Failover must begin with reconciliation.
 - **REC-022** Standby activation · CONSTRAINT · P2§158, P2§267 — A standby instance must not automatically become active without: authorization; lease/ownership; state validation; reconciliation. Standby must require explicit activation.
 
 Notes:
 
 - **Already covered.** Recovery after a crash (P2§83, §306) is REC-014 and REC-015. Restart safety (P2§86, §309) is REC-004, REC-015, and RSK-023.
-- **The lease and separate hosts (TC-07).** The execution lease (REC-013, TEC-013) is the chosen mechanism for REC-019. It protects instances that share one database. After a local ↔ server migration, the source and destination have separate databases, so the lease alone cannot stop both from trading. The mechanism that closes this gap must be decided before migration is built ([open-question register](../open-questions/register.md), TC-07).
-- **REC-021 is FUTURE.** High availability is not approved, so there is no failover. If it is approved, the owner also decides whether "explicit activation" (REC-022) may be a policy authorization or must be a human action.
+- **The lease and separate hosts (TC-07, decided).** The execution lease (REC-013, TEC-013) protects instances that share one lease authority. For failover, active and standby share one lease authority (REC-024). For a local ↔ server migration, where the databases are separate, the owner decided: freeze the source, then issue new exchange keys to the destination and revoke the old ones (MIG-029, MIG-030; [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)).
+- **REC-021 is approved.** The owner approved high availability, so REC-021 was reclassified from FUTURE to CONFIRMED REQUIREMENT by DEC-030. Its wording is unchanged.
+
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+From [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md) ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q5 and Q9).
+
+- **REC-023** Automatic standby takeover · CONFIRMED REQUIREMENT · DEC-030 — High availability is planned now: a standby copy takes over automatically if the main one fails, after checking and reconciling state (REC-021). Like any instance, it must hold the execution lease before it acts (REC-013, REC-022).
+- **REC-024** One lease authority for failover · CONSTRAINT · DEC-030 — The active and standby copies of an account use one execution-lease authority that both can reach, with fencing tokens (TEC-013), so that at most one copy can hold the lease at any time.
+
+The owner chose automatic takeover. The "explicit activation" of REC-022 is therefore the standby acquiring the lease under a policy authorization, after state validation and reconciliation; it is not a human action (DEC-030, builder reading). Where the lease authority lives, a replicated database or an external coordinator, is chosen when OPERATIONALIZATION is planned.
 
 ## Boundary (§92)
 
@@ -70,4 +79,4 @@ Notes:
 
 ## Findings
 
-Open: TC-07 (split-brain across hosts with separate databases). All earlier findings are resolved: CF-09 → DEC-010 (REC-007, since replaced). DUP-16 → DEC-011 (REC-008). CF-05 → DEC-016. CF-12 → [DEC-022](../decisions/DEC-022-restart-recovery-sequence.md) (REC-014 to REC-018).
+All resolved. TC-07 → [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md) (MIG-029, MIG-030, REC-024). CF-09 → DEC-010 (REC-007, since replaced). DUP-16 → DEC-011 (REC-008). CF-05 → DEC-016. CF-12 → [DEC-022](../decisions/DEC-022-restart-recovery-sequence.md) (REC-014 to REC-018).

@@ -41,5 +41,9 @@
 | V-31 | Excessive-trading thresholds (order rate, repeated failed opportunities, churn) and responses | RSK-027 | POLICY-CONTROLLED PARAMETER | Not set | |
 | V-32 | Arbitrage quality-tier boundaries: Tier 1 ≈ ≥1%, Tier 2 ≈ 0.5–1%, Tier 3 ≈ 0.2–0.5%, Tier 4 < ≈0.2% true net | ARB-015 | DEFAULT (analytical reporting categories) | As listed | Categories for analysis and reporting only. They never gate execution (ARB-015, TNP-005, TNP-016) |
 | V-33 | Readiness evidence required for each readiness transition | RDY-002, RDY-004 | POLICY-CONTROLLED PARAMETER | Not set | Includes the canary evidence of V-02 to V-05. Missing evidence means NOT_READY |
+| V-34 | Capital bucket sizing rules: directional trading capital, emergency reserve, per-exchange reserve (how each scales with capital, exposure, liquidity, exchange requirements, active strategies, transfer constraints, system health) | CAP-029, CAP-030 | POLICY-CONTROLLED PARAMETER | Not set | [DEC-028](../decisions/DEC-028-capital-buckets-and-progressive-activation.md): policy-set, never fixed hard-coded amounts |
+| V-35 | Capability eligibility thresholds (capital and proven capacity and safety needed before a capital-intensive capability becomes eligible) | CAP-032, RDY-008 | POLICY-CONTROLLED PARAMETER | Not set | Eligibility never exceeds the operator's authorizations |
+
+**HARD LIMIT values are part of the safety floor.** They are the numbers inside the immutable safety invariants (RSK-034), so changing one needs a formal, versioned, audited, human-controlled change (RSK-039, [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)). POLICY-CONTROLLED PARAMETERS belong to the configurable layer (RSK-035).
 
 To add a value: give it the next V-number, name the requirement that uses it, and classify it. To make any value a permanent hard-coded requirement, the owner must approve it explicitly in a decision record (ARCH-018).

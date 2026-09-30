@@ -99,7 +99,7 @@ AI output crosses into the deterministic side only through validated, structured
 - **ARCH-023** Event-driven architecture · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§126, P2§273 — The system should be event-driven, using events instead of unnecessary polling. Examples: market update → opportunity evaluation; risk state change → strategy evaluation; exchange degradation → venue eligibility change; policy change → policy recompilation; strategy degradation → strategy review.
 - **ARCH-024** End-to-end platform architecture · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§314 — The complete high-level architecture is: user → natural-language policy → policy compiler / validation → structured policy → global platform controller → whole-market universe → market data → data validation → quantitative engine → regime engine → opportunity engine → opportunity filter → strategy engine → AI intelligence when justified → trade / opportunity proposal → deterministic validation → risk authority → capital authority → execution engine → exchange adapter → venue → reconciliation → portfolio / ledger → monitoring → performance analysis → controlled improvement → validation → paper → canary → production.
 
-ARCH-021 and ARCH-024 are conceptual flows, like ARCH-008. The runtime order of the pre-trade steps stays the one in [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md): the Global Capital Authority checks availability, the Risk Engine authorizes and sizes, and only then is capital reserved. Part 2's "risk → capital" matches that order, since risk authorizes before capital is reserved (DEC-024). The "global platform controller" is named but not defined anywhere; it is open question OQ-24.
+ARCH-021 and ARCH-024 are conceptual flows, like ARCH-008. The runtime order of the pre-trade steps stays the one in [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md): the Global Capital Authority checks availability, the Risk Engine authorizes and sizes, and only then is capital reserved. Part 2's "risk → capital" matches that order, since risk authorizes before capital is reserved (DEC-024). The "global platform controller" is defined by ARCH-035 (OQ-24, decided by the owner).
 
 ## Market monitoring vs operational monitoring
 
@@ -128,6 +128,10 @@ Where these are applied: the §94 example chain and every recorded dependency ar
 
 Every system specification in `docs/systems/`, `docs/risk/`, `docs/ai/`, `docs/security/` and `docs/operations/` records the §92 fields that Part 1 supplies and lists the rest as not yet specified. Part 2 did not provide interfaces or contracts; they are defined contract-first when each stage is planned (ARCH-025).
 
+- **ARCH-035** Global platform controller · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-027 — The "global platform controller" of ARCH-024 and RMP-009 is not a separate system. It names three existing parts working together: the Policy System, which applies the operator's policy (POL-008, POL-011); the Risk Engine's emergency controller, which sets the safety level (RSK-020); and System Health, which tracks the platform's state (HLT-010).
+
+ARCH-035 is the owner's answer to OQ-24 ([DEC-027](../decisions/DEC-027-part-2-open-questions.md)).
+
 ## Contracts, governance, and consistency (Handoff Part 2)
 
 - **ARCH-025** Contract-first development · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§120 — Core interfaces should be defined before implementations where practical. Examples: market-data contract; order contract; position contract; risk contract; capital contract; opportunity contract; strategy contract; AI tool contract; exchange adapter contract.
@@ -146,6 +150,7 @@ Where these stand today:
 - **ARCH-027:** the one owner of each authority is listed in the [source-of-truth map](source-of-truth-map.md#canonical-authorities-arch-027).
 - **ARCH-028:** the principles index is in the [platform overview](../product/platform-overview.md#non-negotiable-platform-principles-p2174-p2295-arch-028).
 - **ARCH-030:** the [registry](../requirements/registry.md) holds ID, title, source, class, owner/system, specification, stage, status, and approval state. Dependencies are recorded between systems in the [dependency map](dependency-map.md); they will be recorded per requirement when interfaces are designed. The verification method is assigned when each stage is planned (constitution Rule 140). No priority is invented: order comes from the roadmap's dependency sequence (RMP-002, RMP-011).
+- **ARCH-034:** the owner decided to keep it as an idea; it stays PROPOSED and nothing is built ([DEC-027](../decisions/DEC-027-part-2-open-questions.md)).
 - **ARCH-032, ARCH-033:** the documentation checker in [`tools/docs/`](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) is the first increment. It checks the documentation only, not code, schemas, or tests.
 
 ## Operating values ([DEC-020](../decisions/DEC-020-value-classification.md))

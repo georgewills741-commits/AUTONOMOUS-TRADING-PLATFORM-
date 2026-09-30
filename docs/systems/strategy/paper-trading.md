@@ -38,19 +38,23 @@ live market data (SYS-02) → quant / regime / opportunity (SYS-03..05)
 |---|---|---|
 | Paper executor and its fill, latency, and partial-fill model | This system (SYS-16) | PAP-002, PAP-008, PAP-010 |
 | Execution interface shared by paper and live executors | SYS-10 Execution Engine | PAP-006 |
-| Simulated capital state | SYS-07 Global Capital Authority, running with simulated balances | PAP-007 (where it runs: OQ-25) |
+| Simulated capital state | SYS-07 Global Capital Authority, running with simulated balances in the paper environment | PAP-007, PAP-013 |
 | Expected-vs-observed comparison of paper results | SYS-21 Performance Controller | PFC-010, PFC-015 |
 | Paper evidence records | This system, with events in the audit trail (SYS-30) | PAP-005, PAP-009 |
 | Readiness verdict from paper evidence | SYS-34 Readiness System | RDY-001, RDY-002, PAP-012 |
 | Separation from live accounts | This system, with SYS-31 Security and the environments of OPS-004 | PAP-011, MODE-006, SEC-004 |
 
-**Open question OQ-25.** MODE-003 lets each strategy run in its own mode, while OPS-004 and MODE-006 also define a separate paper environment with no trading credentials. Part 1 and Part 2 do not say whether a strategy in PAPER mode runs in the paper environment or inside production. The recommendation is the paper environment, against live market data, with its own simulated capital and no trading credentials; its evidence is sent to the Readiness System read-only. See the [open-question register](../../open-questions/register.md).
+**Where PAPER-mode strategies run (OQ-25, decided by the owner).** From [DEC-027](../../decisions/DEC-027-part-2-open-questions.md) ([owner decisions 3](../../handoffs/owner-decisions-03-part-2-findings.md), Q2):
+
+- **PAP-013** PAPER mode runs in the paper environment · CONSTRAINT · DEC-027 — A strategy in PAPER mode runs in a separate paper setup that sees live prices but holds no real exchange keys, so it cannot touch real accounts. This is the paper environment of OPS-004, with its own simulated capital and database.
+
+Its evidence reaches the Readiness System one way, read-only (RDY-002). Production accepts paper evidence and never accepts commands from the paper environment. A version that passes readiness is deployed to production for canary unchanged (STR-025).
 
 ## Boundary (§92)
 
 - **Uses:** the production Risk Engine, Global Capital Authority, Portfolio, and Execution paths with simulated capital (PAP-001, MODE-001).
 - **Specified by Part 2:** the paper architecture above (PAP-004 to PAP-012).
-- **Not yet specified:** where PAPER-mode strategies run (OQ-25); the fill, latency, and partial-fill models; interfaces; tests. PAP-003 refers to the canary rule STR-011, which is replaced; the canary that must confirm live costs is now STR-013 to STR-020.
+- **Not yet specified:** the fill, latency, and partial-fill models; interfaces; tests. PAP-003 refers to the canary rule STR-011, which is replaced; the canary that must confirm live costs is now STR-013 to STR-020.
 
 ## Decisions applied (2026-09-30)
 
@@ -58,6 +62,6 @@ live market data (SYS-02) → quant / regime / opportunity (SYS-03..05)
 
 ## Findings
 
-Open: OQ-25 (where PAPER-mode strategies run). All earlier findings are resolved:
+All resolved. OQ-25 → [DEC-027](../../decisions/DEC-027-part-2-open-questions.md) (PAP-013).
 
 TC-04 → [DEC-014](../../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) (PAP-003, TNP-022). OQ-08 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (operating modes owned by the Policy System).

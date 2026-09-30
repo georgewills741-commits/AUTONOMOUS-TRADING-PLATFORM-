@@ -20,6 +20,11 @@
 - **TEC-012** Data retention · IMPLEMENTATION CHOICE · DEC-009 — The ledger, audit trail, event history, and policy and strategy versions are kept permanently and are append-only. Market data is kept 30 days in TimescaleDB, then permanently in compressed Parquet archives (OHLCV, trades, order-book snapshots). Operational logs are kept 90 days.
 - **TEC-013** Supervision and execution lease · IMPLEMENTATION CHOICE · DEC-019 — Containers run with automatic restart policies and health checks, and start automatically when the host boots. The execution lease (REC-013) is a PostgreSQL lease record with an expiry and a monotonically increasing fencing token; every order and transfer request carries the token and is rejected if it is not current (EXE-010).
 
+**Later decisions affecting TEC-011:**
+
+- High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host. The single-host Docker Compose deployment remains for development and the early stages.
+- All production infrastructure, including the container definitions, is kept as code (OPS-014, [DEC-029](../decisions/DEC-029-infrastructure-as-code.md)). The infrastructure-as-code tool is chosen when OPERATIONALIZATION is planned.
+
 ## Not yet decided
 
 Specific versions of each library (fixed in the lockfile when implementation starts), the AI providers and models (chosen in the AI INTELLIGENCE stage from Model Evaluation results, AIL-007), and hosting location. The hosting location should minimise network latency to the enabled venues, and is to be chosen with measurements.

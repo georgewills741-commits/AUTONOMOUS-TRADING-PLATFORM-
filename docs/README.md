@@ -2,7 +2,7 @@
 
 The canonical project knowledge base for the Autonomous Trading Platform: a production-grade autonomous cryptocurrency trading platform ([platform overview](product/platform-overview.md)). The conversation is not the source of truth; this repository is (handoff §00).
 
-**Current state:** Handoff Parts 1 and 2 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md)). The owner's operating model and decisions are applied. Part 2 raised findings that wait for the owner (CF-14, OQ-24 to OQ-26, TC-07). Implementation is not authorized; see [project state](project-state.md).
+**Current state:** Handoff Parts 1 and 2 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md)). The owner has answered every open finding, including the Part 2 findings ([DEC-026](decisions/DEC-026-safety-floor-and-layered-control.md) to [DEC-030](decisions/DEC-030-high-availability-and-single-active-copy.md)). Next is the complete documentation review. Implementation is not authorized; see [project state](project-state.md).
 
 ## Start here
 
@@ -42,10 +42,10 @@ The canonical project knowledge base for the Autonomous Trading Platform: a prod
 | [requirements/](requirements/README.md) | [Conventions](requirements/README.md) · [Registry (index)](requirements/registry.md) · [Values register](requirements/values-register.md) |
 | [roadmap/](roadmap/roadmap.md) | [Master roadmap](roadmap/roadmap.md) |
 | [decisions/](decisions/README.md) | [Decision log](decisions/README.md) |
-| [conflicts/](conflicts/register.md) | [Findings register](conflicts/register.md): conflicts and duplicate responsibilities (CF-14 open) |
-| [open-questions/](open-questions/register.md) | [Open questions and technical concerns](open-questions/register.md) (OQ-24 to OQ-26 and TC-07 open) |
-| [traceability/](traceability/handoff-coverage.md) | [Handoff coverage (Part 1)](traceability/handoff-coverage.md) · [Part 2 reconciliation](traceability/part-2-reconciliation.md) · [Part 2 verification record](traceability/part-2-verification.md) · [Part 1 verification record](traceability/part-1-verification.md) · [Resolution verification record](traceability/resolution-verification.md) · [Owner correction 1 verification record](traceability/owner-correction-01-verification.md) · [Owner decisions 2 verification record](traceability/owner-decisions-02-verification.md) |
+| [conflicts/](conflicts/register.md) | [Findings register](conflicts/register.md): conflicts and duplicate responsibilities (all resolved) |
+| [open-questions/](open-questions/register.md) | [Open questions and technical concerns](open-questions/register.md) (all resolved) |
+| [traceability/](traceability/handoff-coverage.md) | [Handoff coverage (Part 1)](traceability/handoff-coverage.md) · [Part 2 reconciliation](traceability/part-2-reconciliation.md) · [Part 2 verification record](traceability/part-2-verification.md) · [Owner decisions 3 verification](traceability/owner-decisions-03-verification.md) · [Part 1 verification record](traceability/part-1-verification.md) · [Resolution verification record](traceability/resolution-verification.md) · [Owner correction 1 verification record](traceability/owner-correction-01-verification.md) · [Owner decisions 2 verification record](traceability/owner-decisions-02-verification.md) |
 | [glossary.md](glossary.md) | Canonical terminology |
-| [handoffs/](handoffs/part-1-core-platform-features.md) | [Part 1](handoffs/part-1-core-platform-features.md) · [Part 2](handoffs/part-2-consolidated-additional-systems.md) · [Owner correction 1: autonomous operating defaults](handoffs/owner-correction-01-autonomous-operating-defaults.md) · [Owner decisions 2: CF-11 to CF-13](handoffs/owner-decisions-02-cf-11-to-cf-13.md) (all HISTORICAL) |
+| [handoffs/](handoffs/part-1-core-platform-features.md) | [Part 1](handoffs/part-1-core-platform-features.md) · [Part 2](handoffs/part-2-consolidated-additional-systems.md) · [Owner decisions 3: Part 2 findings](handoffs/owner-decisions-03-part-2-findings.md) · [Owner correction 1: autonomous operating defaults](handoffs/owner-correction-01-autonomous-operating-defaults.md) · [Owner decisions 2: CF-11 to CF-13](handoffs/owner-decisions-02-cf-11-to-cf-13.md) (all HISTORICAL) |
 | [builder/](builder/claude-code-builder-constitution.md) | [Claude Code Builder Constitution](builder/claude-code-builder-constitution.md): how the repository is built and maintained |
 | [../tools/docs/](../tools/docs/README.md) | Documentation generator and checker ([DEC-025](decisions/DEC-025-documentation-tooling-in-repository.md)); run it after every documentation change |

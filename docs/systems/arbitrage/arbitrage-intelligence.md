@@ -68,7 +68,7 @@ Every Part 2 arbitrage item has one owner. Arbitrage systems reuse the shared ow
 | Triangular route discovery and execution risk (P2§88, §89) | SYS-19, risk rules in SYS-09 | TAR-003, TAR-004, RSK-033 |
 | Capital pre-positioning (P2§90) | SYS-18 uses it; capital held by SYS-07 | XAR-005, CAP-002 |
 | Intelligent rebalancing, the "Rebalancing Engine" (P2§91) | Evaluation here, decision by SYS-07 | ARB-005, ARB-006, CAP-018, CAP-023, CAP-024 |
-| Arbitrage capital reserves (P2§92) | SYS-07 | ARB-008, ARB-009, CAP-028 (awaits confirmation) |
+| Arbitrage capital reserves (P2§92) | SYS-07 | ARB-008, ARB-009, CAP-029 to CAP-033 (confirmed by the owner, DEC-028) |
 | Arbitrage risk engine (P2§93) | SYS-09 rule sets | RSK-012, RSK-033 |
 | Arbitrage kill switch (P2§94) | SYS-09 | RSK-008, ARB-010 |
 | Arbitrage performance controller (P2§95) | SYS-21 | PFC-014 |

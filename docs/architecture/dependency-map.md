@@ -1,6 +1,6 @@
 # Dependency Map
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-024 and Handoff Part 2 (edges D-54 to D-63). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030).
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-030 and Handoff Part 2 (edges D-54 to D-65). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030).
 >
 > Canonical record of which systems depend on which (ARCH-014). **STATED** edges come directly from handoff text (source given). **DECIDED** edges were fixed by a decision record. **INFERRED** edges are the builder's reading of the text. System IDs are from the [system registry](system-registry.md).
 
@@ -82,6 +82,8 @@ This is a build-dependency chain. The runtime order, with the capital authority 
 | D-61 | Hosting, backup, and migration (MIG) | SYS-11 Reconciliation, SYS-33 Ledger, SYS-10 (active execution authority), SYS-31 Security (secrets) | STATED | P2§139–P2§144; MIG-013 to MIG-018 |
 | D-62 | SYS-09 Risk Engine (loss-streak and excessive-trading protection) | SYS-08 Portfolio and SYS-30 audit trail (trade and loss history), SYS-12 Policy (thresholds) | INFERRED (inputs not stated) | P2§40, P2§41; RSK-026, RSK-027 |
 | D-63 | SYS-06 True Net-Profit Engine | SYS-03 Fee Engine and Slippage Engine (restates D-08 with Part 2's names) | DECIDED (DEC-011, DEC-024) | QNT-007 |
+| D-64 | SYS-11 standby takeover (high availability) | One shared execution-lease authority (TEC-013), SYS-11 reconciliation, SYS-29 System Health | DECIDED (DEC-030) | REC-023, REC-024 |
+| D-65 | SYS-34 Readiness System (capability eligibility) | SYS-07 Global Capital Authority (capital figures), SYS-12 Policy (authorizations) | DECIDED (DEC-028) | RDY-008, CAP-032 |
 
 ## Stage-level dependencies (DECIDED, [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md); Performance Controller placement changed by [DEC-024](../decisions/DEC-024-part-2-reconciliation.md))
 

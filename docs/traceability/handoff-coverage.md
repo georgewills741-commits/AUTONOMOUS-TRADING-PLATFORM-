@@ -136,6 +136,11 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-022](../decisions/DEC-022-restart-recovery-sequence.md) | REC-014, REC-015, REC-016, REC-017, REC-018, AUD-009 |
 | [DEC-023](../decisions/DEC-023-autonomous-canary-approval.md) | STR-019, STR-020, STR-021, STR-022 |
 | [DEC-024](../decisions/DEC-024-part-2-reconciliation.md) | MKD-011, QNT-007, OPP-016, AIL-009, DSI-006, INC-003, RDY-006, RDY-007, OPS-013 |
+| [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md) | PLT-021, RSK-034, RSK-035, RSK-036, RSK-037, RSK-038, RSK-039 |
+| [DEC-027](../decisions/DEC-027-part-2-open-questions.md) | ARCH-035, EXE-011, PAP-013 |
+| [DEC-028](../decisions/DEC-028-capital-buckets-and-progressive-activation.md) | CAP-029, CAP-030, CAP-031, CAP-032, CAP-033, RDY-008 |
+| [DEC-029](../decisions/DEC-029-infrastructure-as-code.md) | OPS-014, OPS-015, OPS-016, OPS-017 |
+| [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md) | REC-023, REC-024, MIG-029, MIG-030 |
 
 ## §100 questions — where the repository answers them
 
@@ -165,7 +170,7 @@ These did not come from a handoff section. Each cites the decision record that c
 | Where does every major feature belong? | [system registry](../architecture/system-registry.md); the section table above |
 | Which features depend on which others? | [dependency map](../architecture/dependency-map.md) |
 | Which requirements are confirmed? | [requirements registry](../requirements/registry.md), "Class" column |
-| Which require confirmation? | The Part 1 items were all decided on 2026-09-30 ([decision log](../decisions/README.md)); they are now FUTURE (CUS-001, CUS-002) or DEPRECATED / REPLACED (EXA-002, AGT-001, LED-002). Part 2 added items awaiting the owner: see the "Approval" column of the [requirements registry](../requirements/registry.md), the [findings register](../conflicts/register.md) (CF-14), and the [open-question register](../open-questions/register.md) (OQ-24 to OQ-26, TC-07) |
+| Which require confirmation? | The Part 1 items were all decided on 2026-09-30 ([decision log](../decisions/README.md)); they are now FUTURE (CUS-001, CUS-002) or DEPRECATED / REPLACED (EXA-002, AGT-001, LED-002). Part 2's items were answered by the owner ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md)). What remains unapproved is shown in the "Approval" column of the [requirements registry](../requirements/registry.md): proposals (ARCH-034) and future items (EXE-011, custody) |
 | What remains after Part 2? | [roadmap](../roadmap/roadmap.md), "What Part 2 did and did not supply"; [project state](../project-state.md) |
 
 ## §102 topics — canonical location of each expected topic

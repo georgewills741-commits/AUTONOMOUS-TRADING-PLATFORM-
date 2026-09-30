@@ -24,6 +24,12 @@ The owner's rules for the approval it performs stay where they are, in [Strategy
 - **RDY-006** Same system as the Governance and Readiness Engine · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — The Readiness System of Part 2 and the Governance and Readiness Engine of DEC-023 are one system, SYS-34. It performs the lifecycle APPROVAL stage ("READINESS REVIEW" in P2§68) under STR-019 to STR-022. It consumes evidence from the systems that own it and does not recompute that evidence.
 - **RDY-007** Readiness verdict vs lifecycle stage · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — The Strategy Registry (STR-023, STR-024) records which lifecycle stage a strategy version is in. This system records whether the evidence allows it to progress: its readiness state, evidence, and blocking conditions. Neither system changes the other's state.
 
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+- **RDY-008** Capability eligibility · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-028 — This system decides when a capital-intensive capability becomes eligible under progressive capability activation (CAP-032). It uses the Global Capital Authority's capital figures and the evidence of RDY-002. Eligibility never exceeds the operator's authorizations (MODE-003, POL-011).
+
+The owner kept this system as its own system (DEC-024, confirmed in [DEC-027](../decisions/DEC-027-part-2-open-questions.md)).
+
 ## How readiness states relate to lifecycle stages
 
 P2§66 says the states "may be refined during architecture". This mapping is the initial refinement ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md)). It is finalized when DIRECTIONAL TRADING is planned.

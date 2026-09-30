@@ -41,6 +41,13 @@ The deployment principle of Part 2 (P2§350): the same logical trading platform 
 - **MIG-026** Logical identity preservation · CONFIRMED REQUIREMENT · P2§153, P2§262 — Migration should preserve, where appropriate: user identity; policy history; strategy history; audit history; experiment history; configuration history; logical platform state; while updating environment-specific identifiers.
 - **MIG-027** Environment identity · CONFIRMED REQUIREMENT · P2§154, P2§263 — Instances should remain distinguishable. Possible identifiers: platform ID; environment ID; deployment ID; version.
 
+## Only one copy trades during a migration (owner decision)
+
+From [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md) ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q5), resolving TC-07.
+
+- **MIG-029** Freeze and new keys · CONSTRAINT · DEC-030 — During every move, freeze the old copy (MIG-013, MIG-014), then create new exchange API keys for the new location and delete the old ones, so the exchange itself refuses the old copy.
+- **MIG-030** No trading before the old key is revoked · CONSTRAINT · DEC-030 — The destination does not trade on a venue until the old key for that venue is revoked. Where a venue offers no API for creating and revoking keys, the rotation is an operator step of the migration.
+
 ## Backup and disaster recovery
 
 - **MIG-028** Disaster recovery · CONFIRMED REQUIREMENT · P2§167 — The project must eventually define: backup strategy; recovery points; recovery procedures; recovery validation; environment restoration; financial reconciliation; operational restart; incident procedures.
@@ -49,11 +56,11 @@ The deployment principle of Part 2 (P2§350): the same logical trading platform 
 
 - **Technology.** The initial deployment is Docker Compose on one host (TEC-011, [DEC-009](../decisions/DEC-009-technology-stack.md)). That host can be the operator's computer or a server, so MIG-001 holds without a second deployment. The Compose definition is the single deployment source of truth (OPS-010); local and server differ only through explicit overrides.
 - **Reconciliation.** Every reconciliation step above is performed by Recovery and Reconciliation (REC-008), with the same rules as a restart (REC-014 to REC-018): the migrated database is recovery context, never authoritative financial state.
-- **One active instance.** The source is frozen before the destination acts (MIG-013, MIG-014). Only one instance may trade an account (REC-019, REC-020). The execution lease (REC-013) protects instances that share a database but not two hosts with separate databases; closing that gap is TC-07.
-- **Secrets** are never in a package (MIG-009, SEC-005). How they reach the destination is decided with TC-07, when migration is planned.
+- **One active instance.** The source is frozen before the destination acts (MIG-013, MIG-014). Only one instance may trade an account (REC-019, REC-020). The execution lease (REC-013) protects instances that share a lease authority. Between two hosts with separate databases, the exchange keys are rotated instead (MIG-029, MIG-030). Automatic failover under high availability uses one shared lease authority (REC-023, REC-024).
+- **Secrets** are never in a package (MIG-009, SEC-005). The destination receives newly issued keys (MIG-029) through the secret manager (SEC-005).
 - **A migration failure** is a Safe Mode trigger (RSK-030) and an incident (INC-002).
 - **Monitoring** covers migration and backup (MON-010). **Tests:** MIG-023 and MIG-024, and the [verification architecture](../architecture/verification-architecture.md).
 
 ## Not yet specified
 
-Package format, backup schedule and retention, recovery point and recovery time objectives (values to be added to the values register when set), minimum and recommended host resources (MIG-002), the split-brain mechanism across hosts (TC-07), interfaces, tests.
+Package format, backup schedule and retention, recovery point and recovery time objectives (values to be added to the values register when set), minimum and recommended host resources (MIG-002), where the failover lease authority lives (REC-024), interfaces, tests. All infrastructure is kept as code (OPS-014), so the target environment is provisioned automatically (OPS-017).

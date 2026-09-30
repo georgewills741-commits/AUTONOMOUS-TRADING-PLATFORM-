@@ -52,7 +52,10 @@ Notes:
 - **Already covered.** Objectives translated into structured policy (P2§100) is NLP-001, NLP-002, NLP-004, and POL-002.
 - **"Policy compiler".** Part 2 uses the term for two steps. Natural language → structured policy is the interpretation pipeline of the [Natural Language Policy Interface](natural-language-policy-interface.md) (NLP-004). Structured policy → enforceable rules, recompiled on every policy change (ARCH-023), is deterministic and belongs to this system. See the [glossary](../../glossary.md).
 - **POL-015 with POL-006 and POL-007.** Every material change can be simulated. Simulation is mandatory before a loosening change (POL-006). A change that only tightens may still activate immediately (POL-007).
-- **Open conflict CF-14.** P2§101 and §279 place user hard policy above system safety; RSK-004 places system safety first. RSK-004 stays in force until the owner decides.
+- **CF-14 (decided).** The owner chose an immutable safety floor ([DEC-026](../../decisions/DEC-026-safety-floor-and-layered-control.md)):
+  - Changing a safety invariant or a HARD LIMIT value needs a formal, versioned, audited, human-controlled policy change (RSK-039).
+  - Operational limits adapt automatically inside the bounds set here (RSK-035, RSK-036). Those adjustments are operating decisions, not policy changes needing confirmation.
+  - POL-005 to POL-007 still govern changes to the bounds and authorizations themselves.
 
 ## Boundary (§92)
 
@@ -63,6 +66,6 @@ Notes:
 
 ## Findings
 
-Open: CF-14 (Part 2 policy hierarchy). All earlier findings are resolved:
+All resolved. CF-14 → [DEC-026](../../decisions/DEC-026-safety-floor-and-layered-control.md).
 
 CF-06 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (this system is in CORE TRADING FOUNDATION). CF-08 and OQ-15 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-009). OQ-17 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-005 to POL-007). OQ-08 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-008). DUP-22 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (MEM-005).

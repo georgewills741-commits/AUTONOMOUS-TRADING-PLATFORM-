@@ -36,9 +36,14 @@ On 2026-09-30 the owner instructed the builder to resolve every unresolved item 
 | [DEC-021](DEC-021-kill-switch-recovery.md) | Cause-based, risk-aware kill-switch recovery with escalation | Owner ([owner decisions 2](../handoffs/owner-decisions-02-cf-11-to-cf-13.md)) | ACCEPTED |
 | [DEC-022](DEC-022-restart-recovery-sequence.md) | Staged restart recovery; persisted state untrusted until reconciled | Owner (owner decisions 2) | ACCEPTED |
 | [DEC-023](DEC-023-autonomous-canary-approval.md) | Policy-driven autonomous approval by the Governance and Readiness Engine | Owner (owner decisions 2) | ACCEPTED; the engine's registration as SYS-34 by DEC-024 |
-| [DEC-024](DEC-024-part-2-reconciliation.md) | Reconciliation of Handoff Part 2: classification, one owner per duplicated responsibility, CF-15, CF-16, re-check of DEC-006 to DEC-023 | Builder | ACCEPTED (delegated); CF-14, OQ-24 to OQ-26, TC-07 left to the owner |
+| [DEC-024](DEC-024-part-2-reconciliation.md) | Reconciliation of Handoff Part 2: classification, one owner per duplicated responsibility, CF-15, CF-16, re-check of DEC-006 to DEC-023 | Builder; confirmed by the owner (owner decisions 3) | ACCEPTED |
 | [DEC-025](DEC-025-documentation-tooling-in-repository.md) | Keep the documentation generator and checker in the repository | Builder | ACCEPTED (delegated) |
+| [DEC-026](DEC-026-safety-floor-and-layered-control.md) | Safety floor and layered control model (CF-14) | Owner ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md)) | ACCEPTED |
+| [DEC-027](DEC-027-part-2-open-questions.md) | Global platform controller, paper environment, adaptive execution (FUTURE), command language kept as idea, DEC-024 confirmed | Owner (owner decisions 3) | ACCEPTED |
+| [DEC-028](DEC-028-capital-buckets-and-progressive-activation.md) | Capital buckets, automatic rebalancing, progressive capability activation | Owner (owner decisions 3); builder (placement) | ACCEPTED |
+| [DEC-029](DEC-029-infrastructure-as-code.md) | Infrastructure as code is a mandatory production requirement | Owner (owner decisions 3) | ACCEPTED |
+| [DEC-030](DEC-030-high-availability-and-single-active-copy.md) | High availability approved; only one active copy during migration (TC-07) | Owner (owner decisions 3); builder (lease authority, key-revocation order) | ACCEPTED |
 
-Handoff Part 2 arrived on 2026-09-30. It came with no instruction to resolve everything. DEC-024 therefore resolves only placement, duplication, and terminology, which reconciliation requires (Part 2 §182). The questions that change meaning are left for the owner.
+Handoff Part 2 arrived on 2026-09-30. It came with no instruction to resolve everything. DEC-024 therefore resolves only placement, duplication, and terminology, which reconciliation requires (Part 2 §182). The questions that change meaning went to the owner, who answered them the same day (DEC-026 to DEC-030).
 
-**Decided does not mean authorized:** none of these decisions authorizes implementation. That still needs the owner's answers on the Part 2 findings, the complete documentation review, and explicit approval (handoff §101; Part 2 §329–§330; constitution Rules 134–135).
+**Decided does not mean authorized:** none of these decisions authorizes implementation. That still needs the complete documentation review and explicit approval (handoff §101; Part 2 §329–§330; constitution Rules 134–135).

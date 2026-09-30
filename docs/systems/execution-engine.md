@@ -37,6 +37,14 @@ Placement (builder): the Global Capital Authority decides a transfer (CAP-023); 
 
 [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md) adds no new execution requirement. Order and transfer timeouts (P2§84, §85, §307, §308) are EXE-005, EXE-006, and EXE-009. Paper/live parity (PAP-006) places a paper executor and a live executor behind this system's execution interface; the paper executor belongs to [Paper Trading](strategy/paper-trading.md). Only the active execution instance may act (EXE-010), across local and server hosts as well (REC-019, REC-020).
 
+## Owner decisions applied (Part 2 findings, 2026-09-30)
+
+From [DEC-027](../decisions/DEC-027-part-2-open-questions.md) ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md), Q4), resolving OQ-26:
+
+- **EXE-011** Adaptive execution · FUTURE · DEC-027 — Adaptive execution: execution that adjusts order type, order splitting, and price to liquidity and volatility, inside risk limits. It is not built until the owner approves it.
+
+When it is approved, it stays deterministic (EXE-001) and inside the safety envelope (RSK-034, RSK-036).
+
 ## Boundary (§92)
 
 - **Owns:** order construction, submission, and execution state (EXE-002).

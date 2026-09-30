@@ -1,6 +1,6 @@
 # DEC-024 — Reconciliation of Handoff Part 2 with Part 1 and the owner's decisions
 
-- **Status:** ACCEPTED (builder reconciliation under Part 2 §182 and §331, and constitution Rules 30–34; the owner may override any item). CF-14, OQ-24 to OQ-26, and TC-07 are **not** decided here; they wait for the owner.
+- **Status:** ACCEPTED (builder reconciliation under Part 2 §182 and §331, and constitution Rules 30–34). **Confirmed by the owner** in [DEC-027](DEC-027-part-2-open-questions.md): all five structural choices are kept. CF-14, OQ-24 to OQ-26, and TC-07 were left for the owner and are now decided in [DEC-026](DEC-026-safety-floor-and-layered-control.md), [DEC-027](DEC-027-part-2-open-questions.md), and [DEC-030](DEC-030-high-availability-and-single-active-copy.md).
 - **Date:** 2026-09-30
 - **Source:** [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N
 - **Resolves:** CF-15, CF-16, DUP-23 to DUP-31
@@ -79,6 +79,8 @@ Part 2 asks for Part 1, every earlier decision, and Part 2 to become one knowled
 | RSK-004 (§26) authority hierarchy | **Conflicts with P2§101 / §279 → CF-14, OPEN.** RSK-004 stays in force |
 
 ## Left for the owner
+
+All of these were answered on 2026-09-30 ([owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md)): CF-14 → DEC-026; OQ-24, OQ-25, OQ-26, ARCH-034 → DEC-027; CAP-028 → DEC-028; OPS-009 → DEC-029; TC-07 and REC-021 → DEC-030. The table below is kept as it was written.
 
 | Item | Question |
 |---|---|

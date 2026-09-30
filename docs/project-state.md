@@ -10,7 +10,7 @@ The single record of where this project currently stands (Constitution Rules 50,
 
 - Handoff Parts 1 and 2 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
-- Part 2 raised findings that need the owner's answers (below).
+- The owner answered every Part 2 finding (DEC-026 to DEC-030). No open questions or findings remain.
 - Implementation is not authorized.
 
 | Gate | Status |
@@ -22,38 +22,39 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Owner correction 1: company-grade autonomous operating model | APPLIED — [DEC-019](decisions/DEC-019-company-grade-autonomous-operating-model.md), [DEC-020](decisions/DEC-020-value-classification.md) · [verification](traceability/owner-correction-01-verification.md) |
 | Conflicts raised by the correction (CF-11 to CF-13) | DECIDED by the owner — [DEC-021](decisions/DEC-021-kill-switch-recovery.md), [DEC-022](decisions/DEC-022-restart-recovery-sequence.md), [DEC-023](decisions/DEC-023-autonomous-canary-approval.md) · [answers](handoffs/owner-decisions-02-cf-11-to-cf-13.md) · [verification](traceability/owner-decisions-02-verification.md) |
 | Master handoff Part 2 (consolidated additional systems, paper operation, readiness, arbitrage, deployment portability) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-2-consolidated-additional-systems.md) · [reconciliation](traceability/part-2-reconciliation.md) · [verification and documentation audit](traceability/part-2-verification.md) · [DEC-024](decisions/DEC-024-part-2-reconciliation.md) |
-| Part 2 findings | **WAITING FOR THE OWNER:** CF-14, OQ-24, OQ-25, OQ-26, TC-07, and four items to confirm (below) |
-| Complete documentation review (handoff §101; P2§329) | NOT STARTED — after the owner answers the Part 2 findings |
+| Part 2 findings (CF-14, OQ-24 to OQ-26, TC-07, and four items to confirm) | DECIDED by the owner — [DEC-026](decisions/DEC-026-safety-floor-and-layered-control.md) to [DEC-030](decisions/DEC-030-high-availability-and-single-active-copy.md) · [answers](handoffs/owner-decisions-03-part-2-findings.md) · [verification](traceability/owner-decisions-03-verification.md) |
+| Complete documentation review (handoff §101; P2§329) | NOT STARTED — **next step** |
 | Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; constitution Part XXIII) |
 | Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330) |
 
 ## Current objective
 
-Get the owner's answers to the Part 2 findings, then carry out the complete documentation review (§101, P2§329). After that the owner decides whether to approve implementation of Stage 1.
+Carry out the complete documentation review (§101, P2§329) and plan Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
 
-## Decisions needed from the owner
+## Owner decisions on the Part 2 findings (2026-09-30)
 
-Each has a recommendation. None has been applied: the requirement in force stays as it is until the owner answers.
+All answered ([owner decisions 3](handoffs/owner-decisions-03-part-2-findings.md)):
 
-| # | Item | Question | Recommendation — NOT YET APPROVED |
-|---|---|---|---|
-| 1 | [CF-14](conflicts/register.md#cf-14--policy-hierarchy-user-hard-policy-above-or-below-system-safety) | Part 2 puts **user hard policy above system safety**; Part 1 (RSK-004) puts system safety first. Which is on top? | System safety is a floor that no policy can lower. The user's hard policy outranks everything else and can always make the platform stricter |
-| 2 | [OQ-24](open-questions/register.md) | What is the **"global platform controller"**? It is named but never defined | No new system: the Policy System, the Risk Engine's emergency controller, and System Health together |
-| 3 | [OQ-25](open-questions/register.md) | Where does a strategy in **PAPER mode** run: in the separate paper environment, or inside production? | The paper environment, against live market data, with its own simulated capital and no trading credentials |
-| 4 | [OQ-26](open-questions/register.md) | What is **"adaptive execution where approved"**? It appears only in the P2§349 checklist | Describe it, or drop it |
-| 5 | [TC-07](open-questions/register.md) | After a local ↔ server migration the two hosts have separate databases, so the database lease alone cannot stop **both from trading** | Decide before migration is planned. Rotating the venue API keys during migration is the only option the venue itself enforces |
-| 6 | CAP-028 | Add the capital categories **directional capital, emergency reserve, venue-specific reserve**? | Confirm, or leave as previously discussed |
-| 7 | OPS-009 | Adopt **infrastructure as code**? | Leave PROPOSED; the Docker Compose definition already version-controls the deployment |
-| 8 | ARCH-034 | Adopt a **domain command language**? | Leave PROPOSED |
-| 9 | REC-021 | Approve **high availability / failover**? | Leave FUTURE; one active instance with automatic restart (TEC-013) |
+| Item | Owner's decision | Record |
+|---|---|---|
+| CF-14: top of the rules | An immutable **safety floor**: nobody (AI, strategy, policy, administrator, automatic process) can bypass the safety invariants; changing one needs a formal human-controlled change. Everything operational adapts automatically inside that envelope, recovers by itself, and never deadlocks the healthy parts. RSK-004 unchanged | [DEC-026](decisions/DEC-026-safety-floor-and-layered-control.md): RSK-034 to RSK-039, PLT-021 |
+| OQ-24: global platform controller | Existing parts working together; no new system | [DEC-027](decisions/DEC-027-part-2-open-questions.md): ARCH-035 |
+| OQ-25: where PAPER mode runs | The separate paper environment, no real exchange keys | DEC-027: PAP-013 |
+| OQ-26: adaptive execution | A FUTURE feature, not built until approved | DEC-027: EXE-011 |
+| ARCH-034: command language | Kept as an idea | DEC-027 |
+| DEC-024's five choices | All kept | DEC-027 |
+| CAP-028: capital categories | Added (directional capital, emergency reserve, per-exchange reserve), policy-set and dynamic, rebalanced automatically, with progressive capability activation | [DEC-028](decisions/DEC-028-capital-buckets-and-progressive-activation.md): CAP-029 to CAP-033, RDY-008 |
+| OPS-009: infrastructure as code | Mandatory for production | [DEC-029](decisions/DEC-029-infrastructure-as-code.md): OPS-014 to OPS-017 |
+| TC-07: one copy during migration | Freeze the old copy, then new exchange keys for the new location, old ones deleted | [DEC-030](decisions/DEC-030-high-availability-and-single-active-copy.md): MIG-029, MIG-030 |
+| REC-021: high availability | Planned now: a standby copy takes over automatically after checking and reconciling state | DEC-030: REC-021, REC-023, REC-024 |
 
-The builder also resolved several placement questions in [DEC-024](decisions/DEC-024-part-2-reconciliation.md). You may override any of them:
+Builder readings you may want to check, all stated in the decision records:
 
-- The Readiness System (Governance and Readiness Engine) is its own system, SYS-34.
-- Canary is a stage inside production, not a separate environment.
-- The Performance Controller's core is built one stage earlier, in DIRECTIONAL TRADING.
-- One platform-wide Opportunity Database.
-- The five-agent decomposition is kept, with all nine Part 2 roles mapped to it.
+- The safety floor is RSK-034 together with the existing system safety rules (RSK-010). HARD LIMIT values are part of it.
+- Automatic adjustments happen inside the bounds you set in policy. Widening a bound or an authorization still needs you (POL-005).
+- The "Capital Allocation & Treasury Engine" is the existing Global Capital Authority. Capability eligibility is decided by the Readiness System.
+- The standby's "explicit activation" is acquiring the execution lease under a policy authorization, not a human action.
+- Where a venue cannot create or revoke keys through its API, the migration's key swap is an operator step.
 
 ## Completed work
 
@@ -101,6 +102,11 @@ The builder also resolved several placement questions in [DEC-024](decisions/DEC
   - Updated: roadmap RMP-003 to RMP-011; dependency map D-54 to D-63; source-of-truth map; glossary.
   - Verified in three passes; defects found were fixed and re-checked.
   - The documentation generator and checker now live in the repository: [`tools/docs/`](../tools/docs/README.md) ([DEC-025](decisions/DEC-025-documentation-tooling-in-repository.md)).
+- **Owner decisions 3 (Part 2 findings, 2026-09-30):**
+  - Answers kept word for word.
+  - DEC-026 to DEC-030: 24 new requirements.
+  - Class-only changes: CAP-028 and OPS-009 replaced; REC-021 reclassified from FUTURE to CONFIRMED REQUIREMENT. No requirement wording changed.
+  - Values register now has 35 entries.
 
 ## In-progress work
 
@@ -110,11 +116,11 @@ None.
 
 | Problem | Impact | Required resolution |
 |---|---|---|
-| Part 2 findings unanswered (CF-14, OQ-24 to OQ-26, TC-07) | The complete documentation review cannot close. CF-14 affects the top of the risk hierarchy | The owner answers, or accepts the recommendations |
+| None | — | — |
 
 ## Open questions
 
-CF-14 in the [findings register](conflicts/register.md). OQ-24, OQ-25, OQ-26, and TC-07 in the [open-question register](open-questions/register.md). Items awaiting confirmation are shown in the [registry](requirements/registry.md)'s Approval column.
+None. Every conflict, duplicate, open question, and technical concern is resolved ([findings register](conflicts/register.md), [open-question register](open-questions/register.md)). What stays unapproved by design (proposals, future items) is shown in the [registry](requirements/registry.md)'s Approval column.
 
 ## Operating model now in force (replaces the earlier "defaults")
 
@@ -133,6 +139,13 @@ CF-14 in the [findings register](conflicts/register.md). OQ-24, OQ-25, OQ-26, an
 - **Hosting.** The same platform runs locally or on a server, with migration only through a formal, reconciled process (MIG-001 to MIG-028).
 - **Canary.** Canary is a production stage (OPS-013).
 
+**From your answers on the Part 2 findings:**
+
+- **Safety floor.** Immutable safety invariants that nothing and nobody can bypass. Inside them, the platform adapts limits, allocation, and thresholds automatically, recovers by itself, and isolates problems instead of stopping everything (RSK-034 to RSK-039).
+- **Capital.** Directional, emergency, and per-exchange buckets, sized dynamically and rebalanced automatically. Capital-intensive features switch on only as capital and proven safety allow (CAP-029 to CAP-033).
+- **Infrastructure.** All production infrastructure is kept as code and rebuildable without you (OPS-014 to OPS-017).
+- **High availability.** A standby takes over automatically after reconciling (REC-023). Only one copy ever trades, and a migration swaps exchange keys (MIG-029).
+
 ## Recent decisions
 
 [Decision log](decisions/README.md):
@@ -141,6 +154,7 @@ CF-14 in the [findings register](conflicts/register.md). OQ-24, OQ-25, OQ-26, an
 - DEC-006 to DEC-018 added on 2026-09-30.
 - DEC-019 and DEC-020 (owner correction) and DEC-021 to DEC-023 (owner decisions on CF-11 to CF-13) added the same day.
 - DEC-024 (Part 2 reconciliation) and DEC-025 (documentation tooling in the repository) added the same day.
+- DEC-026 to DEC-030 (owner decisions on the Part 2 findings) added the same day. DEC-024 confirmed by the owner.
 
 ## Recent changes
 
@@ -150,13 +164,13 @@ CF-14 in the [findings register](conflicts/register.md). OQ-24, OQ-25, OQ-26, an
 - 2026-09-30: applied owner correction 1 (DEC-019, DEC-020): 41 new requirements, 9 superseded, values register, CF-11 to CF-13 raised. No code, configuration, or infrastructure created.
 - 2026-09-30: applied owner decisions on CF-11 to CF-13 (DEC-021 to DEC-023): 16 new requirements, 3 superseded. No code, configuration, or infrastructure created.
 - 2026-09-30: integrated Handoff Part 2 (DEC-024, DEC-025): 194 new requirements, SYS-34, five new specifications, findings CF-14 to CF-16, DUP-23 to DUP-31, OQ-24 to OQ-26, TC-07. No existing requirement changed. No platform code, configuration, or infrastructure created; the only code is the documentation checker in `tools/docs/`.
+- 2026-09-30: applied owner decisions 3 on the Part 2 findings (DEC-026 to DEC-030): 24 new requirements; CAP-028 and OPS-009 replaced; REC-021 reclassified. No code, configuration, or infrastructure created.
 
 ## Next approved step
 
-1. The owner answers the decisions above (or accepts the recommendations).
-2. The builder applies the answers as decision records, re-verifies, and updates this file.
-3. The complete documentation review (§101, P2§329) follows. Stage 1 is planned with its objective, scope, tests, and completion criteria (constitution Rule 140).
-4. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
+1. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1.
+2. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140).
+3. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
 
 ## Memory check (constitution Rule 175)
 

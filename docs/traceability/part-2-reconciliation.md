@@ -10,7 +10,7 @@
   - "Also" lists existing requirements the new ones extend. They are cross-referenced, never copied (P2§185).
   - "Restates" marks a later section that repeats an earlier one (DUP-31).
   - Process sections say where they were applied.
-- Nothing in Part 2 was dropped. A section is either mapped to requirements, recorded as a finding (CF-14, OQ-24 to OQ-26, TC-07), or applied as process. Classification follows the wording ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md), decision 1).
+- Nothing in Part 2 was dropped. A section is either mapped to requirements, recorded as a finding (CF-14, OQ-24 to OQ-26, TC-07, all since decided by the owner in DEC-026 to DEC-030), or applied as process. Classification follows the wording ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md), decision 1).
 
 ## Section → where it went
 
@@ -77,7 +77,7 @@
 | 58 | PAPER TRADING IS A REAL OPERATING MODE | PAP-004 | Also PAP-001, MODE-001 |
 | 59 | CONTINUOUS PAPER OPERATION | PAP-005 | — |
 | 60 | PAPER/LIVE ARCHITECTURAL PARITY | PAP-006 | Also PAP-001 |
-| 61 | SIMULATED CAPITAL | PAP-007 | Where it runs: OQ-25 |
+| 61 | SIMULATED CAPITAL | PAP-007 | Where it runs: the paper environment (PAP-013, owner, DEC-027) |
 | 62 | PAPER EXECUTION MODEL | PAP-008 | Also PAP-002 |
 | 63 | PAPER EXPECTED-VS-OBSERVED ANALYSIS | PFC-010 | — |
 | 64 | PAPER EVIDENCE ACCUMULATION | PAP-009 | — |
@@ -108,7 +108,7 @@
 | 89 | TRIANGULAR EXECUTION RISK | TAR-004 | Also TAR-002, RSK-012 |
 | 90 | CROSS-EXCHANGE CAPITAL PRE-POSITIONING | XAR-005 | Capital held per venue by the Global Capital Authority (CAP-002, ARB-009) |
 | 91 | INTELLIGENT REBALANCING | — | Covered by ARB-005, ARB-006, ARB-007, CAP-018, CAP-023, CAP-024 (the "Rebalancing Engine") |
-| 92 | ARBITRAGE CAPITAL RESERVES | CAP-028 | Also CAP-002, ARB-008, ARB-009; new categories await the owner |
+| 92 | ARBITRAGE CAPITAL RESERVES | CAP-028 | Also CAP-002, ARB-008, ARB-009. CAP-028 confirmed by the owner and replaced by CAP-029 to CAP-033 (DEC-028) |
 | 93 | ARBITRAGE RISK ENGINE | RSK-033 | Also RSK-012, ARB-010, ARB-011 |
 | 94 | ARBITRAGE KILL SWITCH | — | Covered by RSK-008 (arbitrage scope), RSK-020 (scoped actions), ARB-010 |
 | 95 | ARBITRAGE PERFORMANCE CONTROLLER | PFC-014 | Also PFC-001, PFC-006, PFC-008 |
@@ -117,7 +117,7 @@
 | 98 | ARBITRAGE EXPECTED-VS-ACTUAL | PFC-015 | — |
 | 99 | PORTFOLIO / STRATEGY ATTRIBUTION | PRT-006 | Realized P&L via the ledger (PRT-004, LED-006) |
 | 100 | POLICY SYSTEM | — | Covered by NLP-001, NLP-002, NLP-004, POL-002 |
-| 101 | USER POLICY HIERARCHY | — | **CF-14 (OPEN)**: conflicts with RSK-004, which stays in force until the owner decides |
+| 101 | USER POLICY HIERARCHY | — | CF-14, decided by the owner: immutable safety floor (RSK-034 to RSK-039, DEC-026); RSK-004 unchanged |
 | 102 | POLICY COMPILER | POL-012 | Natural language → structured policy: NLP-004 |
 | 103 | POLICY TRACEABILITY | POL-013 | Also AUD-002 |
 | 104 | POLICY IMMUTABILITY | POL-014 | Also POL-003 |
@@ -163,7 +163,7 @@
 | 144 | MIGRATION VALIDATION | MIG-018 | — |
 | 145 | MIGRATION ROLLBACK | MIG-019 | Also OPS-012 |
 | 146 | DEPLOYMENT PACKAGE | OPS-008 | The architecture decision is DEC-009 (TEC-011); no conflict |
-| 147 | INFRASTRUCTURE AS CODE | OPS-009 | PROPOSED until the owner approves |
+| 147 | INFRASTRUCTURE AS CODE | OPS-009 | OPS-009 replaced by OPS-014 to OPS-017: infrastructure as code made mandatory by the owner (DEC-029) |
 | 148 | SINGLE DEPLOYMENT SOURCE OF TRUTH | OPS-010 | — |
 | 149 | BACKUP VS MIGRATION | MIG-022 | — |
 | 150 | LOCAL/SERVER MIGRATION TESTING | MIG-023 | — |
@@ -171,14 +171,14 @@
 | 152 | USER-FACING HOSTING EXPERIENCE | MIG-025 | — |
 | 153 | LOGICAL IDENTITY PRESERVATION | MIG-026 | — |
 | 154 | ENVIRONMENT IDENTITY | MIG-027 | — |
-| 155 | SPLIT-BRAIN PROTECTION | REC-019 | Across separate databases: TC-07 (OPEN); lease REC-013, TEC-013 |
+| 155 | SPLIT-BRAIN PROTECTION | REC-019 | Across separate databases: freeze and new keys (MIG-029, MIG-030; TC-07 decided by the owner, DEC-030); lease REC-013, TEC-013 |
 | 156 | ACTIVE TRADING AUTHORITY | REC-020 | Also REC-013, EXE-010 |
-| 157 | FAILOVER | REC-021 | FUTURE: high availability not approved |
+| 157 | FAILOVER | REC-021 | Approved by the owner: REC-021 reclassified to CONFIRMED REQUIREMENT; automatic takeover REC-023, REC-024 (DEC-030) |
 | 158 | STANDBY MODE | REC-022 | — |
 | 159 | CLOUD/LOCAL RESOURCE DIFFERENCES | MIG-005 | — |
 | 160 | PRODUCTION SECURITY | SEC-009 | — |
 | 161 | ENVIRONMENT SEPARATION | — | Covered by OPS-004, SEC-004, MODE-006; canary as an environment: CF-15, resolved by OPS-013 |
-| 162 | PAPER / LIVE CREDENTIAL SEPARATION | PAP-011 | Also MODE-006, SEC-004; where paper runs: OQ-25 |
+| 162 | PAPER / LIVE CREDENTIAL SEPARATION | PAP-011 | Also MODE-006, SEC-004; paper runs in the paper environment (PAP-013) |
 | 163 | LIVE TRADING GATE | — | Covered by MODE-003, MODE-006, POL-005, STR-021 (DEC-024, decision 5) |
 | 164 | PRODUCTION CHANGE CONTROL | OPS-007 | Also OPS-003, OPS-005 |
 | 165 | CANARY DEPLOYMENT | OPS-011 | Strategy canary: STR-013 to STR-020 |
@@ -192,7 +192,7 @@
 | 173 | CANONICAL CONSISTENCY SYSTEM | ARCH-032 | First increment: documentation checker (DEC-025) |
 | 174 | GLOBAL PROJECT CONSTITUTION | ARCH-028 | Index in the platform overview; named "platform principles" (DEC-024) |
 | 175 | CONSISTENCY ORCHESTRATION | ARCH-033 | Also ARCH-007 |
-| 176 | DOMAIN COMMAND LANGUAGE | ARCH-034 | PROPOSED until formally approved |
+| 176 | DOMAIN COMMAND LANGUAGE | ARCH-034 | PROPOSED; the owner kept it as an idea (DEC-027) |
 | 177 | DOCUMENTATION-FIRST REPOSITORY | — | Process: the repository is the knowledge base (constitution Rules 47–48; DEC-002; ARCH-017). Applied by this documentation |
 | 178 | DOCUMENTATION OWNERSHIP | — | Documentation homes: table in the [Part 2 verification record](part-2-verification.md) |
 | 179 | REQUIREMENTS REGISTRY | ARCH-030 | — |
@@ -209,7 +209,7 @@
 | 190 | ROADMAP: PAPER / READINESS | RMP-006 | — |
 | 191 | ROADMAP: ARBITRAGE | RMP-007 | — |
 | 192 | ROADMAP: HOSTING & PORTABILITY | RMP-008 | — |
-| 193 | ROADMAP: AUTONOMY | RMP-009 | Global controller: OQ-24 |
+| 193 | ROADMAP: AUTONOMY | RMP-009 | Global controller: ARCH-035 (OQ-24 decided by the owner) |
 | 194 | ROADMAP: PRODUCTION HARDENING | RMP-010 | — |
 | 195 | MASTER DEPENDENCY PRINCIPLE | RMP-011 | Also ARCH-014, RMP-002 |
 | 196 | ORIGINAL ADDITION: DETERMINISTIC CORE VS AI INTELLIGENCE LAYER | ARCH-019 | — |
@@ -237,7 +237,7 @@
 | 218 | TRIANGULAR EXECUTION | TAR-004 | — |
 | 219 | CROSS-EXCHANGE CAPITAL PRE-POSITIONING | XAR-005 | — |
 | 220 | INTELLIGENT REBALANCING | — | Restates P2§91: ARB-005, CAP-023 |
-| 221 | ARBITRAGE CAPITAL RESERVE | CAP-028 | — |
+| 221 | ARBITRAGE CAPITAL RESERVE | CAP-028 | Also CAP-029 (DEC-028) |
 | 222 | ARBITRAGE RISK ENGINE | RSK-033 | — |
 | 223 | ARBITRAGE KILL SWITCH | — | Restates P2§94: RSK-008 |
 | 224 | ARBITRAGE PERFORMANCE CONTROLLER | PFC-014 | — |
@@ -272,7 +272,7 @@
 | 253 | MIGRATION VALIDATION | MIG-018 | — |
 | 254 | MIGRATION ROLLBACK | MIG-019 | — |
 | 255 | DEPLOYMENT PACKAGE | OPS-008 | — |
-| 256 | INFRASTRUCTURE AS CODE | OPS-009 | — |
+| 256 | INFRASTRUCTURE AS CODE | OPS-009 | Replaced by OPS-014 to OPS-017 (DEC-029) |
 | 257 | SINGLE SOURCE OF DEPLOYMENT TRUTH | OPS-010 | — |
 | 258 | BACKUP + MIGRATION ARE DISTINCT | MIG-022 | — |
 | 259 | LOCAL/SERVER MIGRATION TESTING | MIG-023 | — |
@@ -282,7 +282,7 @@
 | 263 | UNIQUE ENVIRONMENT IDENTITY | MIG-027 | — |
 | 264 | SPLIT-BRAIN PROTECTION | REC-019 | — |
 | 265 | ACTIVE TRADING INSTANCE AUTHORITY | REC-020 | — |
-| 266 | LOCAL FAILURE / SERVER FAILOVER | REC-021 | — |
+| 266 | LOCAL FAILURE / SERVER FAILOVER | REC-021 | Approved: REC-023, REC-024 (DEC-030) |
 | 267 | STANDBY MODE | REC-022 | — |
 | 268 | CLOUD/LOCAL RESOURCE DIFFERENCES | MIG-005 | — |
 | 269 | AI HOSTING INDEPENDENCE | AIL-015 | — |
@@ -295,7 +295,7 @@
 | 276 | NO AI ON EVERY TICK | — | Restates P2§26: AIL-004 |
 | 277 | AUTONOMOUS SYSTEM OBJECTIVE | — | Covered by PLT-013, PLT-015 |
 | 278 | AUTONOMY DOES NOT MEAN UNLIMITED AUTHORITY | PLT-020 | — |
-| 279 | USER POLICY AS HIGHEST APPLICATION AUTHORITY | — | **CF-14 (OPEN)**, with P2§101 |
+| 279 | USER POLICY AS HIGHEST APPLICATION AUTHORITY | — | CF-14, decided by the owner (DEC-026), with P2§101 |
 | 280 | POLICY SHOULD BE MACHINE-READABLE | POL-012 | — |
 | 281 | POLICY TRACEABILITY | POL-013 | — |
 | 282 | POLICY CHANGE MUST NOT REWRITE HISTORY | POL-014 | — |
@@ -313,7 +313,7 @@
 | 294 | REPOSITORY CONSISTENCY SYSTEM | ARCH-032 | — |
 | 295 | GLOBAL-CONSTITUTION-STYLE PRINCIPLE | ARCH-028 | — |
 | 296 | CONSISTENCY ORCHESTRATION | ARCH-033 | — |
-| 297 | DOMAIN COMMAND LANGUAGE | ARCH-034 | — |
+| 297 | DOMAIN COMMAND LANGUAGE | ARCH-034 | The owner kept it as an idea (DEC-027) |
 | 298 | TOOL-FIRST AI ARCHITECTURE | AIL-013 | — |
 | 299 | AI PERMISSION SCOPES | AGT-022, SEC-008 | — |
 | 300 | PRODUCTION DEPLOYMENT AUTHORITY | AIL-014 | — |
@@ -330,7 +330,7 @@
 | 311 | SAFE WAIT STATE | RSK-032 | — |
 | 312 | CAPITAL PRESERVATION REMAINS PRIMARY | — | Same as Part 1 §82: PLT-006 |
 | 313 | OVERALL SYSTEM OBJECTIVE | PLT-019 | The objective itself is PLT-009 (Part 1 §83) |
-| 314 | COMPLETE HIGH-LEVEL ARCHITECTURE | ARCH-024 | Global platform controller: OQ-24 |
+| 314 | COMPLETE HIGH-LEVEL ARCHITECTURE | ARCH-024 | Global platform controller: ARCH-035 (DEC-027) |
 | 315 | COMPLETE AI ARCHITECTURE | AIL-017 | — |
 | 316 | COMPLETE LIVE TRADING LOOP | — | Conceptual loop, covered by ARCH-008, PERF-003, CAP-016 (DEC-010 runtime order), PRT-002, PFC-001, STR-009 |
 | 317 | COMPLETE CONTROLLED IMPROVEMENT LOOP | — | Covered by STR-009, STR-017, PFC-009, OPS-012 (DUP-29) |
