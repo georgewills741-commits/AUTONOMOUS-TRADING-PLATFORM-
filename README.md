@@ -10,3 +10,4 @@ For where the project currently stands, start with [`docs/project-state.md`](doc
 | [`docs/README.md`](docs/README.md) | Documentation index: every specification, register, and record |
 | [`docs/builder/claude-code-builder-constitution.md`](docs/builder/claude-code-builder-constitution.md) | Rules governing how Claude Code builds and maintains this repository |
 | [`CLAUDE.md`](CLAUDE.md) | Session instructions loaded automatically by Claude Code |
+| [`tools/docs/`](tools/docs/README.md) | Documentation generator and checker; run `python3 tools/docs/build_index.py` after changing any document |

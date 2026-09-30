@@ -1,6 +1,6 @@
 # True Net-Profit Engine (Opportunity Economics)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); ARBITRAGE adds transfer and multi-leg cost components ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §13–§17
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); ARBITRAGE adds transfer and multi-leg cost components ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §13–§17
 
 Canonical definition of how every opportunity's economics are evaluated. It also holds the platform's rules on small positive opportunities, accumulation, and the absence of profit floors and ceilings. The handoff calls §14 "a critical requirement".
 
@@ -49,6 +49,14 @@ How realized results feed back into available capital (compounding) is defined i
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
 - **TNP-023** Latency decay in executable economics · CONFIRMED REQUIREMENT · DEC-019 — Executable net economics must incorporate realistic execution latency: expected opportunity value is weighed against expected latency decay and execution risk. An opportunity that theoretically produces positive net profit but is likely to disappear before execution should be rejected. This is part of each opportunity's economics, not a minimum-profit threshold (TNP-005).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **TNP-024** Liquidity protection · CONSTRAINT · P2§32 — A theoretical opportunity may be rejected if actual liquidity cannot support execution. Liquidity evaluation should be deterministic wherever possible.
+
+Already covered: true executable net economics rather than headline spread, gross percentage, AI prediction, or a fixed return (P2§29, §345) is TNP-001, TNP-002, TNP-004, TNP-018, and PLT-007. Funding costs (P2§33) are a term of TNP-018. No guaranteed returns (P2§34) is PLT-007, PLT-008, and TNP-014. Opportunity accumulation (P2§35) is TNP-008 and TNP-010, with PLT-019. The percentages previously discussed are analytical categories or filters (TNP-016, ARB-015), never guarantees.
 
 ## Boundary (§92)
 

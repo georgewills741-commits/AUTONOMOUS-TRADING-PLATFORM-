@@ -1,6 +1,6 @@
 # Cross-Exchange Arbitrage System
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-18 · **Category:** trading system · **Roadmap stage:** ARBITRAGE ("Cross-exchange") · **Sources:** §06 (also §03 B)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-18 · **Category:** trading system · **Roadmap stage:** ARBITRAGE ("Cross-exchange") · **Sources:** §06 (also §03 B)
 >
 > Canonical location per §98 (`docs/systems/arbitrage/`).
 
@@ -12,6 +12,14 @@ Canonical definition of trading executable price discrepancies between venues. C
 - **XAR-002** Real executable economics · CONSTRAINT · §06 — It must evaluate real executable economics, not merely displayed prices.
 - **XAR-003** Responsibilities · SYSTEM REQUIREMENT · §06 — Exchange monitoring; price comparison; order-book evaluation; liquidity analysis; fee calculation; slippage estimation; market-impact analysis; latency analysis; capital availability; exchange health; position availability; true net-profit calculation; opportunity ranking; execution validation; opportunity tracking; expected-vs-actual analysis.
 - **XAR-004** A price gap is not an opportunity · CONSTRAINT · §06 — A displayed price difference is not automatically an arbitrage opportunity.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../../decisions/DEC-024-part-2-reconciliation.md).
+
+- **XAR-005** Capital pre-positioning · SYSTEM REQUIREMENT · P2§90, P2§219 — Arbitrage may use pre-positioned capital, for example USDT and BTC held on exchanges A, B, and C. This reduces dependence on immediate blockchain transfers and may improve execution speed.
+
+P2§87 and §216 (true executable economics, not raw price differences) are XAR-002, XAR-004, and TNP-018. Pre-positioned inventory is capital held per venue by the Global Capital Authority (ARB-009, CAP-002).
 
 ## Boundary (§92)
 

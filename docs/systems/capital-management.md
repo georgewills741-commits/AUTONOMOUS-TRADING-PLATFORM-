@@ -1,6 +1,6 @@
 # Global Capital Authority (Capital Management)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-07 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Capital Authority", "Capital reservation"); accumulation is listed under ARBITRAGE · **Sources:** §18–§23
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-07 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Capital Authority", "Capital reservation"); accumulation is listed under ARBITRAGE · **Sources:** §18–§23
 >
 > File path follows §98 (`docs/systems/capital-management.md`). The system's name in the handoff is **Global Capital Authority**.
 
@@ -48,13 +48,23 @@ Canonical definition of the platform's single capital state, capital reservation
 
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
-CAP-022 (transfers need operator confirmation by default) is replaced by CAP-023 to CAP-025.
+CAP-022 (transfers need operator confirmation by default) is replaced by CAP-023 to CAP-025. CAP-021 still names the latency targets of PERF-007, which is replaced; reservation must now meet the path-specific latency budgets of PERF-008 to PERF-012.
 
 - **CAP-023** Autonomous rebalancing decision · CONFIRMED REQUIREMENT · DEC-019 — The platform must be capable of making autonomous rebalancing decisions when doing so is authorized by policy and economically justified. The decision considers: venue inventory state; capital requirements; current reserves; expected opportunity distribution; liquidity requirements; future opportunity forecast / expected value; transfer cost; transfer time; network conditions; venue health; risk; capital policy; rebalancing policy; true economic benefit. The outcome is one of NO TRANSFER, WAIT, SCHEDULE, or EXECUTE TRANSFER. The platform should not move funds simply because balances are unequal, and it should not refuse to move funds merely because a human is unavailable.
 - **CAP-024** Economic justification · CONFIRMED REQUIREMENT · DEC-019 — Before transferring, the system should calculate whether expected benefit exceeds transfer cost + risk cost + opportunity cost. It should consider: current inventory; required reserve; available capital; reserved capital; expected opportunity flow; venue-specific capital requirements; transfer fees; network fees; transfer latency; blockchain/network conditions; venue liquidity; expected future opportunity value; risk; capital efficiency; minimum reserve requirements; maximum transfer limits; transfer frequency limits; operational health; exchange availability. A transfer should not occur merely because the balance between exchanges is uneven.
 - **CAP-025** Bounded rebalancing · CONSTRAINT · DEC-019 — Autonomous rebalancing operates within explicit controls: maximum transfer amount; maximum daily transfer amount; minimum venue reserve; maximum venue exposure; approved destination venues; approved source venues; approved assets; transfer frequency limits; emergency restrictions; risk restrictions; capital restrictions; user policy restrictions. If rebalancing is required but outside the authorized boundary, the system does not execute; it waits, alerts, and requests authorization. It must never invent authorization.
 
 The Execution Engine carries out the transfer (EXE-009). Transfer authority and security are SEC-006 and SEC-007. The control values are V-10 in the [values register](../requirements/values-register.md).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **CAP-026** Capital distinctions for compounding · SYSTEM REQUIREMENT · P2§36, P2§227 — The system must distinguish: realized P&L; available capital; authorized trading capital; reserved capital. Realized gains may become available for future trading if authorized. Compounding follows realized capital and policy authorization; it is a capital-management consequence, not a guaranteed strategy outcome.
+- **CAP-027** Atomic capital reservation · CONSTRAINT · P2§38 — Capital reservation must be safe under concurrency. Two strategies must not simultaneously reserve the same capital. Reservation should be atomic or otherwise protected against race conditions.
+- **CAP-028** Arbitrage and reserve capital categories · PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION · P2§92, P2§221 — The Capital Authority may distinguish: available capital; reserved capital; arbitrage capital; directional capital; emergency reserve; venue-specific reserve. The Capital Authority should support dedicated arbitrage reserves where approved. Exact categories require architecture approval.
+
+P2§37 (one canonical Capital Authority) is CAP-001 and CAP-017. CAP-002 already distinguishes capital allocated to arbitrage, capital held in reserve, and capital by exchange; CAP-028's new categories (directional capital, emergency reserve, venue-specific reserve) wait for the owner's confirmation. Pre-positioned arbitrage inventory (XAR-005) is capital held here per venue, never a hidden arbitrage state (ARB-009). "Authorized trading capital" is the capital the Policy System authorizes (NLP-002 capital authorization).
 
 ## Boundary (§92)
 

@@ -14,7 +14,7 @@
 | Requirement text | The specification that owns the requirement (each requirement ID appears in exactly one specification) |
 | Requirement index (ID → owner, class, source, stage) | [docs/requirements/registry.md](../requirements/registry.md) |
 | Requirement conventions and classification | [docs/requirements/README.md](../requirements/README.md) |
-| Handoff section → canonical location | [docs/traceability/handoff-coverage.md](../traceability/handoff-coverage.md) |
+| Handoff section → canonical location | Part 1: [docs/traceability/handoff-coverage.md](../traceability/handoff-coverage.md); Part 2: [docs/traceability/part-2-reconciliation.md](../traceability/part-2-reconciliation.md) |
 | Systems and ownership | [docs/architecture/system-registry.md](system-registry.md) |
 | Dependencies | [docs/architecture/dependency-map.md](dependency-map.md) |
 | Roadmap and stage mapping | [docs/roadmap/roadmap.md](../roadmap/roadmap.md) |
@@ -24,7 +24,9 @@
 | Terminology | [docs/glossary.md](../glossary.md) |
 | Technology stack | [docs/architecture/technology-stack.md](technology-stack.md) |
 | Operating values and their classification | [docs/requirements/values-register.md](../requirements/values-register.md) |
-| Original handoffs (HISTORICAL, not active) | [docs/handoffs/](../handoffs/part-1-core-platform-features.md) |
+| Original handoffs (HISTORICAL, not active) | [Part 1](../handoffs/part-1-core-platform-features.md), [Part 2](../handoffs/part-2-consolidated-additional-systems.md), and the owner's directives in [docs/handoffs/](../handoffs/owner-correction-01-autonomous-operating-defaults.md) |
+| Non-negotiable platform principles (index) | [docs/product/platform-overview.md](../product/platform-overview.md) (ARCH-028) |
+| Documentation generator and checker | [tools/docs/](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) |
 
 ## Product domains
 
@@ -62,10 +64,49 @@ Direct answers to §100's "where does … authority live?":
 | Transfer execution | SYS-10 Execution Engine | EXE-009 — [execution-engine.md](../systems/execution-engine.md) |
 | Restart recovery sequence | SYS-11 Recovery and Reconciliation | REC-014 to REC-018 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Active execution instance (lease) | SYS-11 Recovery and Reconciliation | REC-013, EXE-010 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
-| Canary readiness, approval, and scaling | SYS-14 Strategy Management (Governance and Readiness Engine) | STR-013 to STR-022 — [strategy-management.md](../systems/strategy/strategy-management.md) |
+| Canary readiness, approval, and scaling | SYS-34 Readiness System (the Governance and Readiness Engine) for readiness and approval; SYS-14 for the lifecycle stage | STR-013 to STR-022 — [strategy-management.md](../systems/strategy/strategy-management.md) |
 | Autonomy boundaries | SYS-12 Policy System | POL-011 — [policy-system.md](../systems/policy/policy-system.md) |
 | Realized financial history (P&L, fees, transfers, balances) | SYS-33 Trading Ledger | LED-004, LED-006 — [custody-and-ledger.md](../systems/custody-and-ledger.md) |
 | Operating mode | SYS-12 Policy System | POL-008 — [policy-system.md](../systems/policy/policy-system.md) |
 | Trading universe | SYS-05 with SYS-12 exclusions | OPP-009 — [opportunity-detection.md](../systems/opportunity-detection.md) |
 | Allocation ranking | SYS-07 Global Capital Authority | CAP-017 — [capital-management.md](../systems/capital-management.md) |
 | Regime state | SYS-04 Market Regime Engine | RGM-006 — [market-regime-engine.md](../systems/market-regime-engine.md) |
+
+## Canonical authorities (ARCH-027)
+
+Part 2 requires exactly one of each fundamental authority (P2§184). Each has one owner:
+
+| Authority (P2§184) | Owner | Canonical rule |
+|---|---|---|
+| Capital Authority | SYS-07 Global Capital Authority | CAP-001, CAP-017 — [capital-management.md](../systems/capital-management.md) |
+| Risk Authority | SYS-09 Risk Engine | RSK-001, RSK-012 — [risk-engine.md](../risk/risk-engine.md) |
+| Portfolio Authority | SYS-08 Portfolio Management | PRT-001, PRT-003 — [portfolio-management.md](../systems/portfolio-management.md) |
+| Policy Authority | SYS-12 Policy System | POL-002, POL-009, NLP-003 — [policy-system.md](../systems/policy/policy-system.md) |
+| Fee Engine | SYS-03 Quantitative Engine | QNT-005, QNT-007 — [quantitative-engine.md](../systems/quantitative-engine.md) |
+| Slippage Engine | SYS-03 Quantitative Engine | QNT-006, QNT-007 — [quantitative-engine.md](../systems/quantitative-engine.md) |
+| Exchange abstraction | SYS-01 Exchange Adapter Layer | EXA-004, EXA-011 — [exchange-adapters.md](../systems/exchange-adapters.md) |
+| Audit system | SYS-30 Auditability / Event and Decision History | AUD-005, AUD-012 — [audit-and-event-history.md](../systems/audit-and-event-history.md) |
+| Market-data normalization layer | SYS-02 Market-Data Infrastructure | MKD-011 — [market-data.md](../systems/market-data.md) |
+| Strategy Registry | SYS-14 Strategy Management | STR-023 — [strategy-management.md](../systems/strategy/strategy-management.md) |
+| Readiness System | SYS-34 Readiness System | RDY-001, RDY-006 — [readiness-system.md](../systems/readiness-system.md) |
+| Opportunity Registry (Opportunity Database) | SYS-05 Opportunity Detection Engine | OPP-016 — [opportunity-detection.md](../systems/opportunity-detection.md) |
+
+Other Part 2 concepts and where they are defined:
+
+| Concept | Owner | Canonical rule |
+|---|---|---|
+| Deterministic core vs AI layer, responsibility table | Platform architecture | ARCH-019 to ARCH-022 — [overview.md](overview.md) |
+| AI Resource & Decision Governor | SYS-22 (AI gateway) | AIL-008, AIL-009 — [ai-architecture.md](../ai/ai-architecture.md) |
+| Paper trading architecture, simulated capital | SYS-16 Paper Trading (capital state in SYS-07) | PAP-004 to PAP-012 — [paper-trading.md](../systems/strategy/paper-trading.md) |
+| Readiness states, evidence, blockers | SYS-34 Readiness System | RDY-002 to RDY-005 — [readiness-system.md](../systems/readiness-system.md) |
+| Daily System Intelligence Dashboard and Report | SYS-28 Monitoring and Observability | DSI-001 to DSI-006 — [daily-system-intelligence.md](../operations/daily-system-intelligence.md) |
+| Incident records | SYS-28 Monitoring and Observability | INC-001 to INC-003 — [incident-management.md](../operations/incident-management.md) |
+| Hosting, portability, migration, backup, disaster recovery | Hosting, backup, and migration set | MIG-001 to MIG-028 — [hosting-and-migration.md](../operations/hosting-and-migration.md) |
+| Active execution authority across hosts, split-brain, standby, failover | SYS-11 Recovery and Reconciliation | REC-019 to REC-022 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
+| Environments (canary is a production stage) | Deployment and operational readiness | OPS-004, OPS-013 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |
+| Platform verification (performance, load, chaos) | Verification set | VER-001 to VER-003 — [verification-architecture.md](verification-architecture.md) |
+| Data quality, quarantine, lineage | SYS-02 Market-Data Infrastructure | MKD-008 to MKD-010 — [market-data.md](../systems/market-data.md) |
+| Decision lineage | SYS-30 | AUD-012 — [audit-and-event-history.md](../systems/audit-and-event-history.md) |
+| Strategy drift, missed and false opportunities | SYS-21 Performance Controller | PFC-009, PFC-012, PFC-013 — [performance-controller.md](../systems/performance-controller.md) |
+| Loss-streak and excessive-trading protection, NO NEW POSITIONS | SYS-09 Risk Engine | RSK-026 to RSK-029 — [risk-engine.md](../risk/risk-engine.md) |
+| Policy hierarchy (user hard policy vs system safety) | SYS-09 / SYS-12 | RSK-004 in force; **CF-14 OPEN** — [findings register](../conflicts/register.md) |

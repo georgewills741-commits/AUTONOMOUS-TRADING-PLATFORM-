@@ -1,6 +1,6 @@
 # AI Agents
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented. **Final roster decided: AGT-016 ([DEC-013](../decisions/DEC-013-ai-organization.md)).** · **System:** SYS-23 · **Roadmap stage:** AI INTELLIGENCE ("Agents", "Trading Director", "Devil's Advocate") · **Sources:** §54–§60
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented. **Final roster decided: AGT-016 ([DEC-013](../decisions/DEC-013-ai-organization.md)).** · **System:** SYS-23 · **Roadmap stage:** AI INTELLIGENCE ("Agents", "Trading Director", "Devil's Advocate") · **Sources:** §54–§60
 >
 > §99 sketches `docs/ai/agents/` as a folder. One file is enough for Part 1's content; the split can happen when agent specifications grow (DEC-002).
 
@@ -67,6 +67,33 @@ The formal lifecycle is STR-001 in [Strategy Management](../systems/strategy/str
 
 - **AGT-014** Performance Analyst · SYSTEM REQUIREMENT · §60 — Evaluates: strategy performance; trade outcomes; drawdown; execution quality; expected vs actual; opportunity quality; strategy deterioration; missed opportunities; model contribution.
 - **AGT-015** Problem attribution · CONFIRMED REQUIREMENT · §60 — It must distinguish: strategy problem vs execution problem vs market problem vs data problem vs model problem vs infrastructure problem.
+
+## Roles and who performs them (Handoff Part 2)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Where each Part 2 section went: [Part 2 reconciliation](../traceability/part-2-reconciliation.md).
+
+- **AGT-017** Previously discussed roles retained · CONFIRMED REQUIREMENT · P2§6, P2§200 — The previously discussed roles remain: Market Analyst; Quant Research Agent; Strategy Research Agent; Trading Director; Devil's Advocate; Performance Analyst; Strategy Optimizer; Model Evaluation Agent; AI Cost Manager. Final decomposition must be based on documented ownership.
+- **AGT-018** New agents need documented boundaries · CONSTRAINT · P2§6 — Additional agents must only be introduced after responsibility boundaries are documented. Multiple agents with substantially overlapping ownership must be avoided.
+- **AGT-019** What the Trading Director may do · SYSTEM REQUIREMENT · P2§7, P2§201 — The Trading Director may: interpret validated information; consider strategy context; consider market context; produce structured trade proposals; explain reasoning; request additional analysis; coordinate specialized agents.
+- **AGT-020** What the Trading Director must not do · CONSTRAINT · P2§7, P2§201 — The Trading Director must not: submit unrestricted orders; override risk; override capital authority; override user hard policy; modify financial records; change production strategy outside the approved improvement process; bypass deterministic execution validation.
+- **AGT-021** Additional analysis areas · SYSTEM REQUIREMENT · P2§73 — In addition to AGT-014, the Performance Analyst analyzes: rejection quality; false opportunities; slippage; fees; latency; regime-specific behavior.
+- **AGT-022** Permission scopes · SYSTEM REQUIREMENT · P2§110, P2§299 — Each role has minimum-privilege permission scopes. Examples: Market Analyst — read market information; Strategy Research — read historical data; Trading Director — read validated decision context and create proposals; Performance Analyst — read execution/performance data; Strategy Optimizer — create research candidates. The prohibitions that apply to every research agent are in SEC-008.
+
+The documented decomposition (AGT-017) is the one of [DEC-013](../decisions/DEC-013-ai-organization.md): five agents plus three deterministic services (Model Router, Model Evaluation, AI Cost Manager). [DEC-024](../decisions/DEC-024-part-2-reconciliation.md) confirms it against Part 2 (DUP-23). Every role is kept; none is dropped. AGT-017 does not revive AGT-001: that list of separate agents stays replaced by AGT-016. AGT-017 keeps the roles, and the table shows which agent or service performs each.
+
+| Role (P2§6) | Performed by |
+|---|---|
+| Market Analyst | Market Analyst agent (AGT-008) |
+| Quant Research Agent | Research Agent, quantitative-research tasks (AGT-010) |
+| Strategy Research Agent | Research Agent, strategy-research tasks (AGT-012), inside the Strategy Factory (STR-012) |
+| Strategy Optimizer | Research Agent, optimization tasks (AGT-012), inside the Strategy Factory (STR-012) |
+| Trading Director | Trading Director agent (AGT-004, AGT-019, AGT-020) |
+| Devil's Advocate | Devil's Advocate agent (AGT-006) |
+| Performance Analyst | Performance Analyst agent (AGT-014, AGT-021) |
+| Model Evaluation Agent | Deterministic Model Evaluation service (MEV-003, MEV-004); AI analysis of the results by the Performance Analyst ("model contribution", AGT-014) |
+| AI Cost Manager | Deterministic AI Cost Manager service (COST-002), enforced by the AI Resource & Decision Governor (AIL-009) |
+
+When the Research Agent works on a task, it holds only the permission scope of the role that task belongs to (AGT-022). The Trading Director's "coordinate specialized agents" means coordinating analysis for a trade proposal (the AIV-007 chain). Research coordination belongs to the Strategy Factory (STR-012).
 
 ## Rules that apply to every agent
 

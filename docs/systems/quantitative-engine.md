@@ -1,6 +1,6 @@
 # Quantitative Engine
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-03 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION · **Sources:** §12
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-03 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION · **Sources:** §12
 
 Canonical definition of the platform's deterministic calculations.
 
@@ -15,6 +15,14 @@ Precision rules for all financial calculations are defined in the [architecture 
 ## Decisions applied (2026-09-30)
 
 - **QNT-004** Primitive metrics only · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This engine computes primitive metrics: fees, spread, slippage estimates, indicators, and sizing calculations. Combining costs into the true net expected result belongs only to the True Net-Profit Engine (TNP-017).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **QNT-005** Fee Engine · SYSTEM REQUIREMENT · P2§30 — Fees must be calculated deterministically. The Fee Engine should account for applicable: venue; instrument; maker/taker status; fee schedule; trading tier; funding; transfer costs where relevant. AI may interpret fee implications but cannot become the authoritative fee calculator.
+- **QNT-006** Slippage Engine · SYSTEM REQUIREMENT · P2§31 — The Slippage Engine should model expected execution effects. Where data permits, it considers: order-book depth; order size; liquidity; volatility; spread; execution type; market impact; historical execution behavior.
+- **QNT-007** Fee and Slippage Engines live here · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — The Fee Engine and the Slippage Engine are components of this engine, which already computes fees and slippage estimates as primitive metrics (QNT-004). There is one of each (ARCH-027). The True Net-Profit Engine combines their outputs (TNP-017), and fee metadata comes from the exchange adapters (EXA-012).
 
 ## Boundary (§92)
 

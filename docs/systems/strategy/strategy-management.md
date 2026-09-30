@@ -1,6 +1,6 @@
 # Strategy Management (Lifecycle, Strategy Factory, Versioning)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-14 · **Category:** shared infrastructure ("Strategy lifecycle", §04) · **Roadmap stage:** DIRECTIONAL TRADING ("Strategy lifecycle"), although it serves all trading systems (CF-05) · **Sources:** §34–§38
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-14 · **Category:** shared infrastructure ("Strategy lifecycle", §04) · **Roadmap stage:** DIRECTIONAL TRADING ("Strategy lifecycle"), although it serves all trading systems (CF-05) · **Sources:** §34–§38
 
 Canonical definition of how strategies are researched, validated, promoted, versioned, improved, and retired, and of what research may and may not touch.
 
@@ -53,6 +53,22 @@ STR-011 (canary: 5% for 14 days and 50 trades) is replaced by STR-013 to STR-018
 - **STR-022** Gates cannot be bypassed · CONSTRAINT · DEC-023 — No AI agent or human may bypass the deterministic safety gates. Failure of any mandatory gate prevents canary deployment and places the strategy into a blocked / readiness-failed state until the required conditions are satisfied.
 
 The Governance and Readiness Engine is a component of this system (SYS-14), not a separate system ([DEC-023](../../decisions/DEC-023-autonomous-canary-approval.md)). It issues the "canary authorization" named in STR-013.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../../decisions/DEC-024-part-2-reconciliation.md).
+
+- **STR-023** Strategy Registry · SYSTEM REQUIREMENT · P2§20, P2§210 — Every strategy should have a canonical identity in the Strategy Registry. At minimum: strategy ID; version; description; objective; applicable markets; applicable regimes; risk profile; parameters; dependencies; validation history; status; creation timestamp; approval status; retirement status.
+- **STR-024** Lifecycle states · SYSTEM REQUIREMENT · P2§20 — The lifecycle may include the states: DRAFT; RESEARCH; BACKTESTED; VALIDATING; PAPER; APPROVED; CANARY; PRODUCTION; SUSPENDED; RETIRED.
+- **STR-025** Strategy version immutability · CONSTRAINT · P2§21, P2§211 — Once used for important production decisions, a strategy version must remain reconstructable. Parameter changes must create a new version. Historical versions must not be silently rewritten.
+- **STR-026** Experiment reproducibility · CONFIRMED REQUIREMENT · P2§119 — Experiments should record: dataset version; code version; strategy version; parameters; model/version; configuration; random seeds where applicable; environment; results. A historical experiment should be reproducible as closely as technically possible.
+
+Notes:
+
+- **One lifecycle.** Part 2 describes the lifecycle in five places (P2§19 Strategy Factory, §68 paper → readiness → canary → production, §107 controlled self-improvement, §209, §317). Each is a view of STR-001 and STR-009 at a different level of detail, not a second lifecycle (DUP-29). Part 2's "READINESS REVIEW" is the APPROVAL stage of STR-001.
+- **Governance and Readiness Engine.** It is now registered as its own system, SYS-34 [Readiness System](../readiness-system.md), because Part 2 makes it a canonical authority that aggregates evidence from many systems and covers system changes as well as strategies ([DEC-024](../../decisions/DEC-024-part-2-reconciliation.md), DUP-24). STR-019 to STR-022 stay here: they govern this lifecycle's APPROVAL stage, which that system performs.
+- **Lifecycle state vs readiness.** This system's Strategy Registry records which lifecycle stage a strategy version is in (STR-024). The Readiness System records whether the evidence allows it to progress (RDY-004, RDY-007).
+- The Strategy Registry is the canonical registry of ARCH-027.
 
 ## Boundary (§92)
 

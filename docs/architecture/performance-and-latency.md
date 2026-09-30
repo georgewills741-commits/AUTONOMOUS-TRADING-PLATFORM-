@@ -1,6 +1,6 @@
 # Performance, Latency and Continuous Operation
 
-> **Status:** DOCUMENTED (Handoff Part 1) — no measurements exist yet · **Owner:** cross-cutting · **Roadmap stage:** OPERATIONALIZATION ("Performance engineering", §95), but §76 requires it from architecture design onward · **Sources:** §75–§78
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — no measurements exist yet · **Owner:** cross-cutting · **Roadmap stage:** OPERATIONALIZATION ("Performance engineering", §95), but §76 requires it from architecture design onward · **Sources:** §75–§78
 
 ## Requirements
 
@@ -26,6 +26,18 @@ PERF-007 is replaced by PERF-008 to PERF-012. Its 50 ms / 500 ms figures remain 
 - **PERF-012** Hard limits, soft targets, observed measurements · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — Performance values are distinguished as hard limits (crossing them may make execution unsafe), soft targets (optimization goals), or observed measurements (what the system actually experiences). Design numbers are never mistaken for guaranteed real-world performance.
 
 Placement (builder): the Performance Controller detects degradation (PFC-003); the Risk Engine applies the PERF-011 restrictions through safety levels (RSK-015). How latency enters opportunity economics is TNP-023.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **PERF-013** Concurrency-safe financial state · CONSTRAINT · P2§122 — The platform must account for concurrent: market events; opportunities; strategies; capital reservations; orders; fills; reconciliation; AI requests. Financial state transitions must be atomic or otherwise concurrency-safe.
+- **PERF-014** Backpressure · CONFIRMED REQUIREMENT · P2§123 — The platform must prevent downstream overload. Possible controls: queues; rate limits; priorities; dropping non-critical work; degradation; resource budgets. Safety-critical processing must have higher priority than research.
+- **PERF-015** Resource priority · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§124, P2§272 — Conceptual priority, highest first: emergency safety; risk; capital integrity; execution; market data; reconciliation; monitoring; live AI; research; background analytics. Exact implementation is an architecture decision.
+- **PERF-016** Research compute isolation · CONSTRAINT · P2§125, P2§271 — Heavy research workloads must not consume resources required by: risk; execution; market-data processing; reconciliation; monitoring. Research workloads should be isolated or resource-limited.
+- **PERF-017** Overhead to minimize · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§344 — Latency-sensitive paths should remain deterministic wherever possible. Minimize: internal computation overhead; unnecessary AI calls; unnecessary network calls; repeated calculations; database bottlenecks; queue congestion; lock contention. Measure performance rather than assuming it.
+
+Atomic capital reservation specifically is CAP-027. Performance, load, and chaos testing (P2§168 to §170) are in the [verification architecture](verification-architecture.md).
 
 ## Findings (all resolved)
 

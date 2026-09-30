@@ -1,6 +1,6 @@
 # System Health, Failure Handling and Controlled Degradation
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91
 
 Canonical definition of the platform health states, the failures the platform must expect, and how it degrades safely.
 
@@ -19,7 +19,7 @@ Canonical definition of the platform health states, the failures the platform mu
 - **HLT-005** Degradation examples · CONFIRMED ARCHITECTURAL PRINCIPLE · §91 — AI unavailable → deterministic capabilities continue where safe. Exchange unavailable → venue restricted → affected strategies restricted → other safe capabilities may continue.
 - **HLT-006** Per-subsystem failure behavior · CONFIRMED REQUIREMENT · §91 — Failure behavior must be defined per subsystem.
 
-HLT-006 is why every system specification has a "failure behavior" field. Part 1 leaves it unspecified for almost every system, so that field is expected from Part 2.
+HLT-006 is why every system specification has a "failure behavior" field. Part 1 leaves it unspecified for almost every system, Part 2 did not supply it either, so each system's failure behavior is specified when its stage is planned (constitution Rule 140).
 
 ## Decisions applied (2026-09-30)
 
@@ -36,6 +36,14 @@ HLT-007 is replaced by HLT-011 and RSK-015. HLT-008 is replaced by RSK-015 to RS
 - **HLT-012** Automatic progression to healthy · CONFIRMED REQUIREMENT · DEC-019 — The platform moves from STARTING through RECOVERING to HEALTHY automatically when the recovery checks pass (REC-011), without operator action. While they do not pass, it stays in RECOVERING, at safety level SAFE MODE or CRITICAL RECOVERY.
 
 References to REC-011 in HLT-012 now resolve to REC-015 and REC-016 ([DEC-022](../decisions/DEC-022-restart-recovery-sequence.md)).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **HLT-013** Clock-drift detection · SYSTEM REQUIREMENT · P2§51 — Time is critical to market data, orders, fills, funding, arbitrage, latency, reconciliation, and backtesting. The system should detect meaningful clock drift.
+
+What the platform does when drift is detected (for example marking data degraded) is specified when DATA FOUNDATION is planned; P2§51 requires detection only.
 
 ## Findings (all resolved)
 

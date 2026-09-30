@@ -1,6 +1,6 @@
 # Performance Controller (Expected vs Actual)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-21 · **Category:** shared infrastructure (§49 is platform-wide) · **Roadmap stage:** ARBITRAGE ("Performance controller"), although it serves all strategies (CF-05) · **Sources:** §48–§50
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-21 · **Category:** shared infrastructure (§49 is platform-wide) · **Roadmap stage:** ARBITRAGE ("Performance controller"), although it serves all strategies (CF-05) · **Sources:** §48–§50
 
 Canonical definition of comparing expected with actual results, detecting deterioration, and keeping model health separate from strategy health.
 
@@ -29,6 +29,24 @@ Model health is measured by [Model Evaluation](../ai/model-management.md) (MEV-0
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
 The controller's detection scope (PFC-003) includes the performance and latency degradation of PERF-011. The reference to RSK-009 in PFC-008 now resolves to RSK-021 to RSK-025 ([DEC-021](../decisions/DEC-021-kill-switch-recovery.md)); a kill switch this controller activates follows their recovery rules. The resulting restrictions are applied by the Risk Engine's safety levels (RSK-015), within PFC-004 and PFC-008.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **PFC-009** Strategy drift · SYSTEM REQUIREMENT · P2§42 — The platform should monitor whether production behavior is diverging from validated strategy behavior. Possible dimensions: win/loss distribution; execution quality; slippage; opportunity frequency; regime distribution; latency; P&L distribution; risk behavior. Significant drift should trigger review or controlled suspension.
+- **PFC-010** Paper expected-vs-observed · SYSTEM REQUIREMENT · P2§63 — The platform should compare expected vs observed paper results. Examples: expected fill price vs observed simulated fill; expected vs observed slippage; expected profitability vs realized paper profitability; expected vs observed opportunity frequency; expected vs observed execution latency; expected vs observed strategy behavior.
+- **PFC-011** Expected values, variance, and cause · CONFIRMED REQUIREMENT · P2§74 — The platform should retain expected values before execution where possible, then compare: expected → actual → variance → cause. Potential causes: slippage; latency; liquidity; fee changes; market movement; strategy assumptions; data quality; execution failure.
+- **PFC-012** Missed-opportunity analysis · SYSTEM REQUIREMENT · P2§75 — The platform should preserve opportunities that were not executed when measurable. Reasons may include: risk rejection; capital unavailable; policy restriction; insufficient net profit; liquidity; latency; exchange degradation; AI uncertainty; execution uncertainty. Later analysis may determine whether the rejection was appropriate.
+- **PFC-013** False-opportunity analysis · SYSTEM REQUIREMENT · P2§76 — The system should analyze opportunities that appeared attractive but failed to produce expected economics, to detect: poor models; bad assumptions; data problems; slippage underestimation; liquidity errors; strategy degradation.
+- **PFC-014** Arbitrage performance tracking · SYSTEM REQUIREMENT · P2§95, P2§224 — For arbitrage, track: expected opportunities; executed opportunities; net profitability; failed opportunities; slippage; execution latency; rebalancing costs; inventory efficiency; expected vs actual. Deterioration may trigger throttling, suspension, review, or recalibration, not uncontrolled live strategy rewriting.
+- **PFC-015** Four-way arbitrage comparison · SYSTEM REQUIREMENT · P2§98 — The arbitrage subsystem should compare: theoretical vs expected executable vs paper observed vs live observed. This helps detect unrealistic arbitrage assumptions.
+
+Notes:
+
+- **Actions.** The controller still acts only through PFC-008: it raises alerts, proposes suspension, trips a configured kill switch, and triggers recalibration. Throttling (PFC-014) and controlled suspension (PFC-009) are applied by the Risk Engine through safety levels (RSK-015) or by Strategy Management, never by rewriting a live strategy (STR-010).
+- **Preserved opportunities** (PFC-012) are records in the Opportunity Database (OPP-014, OPP-015). Interpreting causes is the Performance Analyst's work (AGT-015, AGT-021).
+- **Stage (CF-16).** Paper evidence and the Readiness System, both built in DIRECTIONAL TRADING, need the expected-vs-actual comparison. That core (PFC-001 to PFC-003, PFC-009 to PFC-013) is therefore built in DIRECTIONAL TRADING. The arbitrage-specific tracking (PFC-014, PFC-015) stays in ARBITRAGE ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md)).
 
 ## Boundary (§92)
 

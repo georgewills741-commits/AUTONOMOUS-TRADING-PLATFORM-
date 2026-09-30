@@ -4,7 +4,7 @@
 >
 > Every concrete operating value used by a requirement is listed here with its classification: DEFAULT, DESIGN TARGET, POLICY-CONTROLLED PARAMETER, HARD LIMIT, IMPLEMENTATION CHOICE, or OBSERVED. **No value is a permanent hard-coded requirement**; none has been explicitly approved as one. Where no value is adopted, the operator sets it in the Policy System. Until it is set, the autonomous action that depends on it is outside authorization and does not run (CAP-025, PLT-015).
 >
-> Illustrative examples quoted from a source are **not** operating values: the +0.1% … +5% examples in TNP-006, "1% per day" in TNP-012, and "5% daily return" in TNP-014.
+> Illustrative examples quoted from a source are **not** operating values: the +0.1% … +5% examples in TNP-006, "1% per day" in TNP-012, "5% daily return" in TNP-014, and the "1% per trade", "1% every day", and "5% every day" that Part 2 §34 forbids the architecture to encode.
 
 | ID | Value | Used by | Class | Current value | Notes |
 |---|---|---|---|---|---|
@@ -37,5 +37,9 @@
 | V-27 | Kill-switch cause classification: transient (automatically recoverable) vs latched | RSK-021, RSK-022 | POLICY-CONTROLLED PARAMETER | Baseline from DEC-021 | Unclassified causes are latched (RSK-022) |
 | V-28 | Deployments that require human authorization | STR-021 | POLICY-CONTROLLED PARAMETER | Baseline examples from DEC-023 | Policy must mark them explicitly: brand-new strategy class, material risk-model change, exceptional capital increase, security-sensitive change, unresolved governance exception ([DEC-023](../decisions/DEC-023-autonomous-canary-approval.md)) |
 | V-29 | Confidence required to treat critical state as reconciled | REC-016 | HARD LIMIT (value in policy) | Not set | |
+| V-30 | Loss-streak thresholds and the response at each (reduce exposure, pause, review, cooldown, suspend) | RSK-026 | POLICY-CONTROLLED PARAMETER | Not set | P2§40: "Exact thresholds must be policy/configuration driven" |
+| V-31 | Excessive-trading thresholds (order rate, repeated failed opportunities, churn) and responses | RSK-027 | POLICY-CONTROLLED PARAMETER | Not set | |
+| V-32 | Arbitrage quality-tier boundaries: Tier 1 ≈ ≥1%, Tier 2 ≈ 0.5–1%, Tier 3 ≈ 0.2–0.5%, Tier 4 < ≈0.2% true net | ARB-015 | DEFAULT (analytical reporting categories) | As listed | Categories for analysis and reporting only. They never gate execution (ARB-015, TNP-005, TNP-016) |
+| V-33 | Readiness evidence required for each readiness transition | RDY-002, RDY-004 | POLICY-CONTROLLED PARAMETER | Not set | Includes the canary evidence of V-02 to V-05. Missing evidence means NOT_READY |
 
 To add a value: give it the next V-number, name the requirement that uses it, and classify it. To make any value a permanent hard-coded requirement, the owner must approve it explicitly in a decision record (ARCH-018).

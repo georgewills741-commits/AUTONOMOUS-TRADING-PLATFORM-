@@ -1,6 +1,6 @@
 # Architecture Overview
 
-> **Status:** DOCUMENTED (Handoff Part 1) — conceptual architecture; no implementation exists · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — conceptual architecture; no implementation exists · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98
 >
 > Canonical home for the structural principles that apply to every system. System-specific rules live in each system's own specification; this document links to them rather than restating them.
 
@@ -55,6 +55,52 @@ This summarizes rules defined in the linked documents. It adds no new rules.
 
 AI output crosses into the deterministic side only through validated, structured contracts ([AI output validation](../ai/ai-output-validation.md)), and the deterministic Risk Engine keeps final authority ([risk hierarchy](../risk/risk-engine.md)). The Market Regime Engine is deterministic (RGM-005, [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md)). The technology used for all of this is in the [technology stack](technology-stack.md).
 
+## Deterministic core and AI intelligence layer (Handoff Part 2)
+
+- **ARCH-019** Deterministic core and AI layer are distinct · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§2, P2§196 — The distinction between the deterministic trading core and the AI intelligence layer is a foundational architectural principle and must remain explicit throughout the repository. The deterministic core owns functions where correctness, repeatability, financial accuracy, timing, enforcement, and safety are critical. Where applicable these include: market-data ingestion; WebSocket management; market-data normalization; data validation; data-quality scoring; data quarantine; data lineage; timestamp validation; time synchronization; market-data storage; quantitative calculations; indicators; feature calculations; regime classification; opportunity calculations; true net profitability; fee calculations; slippage calculations; liquidity calculations; market-impact calculations; funding calculations; position sizing; exposure calculations; capital availability; capital reservation; portfolio state; order validation; order execution; exchange communication; order reconciliation; position reconciliation; balance reconciliation; risk limits; capital limits; kill switches; safe modes; no-new-position mode; policy enforcement; audit logging; persistent financial state; backtesting; paper trading; deterministic monitoring; recovery; reconciliation; failure handling. The AI layer provides intelligence where interpretation, research, reasoning, synthesis, or hypothesis generation is useful. Where applicable this includes: market interpretation; research; strategy discovery; hypothesis generation; strategy analysis; news analysis; sentiment/context analysis; complex event interpretation; failure analysis; strategy improvement proposals; research prioritization; model evaluation; opportunity interpretation; portfolio contextual reasoning; Devil's Advocate analysis; trading proposals. AI must not replace deterministic authorities.
+- **ARCH-020** AI is never the financial source of truth · CONSTRAINT · P2§3, P2§197 — AI must never become authoritative for: account balance; available capital; reserved capital; position size; position state; order state; fill state; fees; slippage; P&L; exposure; risk limits; capital reservations; net profitability; ledger balances; reconciliation state; policy enforcement; kill-switch state. AI may interpret these values and may propose actions based on them. It cannot redefine them.
+- **ARCH-021** Deterministic operation without AI · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§4, P2§198 — The core platform should remain capable of performing functions that do not genuinely require intelligence. The normal path is market data → validation → normalization → quant → regime → opportunity → net economics → risk → capital → execution, not market tick → LLM → calculate spread → LLM → calculate fees → LLM → trade. AI is introduced only when interpretation or reasoning is genuinely useful.
+- **ARCH-022** Deterministic/AI responsibility table · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§339 — Responsibilities are divided between the deterministic core and the AI layer as in the table below.
+
+| Responsibility | Deterministic core | AI layer |
+|---|---|---|
+| Market data | Authoritative | Interpret |
+| Indicators | Calculate | Interpret |
+| Fees | Calculate | Explain |
+| Slippage | Calculate | Analyze |
+| Net profitability | Calculate | Interpret |
+| Risk limits | Enforce | Propose/analyze |
+| Capital | Authoritative | Consume information |
+| Position state | Authoritative | Interpret |
+| Order state | Authoritative | Interpret |
+| Execution | Execute | Propose |
+| Policy enforcement | Enforce | Interpret user intent |
+| Strategy research | Support data | Primary intelligence role |
+| Strategy proposal | Validate | Generate |
+| Strategy deployment | Control | Propose |
+| News analysis | Provide source/data | Analyze |
+| Market interpretation | Provide facts | Interpret |
+| Reconciliation | Authoritative | Diagnose |
+| Ledger | Authoritative | Read/analyze |
+| Audit | Authoritative | Contribute metadata |
+| Kill switch | Deterministic | Cannot override |
+| Safe mode | Deterministic | Cannot override |
+| AI selection | N/A | Router/Governor |
+| Model evaluation | Deterministic metrics + AI analysis | Analyze |
+| Research | Infrastructure | Intelligence |
+| Live execution | Deterministic | Advisory/proposal |
+| Self-improvement | Controlled pipeline | Generate candidates |
+| Paper execution | Deterministic simulator | Analyze |
+| Readiness | Authoritative gate | Provide analysis |
+| Dashboard | Deterministic aggregation | Summarize/interpret |
+
+**How the table was read.** In the received handoff the table's cell boundaries were lost (for example "Market dataAuthoritativeInterpret"; see the [historical copy](../handoffs/part-2-consolidated-additional-systems.md), §339). The rows above restore the boundaries at the joins between words; no word was added, removed, or changed. "Router/Governor" in the AI column names the deterministic Model Router and AI Resource & Decision Governor that belong to the AI layer (RTR-003, AIL-009). The "AI analysis" of model evaluation is done by the Performance Analyst (model contribution, AGT-014) on the deterministic metrics of Model Evaluation (MEV-003).
+
+- **ARCH-023** Event-driven architecture · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§126, P2§273 — The system should be event-driven, using events instead of unnecessary polling. Examples: market update → opportunity evaluation; risk state change → strategy evaluation; exchange degradation → venue eligibility change; policy change → policy recompilation; strategy degradation → strategy review.
+- **ARCH-024** End-to-end platform architecture · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§314 — The complete high-level architecture is: user → natural-language policy → policy compiler / validation → structured policy → global platform controller → whole-market universe → market data → data validation → quantitative engine → regime engine → opportunity engine → opportunity filter → strategy engine → AI intelligence when justified → trade / opportunity proposal → deterministic validation → risk authority → capital authority → execution engine → exchange adapter → venue → reconciliation → portfolio / ledger → monitoring → performance analysis → controlled improvement → validation → paper → canary → production.
+
+ARCH-021 and ARCH-024 are conceptual flows, like ARCH-008. The runtime order of the pre-trade steps stays the one in [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md): the Global Capital Authority checks availability, the Risk Engine authorizes and sizes, and only then is capital reserved. Part 2's "risk → capital" matches that order, since risk authorizes before capital is reserved (DEC-024). The "global platform controller" is named but not defined anywhere; it is open question OQ-24.
+
 ## Market monitoring vs operational monitoring
 
 - **ARCH-005** Two kinds of monitoring · CONFIRMED ARCHITECTURAL PRINCIPLE · §08 — The system must distinguish Market Monitoring ("What is happening across the trading universe?") from Operational Monitoring ("Is the platform itself functioning correctly?"). These must remain separate.
@@ -80,7 +126,27 @@ Failure handling and controlled degradation are defined in [System Health](../op
 
 Where these are applied: the §94 example chain and every recorded dependency are in the [dependency map](dependency-map.md) (ARCH-014); classification rules are in the [requirements README](../requirements/README.md) (ARCH-015); the canonical location of every concept is in the [source-of-truth map](source-of-truth-map.md) (ARCH-017).
 
-Every system specification in `docs/systems/`, `docs/risk/`, `docs/ai/`, `docs/security/` and `docs/operations/` records the §92 fields that Part 1 supplies and lists the rest as not yet specified. Part 2 is expected to provide interfaces and contracts (§103 closing note).
+Every system specification in `docs/systems/`, `docs/risk/`, `docs/ai/`, `docs/security/` and `docs/operations/` records the §92 fields that Part 1 supplies and lists the rest as not yet specified. Part 2 did not provide interfaces or contracts; they are defined contract-first when each stage is planned (ARCH-025).
+
+## Contracts, governance, and consistency (Handoff Part 2)
+
+- **ARCH-025** Contract-first development · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§120 — Core interfaces should be defined before implementations where practical. Examples: market-data contract; order contract; position contract; risk contract; capital contract; opportunity contract; strategy contract; AI tool contract; exchange adapter contract.
+- **ARCH-026** Interface versioning · CONSTRAINT · P2§121 — Important interfaces should support versioning. Breaking changes must be explicit. Historical data and strategies must not silently break because an interface changed.
+- **ARCH-027** Canonical authorities · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§184, P2§293 — Fundamental authorities are centralized. There is one each of: Capital Authority; Risk Authority; Portfolio Authority; Policy Authority; Fee Engine; Slippage Engine; exchange abstraction; audit system; market-data normalization layer; Strategy Registry; Readiness System; Opportunity Registry. Specialized systems may operate above these authorities.
+- **ARCH-028** Central non-negotiable principles · CONFIRMED REQUIREMENT · P2§174, P2§295 — Central non-negotiable principles should be documented. Part 2 names: deterministic core; AI boundary; capital preservation; risk precedence; no fixed returns; true net profitability; unknown-state safety; controlled self-improvement; auditability; reconciliation; no duplicate authorities. Final naming is an architecture decision.
+- **ARCH-029** No silent requirement promotion · CONSTRAINT · P2§181, P2§290 — A previously discussed idea must not automatically become an approved production requirement; ideas remain ideas until approved. For example, platform-managed accounts remain an architectural option unless formally approved.
+- **ARCH-030** Requirements registry fields · CONFIRMED REQUIREMENT · P2§179, P2§288, P2§336 — There is one canonical requirements registry, and all approved requirements eventually enter it. Each requirement should contain: requirement ID; description; source; classification; owner; system; dependencies; status; priority; roadmap stage; verification method; related documents; approval state.
+- **ARCH-031** Master traceability chain · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§187, P2§337 — One traceability system should connect: source → requirement → architecture → system → implementation → test → verification → roadmap → approval.
+- **ARCH-032** Consistency system · CONFIRMED REQUIREMENT · P2§173, P2§294 — The project should eventually have a mechanism for detecting contradictions between: requirements; architecture; interfaces; schemas; strategies; policies; roadmap; tests; documentation. Exact implementation remains an architecture decision.
+- **ARCH-033** Change-impact identification · CONFIRMED REQUIREMENT · P2§175, P2§296 — When a requirement changes, the affected architecture, interfaces, schemas, tests, roadmap, and documentation should be identified.
+- **ARCH-034** Domain command language · PROPOSED · P2§176, P2§297 — A compact structured command language may eventually reduce repetitive orchestration. It must never bypass validation, authorization, audit, policy, risk, or schema validation. It remains a proposal until formally approved.
+
+Where these stand today:
+
+- **ARCH-027:** the one owner of each authority is listed in the [source-of-truth map](source-of-truth-map.md#canonical-authorities-arch-027).
+- **ARCH-028:** the principles index is in the [platform overview](../product/platform-overview.md#non-negotiable-platform-principles-p2174-p2295-arch-028).
+- **ARCH-030:** the [registry](../requirements/registry.md) holds ID, title, source, class, owner/system, specification, stage, status, and approval state. Dependencies are recorded between systems in the [dependency map](dependency-map.md); they will be recorded per requirement when interfaces are designed. The verification method is assigned when each stage is planned (constitution Rule 140). No priority is invented: order comes from the roadmap's dependency sequence (RMP-002, RMP-011).
+- **ARCH-032, ARCH-033:** the documentation checker in [`tools/docs/`](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) is the first increment. It checks the documentation only, not code, schemas, or tests.
 
 ## Operating values ([DEC-020](../decisions/DEC-020-value-classification.md))
 

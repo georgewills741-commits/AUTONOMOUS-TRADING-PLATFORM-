@@ -1,6 +1,7 @@
 # DEC-016 — Roadmap stage sequence and placement
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
+- **Later changes:** the Performance Controller's core moves to DIRECTIONAL TRADING ([DEC-024](DEC-024-part-2-reconciliation.md), CF-16); its arbitrage tracking stays in ARBITRAGE.
 - **Date:** 2026-09-30
 - **Resolves:** CF-05, CF-06
 

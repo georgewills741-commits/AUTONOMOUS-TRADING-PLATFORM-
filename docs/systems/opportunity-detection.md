@@ -1,6 +1,6 @@
 # Opportunity Detection Engine (Whole-Universe Market Monitoring)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-05 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market universe", "Opportunity monitoring") · **Sources:** §08, §09
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-05 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market universe", "Opportunity monitoring") · **Sources:** §08, §09
 
 Canonical definition of how the platform watches its whole authorized trading universe and finds candidate opportunities. This is **market monitoring**. It is separate from operational monitoring (ARCH-005).
 
@@ -24,6 +24,17 @@ Canonical definition of how the platform watches its whole authorized trading un
 - **OPP-010** Single owner of market monitoring · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This engine is the only owner of market monitoring (§08 and §09 describe one system). Exchange health belongs to operational monitoring (SYS-28).
 - **OPP-011** Detection, not allocation ranking · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This engine detects and filters candidates. Economic quality comes from the True Net-Profit Engine (TNP-021), and ranking for capital is done by the Global Capital Authority (CAP-017).
 - **OPP-012** Tiered monitoring · SYSTEM REQUIREMENT · DEC-017 — Every market in the universe is monitored at ticker level. Full order-book depth is subscribed for markets the scanner flags as candidates, within venue rate limits.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **OPP-013** Bounded whole-market scanning · CONSTRAINT · P2§24 — The platform should evaluate the relevant market universe rather than only a manually selected small set. Whole-market scanning must remain bounded by: data quality; liquidity; venue availability; resource constraints; risk policy; market eligibility. The exact universe-selection architecture must be documented.
+- **OPP-014** Opportunity Database · SYSTEM REQUIREMENT · P2§27, P2§214 — Important opportunities should be retained. Records may include: opportunity ID; timestamp; market; venue; strategy; expected economics; true net economics; required capital; liquidity; risk; decision; rejection reason; execution result; expected result; actual result; missed-opportunity status; data/evidence references; strategy version; policy version. Both executed and rejected opportunities must be preserved.
+- **OPP-015** Rejected opportunities are data · CONFIRMED REQUIREMENT · P2§28, P2§215 — Rejected opportunities must be preserved for analysis. They are necessary for analyzing: correct rejection; over-rejection; under-rejection; capital constraints; risk constraints; data problems; latency; liquidity; policy restrictions; execution constraints.
+- **OPP-016** One platform-wide Opportunity Database · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — This engine owns the single Opportunity Database, the "Opportunity Registry" of ARCH-027. Like the arbitrage opportunity database it now includes (ARB-003, ARB-014), it is an analytical store derived from the event and decision history and linked to it by event identifiers. Arbitrage records are the arbitrage view of this database, not a second database.
+
+**Universe-selection architecture (OPP-013).** What is in the universe: OPP-009. How it is monitored: ticker level for every market, full depth for candidates (OPP-012). What bounds it: OPP-013. What screens events before deeper processing: the Opportunity Filter, a fast deterministic filter (OPP-005, OPP-008; P2§25). The candidate-promotion rules, tier thresholds, and resource budgets are specified when DATA FOUNDATION is planned.
 
 ## Boundary (§92)
 

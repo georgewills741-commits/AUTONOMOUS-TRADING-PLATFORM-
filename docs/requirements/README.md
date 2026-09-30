@@ -6,7 +6,8 @@
 
 - **Requirement text** lives in exactly one place: the specification that owns it. Specifications are listed in the [system registry](../architecture/system-registry.md).
 - **The [registry](registry.md)** is an index: ID, title, class, handoff source, owner, canonical document, and roadmap stage. It never restates requirement text.
-- **Coverage** (which handoff sections produced which requirements) is in [handoff coverage](../traceability/handoff-coverage.md).
+- **Coverage** (which handoff sections produced which requirements) is in [handoff coverage](../traceability/handoff-coverage.md) for Part 1 and the [Part 2 reconciliation](../traceability/part-2-reconciliation.md) for Part 2.
+- **Generation:** the registry and the coverage tables are generated and checked by [`tools/docs/build_index.py`](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)).
 
 ## Line format
 
@@ -16,7 +17,7 @@ Every requirement in a specification is one Markdown list item:
 - **XYZ-001** Short title · CLASS · §NN — Requirement text, keeping the handoff's own wording and modal verbs.
 ```
 
-The parts are: ID · short title · class · source — requirement text. The source is a handoff section (`§NN`), or a decision record (`DEC-NNN`) for requirements created by a decision. Requirements from a decision sit under a "Decisions applied" heading in the owning specification.
+The parts are: ID · short title · class · source — requirement text. The source is a Part 1 handoff section (`§NN`), a Part 2 handoff section (`P2§N`), or a decision record (`DEC-NNN`) for requirements created by a decision. Several sections may be cited, separated by commas. Requirements from a decision sit under a "Decisions applied" heading in the owning specification.
 
 ## IDs
 
@@ -54,7 +55,7 @@ All requirements are **DOCUMENTED**: recorded, not implemented, not verified. Wh
 ## Adding or changing a requirement
 
 1. Add or edit the line in the owning specification. Search first for an existing equivalent (constitution Rule 37).
-2. Update the [registry](registry.md) row.
-3. Update [handoff coverage](../traceability/handoff-coverage.md) if the source is a handoff section; cite the decision record if the source is a decision.
+2. Do not edit the [registry](registry.md) by hand; it is generated.
+3. Run `python3 tools/docs/build_index.py`: it rebuilds the registry and coverage. For a Part 2 source, also fill the hand-written column of the [Part 2 reconciliation](../traceability/part-2-reconciliation.md) if the section's disposition changes. Cite the decision record if the source is a decision.
 4. Record any decision, conflict, or open question in the matching register.
 5. Add any concrete value to the [values register](values-register.md) with its classification.

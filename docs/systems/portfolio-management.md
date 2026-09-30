@@ -1,6 +1,6 @@
 # Portfolio Management
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-08 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION · **Sources:** §24
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-08 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION · **Sources:** §24
 
 Canonical definition of the platform's single portfolio view.
 
@@ -14,6 +14,14 @@ Canonical definition of the platform's single portfolio view.
 
 - **PRT-004** Capital and realized P&L are read-only here · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — Allocated, reserved, and available capital shown in the portfolio are read from the Global Capital Authority; realized P&L is read from the ledger. The portfolio owns only the positions and exposure views.
 - **PRT-005** Derivatives and margin exposure · SYSTEM REQUIREMENT · DEC-007 — The portfolio also tracks leverage, notional exposure, margin, liquidation prices, and funding and borrow accruals for derivatives and margin positions.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **PRT-006** P&L attribution · SYSTEM REQUIREMENT · P2§99 — P&L should be attributable where possible to: strategy; venue; market; asset; trade; opportunity; arbitrage route.
+
+P2§43 (one Portfolio Authority) is PRT-001 to PRT-003. Realized P&L comes from the ledger (PRT-004, LED-006), so attributing it requires ledger entries that carry the strategy, opportunity, and route identifiers.
 
 ## Boundary (§92)
 

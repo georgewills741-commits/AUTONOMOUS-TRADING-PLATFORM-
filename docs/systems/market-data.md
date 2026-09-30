@@ -1,6 +1,6 @@
 # Market Data Infrastructure
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10
 
 Canonical definition of market-data ingestion, validation, normalization, and quality.
 
@@ -16,6 +16,17 @@ Canonical definition of market-data ingestion, validation, normalization, and qu
 - **MKD-005** Evidence identifiers · CONFIRMED REQUIREMENT · DEC-013 — Every stored data item and calculation output carries a stable identifier, its source, and its timestamp, so that AI claims can cite it (AIV-001).
 - **MKD-006** Freshness limits · CONSTRAINT · DEC-012 — Each market-data stream has a freshness limit. Data older than its limit is marked stale, and nothing may trade on stale data.
 - **MKD-007** Storage and retention · SYSTEM REQUIREMENT · DEC-009 — Market data is kept in TimescaleDB for 30 days and permanently in compressed Parquet archives (OHLCV, trades, order-book snapshots) for backtesting (TEC-006, TEC-012).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **MKD-008** Validation before authority · CONFIRMED REQUIREMENT · P2§49, P2§2 — Market data must be validated before being treated as authoritative, and data-quality scoring is deterministic. In addition to MKD-004, checks may include: sequence continuity; impossible prices; stale data; cross-source inconsistencies.
+- **MKD-009** Data quarantine · CONFIRMED REQUIREMENT · P2§49 — Invalid data may enter DATA QUARANTINE rather than contaminating the trading path.
+- **MKD-010** Data lineage · CONFIRMED REQUIREMENT · P2§50 — Important calculations and decisions should be traceable to: source; timestamp; dataset; data version; processing version; feature version; strategy version; policy version.
+- **MKD-011** Single market-data normalization layer · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — This system is the one market-data normalization layer of ARCH-027. Adapters translate venue formats into canonical objects (EXA-013); validation, deduplication, ordering, quality scoring, and quarantine happen here, once.
+
+Decision lineage from market event to result is AUD-012; MKD-010 is its data side and extends the evidence identifiers of MKD-005. Clock-drift detection (P2§51) is HLT-013.
 
 ## Boundary (§92)
 

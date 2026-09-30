@@ -1,6 +1,6 @@
 # Risk Engine, Risk Hierarchy and No-Trade Outcomes
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-09 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Risk") · **Sources:** §25–§27
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-09 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Risk") · **Sources:** §25–§27
 >
 > Canonical location for risk per §98 (`docs/risk/`).
 
@@ -51,7 +51,7 @@ Part 1 calls §27 the "No-Trade / Uncertainty System" without naming an owner. I
 - **RSK-019** Idempotent emergency actions · CONSTRAINT · DEC-019 — Emergency handling must be safe if triggered multiple times: a repeated trigger must not create duplicate actions or unintended orders. Emergency operations are idempotent, auditable, deterministic, retry-safe, and reconciliation-aware.
 - **RSK-020** Safety-level ownership and de-escalation · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — The Risk Engine's emergency controller owns the current safety level. The level is global; its actions are scoped to the affected venues, strategies, and instrument types. It escalates automatically when a deterministic rule fires. It de-escalates automatically when the triggering condition has cleared and the required checks pass (REC-011), except where PLT-014 reserves the condition for a human. Kill-switch reset stays governed by RSK-009 until CF-11 is decided.
 
-CF-11 was decided by [DEC-021](../decisions/DEC-021-kill-switch-recovery.md): kill-switch reset now follows RSK-021 to RSK-025, and references to RSK-009 resolve there. The recovery checks referred to as REC-011 are now REC-015 and REC-016 ([DEC-022](../decisions/DEC-022-restart-recovery-sequence.md)).
+CF-11 was decided by [DEC-021](../decisions/DEC-021-kill-switch-recovery.md): kill-switch reset now follows RSK-021 to RSK-025, and references to RSK-009 resolve there. The recovery checks referred to as REC-011 are now REC-015 and REC-016 ([DEC-022](../decisions/DEC-022-restart-recovery-sequence.md)). RSK-010's last rule refers to SEC-003, which is replaced; its no-withdrawal rule for trading credentials is carried into SEC-006 ([DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)).
 
 ## Owner decisions applied (CF-11 to CF-13, 2026-09-30)
 
@@ -65,13 +65,34 @@ RSK-009 is replaced by RSK-021 to RSK-025 ([DEC-021](../decisions/DEC-021-kill-s
 
 The cause classification (transient vs latched), the cleared-condition period, the repeated-trip limit, and the limited-recovery stages are policy values V-24 to V-27 in the [values register](../requirements/values-register.md).
 
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **RSK-026** Loss-streak protection · SYSTEM REQUIREMENT · P2§40 — The system should support configurable protection against repeated losses. Possible responses: reduce exposure; pause strategy; require review; enter cooldown; suspend strategy. Exact thresholds must be policy/configuration driven.
+- **RSK-027** Excessive-trading protection · SYSTEM REQUIREMENT · P2§41 — The platform should detect abnormal trade frequency. Possible triggers: excessive order rate; repeated failed opportunities; strategy loop; execution churn; unexpected activity. Responses may include: throttle; pause; review; kill switch.
+- **RSK-028** Additional kill-switch scopes · SYSTEM REQUIREMENT · P2§78 — Kill switches must be deterministic. In addition to the scopes in RSK-008, potential levels include: new positions; a specific execution path.
+- **RSK-029** No-new-position mode · CONFIRMED REQUIREMENT · P2§79 — The platform should support NO NEW POSITIONS while still allowing controlled management of existing positions where policy permits. This is distinct from a full shutdown.
+- **RSK-030** Safe Mode triggers · SYSTEM REQUIREMENT · P2§80 — Safe Mode must be a first-class state. Possible triggers: critical state uncertainty; reconciliation failure; risk engine failure; capital integrity issue; security incident; exchange state uncertainty; data corruption; migration failure.
+- **RSK-031** NO TRADE is a valid decision · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§81, P2§310 — "No trade" is not inherently a failure. Examples: opportunity insufficient; risk too high; data stale; unknown regime; capital unavailable; exchange degraded; AI unavailable when required; policy restriction; execution uncertain.
+- **RSK-032** WAIT is first-class · CONSTRAINT · P2§82, P2§311 — WAIT means the system needs more information. The system should not be forced to generate a trade merely because the opportunity engine was activated.
+- **RSK-033** Arbitrage risk scope · SYSTEM REQUIREMENT · P2§93, P2§222 — Arbitrage-specific risks include: leg failure; execution delay; liquidity collapse; exchange outage; inventory imbalance; transfer risk; venue risk; correlated execution failure. They integrate with the global Risk Authority as rule sets (RSK-012).
+
+Notes:
+
+- **One Risk Authority (P2§39, §229)** is RSK-001 and RSK-012. **The independent arbitrage kill switch (P2§94, §223)** is the arbitrage scope of RSK-008; actions are scoped (RSK-020), so directional strategies may continue while arbitrage is disabled if policy permits.
+- **RSK-029 and RSK-015.** NO NEW POSITIONS is the "new positions" kill-switch scope of RSK-028, and it is also what RESTRICTED and SAFE MODE do for the affected scope.
+- **RSK-030 and RSK-016.** Each Safe Mode trigger is mapped by policy to SAFE MODE or a higher safety level (RSK-016; values register V-14).
+- **Thresholds.** Loss-streak and excessive-trading thresholds are policy values V-30 and V-31 in the [values register](../requirements/values-register.md).
+- **Open conflict CF-14.** Part 2's user policy hierarchy (P2§101, §279) puts USER HARD POLICY above SYSTEM SAFETY, while RSK-004 puts system safety first. RSK-004 stays in force until the owner decides ([findings register](../conflicts/register.md#cf-14--policy-hierarchy-user-hard-policy-above-or-below-system-safety)).
+
 ## Boundary (§92)
 
 - **Owns:** deterministic risk decisions and the controls in RSK-002.
 - **Consumes:** user hard constraints from the [Policy System](../systems/policy/policy-system.md); portfolio and exposure state from [Portfolio Management](../systems/portfolio-management.md); strategy output and AI proposals (validated first, AIV-004).
 - **Must not:** be bypassed or overridden by AI (RSK-003, AIL-003), by research (STR-008), or by lower layers (RSK-005).
-- **Not yet specified:** limit values (operator policy), interfaces, tests. System safety is defined in RSK-010; failure and state behavior in [System Health](../operations/system-health.md) (HLT-007 to HLT-009).
+- **Not yet specified:** limit values (operator policy), interfaces, tests. System safety is defined in RSK-010; health state in [System Health](../operations/system-health.md) (HLT-011, HLT-012), and the safety levels in RSK-015 to RSK-020.
 
 ## Findings
 
-All resolved. DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).
+Open: CF-14 (Part 2 policy hierarchy vs RSK-004). All earlier findings are resolved: DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).

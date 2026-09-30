@@ -1,6 +1,6 @@
 # Security Architecture
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
 
 Canonical definition of what the platform must protect. The builder's own rules on secrets (constitution Rules 110 and 153) also apply to this repository.
 
@@ -27,6 +27,15 @@ SEC-003 is replaced by SEC-006, which keeps its no-withdrawal rule for trading k
 - **SEC-007** Transfer credential restrictions · CONFIRMED REQUIREMENT · DEC-019 — Automated transfers must have additional protection. Where supported, transfer credentials should be restricted by: destination allowlists; asset allowlists; amount limits; frequency limits; venue restrictions; authentication controls; audit logging; policy enforcement.
 
 Builder note: where a venue cannot enforce one of the SEC-007 restrictions itself, the platform enforces it before any transfer request is sent (CAP-025).
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **SEC-008** Least-privilege AI permissions · CONSTRAINT · P2§110, P2§299 — AI permissions follow minimum privilege. No research agent automatically receives: live order permission; wallet signing; withdrawal permission; production deployment permission.
+- **SEC-009** Production security scope · SYSTEM REQUIREMENT · P2§160 — Production hardening must cover: authentication; authorization; secrets; encryption; network controls; audit; AI permissions; tool permissions; key management; dependency security; vulnerability monitoring; security incident handling; environment separation.
+
+Already covered: live credentials never in lower environments and paper/live credential separation (P2§161, §162) are SEC-004, MODE-006, and PAP-011. Trading permission not implying withdrawal (P2§116, §305) is SEC-006. No plain-text secrets in migration packages (P2§135) is MIG-009. Per-role permission scopes are AGT-022, and tool access is AIL-013. Security incidents use the incident record of INC-002.
 
 ## Not yet specified
 

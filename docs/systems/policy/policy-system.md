@@ -1,6 +1,6 @@
 # Policy System (Persistent, Versioned Policy)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-12 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §29, §30 (also §02 items 5–6)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-12 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §29, §30 (also §02 items 5–6)
 >
 > Canonical location for policy per §98 (`docs/systems/policy/`). §98 also names `docs/product/trading-policy.md`. It is deliberately not created: the operator's policy exists only in this system's runtime store (POL-009, [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md)).
 
@@ -38,13 +38,31 @@ Summary of the documents that define each step. No new rules are added here.
 
 - **POL-011** Autonomy boundaries are policy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — The Policy System holds the boundaries within which the platform acts autonomously: rebalancing controls (CAP-025); safety policy and emergency-type rules (RSK-016); position-protection policy (RSK-017); canary allocation limits and evidence requirements (STR-015, STR-018); performance hard limits (PERF-012); which gates are human-controlled (PLT-014). Their values are recorded in the values register (ARCH-018). An unset boundary means the autonomous action it governs is outside authorization.
 
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../../decisions/DEC-024-part-2-reconciliation.md).
+
+- **POL-012** Machine-readable policy fields · SYSTEM REQUIREMENT · P2§102, P2§280 — Natural-language policy should eventually compile into machine-readable policy. Potential fields: policy ID; version; objective; hard constraints; soft preferences; risk limits; capital limits; allowed markets; restricted markets; allowed strategies; forbidden conditions; emergency rules; effective time; expiration; change history.
+- **POL-013** Policy traceability · CONFIRMED REQUIREMENT · P2§103, P2§281 — Important decisions should reference the active policy version. The system should answer: which policy permitted or restricted this decision?
+- **POL-014** Policy history is immutable · CONSTRAINT · P2§104, P2§282 — A policy change creates a new version. Historical decisions remain associated with the policy that governed them.
+- **POL-015** Policy simulation · CONFIRMED REQUIREMENT · P2§105, P2§283 — Material policy changes should be testable before activation. The system should compare current policy vs proposed policy and identify meaningful behavioral differences.
+
+Notes:
+
+- **Already covered.** Objectives translated into structured policy (P2§100) is NLP-001, NLP-002, NLP-004, and POL-002.
+- **"Policy compiler".** Part 2 uses the term for two steps. Natural language → structured policy is the interpretation pipeline of the [Natural Language Policy Interface](natural-language-policy-interface.md) (NLP-004). Structured policy → enforceable rules, recompiled on every policy change (ARCH-023), is deterministic and belongs to this system. See the [glossary](../../glossary.md).
+- **POL-015 with POL-006 and POL-007.** Every material change can be simulated. Simulation is mandatory before a loosening change (POL-006). A change that only tightens may still activate immediately (POL-007).
+- **Open conflict CF-14.** P2§101 and §279 place user hard policy above system safety; RSK-004 places system safety first. RSK-004 stays in force until the owner decides.
+
 ## Boundary (§92)
 
 - **Owns:** the authoritative, versioned user policy.
 - **Used by:** Risk Engine, Global Capital Authority, Recovery ("validate policy", REC-002), Trading Director ("policy" input, AGT-004), audit ("policy version", AUD-002).
 - **Must not:** be replaced by AI memory (POL-001, MEM-004).
-- **Not yet specified:** the policy schema, interfaces, tests. Change governance is POL-005 to POL-007; the operator confirms.
+- **Not yet specified:** the final policy schema (POL-012 lists its potential fields), interfaces, tests. Change governance is POL-005 to POL-007; the operator confirms.
 
-## Findings (all resolved)
+## Findings
+
+Open: CF-14 (Part 2 policy hierarchy). All earlier findings are resolved:
 
 CF-06 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (this system is in CORE TRADING FOUNDATION). CF-08 and OQ-15 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-009). OQ-17 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-005 to POL-007). OQ-08 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-008). DUP-22 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (MEM-005).

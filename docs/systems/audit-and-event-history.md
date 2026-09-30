@@ -1,6 +1,6 @@
 # Auditability and Event and Decision History
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-30 (named in the handoff as capabilities, "Auditability" and "Event and Decision History"; no implementing system is named) · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §86, §87 (also §02 item 21)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-30 (named in the handoff as capabilities, "Auditability" and "Event and Decision History"; no implementing system is named) · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §86, §87 (also §02 item 21)
 
 Canonical definition of what must be traceable and which events must be preserved.
 
@@ -24,6 +24,16 @@ Canonical definition of what must be traceable and which events must be preserve
 
 - **AUD-008** Kill-switch recovery record · CONFIRMED REQUIREMENT · DEC-021 — Kill-switch recovery actions, triggers, checks, decisions, and final states must be recorded in the audit trail.
 - **AUD-009** Restart recovery record · CONFIRMED REQUIREMENT · DEC-022 — Every restart recovery step, discrepancy, reconciliation result, decision, and final operating state must be recorded in the audit trail.
+
+## Handoff Part 2 applied (2026-09-30)
+
+New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md), cited as P2§N. Part 2 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 2 reconciliation](../traceability/part-2-reconciliation.md). Placement and duplicate resolutions: [DEC-024](../decisions/DEC-024-part-2-reconciliation.md).
+
+- **AUD-010** Explainable decisions · CONFIRMED REQUIREMENT · P2§108, P2§285 — Increasing autonomy must increase observability. Important decisions should be explainable through: data; policy; strategy; risk; capital; AI contribution; execution; reconciliation.
+- **AUD-011** Additional audit fields · SYSTEM REQUIREMENT · P2§117 — In addition to AUD-002, important events should record: who or what initiated the action; validation; reconciliation result.
+- **AUD-012** Decision lineage · CONFIRMED REQUIREMENT · P2§118 — Important decisions should be reconstructable: market event → data → features → regime → opportunity → strategy → AI input/output → policy → risk → capital → execution → result.
+
+The data side of the lineage (source, dataset, versions) is MKD-010. The Opportunity Database (OPP-016) is derived from this history, as the arbitrage database already was (ARB-014).
 
 ## Boundary (§92)
 

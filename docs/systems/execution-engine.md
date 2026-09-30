@@ -33,6 +33,10 @@ Canonical definition of deterministic order execution, stale-decision protection
 
 Placement (builder): the Global Capital Authority decides a transfer (CAP-023); this engine executes it, with the same idempotency discipline as orders (EXE-006).
 
+## Handoff Part 2 (2026-09-30)
+
+[Handoff Part 2](../handoffs/part-2-consolidated-additional-systems.md) adds no new execution requirement. Order and transfer timeouts (P2§84, §85, §307, §308) are EXE-005, EXE-006, and EXE-009. Paper/live parity (PAP-006) places a paper executor and a live executor behind this system's execution interface; the paper executor belongs to [Paper Trading](strategy/paper-trading.md). Only the active execution instance may act (EXE-010), across local and server hosts as well (REC-019, REC-020).
+
 ## Boundary (§92)
 
 - **Owns:** order construction, submission, and execution state (EXE-002).
