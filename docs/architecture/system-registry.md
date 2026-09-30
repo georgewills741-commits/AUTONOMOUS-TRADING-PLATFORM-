@@ -1,6 +1,6 @@
 # System and Capability Registry
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-018. No system is implemented.
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-020. No system is implemented.
 >
 > The single list of every system and capability named in Part 1: what it is, which document is canonical for it, which requirement IDs it owns, and which §95 roadmap stage it belongs to. Names are the handoff's own. No system has been invented; capabilities that Part 1 names without an owning system are marked. Every entry must meet the §92 boundary fields (ARCH-012). Each specification records the fields Part 1 supplies.
 
@@ -16,9 +16,9 @@
 | SYS-06 | True Net-Profit Engine | Shared infrastructure | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP | CORE TRADING FOUNDATION (ARBITRAGE adds cost components, [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed |
 | SYS-07 | Global Capital Authority | Shared infrastructure | [systems/capital-management.md](../systems/capital-management.md) | CAP | CORE TRADING FOUNDATION | Confirmed |
 | SYS-08 | Portfolio Management | Shared infrastructure | [systems/portfolio-management.md](../systems/portfolio-management.md) | PRT | CORE TRADING FOUNDATION | Confirmed |
-| SYS-09 | Deterministic Risk Engine (incl. risk hierarchy, no-trade outcomes) | Shared infrastructure | [risk/risk-engine.md](../risk/risk-engine.md) | RSK | CORE TRADING FOUNDATION | Confirmed; owns kill switches (RSK-008, [DEC-012](../decisions/DEC-012-safety-architecture.md)) |
-| SYS-10 | Execution Engine | Shared infrastructure | [systems/execution-engine.md](../systems/execution-engine.md) | EXE | CORE TRADING FOUNDATION | Confirmed |
-| SYS-11 | Recovery and Reconciliation | Shared infrastructure | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | REC | CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed |
+| SYS-09 | Deterministic Risk Engine (incl. risk hierarchy, no-trade outcomes) | Shared infrastructure | [risk/risk-engine.md](../risk/risk-engine.md) | RSK | CORE TRADING FOUNDATION | Confirmed; owns kill switches (RSK-008, [DEC-012](../decisions/DEC-012-safety-architecture.md)); owns safety levels and the emergency controller (RSK-015, RSK-020, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)) |
+| SYS-10 | Execution Engine | Shared infrastructure | [systems/execution-engine.md](../systems/execution-engine.md) | EXE | CORE TRADING FOUNDATION | Confirmed; also executes rebalancing transfers (EXE-009, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)) |
+| SYS-11 | Recovery and Reconciliation | Shared infrastructure | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | REC | CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed; automatic 24/7 recovery and execution lease (REC-010 to REC-013, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)) |
 | SYS-12 | Policy System | Shared infrastructure | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | POL | CORE TRADING FOUNDATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed |
 | SYS-13 | Natural Language Policy Interface | AI-assisted interface into SYS-12 | [systems/policy/natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) | NLP | AI INTELLIGENCE | Confirmed |
 | SYS-14 | Strategy Management (Strategy Factory, lifecycle, versioning) | Shared infrastructure | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR | DIRECTIONAL TRADING, shared; ARBITRAGE depends on it ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed |

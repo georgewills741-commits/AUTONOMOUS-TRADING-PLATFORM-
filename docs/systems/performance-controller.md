@@ -26,6 +26,10 @@ Model health is measured by [Model Evaluation](../ai/model-management.md) (MEV-0
 - **PFC-007** Detection here, interpretation by the analyst · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-013 — Deterministic detection happens here. The Performance Analyst agent interprets results and attributes causes (AGT-015).
 - **PFC-008** Permitted actions · CONFIRMED REQUIREMENT · DEC-012 — Under deterministic policy, the controller may raise alerts, propose suspending a strategy, activate a kill switch when a configured rule fires (RSK-009), and trigger recalibration of cost estimates (TNP-022). It cannot change strategies, limits, or policy.
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+The controller's detection scope (PFC-003) includes the performance and latency degradation of PERF-011. The resulting restrictions are applied by the Risk Engine's safety levels (RSK-015), within PFC-004 and PFC-008.
+
 ## Boundary (§92)
 
 - **Owns:** the comparison of expected against actual results, and deterioration detection (PFC-002, PFC-003).

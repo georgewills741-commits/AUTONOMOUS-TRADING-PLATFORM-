@@ -1,6 +1,7 @@
 # DEC-003 — Requirement IDs, classification rules, and spec-embedded requirements
 
 - **Status:** ACCEPTED (delegated, 2026-09-30: accepted under the owner's instruction to resolve all open items; first recorded as PROPOSED)
+- **Later changes:** Amended by [DEC-020](DEC-020-value-classification.md): the IMPLEMENTATION CHOICE class and the values register.
 - **Date:** 2026-09-30
 - **Affects:** every specification; `docs/requirements/`
 - **Resolves:** CF-10, OQ-23

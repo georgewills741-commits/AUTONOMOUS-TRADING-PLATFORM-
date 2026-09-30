@@ -21,6 +21,10 @@ EXA-002 is replaced by EXA-005 (owner decision, [DEC-008](../decisions/DEC-008-v
 - **EXA-008** Order-state query is mandatory · CONSTRAINT · DEC-008 — An adapter must support client-assigned order IDs and querying order state after a timeout. A venue lacking either cannot be used for automated trading.
 - **EXA-009** Instrument support per venue · SYSTEM REQUIREMENT · DEC-007 — Adapters expose which instrument types (spot, perpetual futures, margin) each venue supports, and handle their venue-specific settings: leverage, margin mode, position mode, funding, and borrow data.
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **EXA-010** Transfer support · SYSTEM REQUIREMENT · DEC-019 — Adapters for venues used in rebalancing support transfers to allowlisted addresses of the operator's own venue accounts, using the separate transfer credential (SEC-006), and support transfer-status queries. For on-chain transfers, status can also be confirmed on the blockchain.
+
 ## Boundary (§92)
 
 - **Owns:** all venue-specific behavior (EXA-003). No other system talks to a venue directly (EXA-004).

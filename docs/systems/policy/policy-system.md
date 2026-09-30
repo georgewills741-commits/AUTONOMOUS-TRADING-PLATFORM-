@@ -34,6 +34,10 @@ Summary of the documents that define each step. No new rules are added here.
 - **POL-009** Single location of policy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-015 — The operator's actual policy exists only in this system's versioned store. No repository document holds policy content.
 - **POL-010** Structured editing before the NL interface · CONFIRMED REQUIREMENT · DEC-015 — Until the Natural Language Policy Interface exists, the operator edits structured policy directly through a validated operator interface, under the same versioning and change rules.
 
+## Owner correction applied (OC-1, [DEC-019](../../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **POL-011** Autonomy boundaries are policy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — The Policy System holds the boundaries within which the platform acts autonomously: rebalancing controls (CAP-025); safety policy and emergency-type rules (RSK-016); position-protection policy (RSK-017); canary allocation limits and evidence requirements (STR-015, STR-018); performance hard limits (PERF-012); which gates are human-controlled (PLT-014). Their values are recorded in the values register (ARCH-018). An unset boundary means the autonomous action it governs is outside authorization.
+
 ## Boundary (§92)
 
 - **Owns:** the authoritative, versioned user policy.

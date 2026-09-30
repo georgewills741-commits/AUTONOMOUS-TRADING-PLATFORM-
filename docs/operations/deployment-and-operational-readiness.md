@@ -15,6 +15,10 @@ Canonical definition of what "operational" means and how development continues o
 - **OPS-004** Separate environments · CONFIRMED REQUIREMENT · DEC-015 — The environments are development, testing, research, paper, staging, and production, each with its own configuration, database, and credentials. Only production holds trading-enabled credentials (MODE-006).
 - **OPS-005** Traceable, reversible deployments · CONFIRMED REQUIREMENT · DEC-009 — Every production deployment records the deployed version, can be rolled back to the previous version (TEC-011), and requires the stage's verification to have passed.
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **OPS-006** 24/7 operation · CONFIRMED REQUIREMENT · DEC-019 — The platform is designed to operate 24/7. Services are supervised and restarted automatically (REC-010, TEC-013), and recovery and monitoring functions keep running during SAFE MODE and CRITICAL RECOVERY (REC-012).
+
 ## Not yet specified
 
 What counts as an "approved operational milestone" (to come from the roadmap's stage exit criteria after Part 2), production-readiness criteria (constitution Rule 214), and hosting location. Canary is defined in STR-011.

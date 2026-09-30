@@ -13,11 +13,20 @@ SEC-002 agrees with the AI hard-safety boundary item "receive unrestricted secre
 
 ## Decisions applied (2026-09-30)
 
-- **SEC-003** Trading keys cannot withdraw · CONSTRAINT · DEC-012 — API keys used for trading must not have withdrawal permission and, where the venue supports it, are restricted to known IP addresses. Automated inter-venue transfers, if enabled (CAP-022), use a separate key restricted to a withdrawal-address whitelist containing only the operator's own venue accounts.
+- **SEC-003** Trading keys cannot withdraw · DEPRECATED / REPLACED · DEC-012 — API keys used for trading must not have withdrawal permission and, where the venue supports it, are restricted to known IP addresses. Automated inter-venue transfers, if enabled (CAP-022), use a separate key restricted to a withdrawal-address whitelist containing only the operator's own venue accounts.
 - **SEC-004** Credential separation · CONSTRAINT · DEC-015 — Trading-enabled credentials exist only in the production environment. AI credentials are held only by the AI gateway and are separate from trading credentials.
 - **SEC-005** Secrets handling · CONSTRAINT · DEC-009 — Secrets are never stored in the repository, logs, or AI prompts. They are injected at runtime from the environment or a secret manager.
 
 With a single operator ([DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)), "user accounts" in SEC-001 means the operator's own access to the platform.
+
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+SEC-003 is replaced by SEC-006, which keeps its no-withdrawal rule for trading keys.
+
+- **SEC-006** Three separate authorities · CONSTRAINT · DEC-019 — Trading authority (trading only), rebalancing transfer authority (approved transfers between approved exchange accounts), and withdrawal/custody authority (separate and independently controlled) use separate credentials. Trading credentials must not carry withdrawal permission and, where the venue supports it, are restricted to known IP addresses. Automated rebalancing is restricted to approved accounts and venues owned or controlled by the operator, and must not become a general-purpose withdrawal mechanism. The platform itself holds no general withdrawal or custody authority (custody is FUTURE).
+- **SEC-007** Transfer credential restrictions · CONFIRMED REQUIREMENT · DEC-019 — Automated transfers must have additional protection. Where supported, transfer credentials should be restricted by: destination allowlists; asset allowlists; amount limits; frequency limits; venue restrictions; authentication controls; audit logging; policy enforcement.
+
+Builder note: where a venue cannot enforce one of the SEC-007 restrictions itself, the platform enforces it before any transfer request is sent (CAP-025).
 
 ## Not yet specified
 

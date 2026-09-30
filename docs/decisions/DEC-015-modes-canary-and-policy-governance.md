@@ -1,6 +1,7 @@
 # DEC-015 — Operating modes, canary, and policy governance
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
+- **Later changes:** The canary rule (STR-011) and MODE-004 are superseded by [DEC-019](DEC-019-company-grade-autonomous-operating-model.md).
 - **Date:** 2026-09-30
 - **Resolves:** OQ-08, OQ-09, OQ-15, OQ-17, CF-08
 

@@ -23,6 +23,7 @@
 | Open questions and technical concerns | [docs/open-questions/register.md](../open-questions/register.md) |
 | Terminology | [docs/glossary.md](../glossary.md) |
 | Technology stack | [docs/architecture/technology-stack.md](technology-stack.md) |
+| Operating values and their classification | [docs/requirements/values-register.md](../requirements/values-register.md) |
 | Original handoffs (HISTORICAL, not active) | [docs/handoffs/](../handoffs/part-1-core-platform-features.md) |
 
 ## Product domains
@@ -55,7 +56,13 @@ Direct answers to §100's "where does … authority live?":
 | Portfolio state | SYS-08 Portfolio Management | PRT-001, PRT-003 — [portfolio-management.md](../systems/portfolio-management.md) |
 | Strategy versions and promotion | SYS-14 Strategy Management | STR-001, STR-005 — [strategy-management.md](../systems/strategy/strategy-management.md) |
 | Kill switches, trading authorization | SYS-09 Risk Engine | RSK-008, RSK-009 — [risk-engine.md](../risk/risk-engine.md) ([DEC-012](../decisions/DEC-012-safety-architecture.md)) |
-| Platform health state (safe mode, halt, emergency) | SYS-29 System Health | HLT-007 to HLT-010 — [system-health.md](../operations/system-health.md) |
+| Platform health state | SYS-29 System Health | HLT-011, HLT-012 — [system-health.md](../operations/system-health.md) |
+| Safety level (NORMAL … CRITICAL RECOVERY) and emergency handling | SYS-09 Risk Engine (emergency controller) | RSK-015 to RSK-020 — [risk-engine.md](../risk/risk-engine.md) ([DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)) |
+| Rebalancing decision | SYS-07 Global Capital Authority | CAP-023 to CAP-025 — [capital-management.md](../systems/capital-management.md) |
+| Transfer execution | SYS-10 Execution Engine | EXE-009 — [execution-engine.md](../systems/execution-engine.md) |
+| Active execution instance (lease) | SYS-11 Recovery and Reconciliation | REC-013, EXE-010 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
+| Canary readiness and scaling | SYS-14 Strategy Management | STR-013 to STR-018 — [strategy-management.md](../systems/strategy/strategy-management.md) |
+| Autonomy boundaries | SYS-12 Policy System | POL-011 — [policy-system.md](../systems/policy/policy-system.md) |
 | Realized financial history (P&L, fees, transfers, balances) | SYS-33 Trading Ledger | LED-004, LED-006 — [custody-and-ledger.md](../systems/custody-and-ledger.md) |
 | Operating mode | SYS-12 Policy System | POL-008 — [policy-system.md](../systems/policy/policy-system.md) |
 | Trading universe | SYS-05 with SYS-12 exclusions | OPP-009 — [opportunity-detection.md](../systems/opportunity-detection.md) |

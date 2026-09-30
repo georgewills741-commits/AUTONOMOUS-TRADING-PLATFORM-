@@ -81,3 +81,9 @@ Failure handling and controlled degradation are defined in [System Health](../op
 Where these are applied: the §94 example chain and every recorded dependency are in the [dependency map](dependency-map.md) (ARCH-014); classification rules are in the [requirements README](../requirements/README.md) (ARCH-015); the canonical location of every concept is in the [source-of-truth map](source-of-truth-map.md) (ARCH-017).
 
 Every system specification in `docs/systems/`, `docs/risk/`, `docs/ai/`, `docs/security/` and `docs/operations/` records the §92 fields that Part 1 supplies and lists the rest as not yet specified. Part 2 is expected to provide interfaces and contracts (§103 closing note).
+
+## Operating values ([DEC-020](../decisions/DEC-020-value-classification.md))
+
+- **ARCH-018** Values are classified and configurable · CONSTRAINT · DEC-020 — Every concrete operating value in a requirement (percentages, durations, counts, latencies, thresholds, versions) is recorded in the values register with one classification: DEFAULT, DESIGN TARGET, POLICY-CONTROLLED PARAMETER, HARD LIMIT, IMPLEMENTATION CHOICE, or OBSERVED. No value becomes a permanent hard-coded requirement unless the owner explicitly approves it as such; the architecture supports configurable, evidence-driven values. Illustrative examples quoted from a source are not operating values.
+
+The register is the [values register](../requirements/values-register.md).

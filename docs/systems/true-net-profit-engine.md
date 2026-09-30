@@ -46,6 +46,10 @@ How realized results feed back into available capital (compounding) is defined i
 - **TNP-021** Comparable quality measure · SYSTEM REQUIREMENT · DEC-011 — For each opportunity this engine also produces the TNP-015 quality dimensions and a risk-adjusted expected net return per unit of capital per unit of time, so opportunities from different trading systems can be compared for allocation.
 - **TNP-022** Continuous calibration · CONFIRMED REQUIREMENT · DEC-014 — Cost estimates and the cost-estimate error are recalibrated continuously from expected-vs-actual results (PFC-001).
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **TNP-023** Latency decay in executable economics · CONFIRMED REQUIREMENT · DEC-019 — Executable net economics must incorporate realistic execution latency: expected opportunity value is weighed against expected latency decay and execution risk. An opportunity that theoretically produces positive net profit but is likely to disappear before execution should be rejected. This is part of each opportunity's economics, not a minimum-profit threshold (TNP-005).
+
 ## Boundary (§92)
 
 - **Owns:** the true net expected result of an opportunity (TNP-002), and the eligibility rules TNP-005 to TNP-016.

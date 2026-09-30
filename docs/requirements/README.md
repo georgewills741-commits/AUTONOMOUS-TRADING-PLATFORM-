@@ -35,9 +35,12 @@ The parts are: ID · short title · class · source — requirement text. The so
 | PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION | Discussed before; not a production requirement until confirmed |
 | OPEN QUESTION | Kept in the [open-question register](../open-questions/register.md) as OQ-nn |
 | TECHNICAL CONCERN | Kept in the [open-question register](../open-questions/register.md) as TC-nn |
-| DEPRECATED / REPLACED | Superseded; kept for traceability. The replacing requirement is named next to it (e.g. EXA-002 → EXA-005, AGT-001 → AGT-016, LED-002 → LED-005) |
+| DEPRECATED / REPLACED | Superseded; kept for traceability. The replacing requirement is named next to it (e.g. EXA-002 → EXA-005, AGT-001 → AGT-016, STR-011 → STR-013 to STR-018) |
+| IMPLEMENTATION CHOICE | A technology or mechanism choice rather than a platform behavior (added by [DEC-020](../decisions/DEC-020-value-classification.md), OC-1 item 31) |
 
 The interpretation of CONFIRMED REQUIREMENT vs SYSTEM REQUIREMENT in DEC-003 was accepted (OQ-23 resolved).
+
+**Values** such as percentages, durations, counts, latencies, and versions are classified separately in the [values register](values-register.md): DEFAULT, DESIGN TARGET, POLICY-CONTROLLED PARAMETER, HARD LIMIT, IMPLEMENTATION CHOICE, or OBSERVED (ARCH-018). None is a permanent hard-coded requirement unless the owner explicitly approves it.
 
 Two rules always apply:
 
@@ -54,3 +57,4 @@ All requirements are **DOCUMENTED**: recorded, not implemented, not verified. Wh
 2. Update the [registry](registry.md) row.
 3. Update [handoff coverage](../traceability/handoff-coverage.md) if the source is a handoff section; cite the decision record if the source is a decision.
 4. Record any decision, conflict, or open question in the matching register.
+5. Add any concrete value to the [values register](values-register.md) with its classification.

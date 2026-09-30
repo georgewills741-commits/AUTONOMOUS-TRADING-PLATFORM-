@@ -130,6 +130,8 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) | RMP-002 |
 | [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) | OPP-012, MON-007, MON-008, MON-009, AUD-006, PERF-007 |
 | [DEC-018](../decisions/DEC-018-initial-directional-research-candidates.md) | DIR-005 |
+| [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) | PLT-013, PLT-014, PLT-015, MODE-007, TEC-013, EXA-010, TNP-023, CAP-023, CAP-024, CAP-025, RSK-015, RSK-016, RSK-017, RSK-018, RSK-019, RSK-020, EXE-009, EXE-010, REC-010, REC-011, REC-012, REC-013, POL-011, STR-013, STR-014, STR-015, STR-016, STR-017, STR-018, HLT-011, HLT-012, AUD-007, SEC-006, SEC-007, PERF-008, PERF-009, PERF-010, PERF-011, PERF-012, OPS-006 |
+| [DEC-020](../decisions/DEC-020-value-classification.md) | ARCH-018 |
 
 ## §100 questions — where the repository answers them
 

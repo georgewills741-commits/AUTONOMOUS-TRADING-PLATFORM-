@@ -31,8 +31,19 @@ Canonical definition of how strategies are researched, validated, promoted, vers
 
 ## Decisions applied (2026-09-30)
 
-- **STR-011** Canary · CONFIRMED REQUIREMENT · DEC-015 — In canary, a newly approved strategy version trades live with a capped capital allocation and tightened risk limits, for a minimum period and trade count. Promotion to production requires expected-vs-actual results within tolerance and no safety incidents. A breach suspends the version or rolls back to the previous one. Initial operator-configurable defaults: capital cap of 5% of the strategy's target allocation; minimum 14 days and 50 trades.
+- **STR-011** Canary · DEPRECATED / REPLACED · DEC-015 — In canary, a newly approved strategy version trades live with a capped capital allocation and tightened risk limits, for a minimum period and trade count. Promotion to production requires expected-vs-actual results within tolerance and no safety incidents. A breach suspends the version or rolls back to the previous one. Initial operator-configurable defaults: capital cap of 5% of the strategy's target allocation; minimum 14 days and 50 trades.
 - **STR-012** The Strategy Factory owns the research process · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The Strategy Factory owns and coordinates the research process, including "research coordination" (§51). AI agents assist inside it.
+
+## Owner correction applied (OC-1, [DEC-019](../../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+STR-011 (canary: 5% for 14 days and 50 trades) is replaced by STR-013 to STR-018. Its values are withdrawn (V-01 to V-03 in the [values register](../../requirements/values-register.md)).
+
+- **STR-013** Evidence-based canary readiness · CONFIRMED REQUIREMENT · DEC-019 — A candidate strategy version becomes eligible for canary only when the system verifies: backtest; out-of-sample; walk-forward; stress test; robustness; paper trading; risk validation; policy validation; operational validation; capital availability; liquidity availability; market/regime compatibility; system health; then canary authorization. Capital availability is one condition, not the only one.
+- **STR-014** Automatic canary entry · CONFIRMED REQUIREMENT · DEC-019 — When all readiness conditions are verified, the platform automatically enters canary operation, without waiting for manual activation, unless policy designates that gate as human-controlled (PLT-014).
+- **STR-015** Dynamic canary allocation · CONFIRMED REQUIREMENT · DEC-019 — The initial canary allocation is determined within policy-defined limits, based on factors such as: available capital; target capital; strategy risk; portfolio exposure; liquidity; expected opportunity frequency; historical validation quality; strategy confidence; market regime; capital efficiency; existing portfolio correlation; current system risk. It must always remain within hard risk limits. No universal fixed percentage is used.
+- **STR-016** Gradual scaling · CONSTRAINT · DEC-019 — A successful canary progresses through controlled allocation stages: small initial allocation → observe → validate live performance → check expected vs actual → check risk → check execution → check slippage → check drawdown → check stability → increase allocation → revalidate → next allocation stage → full authorized deployment. The allocation never jumps from canary to full capital without passing the required gates.
+- **STR-017** Automatic canary stop · CONFIRMED REQUIREMENT · DEC-019 — If a canary deteriorates, the platform automatically: stops allocation increases; reduces exposure where policy requires; suspends the strategy; rolls back the strategy version; returns capital to the appropriate reserve; records the event; analyses expected vs actual performance. This must not require an AI agent to improvise the response.
+- **STR-018** Evidence, not time alone · CONSTRAINT · DEC-019 — Readiness is evidence-based and risk-based. A strategy does not become production-ready merely because time has passed, and is not rejected merely for not reaching an arbitrary number of days when all required evidence is otherwise sufficient. Time and trade count may be used as evidence requirements.
 
 ## Boundary (§92)
 
@@ -41,6 +52,8 @@ Canonical definition of how strategies are researched, validated, promoted, vers
 - **Must not:** modify live trading directly (STR-004), or let research change protected production controls (STR-008).
 - **Not yet specified:** validation thresholds for each lifecycle stage (expected with Part 2 verification architecture), interfaces, tests. The operator approves promotions; canary is STR-011.
 
-## Findings (all resolved)
+## Findings
 
 DUP-18 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (STR-012). DUP-20 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (DIR-004). OQ-09 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (STR-011). CF-05 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (built in DIRECTIONAL TRADING as shared infrastructure; ARBITRAGE depends on it).
+
+Open: CF-13 (APPROVAL stage): STR-001 (§34) and STR-009 (§38) place APPROVAL before CANARY; STR-014 (OC-1) enters canary automatically after deterministic canary authorization. Whether APPROVAL is a human gate by default awaits owner review; see the [findings register](../../conflicts/register.md).

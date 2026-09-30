@@ -16,6 +16,10 @@ Canonical definition of what must be traceable and which events must be preserve
 - **AUD-005** Authoritative event record · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The event and decision history is the authoritative record of what happened. The arbitrage opportunity database is derived from it (ARB-014).
 - **AUD-006** Separate from operational logs · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-017 — Operational logs (MON-009) are separate from the audit trail. Logs may be rotated; audit records may not.
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **AUD-007** Transfer record · CONFIRMED REQUIREMENT · DEC-019 — For every transfer the system must record: why the transfer was initiated; source; destination; asset; amount; expected benefit; transfer cost; policy version; authorization boundary; execution result; reconciliation result.
+
 ## Boundary (§92)
 
 - **Owns:** the audit trail and the event and decision history.

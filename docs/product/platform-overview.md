@@ -61,6 +61,12 @@ How these principles apply to individual opportunities (positive-net execution, 
 
 Sources: [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (owner decision), [DEC-007](../decisions/DEC-007-instrument-scope.md) (owner decision).
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **PLT-013** Company-grade autonomy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — The operating model is autonomous, policy-bounded, risk-bounded, capital-bounded, evidence-driven, self-monitoring, self-recovering, and reconciliation-aware. The system should require human intervention when necessary, but human absence must not itself cause normal 24/7 operation to stop.
+- **PLT-014** Human intervention by exception · CONFIRMED REQUIREMENT · DEC-019 — Human intervention should primarily be required for: policy changes requiring approval; security events; unrecoverable state; unknown financial state; unauthorized conditions; custody/security events; infrastructure failure beyond automated recovery; architecture changes; production approval gates explicitly designated as human-controlled. Routine operation should remain autonomous.
+- **PLT-015** Operating decision rule · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — The system operates autonomously when it has sufficient authority, capital, information, infrastructure health, and state certainty to do so safely. When it can act safely, it acts autonomously; when it needs more information, it waits and validates; when it is outside authorization, it does not act; when external state is uncertain, it reconciles or enters SAFE MODE; when a condition is recoverable, it recovers automatically; when a strategy is ready, it enters canary automatically; when performance deteriorates, it adapts, throttles, or suspends; when an emergency occurs, it enters the appropriate safety state. The system must be autonomous without being uncontrolled.
+
 ## Findings (all resolved)
 
 OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).

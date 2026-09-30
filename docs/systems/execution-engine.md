@@ -26,6 +26,13 @@ Canonical definition of deterministic order execution, stale-decision protection
 - **EXE-007** Reconciliation is invoked, not reimplemented · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The Execution Engine invokes Recovery and Reconciliation for order-level reconciliation (EXE-002, EXE-006); it does not implement its own reconciliation logic.
 - **EXE-008** Client order IDs · CONSTRAINT · DEC-008 — Every order carries a unique client order ID, so its state can be queried after a timeout (EXA-008).
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+- **EXE-009** Transfer execution and state verification · CONFIRMED REQUIREMENT · DEC-019 — A transfer timeout must never automatically mean the transfer failed. After a timeout or an unknown result, the engine queries the venue, and the blockchain where relevant, to determine the actual state: success, pending, failed, or unknown. If the state remains unknown, it makes no duplicate transfer, hands the transfer to reconciliation, and keeps the platform in a safe state for it. This applies to all autonomous transfer operations.
+- **EXE-010** Only the active instance acts · CONSTRAINT · DEC-019 — Only the instance holding the current execution lease (REC-013) may submit, amend, or cancel orders or initiate transfers. Every such request is checked against the lease, so two instances can never both act as the live trading authority.
+
+Placement (builder): the Global Capital Authority decides a transfer (CAP-023); this engine executes it, with the same idempotency discipline as orders (EXE-006).
+
 ## Boundary (§92)
 
 - **Owns:** order construction, submission, and execution state (EXE-002).

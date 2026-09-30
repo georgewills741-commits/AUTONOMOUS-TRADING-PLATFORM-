@@ -19,6 +19,10 @@ Canonical definition of **operational** monitoring: whether the platform itself 
 - **MON-008** Reporting · CONFIRMED REQUIREMENT · DEC-017 — The platform produces daily and on-demand reports of P&L, exposure, strategy performance, expected vs actual, AI cost, and incidents, as read-only views over the ledger, portfolio, audit trail, and Performance Controller.
 - **MON-009** Operational logs · SYSTEM REQUIREMENT · DEC-017 — Structured operational logs are kept here and rotated after 90 days. They are separate from the audit trail (AUD-006).
 
+## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
+
+Monitoring collects the performance measurements in PERF-010, and raises an alert or incident when recovery fails (REC-012) or a safety level escalates (RSK-015). No new requirement is created here.
+
 ## Not yet specified
 
 Specific alert channels (operator configuration), dashboard layouts, and tests. How monitoring feeds platform state is HLT-010.

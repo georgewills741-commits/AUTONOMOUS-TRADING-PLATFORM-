@@ -2,20 +2,21 @@
 
 > **Index only.** Requirement text lives in the linked specification (DEC-003). This table is generated from the specifications, so rebuild or edit it together with them. Conventions: [README](README.md).
 >
-> **Sources:** Handoff Part 1 (228) and decision records (109) · **Status of every entry:** DOCUMENTED — not implemented, not verified · **Total:** 337 requirements
+> **Sources:** Handoff Part 1 (228) and decision records (150) · **Status of every entry:** DOCUMENTED — not implemented, not verified · **Total:** 378 requirements
 
 ## Summary by class
 
 | Class | Count |
 |---|---|
-| CONFIRMED REQUIREMENT | 96 |
+| CONFIRMED REQUIREMENT | 113 |
 | CONFIRMED ARCHITECTURAL PRINCIPLE | 85 |
-| CONSTRAINT | 89 |
-| SYSTEM REQUIREMENT | 62 |
+| CONSTRAINT | 92 |
+| SYSTEM REQUIREMENT | 63 |
 | FUTURE | 2 |
-| DEPRECATED / REPLACED | 3 |
+| DEPRECATED / REPLACED | 12 |
+| IMPLEMENTATION CHOICE | 11 |
 
-Nothing awaits confirmation. The previously discussed and proposed items were decided on 2026-09-30: FUTURE entries are recorded but not built, and each DEPRECATED / REPLACED entry names its replacement in its specification. LED-001 stays conditional on a user-facing platform, which the platform currently is not (DEC-006).
+FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry names its replacement in its specification. LED-001 stays conditional on a user-facing platform, which the platform currently is not (DEC-006). Open conflicts that affect requirements are listed in the [findings register](../conflicts/register.md). Concrete values used by requirements are classified in the [values register](values-register.md).
 
 ## Registry
 
@@ -33,12 +34,16 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | PLT-010 | Single-operator platform | CONFIRMED REQUIREMENT | DEC-006 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
 | PLT-011 | Instrument scope | CONFIRMED REQUIREMENT | DEC-007 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
 | PLT-012 | Instrument types gated by their risk controls | CONSTRAINT | DEC-007 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
+| PLT-013 | Company-grade autonomy | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
+| PLT-014 | Human intervention by exception | CONFIRMED REQUIREMENT | DEC-019 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
+| PLT-015 | Operating decision rule | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | Platform (product level) | [product/platform-overview.md](../product/platform-overview.md) | — (platform-wide) |
 | MODE-001 | Four operating modes | CONFIRMED REQUIREMENT | §31 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
 | MODE-002 | Controlled mode transitions | CONSTRAINT | §31 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
 | MODE-003 | Per-strategy modes under a platform maximum | CONFIRMED REQUIREMENT | DEC-015 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
-| MODE-004 | Mode transitions | CONSTRAINT | DEC-015 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
+| MODE-004 | Mode transitions | DEPRECATED / REPLACED | DEC-015 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
 | MODE-005 | Supervised authorization | SYSTEM REQUIREMENT | DEC-015 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
 | MODE-006 | Modes vs environments | CONSTRAINT | DEC-015 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
+| MODE-007 | Autonomous mode progression within policy | CONFIRMED REQUIREMENT | DEC-019 | Operating modes (Policy System, POL-008) | [product/operating-modes.md](../product/operating-modes.md) | CORE TRADING FOUNDATION |
 | ARCH-001 | Multiple trading systems | CONFIRMED ARCHITECTURAL PRINCIPLE | §03 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
 | ARCH-002 | One platform, not three applications | CONSTRAINT | §03 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
 | ARCH-003 | Reuse of common infrastructure | CONFIRMED ARCHITECTURAL PRINCIPLE | §04 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
@@ -56,18 +61,20 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | ARCH-015 | Feature classification | CONFIRMED REQUIREMENT | §96 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
 | ARCH-016 | Duplication control | CONFIRMED ARCHITECTURAL PRINCIPLE | §97 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
 | ARCH-017 | Canonical source of truth | CONFIRMED ARCHITECTURAL PRINCIPLE | §98 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
-| TEC-001 | Primary language | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| ARCH-018 | Values are classified and configurable | CONSTRAINT | DEC-020 | Platform architecture (cross-cutting) | [architecture/overview.md](../architecture/overview.md) | FOUNDATION |
+| TEC-001 | Primary language | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
 | TEC-002 | Rust only for measured hot paths | CONSTRAINT | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
 | TEC-003 | Exact decimal arithmetic | CONSTRAINT | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-004 | Validated contracts | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-005 | Exchange connectivity library | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-006 | Storage | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-007 | Messaging | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-008 | Modular monolith | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-009 | Reproducible tooling | CONFIRMED REQUIREMENT | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-010 | Observability stack | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-011 | Deployment | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
-| TEC-012 | Data retention | CONFIRMED REQUIREMENT | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-004 | Validated contracts | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-005 | Exchange connectivity library | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-006 | Storage | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-007 | Messaging | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-008 | Modular monolith | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-009 | Reproducible tooling | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-010 | Observability stack | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-011 | Deployment | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-012 | Data retention | IMPLEMENTATION CHOICE | DEC-009 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
+| TEC-013 | Supervision and execution lease | IMPLEMENTATION CHOICE | DEC-019 | Technology stack | [architecture/technology-stack.md](../architecture/technology-stack.md) | FOUNDATION |
 | RMP-001 | Minimum stage classes | CONFIRMED REQUIREMENT | §95 | Roadmap | [roadmap/roadmap.md](../roadmap/roadmap.md) | FOUNDATION |
 | RMP-002 | Sequential stages | CONFIRMED REQUIREMENT | DEC-016 | Roadmap | [roadmap/roadmap.md](../roadmap/roadmap.md) | FOUNDATION |
 | EXA-001 | Standardized adapters | CONFIRMED ARCHITECTURAL PRINCIPLE | §42 | SYS-01 Exchange Adapter Layer | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | DATA FOUNDATION |
@@ -79,6 +86,7 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | EXA-007 | Legitimate access only | CONSTRAINT | DEC-008 | SYS-01 Exchange Adapter Layer | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | DATA FOUNDATION |
 | EXA-008 | Order-state query is mandatory | CONSTRAINT | DEC-008 | SYS-01 Exchange Adapter Layer | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | DATA FOUNDATION |
 | EXA-009 | Instrument support per venue | SYSTEM REQUIREMENT | DEC-007 | SYS-01 Exchange Adapter Layer | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | DATA FOUNDATION |
+| EXA-010 | Transfer support | SYSTEM REQUIREMENT | DEC-019 | SYS-01 Exchange Adapter Layer | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | DATA FOUNDATION |
 | MKD-001 | Foundational shared infrastructure | CONFIRMED ARCHITECTURAL PRINCIPLE | §10 | SYS-02 Market-Data Infrastructure | [systems/market-data.md](../systems/market-data.md) | DATA FOUNDATION |
 | MKD-002 | Data coverage | SYSTEM REQUIREMENT | §10 | SYS-02 Market-Data Infrastructure | [systems/market-data.md](../systems/market-data.md) | DATA FOUNDATION |
 | MKD-003 | Market-data pipeline | CONFIRMED ARCHITECTURAL PRINCIPLE | §10 | SYS-02 Market-Data Infrastructure | [systems/market-data.md](../systems/market-data.md) | DATA FOUNDATION |
@@ -130,6 +138,7 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | TNP-020 | Economic eligibility | CONFIRMED REQUIREMENT | DEC-014 | SYS-06 True Net-Profit Engine | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | CORE TRADING FOUNDATION (+ ARBITRAGE cost components) |
 | TNP-021 | Comparable quality measure | SYSTEM REQUIREMENT | DEC-011 | SYS-06 True Net-Profit Engine | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | CORE TRADING FOUNDATION (+ ARBITRAGE cost components) |
 | TNP-022 | Continuous calibration | CONFIRMED REQUIREMENT | DEC-014 | SYS-06 True Net-Profit Engine | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | CORE TRADING FOUNDATION (+ ARBITRAGE cost components) |
+| TNP-023 | Latency decay in executable economics | CONFIRMED REQUIREMENT | DEC-019 | SYS-06 True Net-Profit Engine | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | CORE TRADING FOUNDATION (+ ARBITRAGE cost components) |
 | CAP-001 | Single authoritative capital state | CONFIRMED ARCHITECTURAL PRINCIPLE | §18 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
 | CAP-002 | Capital categories | SYSTEM REQUIREMENT | §18 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
 | CAP-003 | No assumed capital | CONSTRAINT | §18 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
@@ -151,7 +160,10 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | CAP-019 | Capital derived from the ledger | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-006 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
 | CAP-020 | Collateral and margin categories | SYSTEM REQUIREMENT | DEC-007 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
 | CAP-021 | Reservation on the latency-sensitive path | CONFIRMED REQUIREMENT | DEC-010 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
-| CAP-022 | Rebalancing transfers need confirmation by default | CONSTRAINT | DEC-012 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
+| CAP-022 | Rebalancing transfers need confirmation by default | DEPRECATED / REPLACED | DEC-012 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
+| CAP-023 | Autonomous rebalancing decision | CONFIRMED REQUIREMENT | DEC-019 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
+| CAP-024 | Economic justification | CONFIRMED REQUIREMENT | DEC-019 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
+| CAP-025 | Bounded rebalancing | CONSTRAINT | DEC-019 | SYS-07 Global Capital Authority | [systems/capital-management.md](../systems/capital-management.md) | CORE TRADING FOUNDATION |
 | PRT-001 | One centralized portfolio view | CONFIRMED ARCHITECTURAL PRINCIPLE | §24 | SYS-08 Portfolio Management | [systems/portfolio-management.md](../systems/portfolio-management.md) | CORE TRADING FOUNDATION |
 | PRT-002 | Tracked state | SYSTEM REQUIREMENT | §24 | SYS-08 Portfolio Management | [systems/portfolio-management.md](../systems/portfolio-management.md) | CORE TRADING FOUNDATION |
 | PRT-003 | No competing portfolio truths | CONSTRAINT | §24 | SYS-08 Portfolio Management | [systems/portfolio-management.md](../systems/portfolio-management.md) | CORE TRADING FOUNDATION |
@@ -171,6 +183,12 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | RSK-012 | Arbitrage risk as rule sets | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-013 | Derivatives and margin controls | CONFIRMED REQUIREMENT | DEC-007 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-014 | Uncertainty means no new position | CONSTRAINT | DEC-013 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-015 | Graduated safety levels | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-016 | Response by emergency type | CONFIRMED REQUIREMENT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-017 | Policy-driven position handling | CONFIRMED REQUIREMENT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-018 | No AI in emergency position handling | CONSTRAINT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-019 | Idempotent emergency actions | CONSTRAINT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-020 | Safety-level ownership and de-escalation | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | EXE-001 | Deterministic execution | CONFIRMED ARCHITECTURAL PRINCIPLE | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-002 | Responsibilities | SYSTEM REQUIREMENT | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-003 | Never trust AI claims of success | CONSTRAINT | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
@@ -179,6 +197,8 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | EXE-006 | Timeout handling | CONFIRMED REQUIREMENT | §41 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-007 | Reconciliation is invoked, not reimplemented | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-008 | Client order IDs | CONSTRAINT | DEC-008 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
+| EXE-009 | Transfer execution and state verification | CONFIRMED REQUIREMENT | DEC-019 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
+| EXE-010 | Only the active instance acts | CONSTRAINT | DEC-019 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | REC-001 | External reality changes while offline | CONFIRMED ARCHITECTURAL PRINCIPLE | §71 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-002 | Recovery sequence | CONFIRMED REQUIREMENT | §71 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-003 | Restart does not authorize trading | CONSTRAINT | §72 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
@@ -187,7 +207,11 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | REC-006 | Never restore stale memory | CONSTRAINT | §73 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-007 | Verify the database before loading from it | CONFIRMED REQUIREMENT | DEC-010 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-008 | Sole owner of reconciliation | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| REC-009 | Resuming after a restart | CONSTRAINT | DEC-012 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-009 | Resuming after a restart | DEPRECATED / REPLACED | DEC-012 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-010 | Automatic 24/7 recovery | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-011 | Recovery checks and decision | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-012 | Recovery failure handling | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-013 | Active-instance protection | CONSTRAINT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | POL-001 | User rules outside AI context | CONSTRAINT | §29 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-002 | Structured, persistent, versioned policy | CONFIRMED REQUIREMENT | §29 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-003 | Every meaningful change is a new version | CONFIRMED REQUIREMENT | §30 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
@@ -198,6 +222,7 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | POL-008 | Operating mode is policy | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-015 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-009 | Single location of policy | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-015 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-010 | Structured editing before the NL interface | CONFIRMED REQUIREMENT | DEC-015 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
+| POL-011 | Autonomy boundaries are policy | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | NLP-001 | Built-in natural-language interface | CONFIRMED REQUIREMENT | §28 | SYS-13 Natural Language Policy Interface | [systems/policy/natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) | AI INTELLIGENCE |
 | NLP-002 | Instruction categories | SYSTEM REQUIREMENT | §28 | SYS-13 Natural Language Policy Interface | [systems/policy/natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) | AI INTELLIGENCE |
 | NLP-003 | Interface, not authority | CONFIRMED ARCHITECTURAL PRINCIPLE | §28 | SYS-13 Natural Language Policy Interface | [systems/policy/natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) | AI INTELLIGENCE |
@@ -214,8 +239,14 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | STR-008 | What research must not touch | CONSTRAINT | §37 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | STR-009 | Improvement path | CONFIRMED REQUIREMENT | §38 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | STR-010 | Forbidden reaction to losses | CONSTRAINT | §38 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
-| STR-011 | Canary | CONFIRMED REQUIREMENT | DEC-015 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-011 | Canary | DEPRECATED / REPLACED | DEC-015 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | STR-012 | The Strategy Factory owns the research process | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-013 | Evidence-based canary readiness | CONFIRMED REQUIREMENT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-014 | Automatic canary entry | CONFIRMED REQUIREMENT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-015 | Dynamic canary allocation | CONFIRMED REQUIREMENT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-016 | Gradual scaling | CONSTRAINT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-017 | Automatic canary stop | CONFIRMED REQUIREMENT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-018 | Evidence, not time alone | CONSTRAINT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | BKT-001 | Backtesting scope | SYSTEM REQUIREMENT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
 | BKT-002 | Bias and leakage protections | CONFIRMED REQUIREMENT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
 | BKT-003 | A backtest is not authorization | CONSTRAINT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
@@ -321,21 +352,26 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | HLT-004 | Fail safely | CONSTRAINT | §90 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | HLT-005 | Degradation examples | CONFIRMED ARCHITECTURAL PRINCIPLE | §91 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | HLT-006 | Per-subsystem failure behavior | CONFIRMED REQUIREMENT | §91 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| HLT-007 | Formal states | CONFIRMED REQUIREMENT | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| HLT-008 | Trading allowed per state | CONSTRAINT | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| HLT-009 | Transitions | CONSTRAINT | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| HLT-007 | Formal states | DEPRECATED / REPLACED | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| HLT-008 | Trading allowed per state | DEPRECATED / REPLACED | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| HLT-009 | Transitions | DEPRECATED / REPLACED | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | HLT-010 | Ownership of platform state | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-012 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| HLT-011 | Health state separate from safety level | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| HLT-012 | Automatic progression to healthy | CONFIRMED REQUIREMENT | DEC-019 | SYS-29 System Health | [operations/system-health.md](../operations/system-health.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | AUD-001 | Traceable actions | CONFIRMED REQUIREMENT | §86 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-002 | Audit record contents | SYSTEM REQUIREMENT | §86 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-003 | Events to preserve | SYSTEM REQUIREMENT | §87 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-004 | Append-only and permanent | CONSTRAINT | DEC-009 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-005 | Authoritative event record | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-006 | Separate from operational logs | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-017 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
+| AUD-007 | Transfer record | CONFIRMED REQUIREMENT | DEC-019 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | SEC-001 | Protected assets | CONFIRMED REQUIREMENT | §89 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | SEC-002 | No unrestricted credentials for AI agents | CONSTRAINT | §89 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
-| SEC-003 | Trading keys cannot withdraw | CONSTRAINT | DEC-012 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
+| SEC-003 | Trading keys cannot withdraw | DEPRECATED / REPLACED | DEC-012 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | SEC-004 | Credential separation | CONSTRAINT | DEC-015 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | SEC-005 | Secrets handling | CONSTRAINT | DEC-009 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
+| SEC-006 | Three separate authorities | CONSTRAINT | DEC-019 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
+| SEC-007 | Transfer credential restrictions | CONFIRMED REQUIREMENT | DEC-019 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | CUS-001 | Platform-account architecture | FUTURE | §84 | SYS-32 Platform Account / Custody | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | None (FUTURE) |
 | CUS-002 | What it would require | FUTURE | §84 | SYS-32 Platform Account / Custody | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | None (FUTURE) |
 | CUS-003 | Not assumed approved | CONSTRAINT | §84 | SYS-32 Platform Account / Custody | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | None (FUTURE) |
@@ -352,9 +388,15 @@ Nothing awaits confirmation. The previously discussed and proposed items were de
 | PERF-004 | AI off the latency path | CONSTRAINT | §77 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
 | PERF-005 | Performance engineering techniques | CONFIRMED ARCHITECTURAL PRINCIPLE | §78 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
 | PERF-006 | Measured technology choices | CONSTRAINT | §78 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
-| PERF-007 | Initial design targets | CONFIRMED REQUIREMENT | DEC-017 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-007 | Initial design targets | DEPRECATED / REPLACED | DEC-017 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-008 | Latency decomposition | CONFIRMED REQUIREMENT | DEC-019 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-009 | Path-specific latency budgets | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-010 | Continuous measurement | CONFIRMED REQUIREMENT | DEC-019 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-011 | Automatic degradation handling | CONFIRMED REQUIREMENT | DEC-019 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
+| PERF-012 | Hard limits, soft targets, observed measurements | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | Performance (cross-cutting) | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | OPERATIONALIZATION |
 | OPS-001 | Operational readiness is not project completion | CONFIRMED ARCHITECTURAL PRINCIPLE | §80 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
 | OPS-002 | Subsystems can go live independently | CONFIRMED REQUIREMENT | §80 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
 | OPS-003 | Development while online | CONFIRMED REQUIREMENT | §81 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
 | OPS-004 | Separate environments | CONFIRMED REQUIREMENT | DEC-015 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
 | OPS-005 | Traceable, reversible deployments | CONFIRMED REQUIREMENT | DEC-009 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
+| OPS-006 | 24/7 operation | CONFIRMED REQUIREMENT | DEC-019 | Deployment and operational readiness | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPERATIONALIZATION |
