@@ -1,0 +1,31 @@
+# Glossary
+
+> **Status:** ACTIVE — 2026-09-30. Canonical terminology (constitution Rules 33, 59, 144).
+>
+> **MERGED** means different names in the handoff clearly refer to the same thing, so one canonical name is used. **DISTINCT** means similar names refer to different things and are kept apart. **OPEN** means the meaning is uncertain, so the terms are not merged. Renaming a canonical term requires a decision record.
+
+| Canonical term | Meaning | Variants seen in Part 1 | Status | Canonical document |
+|---|---|---|---|---|
+| Global Capital Authority | The single authoritative capital state and allocator | "Capital Authority" (§95), "capital management" (§01, §98), "Capital" (§98) | MERGED | [capital-management.md](systems/capital-management.md) |
+| True Net-Profit Engine | Evaluates an opportunity's realistic executable economics | "opportunity economics" (§95), "true net-profit calculation" (§06, §43, §95), "net economics" (§20); "arbitrage economics" (§12) is a Quantitative Engine metric (DUP-01) | MERGED (except "arbitrage economics", OPEN) | [true-net-profit-engine.md](systems/true-net-profit-engine.md) |
+| True net expected result | The engine's output: gross opportunity minus all costs and the safety margin | "true net expected profit" (§14) | MERGED | [true-net-profit-engine.md](systems/true-net-profit-engine.md) |
+| Opportunity Detection Engine | Shared scanning of the configured universe for candidate opportunities | "opportunity-detection capability" (§09), "opportunity monitoring" (§95), "opportunity scanning" (§08), "opportunity engine" (§10), "whole-universe opportunity monitoring" (§01, §08) | MERGED (grouping PROPOSED, DUP-05) | [opportunity-detection.md](systems/opportunity-detection.md) |
+| Market monitoring | Watching what happens across the trading universe | — | DISTINCT from operational monitoring (ARCH-005) | [opportunity-detection.md](systems/opportunity-detection.md) |
+| Operational monitoring | Watching whether the platform itself works | "Monitoring and Observability" (§88) | DISTINCT from market monitoring | [monitoring-and-observability.md](operations/monitoring-and-observability.md) |
+| Market Regime Engine | Classifies the current market regime | "Regime engine" (§95), "market-regime awareness" (§11) | MERGED | [market-regime-engine.md](systems/market-regime-engine.md) |
+| Risk Engine | Deterministic risk enforcement | "Deterministic Risk Engine" (§25), "Risk" (§95, §98) | MERGED | [risk-engine.md](risk/risk-engine.md) |
+| Policy System | Authoritative store of structured, versioned user policy | "the policy system" (§28), "structured, persistent policy" (§02), "Policy" (§98) | MERGED | [policy-system.md](systems/policy/policy-system.md) |
+| Natural Language Policy Interface | Natural-language way into the Policy System; not the authority | "natural-language policy control" (§01), "controlled policy interface" (§02) | MERGED | [natural-language-policy-interface.md](systems/policy/natural-language-policy-interface.md) |
+| Strategy Management | Strategy lifecycle, Strategy Factory, versioning | "Strategy management" (§01), "Strategy Factory" (§35), "Strategy lifecycle" (§04, §34, §95) | MERGED (as one system, SYS-14) | [strategy-management.md](systems/strategy/strategy-management.md) |
+| Venue | Any supported place the platform trades or holds assets | "trading venue" (§02), "exchange" (§42), "venues / wallets" (§84) | OPEN: whether wallets are venues depends on OQ-01 | [exchange-adapters.md](systems/exchange-adapters.md) |
+| Capital reserve | A category of capital held back, inside the Global Capital Authority | "capital held in reserve" (§18), "capital reserve" (§20, §43), "capital reserves" (§25), "arbitrage capital reserve" (§46), "reserve requirements" (§22, §45) | MERGED (the arbitrage reserve is a subset, ARB-009) | [capital-management.md](systems/capital-management.md) |
+| PAPER | (1) platform operating mode with simulated capital; (2) strategy lifecycle stage; (3) the Paper Trading capability | "paper trading", "paper-test", "paper testing" | DISTINCT meanings, related (see operating modes) | [operating-modes.md](product/operating-modes.md), [paper-trading.md](systems/strategy/paper-trading.md) |
+| RESEARCH | (1) operating mode; (2) lifecycle stage; (3) research activity bounded by §37; (4) the Research Agent | "research", "Research Agent" | DISTINCT | [operating-modes.md](product/operating-modes.md) |
+| AUTONOMOUS LIVE / PRODUCTION / live operation | Operating mode / strategy lifecycle stage / roadmap item | "live trading" (§01) | DISTINCT; relationship OPEN (OQ-08) | [operating-modes.md](product/operating-modes.md) |
+| Canary | A lifecycle stage between approval and production | — | OPEN: undefined (OQ-09) | [strategy-management.md](systems/strategy/strategy-management.md) |
+| Kill switch / emergency shutdown / safe mode / trading halted / emergency | Safety stops at different scopes | "global safety architecture" (§47) | OPEN: not merged; ownership unresolved (DUP-04, OQ-06) | [risk-engine.md](risk/risk-engine.md), [system-health.md](operations/system-health.md) |
+| Model health vs strategy health | Reliability of an AI model vs effectiveness of a trading strategy | — | DISTINCT (PFC-005) | [performance-controller.md](systems/performance-controller.md) |
+| Model Evaluation | Measuring AI model accuracy, reliability, calibration, cost, and similar | "Model Evaluation Agent" (§54), "Model Evaluation" (§61) | MERGED name; agent vs deterministic service OPEN (TC-02) | [model-management.md](ai/model-management.md) |
+| Strategy research / optimization agent | AI that proposes and compares strategy candidates | "Strategy Research Agent", "Strategy Optimizer" (§54), "Strategy Research / Optimization" (§59) | OPEN (DUP-12) | [agents.md](ai/agents.md) |
+| Hallucination Firewall | Requires evidence references for important AI claims; marks the rest UNVERIFIED | — | — | [ai-output-validation.md](ai/ai-output-validation.md) |
+| Opportunity database | Arbitrage store of detected, executed, and rejected opportunities and their economics | "Arbitrage Opportunity Database" (§44) | DISTINCT from event history (DUP-21) | [arbitrage-intelligence.md](systems/arbitrage/arbitrage-intelligence.md) |

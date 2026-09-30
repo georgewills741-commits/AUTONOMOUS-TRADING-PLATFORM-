@@ -1,0 +1,219 @@
+# Handoff Coverage — Part 1
+
+> Where every section of [Handoff Part 1](../handoffs/part-1-core-platform-features.md) now lives. The section table is generated from requirement source references; the §100 and §102 tables were written by hand and checked. A section with no requirement IDs is process/meta content, and its mapping is stated.
+
+## Section → canonical location
+
+| § | Handoff section | Canonical document(s) | Requirement IDs |
+|---|---|---|---|
+| 00 | PART-SPECIFIC HANDOFF INSTRUCTION | Builder instructions for this handoff. Applied as process: [project state](../project-state.md), [DEC-002](../decisions/DEC-002-documentation-structure.md), [DEC-003](../decisions/DEC-003-requirement-ids-and-classification.md), [DEC-005](../decisions/DEC-005-record-findings-without-resolving.md), [requirements README](../requirements/README.md) | — |
+| 01 | PLATFORM IDENTITY | [product/platform-overview.md](../product/platform-overview.md) | PLT-001, PLT-002, PLT-003 |
+| 02 | CORE PLATFORM OBJECTIVE | [product/platform-overview.md](../product/platform-overview.md) | PLT-004, PLT-005 |
+| 03 | MULTI-STRATEGY ARCHITECTURE | [architecture/overview.md](../architecture/overview.md) | ARCH-001, ARCH-002 |
+| 04 | SHARED INFRASTRUCTURE PRINCIPLE | [architecture/overview.md](../architecture/overview.md) | ARCH-003, ARCH-004 |
+| 05 | DIRECTIONAL TRADING SYSTEM | [systems/directional-trading.md](../systems/directional-trading.md) | DIR-001, DIR-002, DIR-003 |
+| 06 | CROSS-EXCHANGE ARBITRAGE | [systems/arbitrage/cross-exchange-arbitrage.md](../systems/arbitrage/cross-exchange-arbitrage.md) | XAR-001, XAR-002, XAR-003, XAR-004 |
+| 07 | TRIANGULAR ARBITRAGE | [systems/arbitrage/triangular-arbitrage.md](../systems/arbitrage/triangular-arbitrage.md) | TAR-001, TAR-002 |
+| 08 | WHOLE-UNIVERSE OPPORTUNITY MONITORING | [architecture/overview.md](../architecture/overview.md); [systems/opportunity-detection.md](../systems/opportunity-detection.md) | ARCH-005, OPP-001, OPP-002, OPP-003, OPP-004, OPP-005 |
+| 09 | OPPORTUNITY DETECTION ENGINE | [systems/opportunity-detection.md](../systems/opportunity-detection.md) | OPP-006, OPP-007, OPP-008 |
+| 10 | MARKET-DATA INFRASTRUCTURE | [systems/market-data.md](../systems/market-data.md) | MKD-001, MKD-002, MKD-003, MKD-004 |
+| 11 | MARKET REGIME ENGINE | [systems/market-regime-engine.md](../systems/market-regime-engine.md) | RGM-001, RGM-002, RGM-003, RGM-004 |
+| 12 | DETERMINISTIC QUANTITATIVE ENGINE | [systems/quantitative-engine.md](../systems/quantitative-engine.md) | QNT-001, QNT-002, QNT-003 |
+| 13 | TRUE NET-PROFIT ENGINE | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP-001, TNP-002, TNP-003, TNP-004 |
+| 14 | POSITIVE-NET-PROFIT OPPORTUNITY PRINCIPLE | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP-005, TNP-006, TNP-007 |
+| 15 | SMALL-PROFIT ACCUMULATION | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP-008, TNP-009, TNP-010, TNP-011 |
+| 16 | NO ARTIFICIAL PROFIT CEILING | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP-012, TNP-013, TNP-014 |
+| 17 | OPPORTUNITY QUALITY | [systems/true-net-profit-engine.md](../systems/true-net-profit-engine.md) | TNP-015, TNP-016 |
+| 18 | GLOBAL CAPITAL AUTHORITY | [systems/capital-management.md](../systems/capital-management.md) | CAP-001, CAP-002, CAP-003 |
+| 19 | CAPITAL RESERVATION | [systems/capital-management.md](../systems/capital-management.md) | CAP-004, CAP-005 |
+| 20 | DYNAMIC CAPITAL ALLOCATION | [systems/capital-management.md](../systems/capital-management.md) | CAP-006, CAP-007 |
+| 21 | OPPORTUNITY COMPETITION | [systems/capital-management.md](../systems/capital-management.md) | CAP-008, CAP-009 |
+| 22 | ARBITRAGE ACCUMULATION AND COMPOUNDING | [systems/capital-management.md](../systems/capital-management.md) | CAP-010, CAP-011, CAP-012, CAP-013 |
+| 23 | ACTIVE TRADE PROTECTION | [systems/capital-management.md](../systems/capital-management.md) | CAP-014, CAP-015 |
+| 24 | PORTFOLIO MANAGEMENT | [systems/portfolio-management.md](../systems/portfolio-management.md) | PRT-001, PRT-002, PRT-003 |
+| 25 | DETERMINISTIC RISK ENGINE | [risk/risk-engine.md](../risk/risk-engine.md) | RSK-001, RSK-002, RSK-003 |
+| 26 | RISK DECISION HIERARCHY | [risk/risk-engine.md](../risk/risk-engine.md) | RSK-004, RSK-005 |
+| 27 | NO-TRADE / UNCERTAINTY SYSTEM | [risk/risk-engine.md](../risk/risk-engine.md) | RSK-006, RSK-007 |
+| 28 | NATURAL LANGUAGE POLICY INTERFACE | [systems/policy/natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) | NLP-001, NLP-002, NLP-003, NLP-004, NLP-005, NLP-006 |
+| 29 | POLICY IS NOT AI MEMORY | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | POL-001, POL-002 |
+| 30 | POLICY VERSIONING | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | POL-003, POL-004 |
+| 31 | OPERATING MODES | [product/operating-modes.md](../product/operating-modes.md) | MODE-001, MODE-002 |
+| 32 | PAPER TRADING | [systems/strategy/paper-trading.md](../systems/strategy/paper-trading.md) | PAP-001, PAP-002 |
+| 33 | BACKTESTING | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | BKT-001, BKT-002, BKT-003 |
+| 34 | STRATEGY LIFECYCLE | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR-001, STR-002 |
+| 35 | STRATEGY FACTORY | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR-003, STR-004 |
+| 36 | STRATEGY VERSION CONTROL | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR-005, STR-006 |
+| 37 | RESEARCH / PRODUCTION SEPARATION | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR-007, STR-008 |
+| 38 | CONTROLLED STRATEGY IMPROVEMENT | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | STR-009, STR-010 |
+| 39 | EXECUTION ENGINE | [systems/execution-engine.md](../systems/execution-engine.md) | EXE-001, EXE-002, EXE-003 |
+| 40 | STALE DECISION PROTECTION | [systems/execution-engine.md](../systems/execution-engine.md) | EXE-004 |
+| 41 | IDEMPOTENT EXECUTION | [systems/execution-engine.md](../systems/execution-engine.md) | EXE-005, EXE-006 |
+| 42 | EXCHANGE ADAPTER ARCHITECTURE | [systems/exchange-adapters.md](../systems/exchange-adapters.md) | EXA-001, EXA-002, EXA-003, EXA-004 |
+| 43 | ARBITRAGE INTELLIGENCE | [systems/arbitrage/arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md) | ARB-001, ARB-002 |
+| 44 | ARBITRAGE OPPORTUNITY DATABASE | [systems/arbitrage/arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md) | ARB-003, ARB-004 |
+| 45 | INTELLIGENT REBALANCING | [systems/arbitrage/arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md) | ARB-005, ARB-006, ARB-007 |
+| 46 | ARBITRAGE CAPITAL RESERVE | [systems/arbitrage/arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md) | ARB-008, ARB-009 |
+| 47 | ARBITRAGE KILL SWITCH | [systems/arbitrage/arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md) | ARB-010, ARB-011 |
+| 48 | EXPECTED VS ACTUAL PERFORMANCE | [systems/performance-controller.md](../systems/performance-controller.md) | PFC-001 |
+| 49 | PERFORMANCE CONTROLLER | [systems/performance-controller.md](../systems/performance-controller.md) | PFC-002, PFC-003, PFC-004 |
+| 50 | MODEL HEALTH VS STRATEGY HEALTH | [systems/performance-controller.md](../systems/performance-controller.md) | PFC-005 |
+| 51 | AI INTELLIGENCE LAYER | [ai/ai-architecture.md](../ai/ai-architecture.md) | AIL-001, AIL-002 |
+| 52 | AI HARD-SAFETY BOUNDARY | [ai/ai-architecture.md](../ai/ai-architecture.md) | AIL-003 |
+| 53 | EVENT-DRIVEN AI ACTIVATION | [ai/ai-architecture.md](../ai/ai-architecture.md) | AIL-004, AIL-005 |
+| 54 | AI AGENT ORGANIZATION | [ai/agents.md](../ai/agents.md) | AGT-001, AGT-002, AGT-003 |
+| 55 | TRADING DIRECTOR | [ai/agents.md](../ai/agents.md) | AGT-004, AGT-005 |
+| 56 | DEVIL'S ADVOCATE | [ai/agents.md](../ai/agents.md) | AGT-006, AGT-007 |
+| 57 | MARKET ANALYST | [ai/agents.md](../ai/agents.md) | AGT-008, AGT-009 |
+| 58 | QUANT RESEARCH AGENT | [ai/agents.md](../ai/agents.md) | AGT-010, AGT-011 |
+| 59 | STRATEGY RESEARCH / OPTIMIZATION | [ai/agents.md](../ai/agents.md) | AGT-012, AGT-013 |
+| 60 | PERFORMANCE ANALYST | [ai/agents.md](../ai/agents.md) | AGT-014, AGT-015 |
+| 61 | MODEL EVALUATION | [ai/model-management.md](../ai/model-management.md) | MEV-001, MEV-002 |
+| 62 | AI COST MANAGER | [ai/model-management.md](../ai/model-management.md) | COST-001 |
+| 63 | MODEL ROUTER | [ai/model-management.md](../ai/model-management.md) | RTR-001, RTR-002 |
+| 64 | HALLUCINATION FIREWALL | [ai/ai-output-validation.md](../ai/ai-output-validation.md) | AIV-001, AIV-002, AIV-003 |
+| 65 | STRUCTURED AI OUTPUT CONTRACT | [ai/ai-output-validation.md](../ai/ai-output-validation.md) | AIV-004, AIV-005, AIV-006 |
+| 66 | MULTI-AGENT VALIDATION | [ai/ai-output-validation.md](../ai/ai-output-validation.md) | AIV-007, AIV-008, AIV-009 |
+| 67 | AI CONFIDENCE CALIBRATION | [ai/ai-output-validation.md](../ai/ai-output-validation.md) | AIV-010, AIV-011, AIV-012 |
+| 68 | AI MEMORY / PROJECT KNOWLEDGE | [ai/ai-memory.md](../ai/ai-memory.md) | MEM-001, MEM-002, MEM-003, MEM-004 |
+| 69 | CONSISTENCY / ANTI-DRIFT ARCHITECTURE | [architecture/overview.md](../architecture/overview.md) | ARCH-006, ARCH-007 |
+| 70 | DATA / COMPUTATION / STRATEGY / AI / RISK / EXECUTION SEPARATION | [architecture/overview.md](../architecture/overview.md) | ARCH-008, ARCH-009 |
+| 71 | RECOVERY AND RECONCILIATION | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | REC-001, REC-002 |
+| 72 | SAFE RESUME | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | REC-003, REC-004 |
+| 73 | ACTIVE TRADE RECOVERY | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | REC-005, REC-006 |
+| 74 | SYSTEM HEALTH STATE MACHINE | [operations/system-health.md](../operations/system-health.md) | HLT-001, HLT-002 |
+| 75 | CONTINUOUS OPERATION | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | PERF-001 |
+| 76 | PERFORMANCE AS A FIRST-CLASS REQUIREMENT | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | PERF-002 |
+| 77 | LATENCY-SENSITIVE PATH | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | PERF-003, PERF-004 |
+| 78 | PERFORMANCE ENGINEERING | [architecture/performance-and-latency.md](../architecture/performance-and-latency.md) | PERF-005, PERF-006 |
+| 79 | NUMERICAL PRECISION | [architecture/overview.md](../architecture/overview.md) | ARCH-010, ARCH-011 |
+| 80 | OPERATIONAL READINESS | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPS-001, OPS-002 |
+| 81 | DEVELOPMENT WHILE ONLINE | [operations/deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) | OPS-003 |
+| 82 | PLATFORM SAFETY PRIORITY | [product/platform-overview.md](../product/platform-overview.md) | PLT-006 |
+| 83 | NO GUARANTEED RETURNS | [product/platform-overview.md](../product/platform-overview.md) | PLT-007, PLT-008, PLT-009 |
+| 84 | PLATFORM ACCOUNT / CUSTODY ARCHITECTURE | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | CUS-001, CUS-002, CUS-003 |
+| 85 | LEDGER / ACCOUNTING FOUNDATION | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | LED-001, LED-002, LED-003 |
+| 86 | AUDITABILITY | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | AUD-001, AUD-002 |
+| 87 | EVENT AND DECISION HISTORY | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | AUD-003 |
+| 88 | MONITORING AND OBSERVABILITY | [operations/monitoring-and-observability.md](../operations/monitoring-and-observability.md) | MON-001, MON-002, MON-003, MON-004, MON-005, MON-006 |
+| 89 | SECURITY ARCHITECTURE | [security/security-architecture.md](../security/security-architecture.md) | SEC-001, SEC-002 |
+| 90 | FAILURE IS AN EXPECTED STATE | [operations/system-health.md](../operations/system-health.md) | HLT-003, HLT-004 |
+| 91 | CONTROLLED DEGRADATION | [operations/system-health.md](../operations/system-health.md) | HLT-005, HLT-006 |
+| 92 | SYSTEM BOUNDARY PRINCIPLE | [architecture/overview.md](../architecture/overview.md); [architecture/system-registry.md](../architecture/system-registry.md) | ARCH-012 |
+| 93 | FEATURE OWNERSHIP | [architecture/overview.md](../architecture/overview.md); [architecture/system-registry.md](../architecture/system-registry.md) | ARCH-013 |
+| 94 | FEATURE DEPENDENCY | [architecture/overview.md](../architecture/overview.md); [architecture/dependency-map.md](../architecture/dependency-map.md) | ARCH-014 |
+| 95 | ROADMAP STAGE CLASSIFICATION | [roadmap/roadmap.md](../roadmap/roadmap.md) | RMP-001 |
+| 96 | FEATURE STATUS CLASSIFICATION | [architecture/overview.md](../architecture/overview.md); [requirements/README.md](../requirements/README.md) | ARCH-015 |
+| 97 | DUPLICATION CONTROL | [architecture/overview.md](../architecture/overview.md); [conflicts/register.md](../conflicts/register.md) | ARCH-016 |
+| 98 | CANONICAL SOURCE OF TRUTH | [architecture/overview.md](../architecture/overview.md); [architecture/source-of-truth-map.md](../architecture/source-of-truth-map.md) | ARCH-017 |
+| 99 | REPOSITORY ORGANIZATION TARGET | Repository organization target. Applied in [DEC-002](../decisions/DEC-002-documentation-structure.md) (with deviations recorded; CF-07) | — |
+| 100 | DOCUMENTATION-FIRST COMPLETION GATE | Completion gate. Answered in the "§100 questions" table below | — |
+| 101 | PART 1 DOES NOT AUTHORIZE IMPLEMENTATION | Implementation gate. Recorded in [project state](../project-state.md) and the [roadmap](../roadmap/roadmap.md) | — |
+| 102 | PART 1 EXPECTED DOCUMENTATION COVERAGE | Expected coverage. Checked in the "§102 topics" table below | — |
+| 103 | PART 1 FINAL COMPLETION CONDITION | Completion condition. Checked in the [Part 1 verification record](part-1-verification.md) | — |
+
+## §100 questions — where the repository answers them
+
+§100: "If these questions cannot be answered from the repository, the documentation foundation is incomplete."
+
+| §100 question | Answered in |
+|---|---|
+| What is the platform? | [platform-overview.md](../product/platform-overview.md): PLT-001 to PLT-003 |
+| What are its major trading systems? | [architecture overview](../architecture/overview.md): ARCH-001; [system registry](../architecture/system-registry.md) |
+| What infrastructure is shared? | [architecture overview](../architecture/overview.md): ARCH-003, ARCH-004; [system registry](../architecture/system-registry.md), "Category" column |
+| What is deterministic? | [architecture overview](../architecture/overview.md), "What is deterministic and what belongs to AI" |
+| What belongs to AI? | Same section; [AI architecture](../ai/ai-architecture.md): AIL-001 to AIL-005 |
+| Where does capital authority live? | [Global Capital Authority](../systems/capital-management.md): CAP-001; [source-of-truth map](../architecture/source-of-truth-map.md), "Key authorities" |
+| Where does risk authority live? | [Risk Engine](../risk/risk-engine.md): RSK-001, RSK-004 |
+| Where does execution authority live? | [Execution Engine](../systems/execution-engine.md): EXE-001 to EXE-003 |
+| How does the Natural Language Policy Interface work conceptually? | [NL Policy Interface](../systems/policy/natural-language-policy-interface.md): NLP-003, NLP-004 |
+| How are user instructions converted into enforceable policy? | [Policy System](../systems/policy/policy-system.md), "How instructions become enforceable policy" |
+| How does the system monitor the whole trading universe? | [Opportunity Detection Engine](../systems/opportunity-detection.md): OPP-001 to OPP-005 |
+| How does it evaluate small positive opportunities? | [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-005 to TNP-007, TNP-011 |
+| How does accumulation work? | [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-008 to TNP-010; [Global Capital Authority](../systems/capital-management.md): CAP-010 to CAP-013 |
+| Is there an artificial daily-profit ceiling? | **No.** [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-012 to TNP-014; [platform overview](../product/platform-overview.md): PLT-008 |
+| How are strategies promoted? | [Strategy Management](../systems/strategy/strategy-management.md): STR-001, STR-003; "canary" still undefined (OQ-09) |
+| What happens after interruption? | [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md): REC-001 to REC-006 |
+| What happens after an execution timeout? | [Execution Engine](../systems/execution-engine.md): EXE-005, EXE-006 |
+| How are AI models controlled? | [AI architecture](../ai/ai-architecture.md): AIL-003; [AI output validation](../ai/ai-output-validation.md); [model management](../ai/model-management.md) |
+| How are duplicate systems prevented? | [architecture overview](../architecture/overview.md): ARCH-003, ARCH-016; [agents](../ai/agents.md): AGT-003; [findings register](../conflicts/register.md), DUP entries |
+| Where does every major feature belong? | [system registry](../architecture/system-registry.md); the section table above |
+| Which features depend on which others? | [dependency map](../architecture/dependency-map.md) |
+| Which requirements are confirmed? | [requirements registry](../requirements/registry.md), "Class" column |
+| Which require confirmation? | [requirements registry](../requirements/registry.md) (PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION, PROPOSED); [custody and ledger](../systems/custody-and-ledger.md); [agents](../ai/agents.md) roster; [open questions](../open-questions/register.md) |
+| What remains for Part 2? | [roadmap](../roadmap/roadmap.md), "What remains for Part 2"; [open questions](../open-questions/register.md); [project state](../project-state.md) |
+
+## §102 topics — canonical location of each expected topic
+
+| §102 topic | Canonical location |
+|---|---|
+| Platform identity | [platform-overview.md](../product/platform-overview.md): PLT-001 to PLT-003 |
+| Platform objective | [platform-overview.md](../product/platform-overview.md): PLT-004, PLT-009 |
+| Multi-strategy architecture | [overview.md](../architecture/overview.md): ARCH-001, ARCH-002 |
+| Directional trading | [directional-trading.md](../systems/directional-trading.md) |
+| Cross-exchange arbitrage | [cross-exchange-arbitrage.md](../systems/arbitrage/cross-exchange-arbitrage.md) |
+| Triangular arbitrage | [triangular-arbitrage.md](../systems/arbitrage/triangular-arbitrage.md) |
+| Shared infrastructure | [overview.md](../architecture/overview.md): ARCH-003, ARCH-004, ARCH-016 |
+| Whole-universe market monitoring | [opportunity-detection.md](../systems/opportunity-detection.md): OPP-001 to OPP-005 |
+| Opportunity monitoring | [opportunity-detection.md](../systems/opportunity-detection.md) |
+| Market data | [market-data.md](../systems/market-data.md) |
+| Market regime | [market-regime-engine.md](../systems/market-regime-engine.md) |
+| Quantitative engine | [quantitative-engine.md](../systems/quantitative-engine.md) |
+| Opportunity detection | [opportunity-detection.md](../systems/opportunity-detection.md): OPP-006 to OPP-008 |
+| True net-profit calculation | [true-net-profit-engine.md](../systems/true-net-profit-engine.md): TNP-001 to TNP-004 |
+| Small positive opportunity execution | [true-net-profit-engine.md](../systems/true-net-profit-engine.md): TNP-005 to TNP-007 |
+| Opportunity accumulation | [true-net-profit-engine.md](../systems/true-net-profit-engine.md): TNP-008 to TNP-011; [capital-management.md](../systems/capital-management.md): CAP-010 to CAP-013 |
+| Capital authority | [capital-management.md](../systems/capital-management.md): CAP-001 to CAP-003 |
+| Capital reservation | [capital-management.md](../systems/capital-management.md): CAP-004, CAP-005 |
+| Dynamic capital allocation | [capital-management.md](../systems/capital-management.md): CAP-006, CAP-007 |
+| Opportunity competition | [capital-management.md](../systems/capital-management.md): CAP-008, CAP-009 |
+| Portfolio management | [portfolio-management.md](../systems/portfolio-management.md) |
+| Risk | [risk-engine.md](../risk/risk-engine.md): RSK-001 to RSK-005 |
+| No-trade/uncertainty | [risk-engine.md](../risk/risk-engine.md): RSK-006, RSK-007 |
+| Natural Language Policy Interface | [natural-language-policy-interface.md](../systems/policy/natural-language-policy-interface.md) |
+| Persistent policy | [policy-system.md](../systems/policy/policy-system.md): POL-001, POL-002 |
+| Policy versioning | [policy-system.md](../systems/policy/policy-system.md): POL-003, POL-004 |
+| Operating modes | [operating-modes.md](../product/operating-modes.md) |
+| Paper trading | [paper-trading.md](../systems/strategy/paper-trading.md) |
+| Backtesting | [backtesting.md](../systems/strategy/backtesting.md) |
+| Strategy lifecycle | [strategy-management.md](../systems/strategy/strategy-management.md): STR-001, STR-002 |
+| Strategy factory | [strategy-management.md](../systems/strategy/strategy-management.md): STR-003, STR-004 |
+| Strategy improvement | [strategy-management.md](../systems/strategy/strategy-management.md): STR-009, STR-010 |
+| Execution | [execution-engine.md](../systems/execution-engine.md): EXE-001 to EXE-003 |
+| Stale-decision protection | [execution-engine.md](../systems/execution-engine.md): EXE-004 |
+| Idempotent execution | [execution-engine.md](../systems/execution-engine.md): EXE-005, EXE-006 |
+| Exchange architecture | [exchange-adapters.md](../systems/exchange-adapters.md) |
+| Arbitrage intelligence | [arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md): ARB-001, ARB-002 |
+| Arbitrage opportunity database | [arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md): ARB-003, ARB-004 |
+| Intelligent rebalancing | [arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md): ARB-005 to ARB-007 |
+| Arbitrage reserves | [arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md): ARB-008, ARB-009 |
+| Arbitrage kill switch | [arbitrage-intelligence.md](../systems/arbitrage/arbitrage-intelligence.md): ARB-010, ARB-011 |
+| Expected-vs-actual performance | [performance-controller.md](../systems/performance-controller.md): PFC-001 |
+| Performance controller | [performance-controller.md](../systems/performance-controller.md): PFC-002 to PFC-005 |
+| AI architecture | [ai-architecture.md](../ai/ai-architecture.md) |
+| AI agents | [agents.md](../ai/agents.md) |
+| AI memory/knowledge | [ai-memory.md](../ai/ai-memory.md) |
+| AI consistency/anti-drift | [overview.md](../architecture/overview.md): ARCH-006, ARCH-007 (§69); [ai-memory.md](../ai/ai-memory.md): MEM-004 |
+| Model routing | [model-management.md](../ai/model-management.md): RTR-001, RTR-002 |
+| AI cost management | [model-management.md](../ai/model-management.md): COST-001 |
+| Hallucination Firewall | [ai-output-validation.md](../ai/ai-output-validation.md): AIV-001 to AIV-003 |
+| Structured AI outputs | [ai-output-validation.md](../ai/ai-output-validation.md): AIV-004 to AIV-006 |
+| Multi-agent validation | [ai-output-validation.md](../ai/ai-output-validation.md): AIV-007 to AIV-009 |
+| AI confidence calibration | [ai-output-validation.md](../ai/ai-output-validation.md): AIV-010 to AIV-012 |
+| Recovery | [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md): REC-001, REC-002 |
+| Reconciliation | [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md): REC-002, REC-005; [execution-engine.md](../systems/execution-engine.md): EXE-006 |
+| Safe resume | [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md): REC-003, REC-004 |
+| Monitoring | [monitoring-and-observability.md](../operations/monitoring-and-observability.md) |
+| Observability | [monitoring-and-observability.md](../operations/monitoring-and-observability.md) |
+| Performance engineering | [performance-and-latency.md](../architecture/performance-and-latency.md) |
+| Numerical precision | [overview.md](../architecture/overview.md): ARCH-010, ARCH-011 |
+| Security | [security-architecture.md](../security/security-architecture.md) |
+| Auditability | [audit-and-event-history.md](../systems/audit-and-event-history.md) |
+| Failure handling | [system-health.md](../operations/system-health.md): HLT-003, HLT-004 |
+| Controlled degradation | [system-health.md](../operations/system-health.md): HLT-005, HLT-006 |
+| System boundaries | [overview.md](../architecture/overview.md): ARCH-012; the "Boundary (§92)" section of each specification |
+| Feature ownership | [overview.md](../architecture/overview.md): ARCH-013; [system registry](../architecture/system-registry.md) |
+| Dependencies | [overview.md](../architecture/overview.md): ARCH-014; [dependency map](../architecture/dependency-map.md) |
+| Roadmap classification | [roadmap.md](../roadmap/roadmap.md): RMP-001 |
+| Requirement classification | [overview.md](../architecture/overview.md): ARCH-015; [requirements README](../requirements/README.md) |
+| Duplicate prevention | [overview.md](../architecture/overview.md): ARCH-016; [findings register](../conflicts/register.md) |
+| Canonical sources of truth | [overview.md](../architecture/overview.md): ARCH-017; [source-of-truth map](../architecture/source-of-truth-map.md) |
