@@ -1,6 +1,6 @@
 # Dependency Map
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-020. Part 2 promises "complete dependency mapping"; revise this map when it arrives.
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-023. Part 2 promises "complete dependency mapping"; revise this map when it arrives.
 >
 > Canonical record of which systems depend on which (ARCH-014). **STATED** edges come directly from handoff text (source given). **DECIDED** edges were fixed by a decision record. **INFERRED** edges are the builder's reading of the text. System IDs are from the [system registry](system-registry.md).
 
@@ -69,8 +69,9 @@ This is a build-dependency chain. The runtime order, with the capital authority 
 | D-48 | SYS-10 Execution Engine (transfers) | SYS-01 Exchange Adapters (transfer and transfer-status support) | DECIDED (DEC-019) | EXE-009, EXA-010 |
 | D-49 | SYS-10 Execution Engine, SYS-11 Recovery | Execution lease (PostgreSQL) | DECIDED (DEC-019) | EXE-010, REC-013, TEC-013 |
 | D-50 | SYS-09 Risk Engine (emergency controller) | SYS-12 Policy System (safety and position-protection policy), SYS-29 System Health, SYS-21 Performance Controller (degradation signals) | DECIDED (DEC-019) | RSK-015 to RSK-017, PERF-011 |
-| D-51 | SYS-14 Strategy Management (canary readiness) | SYS-15, SYS-16, SYS-07 (capital availability), SYS-04 (regime), SYS-09 (risk validation), SYS-12 (policy validation), SYS-29 (system health) | DECIDED (DEC-019) | STR-013 to STR-016 |
+| D-51 | SYS-14 Strategy Management (canary readiness; Governance and Readiness Engine, DEC-023) | SYS-15, SYS-16, SYS-07 (capital availability), SYS-04 (regime), SYS-09 (risk validation), SYS-12 (policy validation), SYS-29 (system health) | DECIDED (DEC-019) | STR-013 to STR-016 |
 | D-52 | SYS-06 True Net-Profit Engine (latency decay) | Measured latency from SYS-28 Monitoring | DECIDED (DEC-019) | TNP-023, PERF-010 |
+| D-53 | SYS-09 Risk Engine (kill-switch recovery) | SYS-11 Reconciliation, SYS-29 System Health, SYS-02 Market Data (freshness), SYS-07 Capital (reservations), SYS-12 Policy | DECIDED (DEC-021) | RSK-021, RSK-023 |
 
 ## Stage-level dependencies (DECIDED, [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md))
 

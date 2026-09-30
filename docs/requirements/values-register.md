@@ -9,7 +9,7 @@
 | ID | Value | Used by | Class | Current value | Notes |
 |---|---|---|---|---|---|
 | V-01 | Canary maximum initial allocation | STR-015 | POLICY-CONTROLLED PARAMETER (upper bound; the actual allocation is computed dynamically within it) | Not set | The former default of 5% (DEC-015) was withdrawn by OC-1 items 16, 18, 31 |
-| V-02 | Canary evidence: minimum live duration | STR-018 | POLICY-CONTROLLED PARAMETER (optional evidence requirement) | Not set | The former 14 days was withdrawn; time alone never decides readiness |
+| V-02 | Canary evidence: minimum live duration | STR-018, STR-020 | POLICY-CONTROLLED PARAMETER (optional evidence requirement) | Not set | The former 14 days was withdrawn; time alone never decides readiness |
 | V-03 | Canary evidence: minimum trade count | STR-018 | POLICY-CONTROLLED PARAMETER (optional evidence requirement) | Not set | The former 50 trades was withdrawn |
 | V-04 | Canary allocation stages and the gate thresholds between them | STR-016 | POLICY-CONTROLLED PARAMETER | Not set | |
 | V-05 | Canary deterioration thresholds | STR-017 | POLICY-CONTROLLED PARAMETER | Not set | |
@@ -31,5 +31,11 @@
 | V-21 | Python version | TEC-001 | IMPLEMENTATION CHOICE | 3.12 or later | |
 | V-22 | PostgreSQL version | TEC-006 | IMPLEMENTATION CHOICE | 16 | |
 | V-23 | Execution lease duration and renewal interval | REC-013, TEC-013 | IMPLEMENTATION CHOICE | Not set | To be chosen from measured failover behavior |
+| V-24 | Period a transient trigger condition must stay cleared before automatic kill-switch recovery | RSK-021 | POLICY-CONTROLLED PARAMETER | Not set | [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) |
+| V-25 | Repeated-trip limit (trips within a window that stop automatic recovery and escalate) | RSK-024 | POLICY-CONTROLLED PARAMETER | Not set | |
+| V-26 | Limited-recovery stages (exposure and capital allowed at each step before full operation) | RSK-023 | POLICY-CONTROLLED PARAMETER | Not set | |
+| V-27 | Kill-switch cause classification: transient (automatically recoverable) vs latched | RSK-021, RSK-022 | POLICY-CONTROLLED PARAMETER | Baseline from DEC-021 | Unclassified causes are latched (RSK-022) |
+| V-28 | Deployments that require human authorization | STR-021 | POLICY-CONTROLLED PARAMETER | Baseline examples from DEC-023 | Policy must mark them explicitly: brand-new strategy class, material risk-model change, exceptional capital increase, security-sensitive change, unresolved governance exception ([DEC-023](../decisions/DEC-023-autonomous-canary-approval.md)) |
+| V-29 | Confidence required to treat critical state as reconciled | REC-016 | HARD LIMIT (value in policy) | Not set | |
 
 To add a value: give it the next V-number, name the requirement that uses it, and classify it. To make any value a permanent hard-coded requirement, the owner must approve it explicitly in a decision record (ARCH-018).

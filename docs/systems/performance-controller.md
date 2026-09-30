@@ -28,7 +28,7 @@ Model health is measured by [Model Evaluation](../ai/model-management.md) (MEV-0
 
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
-The controller's detection scope (PFC-003) includes the performance and latency degradation of PERF-011. The resulting restrictions are applied by the Risk Engine's safety levels (RSK-015), within PFC-004 and PFC-008.
+The controller's detection scope (PFC-003) includes the performance and latency degradation of PERF-011. The reference to RSK-009 in PFC-008 now resolves to RSK-021 to RSK-025 ([DEC-021](../decisions/DEC-021-kill-switch-recovery.md)); a kill switch this controller activates follows their recovery rules. The resulting restrictions are applied by the Risk Engine's safety levels (RSK-015), within PFC-004 and PFC-008.
 
 ## Boundary (§92)
 

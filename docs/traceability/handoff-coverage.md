@@ -132,6 +132,9 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-018](../decisions/DEC-018-initial-directional-research-candidates.md) | DIR-005 |
 | [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) | PLT-013, PLT-014, PLT-015, MODE-007, TEC-013, EXA-010, TNP-023, CAP-023, CAP-024, CAP-025, RSK-015, RSK-016, RSK-017, RSK-018, RSK-019, RSK-020, EXE-009, EXE-010, REC-010, REC-011, REC-012, REC-013, POL-011, STR-013, STR-014, STR-015, STR-016, STR-017, STR-018, HLT-011, HLT-012, AUD-007, SEC-006, SEC-007, PERF-008, PERF-009, PERF-010, PERF-011, PERF-012, OPS-006 |
 | [DEC-020](../decisions/DEC-020-value-classification.md) | ARCH-018 |
+| [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) | RSK-021, RSK-022, RSK-023, RSK-024, RSK-025, AUD-008 |
+| [DEC-022](../decisions/DEC-022-restart-recovery-sequence.md) | REC-014, REC-015, REC-016, REC-017, REC-018, AUD-009 |
+| [DEC-023](../decisions/DEC-023-autonomous-canary-approval.md) | STR-019, STR-020, STR-021, STR-022 |
 
 ## §100 questions — where the repository answers them
 

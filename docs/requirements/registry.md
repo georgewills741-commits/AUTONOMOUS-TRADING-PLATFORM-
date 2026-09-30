@@ -2,18 +2,18 @@
 
 > **Index only.** Requirement text lives in the linked specification (DEC-003). This table is generated from the specifications, so rebuild or edit it together with them. Conventions: [README](README.md).
 >
-> **Sources:** Handoff Part 1 (228) and decision records (150) · **Status of every entry:** DOCUMENTED — not implemented, not verified · **Total:** 378 requirements
+> **Sources:** Handoff Part 1 (228) and decision records (166) · **Status of every entry:** DOCUMENTED — not implemented, not verified · **Total:** 394 requirements
 
 ## Summary by class
 
 | Class | Count |
 |---|---|
-| CONFIRMED REQUIREMENT | 113 |
+| CONFIRMED REQUIREMENT | 120 |
 | CONFIRMED ARCHITECTURAL PRINCIPLE | 85 |
-| CONSTRAINT | 92 |
+| CONSTRAINT | 98 |
 | SYSTEM REQUIREMENT | 63 |
 | FUTURE | 2 |
-| DEPRECATED / REPLACED | 12 |
+| DEPRECATED / REPLACED | 15 |
 | IMPLEMENTATION CHOICE | 11 |
 
 FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry names its replacement in its specification. LED-001 stays conditional on a user-facing platform, which the platform currently is not (DEC-006). Open conflicts that affect requirements are listed in the [findings register](../conflicts/register.md). Concrete values used by requirements are classified in the [values register](values-register.md).
@@ -177,7 +177,7 @@ FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry name
 | RSK-006 | Valid outcomes | SYSTEM REQUIREMENT | §27 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-007 | No manufactured confidence | CONSTRAINT | §27 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-008 | Kill switches and the global safety architecture | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-012 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
-| RSK-009 | Kill-switch activation and reset | CONSTRAINT | DEC-012 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-009 | Kill-switch activation and reset | DEPRECATED / REPLACED | DEC-012 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-010 | System safety rules | CONFIRMED REQUIREMENT | DEC-012 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-011 | Final position size | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-010 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-012 | Arbitrage risk as rule sets | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
@@ -189,6 +189,11 @@ FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry name
 | RSK-018 | No AI in emergency position handling | CONSTRAINT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-019 | Idempotent emergency actions | CONSTRAINT | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | RSK-020 | Safety-level ownership and de-escalation | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-019 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-021 | Automatic recovery from transient conditions | CONFIRMED REQUIREMENT | DEC-021 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-022 | Latched kill switches | CONSTRAINT | DEC-021 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-023 | Progressive, scoped recovery | CONFIRMED REQUIREMENT | DEC-021 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-024 | Recovery failure escalation | CONSTRAINT | DEC-021 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
+| RSK-025 | Activation, AI limits, and precedence | CONSTRAINT | DEC-021 | SYS-09 Risk Engine | [risk/risk-engine.md](../risk/risk-engine.md) | CORE TRADING FOUNDATION |
 | EXE-001 | Deterministic execution | CONFIRMED ARCHITECTURAL PRINCIPLE | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-002 | Responsibilities | SYSTEM REQUIREMENT | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
 | EXE-003 | Never trust AI claims of success | CONSTRAINT | §39 | SYS-10 Execution Engine | [systems/execution-engine.md](../systems/execution-engine.md) | CORE TRADING FOUNDATION |
@@ -205,13 +210,18 @@ FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry name
 | REC-004 | Resume preconditions | CONFIRMED REQUIREMENT | §72 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-005 | Determine real trade state | CONFIRMED REQUIREMENT | §73 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-006 | Never restore stale memory | CONSTRAINT | §73 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| REC-007 | Verify the database before loading from it | CONFIRMED REQUIREMENT | DEC-010 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-007 | Verify the database before loading from it | DEPRECATED / REPLACED | DEC-010 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-008 | Sole owner of reconciliation | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-009 | Resuming after a restart | DEPRECATED / REPLACED | DEC-012 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-010 | Automatic 24/7 recovery | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
-| REC-011 | Recovery checks and decision | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-011 | Recovery checks and decision | DEPRECATED / REPLACED | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-012 | Recovery failure handling | CONFIRMED REQUIREMENT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | REC-013 | Active-instance protection | CONSTRAINT | DEC-019 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-014 | Persisted state is untrusted context | CONSTRAINT | DEC-022 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-015 | Recovery sequence | CONFIRMED REQUIREMENT | DEC-022 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-016 | Recovery outcomes | CONFIRMED REQUIREMENT | DEC-022 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-017 | Idempotent recovery | CONSTRAINT | DEC-022 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
+| REC-018 | Recovery never bypasses controls | CONSTRAINT | DEC-022 | SYS-11 Recovery and Reconciliation | [systems/recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) | CORE TRADING FOUNDATION / OPERATIONALIZATION |
 | POL-001 | User rules outside AI context | CONSTRAINT | §29 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-002 | Structured, persistent, versioned policy | CONFIRMED REQUIREMENT | §29 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
 | POL-003 | Every meaningful change is a new version | CONFIRMED REQUIREMENT | §30 | SYS-12 Policy System | [systems/policy/policy-system.md](../systems/policy/policy-system.md) | CORE TRADING FOUNDATION |
@@ -247,6 +257,10 @@ FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry name
 | STR-016 | Gradual scaling | CONSTRAINT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | STR-017 | Automatic canary stop | CONFIRMED REQUIREMENT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | STR-018 | Evidence, not time alone | CONSTRAINT | DEC-019 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-019 | Autonomous approval by the Governance and Readiness Engine | CONFIRMED REQUIREMENT | DEC-023 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-020 | Deterministic canary controls | CONFIRMED REQUIREMENT | DEC-023 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-021 | Human approval only where policy requires | CONFIRMED REQUIREMENT | DEC-023 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
+| STR-022 | Gates cannot be bypassed | CONSTRAINT | DEC-023 | SYS-14 Strategy Management | [systems/strategy/strategy-management.md](../systems/strategy/strategy-management.md) | DIRECTIONAL TRADING |
 | BKT-001 | Backtesting scope | SYSTEM REQUIREMENT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
 | BKT-002 | Bias and leakage protections | CONFIRMED REQUIREMENT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
 | BKT-003 | A backtest is not authorization | CONSTRAINT | §33 | SYS-15 Backtesting | [systems/strategy/backtesting.md](../systems/strategy/backtesting.md) | DIRECTIONAL TRADING |
@@ -365,6 +379,8 @@ FUTURE entries are recorded but not built. Each DEPRECATED / REPLACED entry name
 | AUD-005 | Authoritative event record | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-011 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-006 | Separate from operational logs | CONFIRMED ARCHITECTURAL PRINCIPLE | DEC-017 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | AUD-007 | Transfer record | CONFIRMED REQUIREMENT | DEC-019 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
+| AUD-008 | Kill-switch recovery record | CONFIRMED REQUIREMENT | DEC-021 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
+| AUD-009 | Restart recovery record | CONFIRMED REQUIREMENT | DEC-022 | SYS-30 Auditability / Event and Decision History | [systems/audit-and-event-history.md](../systems/audit-and-event-history.md) | CORE TRADING FOUNDATION |
 | SEC-001 | Protected assets | CONFIRMED REQUIREMENT | §89 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | SEC-002 | No unrestricted credentials for AI agents | CONSTRAINT | §89 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |
 | SEC-003 | Trading keys cannot withdraw | DEPRECATED / REPLACED | DEC-012 | SYS-31 Security Architecture | [security/security-architecture.md](../security/security-architecture.md) | FOUNDATION |

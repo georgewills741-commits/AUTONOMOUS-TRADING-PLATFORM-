@@ -20,6 +20,11 @@ Canonical definition of what must be traceable and which events must be preserve
 
 - **AUD-007** Transfer record · CONFIRMED REQUIREMENT · DEC-019 — For every transfer the system must record: why the transfer was initiated; source; destination; asset; amount; expected benefit; transfer cost; policy version; authorization boundary; execution result; reconciliation result.
 
+## Owner decisions applied (CF-11 to CF-13, 2026-09-30)
+
+- **AUD-008** Kill-switch recovery record · CONFIRMED REQUIREMENT · DEC-021 — Kill-switch recovery actions, triggers, checks, decisions, and final states must be recorded in the audit trail.
+- **AUD-009** Restart recovery record · CONFIRMED REQUIREMENT · DEC-022 — Every restart recovery step, discrepancy, reconciliation result, decision, and final operating state must be recorded in the audit trail.
+
 ## Boundary (§92)
 
 - **Owns:** the audit trail and the event and decision history.

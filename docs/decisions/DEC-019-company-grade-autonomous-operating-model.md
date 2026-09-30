@@ -4,7 +4,8 @@
 - **Date:** 2026-09-30
 - **Decided by:** project owner, in the directive [Owner correction 1: company-grade autonomous operating defaults](../handoffs/owner-correction-01-autonomous-operating-defaults.md) ("OC-1"). Items 1–30 and 32–33 are applied here; item 31 is applied in [DEC-020](DEC-020-value-classification.md).
 - **Supersedes in part:** [DEC-012](DEC-012-safety-architecture.md), [DEC-015](DEC-015-modes-canary-and-policy-governance.md), [DEC-017](DEC-017-reporting-alerting-and-performance-targets.md)
-- **Raises for owner review:** CF-11, CF-12, CF-13 ([findings register](../conflicts/register.md))
+- **Raised for owner review:** CF-11, CF-12, CF-13 ([findings register](../conflicts/register.md)); decided by the owner in [DEC-021](DEC-021-kill-switch-recovery.md), [DEC-022](DEC-022-restart-recovery-sequence.md), [DEC-023](DEC-023-autonomous-canary-approval.md)
+- **Later changes:** REC-011 is superseded by DEC-022
 
 ## Context
 

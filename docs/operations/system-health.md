@@ -35,6 +35,8 @@ HLT-007 is replaced by HLT-011 and RSK-015. HLT-008 is replaced by RSK-015 to RS
 - **HLT-011** Health state separate from safety level · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-019 — System Health tracks the platform's health: STARTING, RECOVERING, HEALTHY, DEGRADED, or STOPPED, plus the component conditions EXCHANGE DEGRADED (per venue), DATA DEGRADED, and AI DEGRADED. WARNING is an alert severity. What the platform may do is governed by the Risk Engine's safety level (RSK-015). Of the §74 names, SAFE MODE and EMERGENCY are safety levels, and TRADING HALTED is the condition in which the global kill switch is active. Health conditions feed the deterministic rules that set the safety level.
 - **HLT-012** Automatic progression to healthy · CONFIRMED REQUIREMENT · DEC-019 — The platform moves from STARTING through RECOVERING to HEALTHY automatically when the recovery checks pass (REC-011), without operator action. While they do not pass, it stays in RECOVERING, at safety level SAFE MODE or CRITICAL RECOVERY.
 
+References to REC-011 in HLT-012 now resolve to REC-015 and REC-016 ([DEC-022](../decisions/DEC-022-restart-recovery-sequence.md)).
+
 ## Findings (all resolved)
 
 OQ-07 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (HLT-007 to HLT-010). DUP-04 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (RSK-008). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (CORE TRADING FOUNDATION).

@@ -1,12 +1,12 @@
 # Findings Register: Conflicts, Inconsistencies and Duplicate Responsibilities
 
-> **Status:** ACTIVE register. Last updated 2026-09-30. The 32 Part 1 findings are RESOLVED by decision records DEC-002, DEC-003, DEC-006, and DEC-010 to DEC-016 (resolved at the owner's instruction; see each record for who decided). **Three findings raised by the owner's correction OC-1 (CF-11 to CF-13) are OPEN, awaiting owner review.** Entries are kept, not deleted, so the trace remains (constitution Rule 179).
+> **Status:** ACTIVE register. Last updated 2026-09-30. The 32 Part 1 findings are RESOLVED by decision records DEC-002, DEC-003, DEC-006, and DEC-010 to DEC-016 (resolved at the owner's instruction; see each record for who decided). The three findings raised by the owner's correction OC-1 (CF-11 to CF-13) were decided by the owner ([owner decisions 2](../handoffs/owner-decisions-02-cf-11-to-cf-13.md)): DEC-021 to DEC-023. **No finding is open.** Entries are kept, not deleted, so the trace remains (constitution Rule 179).
 >
 > Specifications keep the handoff's requirements **as stated**. Findings are recorded here and are **not** silently resolved in the specifications (DEC-005). Every "proposed resolution" is **RECOMMENDED — NOT YET APPROVED** until the project owner accepts it. When one is accepted, record the decision in [`docs/decisions/`](../decisions/README.md), update the affected specifications, and mark the finding RESOLVED here with a link. Do not delete it.
 >
 > Open questions and technical concerns are in [`docs/open-questions/register.md`](../open-questions/register.md). Terminology normalization is in the [glossary](../glossary.md).
 
-Summary: 13 conflicts/inconsistencies (CF): 10 RESOLVED, 3 OPEN (CF-11 to CF-13). 22 duplicate or overlapping responsibilities (DUP), all RESOLVED. "Proposed resolution" below is the builder's recommendation as first written; "Resolution" is what was decided.
+Summary: 13 conflicts/inconsistencies (CF), all RESOLVED. 22 duplicate or overlapping responsibilities (DUP), all RESOLVED. "Proposed resolution" below is the builder's recommendation as first written; "Resolution" is what was decided.
 
 ## Conflicts and inconsistencies (CF)
 
@@ -82,8 +82,8 @@ Summary: 13 conflicts/inconsistencies (CF): 10 RESOLVED, 3 OPEN (CF-11 to CF-13)
 - **Sources:** RSK-009 ([DEC-012](../decisions/DEC-012-safety-architecture.md): only the operator can reset a kill switch) vs OC-1 items 13, 14, 28, 29, 32 (PLT-013 to PLT-015: human intervention by exception; recover automatically when recoverable).
 - **Conflict:** kill switches can be activated automatically (for example on exchange instability, API instability, or stale data). With operator-only reset, every such activation stops that part of the platform until a human acts, even after the condition has cleared.
 - **Impact:** high for 24/7 operation, and for safety if reset were made fully automatic (e.g. a kill switch triggered by repeated losses, §47).
-- **Status:** OPEN — surfaced by [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) for owner review. RSK-009 stays in force until decided.
-- **Proposed resolution (RECOMMENDED — NOT YET APPROVED):** reset by cause.
+- **Status:** RESOLVED by the owner — [DEC-021](../decisions/DEC-021-kill-switch-recovery.md): cause-based, risk-aware recovery with escalation (RSK-021 to RSK-025, AUD-008). The owner's answer extends the proposal: more latched causes, a progressive recovery path, and audit.
+- **Proposed resolution (as first written):** reset by cause.
   - The operator must reset kill switches activated by the operator, by a security event, by unknown financial state, or by loss-based triggers (repeated losses, capital inconsistency).
   - Kill switches activated by recoverable, measurable conditions (venue or API instability, stale data, latency degradation, liquidity collapse) reset automatically once the condition has stayed cleared for a policy-defined period and the recovery checks pass (REC-011).
   - The cause-to-reset mapping lives in policy (POL-011).
@@ -92,8 +92,8 @@ Summary: 13 conflicts/inconsistencies (CF): 10 RESOLVED, 3 OPEN (CF-11 to CF-13)
 - **Sources:** REC-007 ([DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md): database integrity verified *before* state is loaded) vs REC-002 (§71: load verified internal state → verify database) and REC-011 (OC-1 item 11: load persistent state → verify database). Also, REC-011 verifies capital, positions, and orders before reconciling with exchange state, while §71 validates capital after reconciliation.
 - **Conflict:** ordering only. Every source requires all checks to pass before trading resumes.
 - **Impact:** low.
-- **Status:** OPEN — surfaced by [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md).
-- **Proposed resolution (RECOMMENDED — NOT YET APPROVED):**
+- **Status:** RESOLVED by the owner — [DEC-022](../decisions/DEC-022-restart-recovery-sequence.md): staged recovery; persisted state untrusted until reconciled (REC-014 to REC-018, AUD-009).
+- **Proposed resolution (as first written):**
   - No loaded state is relied on until database integrity is verified. This satisfies all three orders, and REC-007 would be reworded to say so.
   - Capital, position, and order checks before reconciliation verify internal consistency; they are validated again against exchange state after reconciliation, as §71 does.
 
@@ -101,8 +101,8 @@ Summary: 13 conflicts/inconsistencies (CF): 10 RESOLVED, 3 OPEN (CF-11 to CF-13)
 - **Sources:** STR-001 (§34) and STR-009 (§38): … paper → **approval** → canary → production; vs STR-014 and MODE-007 (OC-1 items 16, 17): automatic canary entry after deterministic "canary authorization"; PLT-014 (OC-1 item 29): human intervention for "production approval gates explicitly designated as human-controlled".
 - **Conflict:** the handoff does not say whether APPROVAL is a human decision. If it is, automatic canary entry would bypass it.
 - **Impact:** medium. It decides whether any new strategy version reaches live capital without a person.
-- **Status:** OPEN — surfaced by [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md). STR-014 is applied as the owner wrote it: automatic, unless policy designates the gate human-controlled.
-- **Proposed resolution (RECOMMENDED — NOT YET APPROVED):** the APPROVAL stage is performed by the deterministic canary authorization (STR-013) by default. The operator can designate it human-controlled in policy, globally or per strategy. Owner to confirm, or to state that APPROVAL is always human.
+- **Status:** RESOLVED by the owner — [DEC-023](../decisions/DEC-023-autonomous-canary-approval.md): the Governance and Readiness Engine approves automatically; human approval only where policy requires it; nobody can bypass the gates (STR-019 to STR-022).
+- **Proposed resolution (as first written):** the APPROVAL stage is performed by the deterministic canary authorization (STR-013) by default. The operator can designate it human-controlled in policy, globally or per strategy. Owner to confirm, or to state that APPROVAL is always human.
 
 ## Duplicate or overlapping responsibilities (DUP)
 

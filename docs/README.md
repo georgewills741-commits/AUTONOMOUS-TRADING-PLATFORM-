@@ -2,7 +2,7 @@
 
 The canonical project knowledge base for the Autonomous Trading Platform: a production-grade autonomous cryptocurrency trading platform ([platform overview](product/platform-overview.md)). The conversation is not the source of truth; this repository is (handoff §00).
 
-**Current state:** Handoff Part 1 is documented and its open items are resolved; the technology stack is decided; the owner's company-grade autonomous operating model is applied ([DEC-019](decisions/DEC-019-company-grade-autonomous-operating-model.md)). Three conflicts it raised (CF-11 to CF-13) await owner review. Part 2 has not been received. **No product implementation exists or is authorized.** Details: [project state](project-state.md).
+**Current state:** Handoff Part 1 is documented and its open items are resolved; the technology stack is decided; the owner's company-grade autonomous operating model is applied ([DEC-019](decisions/DEC-019-company-grade-autonomous-operating-model.md)), and the owner has decided the three conflicts it raised (DEC-021 to DEC-023). No open questions or findings remain. Part 2 has not been received. **No product implementation exists or is authorized.** Details: [project state](project-state.md).
 
 ## Start here
 
@@ -42,9 +42,9 @@ The canonical project knowledge base for the Autonomous Trading Platform: a prod
 | [requirements/](requirements/README.md) | [Conventions](requirements/README.md) · [Registry (index)](requirements/registry.md) · [Values register](requirements/values-register.md) |
 | [roadmap/](roadmap/roadmap.md) | [Master roadmap](roadmap/roadmap.md) |
 | [decisions/](decisions/README.md) | [Decision log](decisions/README.md) |
-| [conflicts/](conflicts/register.md) | [Findings register](conflicts/register.md): conflicts and duplicate responsibilities (CF-11 to CF-13 open) |
+| [conflicts/](conflicts/register.md) | [Findings register](conflicts/register.md): conflicts and duplicate responsibilities (all resolved) |
 | [open-questions/](open-questions/register.md) | [Open questions and technical concerns](open-questions/register.md) (all resolved) |
-| [traceability/](traceability/handoff-coverage.md) | [Handoff coverage](traceability/handoff-coverage.md) · [Part 1 verification record](traceability/part-1-verification.md) · [Resolution verification record](traceability/resolution-verification.md) · [Owner correction 1 verification record](traceability/owner-correction-01-verification.md) |
+| [traceability/](traceability/handoff-coverage.md) | [Handoff coverage](traceability/handoff-coverage.md) · [Part 1 verification record](traceability/part-1-verification.md) · [Resolution verification record](traceability/resolution-verification.md) · [Owner correction 1 verification record](traceability/owner-correction-01-verification.md) · [Owner decisions 2 verification record](traceability/owner-decisions-02-verification.md) |
 | [glossary.md](glossary.md) | Canonical terminology |
-| [handoffs/](handoffs/part-1-core-platform-features.md) | [Part 1](handoffs/part-1-core-platform-features.md) · [Owner correction 1: autonomous operating defaults](handoffs/owner-correction-01-autonomous-operating-defaults.md) (both HISTORICAL) |
+| [handoffs/](handoffs/part-1-core-platform-features.md) | [Part 1](handoffs/part-1-core-platform-features.md) · [Owner correction 1: autonomous operating defaults](handoffs/owner-correction-01-autonomous-operating-defaults.md) · [Owner decisions 2: CF-11 to CF-13](handoffs/owner-decisions-02-cf-11-to-cf-13.md) (all HISTORICAL) |
 | [builder/](builder/claude-code-builder-constitution.md) | [Claude Code Builder Constitution](builder/claude-code-builder-constitution.md): how the repository is built and maintained |

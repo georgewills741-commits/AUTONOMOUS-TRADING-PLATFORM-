@@ -55,13 +55,14 @@ Direct answers to §100's "where does … authority live?":
 | User policy | SYS-12 Policy System (NL interface is not the authority) | POL-002, NLP-003 — [policy-system.md](../systems/policy/policy-system.md) |
 | Portfolio state | SYS-08 Portfolio Management | PRT-001, PRT-003 — [portfolio-management.md](../systems/portfolio-management.md) |
 | Strategy versions and promotion | SYS-14 Strategy Management | STR-001, STR-005 — [strategy-management.md](../systems/strategy/strategy-management.md) |
-| Kill switches, trading authorization | SYS-09 Risk Engine | RSK-008, RSK-009 — [risk-engine.md](../risk/risk-engine.md) ([DEC-012](../decisions/DEC-012-safety-architecture.md)) |
+| Kill switches, trading authorization, kill-switch recovery | SYS-09 Risk Engine | RSK-008, RSK-021 to RSK-025 — [risk-engine.md](../risk/risk-engine.md) ([DEC-012](../decisions/DEC-012-safety-architecture.md)) |
 | Platform health state | SYS-29 System Health | HLT-011, HLT-012 — [system-health.md](../operations/system-health.md) |
 | Safety level (NORMAL … CRITICAL RECOVERY) and emergency handling | SYS-09 Risk Engine (emergency controller) | RSK-015 to RSK-020 — [risk-engine.md](../risk/risk-engine.md) ([DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)) |
 | Rebalancing decision | SYS-07 Global Capital Authority | CAP-023 to CAP-025 — [capital-management.md](../systems/capital-management.md) |
 | Transfer execution | SYS-10 Execution Engine | EXE-009 — [execution-engine.md](../systems/execution-engine.md) |
+| Restart recovery sequence | SYS-11 Recovery and Reconciliation | REC-014 to REC-018 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Active execution instance (lease) | SYS-11 Recovery and Reconciliation | REC-013, EXE-010 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
-| Canary readiness and scaling | SYS-14 Strategy Management | STR-013 to STR-018 — [strategy-management.md](../systems/strategy/strategy-management.md) |
+| Canary readiness, approval, and scaling | SYS-14 Strategy Management (Governance and Readiness Engine) | STR-013 to STR-022 — [strategy-management.md](../systems/strategy/strategy-management.md) |
 | Autonomy boundaries | SYS-12 Policy System | POL-011 — [policy-system.md](../systems/policy/policy-system.md) |
 | Realized financial history (P&L, fees, transfers, balances) | SYS-33 Trading Ledger | LED-004, LED-006 — [custody-and-ledger.md](../systems/custody-and-ledger.md) |
 | Operating mode | SYS-12 Policy System | POL-008 — [policy-system.md](../systems/policy/policy-system.md) |

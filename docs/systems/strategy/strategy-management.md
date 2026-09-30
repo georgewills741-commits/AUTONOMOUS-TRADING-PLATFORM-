@@ -45,6 +45,15 @@ STR-011 (canary: 5% for 14 days and 50 trades) is replaced by STR-013 to STR-018
 - **STR-017** Automatic canary stop · CONFIRMED REQUIREMENT · DEC-019 — If a canary deteriorates, the platform automatically: stops allocation increases; reduces exposure where policy requires; suspends the strategy; rolls back the strategy version; returns capital to the appropriate reserve; records the event; analyses expected vs actual performance. This must not require an AI agent to improvise the response.
 - **STR-018** Evidence, not time alone · CONSTRAINT · DEC-019 — Readiness is evidence-based and risk-based. A strategy does not become production-ready merely because time has passed, and is not rejected merely for not reaching an arbitrary number of days when all required evidence is otherwise sufficient. Time and trade count may be used as evidence requirements.
 
+## Owner decisions applied (CF-11 to CF-13, 2026-09-30)
+
+- **STR-019** Autonomous approval by the Governance and Readiness Engine · CONFIRMED REQUIREMENT · DEC-023 — The lifecycle APPROVAL stage (STR-001, STR-009) is performed automatically by the platform's deterministic Governance and Readiness Engine when all mandatory readiness, risk, validation, capital, data-integrity, liquidity, execution, and operational checks pass. A strategy may enter canary automatically only when it satisfies the defined eligibility policy and sufficient capital is available.
+- **STR-020** Deterministic canary controls · CONFIRMED REQUIREMENT · DEC-023 — The canary allocation, exposure limits, duration, and promotion criteria are enforced by deterministic controls.
+- **STR-021** Human approval only where policy requires · CONFIRMED REQUIREMENT · DEC-023 — Human approval is required only when policy explicitly marks a deployment as requiring human authorization, such as a brand-new strategy class, a material risk-model change, an exceptional capital increase, a security-sensitive change, or any unresolved governance exception.
+- **STR-022** Gates cannot be bypassed · CONSTRAINT · DEC-023 — No AI agent or human may bypass the deterministic safety gates. Failure of any mandatory gate prevents canary deployment and places the strategy into a blocked / readiness-failed state until the required conditions are satisfied.
+
+The Governance and Readiness Engine is a component of this system (SYS-14), not a separate system ([DEC-023](../../decisions/DEC-023-autonomous-canary-approval.md)). It issues the "canary authorization" named in STR-013.
+
 ## Boundary (§92)
 
 - **Owns:** strategy versions, lifecycle state, promotion, and retirement.
@@ -54,6 +63,4 @@ STR-011 (canary: 5% for 14 days and 50 trades) is replaced by STR-013 to STR-018
 
 ## Findings
 
-DUP-18 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (STR-012). DUP-20 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (DIR-004). OQ-09 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (STR-011). CF-05 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (built in DIRECTIONAL TRADING as shared infrastructure; ARBITRAGE depends on it).
-
-Open: CF-13 (APPROVAL stage): STR-001 (§34) and STR-009 (§38) place APPROVAL before CANARY; STR-014 (OC-1) enters canary automatically after deterministic canary authorization. Whether APPROVAL is a human gate by default awaits owner review; see the [findings register](../../conflicts/register.md).
+All resolved. DUP-18 → DEC-011 (STR-012). DUP-20 → DEC-011 (DIR-004). OQ-09 → DEC-015 (STR-011, since replaced). CF-05 → DEC-016. CF-13 → [DEC-023](../../decisions/DEC-023-autonomous-canary-approval.md) (STR-019 to STR-022).
