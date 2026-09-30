@@ -14,7 +14,10 @@ Canonical definition of paper trading. PAPER is both a platform [operating mode]
 - **Uses:** the production Risk Engine, Global Capital Authority, Portfolio, and Execution paths with simulated capital (PAP-001, MODE-001).
 - **Not yet specified in Part 1:** how simulated fills, latency, and partial fills are modelled; how paper and live state are kept technically separate (constitution Rule 111); interfaces; tests.
 
-## Findings
+## Decisions applied (2026-09-30)
 
-- TC-04: at small margins, simulated execution that is optimistic about fills or slippage would overstate results. Paper results need comparison with live expected-vs-actual data (PFC-001) before being trusted.
-- OQ-08: operating-mode ownership and transitions.
+- **PAP-003** Paper does not validate small margins · CONSTRAINT · DEC-014 — Paper results alone do not validate small-margin strategies. Their canary (STR-011) must confirm live expected-vs-actual costs.
+
+## Findings (all resolved)
+
+TC-04 → [DEC-014](../../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) (PAP-003, TNP-022). OQ-08 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (operating modes owned by the Policy System).

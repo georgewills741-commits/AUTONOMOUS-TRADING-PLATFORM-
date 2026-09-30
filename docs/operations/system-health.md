@@ -1,6 +1,6 @@
 # System Health, Failure Handling and Controlled Degradation
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** **not mapped by §95** (CF-05) · **Sources:** §74, §90, §91
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91
 
 Canonical definition of the platform health states, the failures the platform must expect, and how it degrades safely.
 
@@ -21,8 +21,13 @@ Canonical definition of the platform health states, the failures the platform mu
 
 HLT-006 is why every system specification has a "failure behavior" field. Part 1 leaves it unspecified for almost every system, so that field is expected from Part 2.
 
-## Findings
+## Decisions applied (2026-09-30)
 
-- OQ-07: the final state machine. It needs transitions, the difference between DEGRADED and WARNING, and how the subsystem states combine.
-- DUP-04: SAFE MODE, TRADING HALTED, and EMERGENCY overlap with the Risk Engine's kill switches and emergency shutdown (RSK-002), the arbitrage kill switch (ARB-010), and the §27 outcomes (RSK-006).
-- CF-05: not mapped to any roadmap stage.
+- **HLT-007** Formal states · CONFIRMED REQUIREMENT · DEC-012 — The overall platform state is one of STARTING, RECOVERING, HEALTHY, DEGRADED, SAFE MODE, TRADING HALTED, EMERGENCY, or STOPPED. EXCHANGE DEGRADED (per venue), DATA DEGRADED, and AI DEGRADED are component conditions that make the overall state DEGRADED. WARNING is an alert severity (MON-007), not a trading state.
+- **HLT-008** Trading allowed per state · CONSTRAINT · DEC-012 — HEALTHY: trading allowed. DEGRADED: only strategies that do not depend on a degraded component. SAFE MODE: no new positions; reduce and close only. TRADING HALTED: no orders except those the operator approves. EMERGENCY: cancel all open orders, no new orders, and alert the operator; positions are closed automatically only if policy explicitly enables it. STARTING, RECOVERING, STOPPED: no trading.
+- **HLT-009** Transitions · CONSTRAINT · DEC-012 — Any state can move automatically to SAFE MODE, TRADING HALTED, or EMERGENCY when a deterministic rule or kill switch fires. Leaving those states requires operator action and the safe-resume checks (REC-004). STARTING moves to RECOVERING, and RECOVERING to HEALTHY only after reconciliation succeeds.
+- **HLT-010** Ownership of platform state · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-012 — System Health owns the platform state, fed by operational monitoring. The Risk Engine reads it before authorizing any trade (RSK-010).
+
+## Findings (all resolved)
+
+OQ-07 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (HLT-007 to HLT-010). DUP-04 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (RSK-008). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (CORE TRADING FOUNDATION).

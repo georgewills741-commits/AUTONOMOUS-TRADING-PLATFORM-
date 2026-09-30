@@ -36,6 +36,16 @@ Canonical definition of the platform's single capital state, capital reservation
 - **CAP-014** Respect existing commitments · CONSTRAINT · §23 — A new opportunity must not automatically interrupt an existing position merely because it appears theoretically better. Existing commitments must be respected.
 - **CAP-015** Grounds for rejecting a new opportunity · SYSTEM REQUIREMENT · §23 — A new opportunity may be rejected because: capital is committed; risk budget is committed; exposure limits are reached; execution resources are constrained; existing positions require management; the opportunity is no longer executable.
 
+## Decisions applied (2026-09-30)
+
+- **CAP-016** Runtime order of capital and risk · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-010 — The runtime order is: capital request → this system checks availability and allocation → the Risk Engine authorizes and sets the final size → this system reserves → execution → commit / release. §94's order is a build-dependency chain, not the runtime order. A risk rejection means nothing is reserved.
+- **CAP-017** Allocation and ranking authority · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This system alone allocates capital and ranks competing opportunities for allocation, using the comparable measure in TNP-021. Arbitrage allocation and the arbitrage reserve are capital categories held here.
+- **CAP-018** Rebalancing decisions · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This system decides whether to rebalance. Arbitrage Intelligence supplies the evaluation (ARB-006).
+- **CAP-019** Capital derived from the ledger · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-006 — Available capital is derived from ledger-confirmed balances minus reservations and commitments (LED-006).
+- **CAP-020** Collateral and margin categories · SYSTEM REQUIREMENT · DEC-007 — The capital state also distinguishes collateral posted for margin and derivatives positions, borrowed funds, and margin required to keep positions open.
+- **CAP-021** Reservation on the latency-sensitive path · CONFIRMED REQUIREMENT · DEC-010 — The latency-sensitive path includes capital reservation (§77 lists stages, not every control). Reservation must meet the latency targets in PERF-007.
+- **CAP-022** Rebalancing transfers need confirmation by default · CONSTRAINT · DEC-012 — Rebalancing transfers are proposed by the platform and executed after operator confirmation. Automated transfers can be enabled only by an important policy change (POL-005) and must use the restricted transfer key described in SEC-003.
+
 ## Boundary (§92)
 
 - **Owns:** the authoritative capital state (CAP-001, CAP-002), reservations (CAP-004, CAP-005), and allocation decisions (CAP-006 to CAP-009).
@@ -43,10 +53,6 @@ Canonical definition of the platform's single capital state, capital reservation
 - **Must not:** let any strategy assume capital (CAP-003) or hold capital state outside this system (ARB-009).
 - **Not yet specified in Part 1:** failure behavior, reservation timeouts, interfaces, tests.
 
-## Findings
+## Findings (all resolved)
 
-- CF-01: §19 and §21 place the capital authority before the risk check; §94 places risk before capital.
-- CF-03: capital reservation does not appear on the latency-sensitive path (PERF-003).
-- DUP-02: the Portfolio also tracks allocated, reserved, and available capital (PRT-002).
-- DUP-06 and DUP-07: rebalancing, dynamic allocation, and the capital reserve are also listed by Arbitrage Intelligence (ARB-001).
-- OQ-02: CAP-012 routes realized results through "accounting / ledger", but the ledger is only required if the platform becomes user-facing (LED-001).
+CF-01 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (CAP-016). CF-03 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (CAP-021). DUP-02 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (PRT-004). DUP-06 and DUP-07 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (CAP-017, CAP-018). OQ-02 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (CAP-019). OQ-04 → [DEC-007](../decisions/DEC-007-instrument-scope.md) (CAP-020).

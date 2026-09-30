@@ -1,6 +1,6 @@
 # AI Agents
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented. **The roster itself is PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION.** · **System:** SYS-23 · **Roadmap stage:** AI INTELLIGENCE ("Agents", "Trading Director", "Devil's Advocate") · **Sources:** §54–§60
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented. **Final roster decided: AGT-016 ([DEC-013](../decisions/DEC-013-ai-organization.md)).** · **System:** SYS-23 · **Roadmap stage:** AI INTELLIGENCE ("Agents", "Trading Director", "Devil's Advocate") · **Sources:** §54–§60
 >
 > §99 sketches `docs/ai/agents/` as a folder. One file is enough for Part 1's content; the split can happen when agent specifications grow (DEC-002).
 
@@ -8,7 +8,7 @@ Canonical definition of the AI agents and the overlap analysis that §54 require
 
 ## Roster
 
-- **AGT-001** Previously discussed roster · PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION · §54 — Previously discussed AI responsibilities include: 1. Market Analyst; 2. Quant Research Agent; 3. Strategy Research Agent; 4. Trading Director; 5. Devil's Advocate; 6. Performance Analyst; 7. Strategy Optimizer; 8. Model Evaluation Agent; 9. Research Agent; 10. AI Cost Manager; 11. News/Sentiment Agent.
+- **AGT-001** Previously discussed roster · DEPRECATED / REPLACED · §54 — Previously discussed AI responsibilities include: 1. Market Analyst; 2. Quant Research Agent; 3. Strategy Research Agent; 4. Trading Director; 5. Devil's Advocate; 6. Performance Analyst; 7. Strategy Optimizer; 8. Model Evaluation Agent; 9. Research Agent; 10. AI Cost Manager; 11. News/Sentiment Agent.
 - **AGT-002** Find overlaps before implementation · CONFIRMED REQUIREMENT · §54 — Claude must identify overlapping responsibilities before implementation.
 - **AGT-003** No duplicate agents · CONSTRAINT · §54 — The project must not create multiple agents doing essentially the same job without an explicit architectural reason.
 
@@ -30,7 +30,11 @@ Only six of the eleven agents have their own section in Part 1. The rest are nam
 | 10 | AI Cost Manager | §62 (COST-001, not framed as an agent) | Model Router (routing); Model Evaluation (cost) | DUP-15, TC-02 |
 | 11 | News/Sentiment Agent | name only; §51 lists "news analysis", "sentiment" | Market Analyst ("relevant news", "event interpretation") | DUP-11 |
 
-The final roster is OQ-11. No agent is to be built until it is resolved (AGT-003).
+Every overlap above is resolved by [DEC-013](../decisions/DEC-013-ai-organization.md):
+
+- **AGT-016** Final agent roster · CONFIRMED REQUIREMENT · DEC-013 — The platform has five AI agents. Market Analyst (including news and sentiment). Research Agent (quantitative research and strategy research/optimization, routed by task type). Trading Director. Devil's Advocate. Performance Analyst. Model Evaluation and the AI Cost Manager are deterministic services, not agents.
+
+AGT-001 is replaced by AGT-016. The sections below keep the handoff's definitions as written. The Market Analyst section now also covers news and sentiment; the Quant Research Agent and strategy research/optimization sections both describe task types of the one Research Agent.
 
 ## Trading Director
 

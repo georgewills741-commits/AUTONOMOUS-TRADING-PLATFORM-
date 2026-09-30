@@ -21,7 +21,7 @@ Canonical definition of trading executable price discrepancies between venues. C
 
 ## Findings
 
-Several XAR-003 responsibilities are also owned elsewhere:
+Several XAR-003 responsibilities are also owned elsewhere. **All resolved** by [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md): this system supplies leg definitions, sizes, and expected values, and uses the owning systems for the rest (ARB-012). Arbitrage is fully deterministic (ARB-013, [DEC-013](../../decisions/DEC-013-ai-organization.md)).
 
 | XAR-003 item | Also owned by | Finding |
 |---|---|---|

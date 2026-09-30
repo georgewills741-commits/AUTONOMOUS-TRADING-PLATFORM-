@@ -1,6 +1,6 @@
 # DEC-004 — Keep each received handoff verbatim as a HISTORICAL record
 
-- **Status:** PROPOSED (in effect provisionally)
+- **Status:** ACCEPTED (delegated, 2026-09-30: accepted under the owner's instruction to resolve all open items; first recorded as PROPOSED)
 - **Date:** 2026-09-30
 - **Affects:** `docs/handoffs/`
 

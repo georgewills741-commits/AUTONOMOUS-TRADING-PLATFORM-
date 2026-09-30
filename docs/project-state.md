@@ -6,12 +6,14 @@ The single record of where this project currently stands (Constitution Rules 50,
 
 ## Current stage
 
-**FOUNDATION — documentation initialization.** Handoff Part 1 of 2 has been received, analysed, and organized into the canonical documentation. Part 2 has not been received.
+**FOUNDATION — documentation initialization.** Handoff Part 1 is documented, and every open question and finding from it has been resolved. Part 2 has not been received.
 
 | Gate | Status |
 |---|---|
 | Builder constitution | ADOPTED — [`builder/claude-code-builder-constitution.md`](builder/claude-code-builder-constitution.md) ([DEC-001](decisions/DEC-001-adopt-builder-constitution.md)) |
 | Master handoff Part 1 (core platform features and systems) | RECEIVED and DOCUMENTED — [historical copy](handoffs/part-1-core-platform-features.md) · [coverage](traceability/handoff-coverage.md) · [verification](traceability/part-1-verification.md) |
+| Part 1 open questions and findings (61) | **ALL RESOLVED** — [decision log](decisions/README.md) · [resolution verification](traceability/resolution-verification.md) |
+| Technology stack | DECIDED — [technology stack](architecture/technology-stack.md) ([DEC-009](decisions/DEC-009-technology-stack.md)) |
 | Master handoff Part 2 (detailed requirements, interfaces/contracts, dependency and stage mapping, verification architecture) | **NOT RECEIVED** |
 | Complete documentation review (handoff §101) | NOT STARTED — after Part 2 |
 | Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; constitution Part XXIII) |
@@ -19,21 +21,24 @@ The single record of where this project currently stands (Constitution Rules 50,
 
 ## Current objective
 
-Wait for Handoff Part 2 and fold it into the existing documentation, re-checking every open question and finding against it.
+Wait for Handoff Part 2 and fold it into the documentation. Then re-check every decision (DEC-006 to DEC-018) against it, recording any conflict as a new finding rather than silently changing a decision.
 
 ## Completed work
 
-- **Session 1:** constitution adopted and persisted; `CLAUDE.md` created to load it; project-state file created.
-- **Session 1, Part 1 processing:**
-  - Original handoff kept as a HISTORICAL record; wording script-verified identical, all 104 sections (§00–§103) present.
-  - 33 systems and capabilities registered with canonical documents ([system registry](architecture/system-registry.md)).
-  - 228 requirements classified and placed in their owning specifications, indexed in the [requirements registry](requirements/registry.md).
-  - [Dependency map](architecture/dependency-map.md): 40 dependencies, each marked STATED or INFERRED.
-  - [Roadmap](roadmap/roadmap.md) stage mapping, with gaps and double mappings identified.
-  - [Findings register](conflicts/register.md): 10 conflicts/inconsistencies and 22 duplicate responsibilities.
-  - [Open-question register](open-questions/register.md): 23 open questions and 6 technical concerns.
-  - [Glossary](glossary.md), [source-of-truth map](architecture/source-of-truth-map.md), [decision log](decisions/README.md) (DEC-001 to DEC-005), [documentation index](README.md).
-  - Verified per the [Part 1 verification record](traceability/part-1-verification.md).
+- **Constitution:** adopted and persisted; `CLAUDE.md` loads it every session.
+- **Part 1 processing:**
+  - Original handoff kept verbatim (HISTORICAL).
+  - 33 systems registered.
+  - 228 handoff requirements classified and placed in their owning specifications.
+  - Dependency map, roadmap, glossary, source-of-truth map.
+  - 61 findings and questions recorded.
+  - Verified in three passes.
+- **Resolution round (owner instruction: resolve every open item before Part 2):**
+  - **Owner decisions:** single operator with no custody (DEC-006); spot, perpetual futures, and margin (DEC-007); venues Binance, OKX, Coinbase, Bybit, KuCoin, and extensible (DEC-008).
+  - **Owner-delegated:** technology stack — Python 3.12 core, Rust only for measured hot paths, PostgreSQL + TimescaleDB, Parquet/DuckDB, NATS, CCXT (DEC-009).
+  - **Decided under the owner's instruction:** DEC-010 to DEC-018 — pre-trade flow, ownership of every overlapping responsibility, safety architecture, AI organization (five agents plus three deterministic services), net-profit formula and uncertainty margin, modes/canary/policy governance, stage placement, reporting and performance targets, initial directional research candidates.
+  - **Applied to the specifications:** 109 new requirements that cite their decision record. Five handoff requirements were reclassified (EXA-002, AGT-001, and LED-002 to DEPRECATED / REPLACED; CUS-001 and CUS-002 to FUTURE); no handoff requirement text was changed or removed.
+  - All 10 conflicts, 22 duplicate responsibilities, 23 open questions, and 6 technical concerns are marked RESOLVED, with links, in the registers.
 
 ## In-progress work
 
@@ -43,28 +48,33 @@ None.
 
 | Problem | Impact | Required resolution |
 |---|---|---|
-| Handoff Part 2 not received | Interfaces, contracts, stage sequencing, and verification architecture cannot be completed; the documentation review (§101) cannot start | Project owner supplies Part 2 |
-| High-impact open items: CF-01 (capital vs risk order), CF-06 (policy stage placement), OQ-01 (custody / user model), OQ-04 (instrument scope), OQ-06 (safety ownership), OQ-16 (technology stack) | Block design of the core trading systems | Owner answers, possibly in Part 2 |
+| Handoff Part 2 not received | Interfaces, contracts, per-stage entry/exit criteria, and verification architecture cannot be completed; the documentation review (§101) cannot start | Project owner supplies Part 2 |
 
 ## Open questions
 
-23 open questions and 6 technical concerns: [open-question register](open-questions/register.md). 32 findings: [findings register](conflicts/register.md). None is resolved yet. CF-07 and CF-10 are provisionally resolved by builder decisions awaiting review.
+None. All 23 open questions and 6 technical concerns are resolved ([register](open-questions/register.md)), and so are all 32 findings ([register](conflicts/register.md)).
+
+## Decisions worth the owner's review
+
+All decisions made under delegation can be overridden with a new decision record. These have the most operational effect:
+
+- **Rebalancing transfers need your confirmation by default.** Trading keys never have withdrawal permission; automated transfers need an important policy change and a separate whitelisted key (CAP-022, SEC-003).
+- **No automatic position closing in EMERGENCY** unless policy enables it (HLT-008).
+- **No automatic resume after a restart** unless you enable it (REC-009).
+- **Canary defaults:** 5% of target allocation, at least 14 days and 50 trades (STR-011).
+- **Uncertainty margin confidence multiplier `k`:** operator-configured (TNP-019).
+- **Latency design targets** of 50 ms / 500 ms (PERF-007), to be replaced by measurements.
 
 ## Recent decisions
 
-All PROPOSED, awaiting owner review: [decision log](decisions/README.md).
-
-- DEC-001: constitution location and loading (moved here from this file's earlier table).
-- DEC-002: documentation structure, with deviations from the §99 target explained.
-- DEC-003: requirement IDs and classification; requirement text lives only in specifications.
-- DEC-004: original handoffs kept verbatim as HISTORICAL.
-- DEC-005: findings recorded, not silently resolved.
+[Decision log](decisions/README.md): DEC-001 to DEC-005 accepted (first recorded as proposed); DEC-006 to DEC-018 added on 2026-09-30.
 
 ## Recent changes
 
 - 2026-09-30: adopted the builder constitution; created `CLAUDE.md` and this file.
-- 2026-09-30: processed Handoff Part 1 into `docs/` (see Completed work). No code, configuration, or infrastructure created.
+- 2026-09-30: processed Handoff Part 1 into `docs/`.
+- 2026-09-30: resolved all open items; added DEC-006 to DEC-018, [technology stack](architecture/technology-stack.md), and 109 decision-sourced requirements; updated registers, registry, roadmap, dependency map, glossary, and source-of-truth map. No code, configuration, or infrastructure created.
 
 ## Next approved step
 
-Receive **Handoff Part 2**, then integrate it (constitution handoff loop: read, extract, classify, map, organize, reconcile, persist, verify, report), re-check all OQ and CF items, and stop. After that comes the complete documentation review and human approval (§101). Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135).
+Receive **Handoff Part 2**, then integrate it (constitution handoff loop: read, extract, classify, map, organize, reconcile, persist, verify, report), re-check all decisions against it, and stop. After that comes the complete documentation review and human approval (§101). Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135).

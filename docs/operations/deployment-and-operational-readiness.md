@@ -10,6 +10,11 @@ Canonical definition of what "operational" means and how development continues o
 - **OPS-002** Subsystems can go live independently · CONFIRMED REQUIREMENT · §80 — A completed subsystem can become operational while unrelated development continues, provided production boundaries remain protected.
 - **OPS-003** Development while online · CONFIRMED REQUIREMENT · §81 — After an approved operational milestone: development may continue; production paths remain protected; new features remain isolated until verified; deployments are controlled; versioning is explicit; rollback exists; database changes are compatible; shared infrastructure changes are tested; new functionality passes required gates before activation.
 
-## Not yet specified in Part 1
+## Decisions applied (2026-09-30)
 
-Deployment targets and environments (constitution Rule 109 lists development, testing, research, paper, staging, production), the definition of "canary" (OQ-09), what counts as an "approved operational milestone", rollback mechanics, and production-readiness criteria (constitution Rule 214).
+- **OPS-004** Separate environments · CONFIRMED REQUIREMENT · DEC-015 — The environments are development, testing, research, paper, staging, and production, each with its own configuration, database, and credentials. Only production holds trading-enabled credentials (MODE-006).
+- **OPS-005** Traceable, reversible deployments · CONFIRMED REQUIREMENT · DEC-009 — Every production deployment records the deployed version, can be rolled back to the previous version (TEC-011), and requires the stage's verification to have passed.
+
+## Not yet specified
+
+What counts as an "approved operational milestone" (to come from the roadmap's stage exit criteria after Part 2), production-readiness criteria (constitution Rule 214), and hosting location. Canary is defined in STR-011.

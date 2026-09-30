@@ -15,9 +15,6 @@ Canonical definition of trading executable multi-leg routes within a venue/marke
 - **Must use:** shared infrastructure for economics, capital, risk, execution, and portfolio (ARCH-003).
 - **Not yet specified in Part 1:** handling of a partially completed route, route latency limits, interfaces, tests.
 
-## Findings
+## Findings (all resolved)
 
-- DUP-01: profitability, fees, and slippage calculation overlap with the True Net-Profit Engine and the Quantitative Engine.
-- DUP-09: multi-leg risk overlaps with the shared Risk Engine.
-- DUP-03: expected-vs-actual analysis overlaps with the Performance Controller.
-- CF-04: the AI output contract's BUY / SELL / HOLD / NO_TRADE decision does not describe multi-leg routes.
+DUP-01 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (ARB-012, TNP-017). DUP-09 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (RSK-012). DUP-03 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (PFC-006). CF-04 → [DEC-013](../../decisions/DEC-013-ai-organization.md): arbitrage is deterministic end to end, and AI never proposes arbitrage trades (ARB-013).

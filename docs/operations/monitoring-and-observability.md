@@ -1,6 +1,6 @@
 # Monitoring and Observability
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-28 · **Category:** operations · **Roadmap stage:** OPERATIONALIZATION ("Monitoring") · **Sources:** §88 (also §02 item 20)
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-28 (also owns alerting and reporting, [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md)) · **Category:** operations · **Roadmap stage:** OPERATIONALIZATION ("Monitoring") · **Sources:** §88 (also §02 item 20)
 
 Canonical definition of **operational** monitoring: whether the platform itself is functioning correctly. Market monitoring is a separate concern owned by the [Opportunity Detection Engine](../systems/opportunity-detection.md) (ARCH-005). The "Trading" signals below observe the platform's own trading activity, not the market.
 
@@ -13,6 +13,12 @@ Canonical definition of **operational** monitoring: whether the platform itself 
 - **MON-005** Risk signals · SYSTEM REQUIREMENT · §88 — Risk: rejections; exposure; limits; kill switches; safe mode.
 - **MON-006** Recovery signals · SYSTEM REQUIREMENT · §88 — Recovery: reconciliation; state mismatches; recovery events.
 
-## Not yet specified in Part 1
+## Decisions applied (2026-09-30)
 
-Alerting and reporting (named in §01, §02 item 22, and §95 but never defined, OQ-13), dashboards, retention, how monitoring feeds the [system health](system-health.md) state, and tests.
+- **MON-007** Alerting · CONFIRMED REQUIREMENT · DEC-017 — Alerts have severities INFO, WARNING, CRITICAL, and EMERGENCY, and are delivered to at least one operator-configured channel. CRITICAL and EMERGENCY alerts require acknowledgement.
+- **MON-008** Reporting · CONFIRMED REQUIREMENT · DEC-017 — The platform produces daily and on-demand reports of P&L, exposure, strategy performance, expected vs actual, AI cost, and incidents, as read-only views over the ledger, portfolio, audit trail, and Performance Controller.
+- **MON-009** Operational logs · SYSTEM REQUIREMENT · DEC-017 — Structured operational logs are kept here and rotated after 90 days. They are separate from the audit trail (AUD-006).
+
+## Not yet specified
+
+Specific alert channels (operator configuration), dashboard layouts, and tests. How monitoring feeds platform state is HLT-010.

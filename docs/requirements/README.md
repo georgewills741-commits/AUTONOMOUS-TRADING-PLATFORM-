@@ -16,7 +16,7 @@ Every requirement in a specification is one Markdown list item:
 - **XYZ-001** Short title · CLASS · §NN — Requirement text, keeping the handoff's own wording and modal verbs.
 ```
 
-The parts are: ID · short title · class · handoff source section(s) — requirement text.
+The parts are: ID · short title · class · source — requirement text. The source is a handoff section (`§NN`), or a decision record (`DEC-NNN`) for requirements created by a decision. Requirements from a decision sit under a "Decisions applied" heading in the owning specification.
 
 ## IDs
 
@@ -31,13 +31,13 @@ The parts are: ID · short title · class · handoff source section(s) — requi
 | CONSTRAINT | A prohibition or limit |
 | SYSTEM REQUIREMENT | Responsibilities or capabilities of a named system |
 | PROPOSED | Something offered as potential, not yet approved |
-| FUTURE | Deliberately deferred to a later stage (none in Part 1) |
+| FUTURE | Deliberately deferred; recorded but not built (e.g. CUS-001, CUS-002) |
 | PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION | Discussed before; not a production requirement until confirmed |
 | OPEN QUESTION | Kept in the [open-question register](../open-questions/register.md) as OQ-nn |
 | TECHNICAL CONCERN | Kept in the [open-question register](../open-questions/register.md) as TC-nn |
-| DEPRECATED / REPLACED | Superseded; kept for traceability (none yet) |
+| DEPRECATED / REPLACED | Superseded; kept for traceability. The replacing requirement is named next to it (e.g. EXA-002 → EXA-005, AGT-001 → AGT-016, LED-002 → LED-005) |
 
-The interpretation of CONFIRMED REQUIREMENT vs SYSTEM REQUIREMENT is awaiting confirmation (OQ-23).
+The interpretation of CONFIRMED REQUIREMENT vs SYSTEM REQUIREMENT in DEC-003 was accepted (OQ-23 resolved).
 
 Two rules always apply:
 
@@ -46,11 +46,11 @@ Two rules always apply:
 
 ## Status
 
-All Part 1 requirements are **DOCUMENTED**: recorded, not implemented, not verified. When implementation is approved, the registry gains implementation, test, and verification columns (constitution Rule 184).
+All requirements are **DOCUMENTED**: recorded, not implemented, not verified. When implementation is approved, the registry gains implementation, test, and verification columns (constitution Rule 184).
 
 ## Adding or changing a requirement
 
 1. Add or edit the line in the owning specification. Search first for an existing equivalent (constitution Rule 37).
 2. Update the [registry](registry.md) row.
-3. Update [handoff coverage](../traceability/handoff-coverage.md) if the source is a handoff section.
+3. Update [handoff coverage](../traceability/handoff-coverage.md) if the source is a handoff section; cite the decision record if the source is a decision.
 4. Record any decision, conflict, or open question in the matching register.

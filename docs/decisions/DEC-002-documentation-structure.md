@@ -1,9 +1,9 @@
 # DEC-002 — Documentation structure derived from Handoff Part 1
 
-- **Status:** PROPOSED (in effect provisionally)
+- **Status:** ACCEPTED (delegated, 2026-09-30: accepted under the owner's instruction to resolve all open items; first recorded as PROPOSED)
 - **Date:** 2026-09-30
 - **Affects:** everything under `docs/`
-- **Resolves (provisionally):** CF-07
+- **Resolves:** CF-07
 
 ## Context
 

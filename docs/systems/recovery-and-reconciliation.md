@@ -19,15 +19,19 @@ Canonical definition of what happens after a restart or interruption and how int
 - **REC-005** Determine real trade state · CONFIRMED REQUIREMENT · §73 — After interruption determine: open positions; filled orders; partial fills; cancelled orders; triggered stops/targets; actual execution prices; balances; exposure; market conditions; strategy validity; emergency requirements.
 - **REC-006** Never restore stale memory · CONSTRAINT · §73 — Never simply restore an old in-memory state.
 
+## Decisions applied (2026-09-30)
+
+- **REC-007** Verify the database before loading from it · CONFIRMED REQUIREMENT · DEC-010 — Database integrity is verified before internal state is loaded from it. "Load verified internal state" in REC-002 means loading state from the database after that check.
+- **REC-008** Sole owner of reconciliation · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This system owns all reconciliation logic (orders, balances, positions, ledger); other systems invoke it.
+- **REC-009** Resuming after a restart · CONSTRAINT · DEC-012 — After a restart, trading resumes only when REC-004 is met and the operator confirms. The operator may enable automatic resume, which then applies only when the platform was HEALTHY before the interruption and reconciliation found no mismatches.
+
 ## Boundary (§92)
 
 - **Owns:** the restart sequence, reconciliation of internal vs venue state, and the safe-resume decision.
 - **Consumes:** venue state via the [Exchange Adapter Layer](exchange-adapters.md). Validates against the [Risk Engine](../risk/risk-engine.md), [Global Capital Authority](capital-management.md), [Policy System](policy/policy-system.md), and [Strategy Management](strategy/strategy-management.md).
 - **Called by:** the Execution Engine after a timeout (EXE-006).
-- **Not yet specified in Part 1:** how mismatches are resolved, who authorizes resuming, interfaces, tests.
+- **Not yet specified:** mismatch-resolution procedures per mismatch type (expected with Part 2 contracts), interfaces, tests. Resuming is governed by REC-009.
 
-## Findings
+## Findings (all resolved)
 
-- CF-09: REC-002 loads verified internal state before verifying the database. The intended order needs confirming.
-- DUP-16: the Execution Engine also lists reconciliation (EXE-002), and custody would need its own reconciliation (CUS-002).
-- CF-05: reconciliation is mapped to two roadmap stages.
+CF-09 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (REC-007). DUP-16 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (REC-008). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (core reconciliation in CORE TRADING FOUNDATION, hardening in OPERATIONALIZATION).

@@ -34,15 +34,23 @@ Canonical definition of capabilities used by both arbitrage systems: the opportu
 
 | ARB-001 capability | Platform-wide owner | Finding |
 |---|---|---|
-| Opportunity discovery; opportunity ranking | [Opportunity Detection Engine](../opportunity-detection.md); ranking owner unresolved | DUP-10 |
+| Opportunity discovery; opportunity ranking | [Opportunity Detection Engine](../opportunity-detection.md); ranking for capital by the Global Capital Authority (CAP-017) | DUP-10 |
 | True net-profit calculation | [True Net-Profit Engine](../true-net-profit-engine.md) | DUP-01 |
 | Arbitrage-specific risk | [Risk Engine](../../risk/risk-engine.md) | DUP-09 |
 | Capital reserve; dynamic capital allocation | [Global Capital Authority](../capital-management.md) | DUP-07 |
 | Rebalancing intelligence | Global Capital Authority, per ARB-007 | DUP-06 |
-| Kill switch | undefined "global safety architecture" | DUP-04, OQ-06 |
+| Kill switch | [Risk Engine](../../risk/risk-engine.md) rule set (RSK-008) | DUP-04, OQ-06 |
 | Performance controller; expected-vs-actual analysis | [Performance Controller](../performance-controller.md) | DUP-03 |
 | Opportunity database | Overlaps [event and decision history](../audit-and-event-history.md) | DUP-21 |
 | Liquidity intelligence | Not defined elsewhere; stays here | — |
+
+Every overlap above is resolved: DUP-04 by [DEC-012](../../decisions/DEC-012-safety-architecture.md), all others by [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md).
+
+## Decisions applied (2026-09-30)
+
+- **ARB-012** Arbitrage systems use shared owners · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The cross-exchange and triangular arbitrage systems supply leg and route definitions, sizes, and expected values. They take fee, slippage, and net-profit calculation from the True Net-Profit Engine; capital, reserve, allocation, and rebalancing decisions from the Global Capital Authority; risk rules from the Risk Engine; exchange health from operational monitoring; and expected-vs-actual analysis from the Performance Controller.
+- **ARB-013** Deterministic arbitrage · CONSTRAINT · DEC-013 — Arbitrage decisions are fully deterministic. AI may analyse arbitrage performance but never proposes or approves an arbitrage trade.
+- **ARB-014** Opportunity database is derived from events · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The arbitrage opportunity database is an analytical store linked to the event and decision history by event identifiers, and can be rebuilt from it. It never diverges from the event history.
 
 ## Boundary (§92)
 

@@ -21,6 +21,11 @@ Canonical definition of deterministic order execution, stale-decision protection
 - **EXE-005** A timeout is not a failure · CONSTRAINT · §41 — A timeout does not prove an order failed.
 - **EXE-006** Timeout handling · CONFIRMED REQUIREMENT · §41 — Order submission → network timeout → do not blindly resubmit → query exchange → determine actual state → reconcile → continue safely. This prevents duplicate orders.
 
+## Decisions applied (2026-09-30)
+
+- **EXE-007** Reconciliation is invoked, not reimplemented · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The Execution Engine invokes Recovery and Reconciliation for order-level reconciliation (EXE-002, EXE-006); it does not implement its own reconciliation logic.
+- **EXE-008** Client order IDs · CONSTRAINT · DEC-008 — Every order carries a unique client order ID, so its state can be queried after a timeout (EXA-008).
+
 ## Boundary (§92)
 
 - **Owns:** order construction, submission, and execution state (EXE-002).
@@ -28,8 +33,6 @@ Canonical definition of deterministic order execution, stale-decision protection
 - **Must not:** accept AI assertions about order state (EXE-003), or resubmit after a timeout without querying the venue first (EXE-006).
 - **Not yet specified in Part 1:** order-type support, the revalidation criteria and time limits, the retry policy, interfaces, tests.
 
-## Findings
+## Findings (all resolved)
 
-- DUP-16: "reconciliation" is an Execution Engine responsibility here and also the purpose of [Recovery and Reconciliation](recovery-and-reconciliation.md).
-- TC-05: EXE-006 requires every venue adapter to support querying order state.
-- CF-03: capital reservation is missing from the latency-sensitive path.
+DUP-16 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (EXE-007). TC-05 → [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md) (EXE-008, EXA-008). CF-03 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (CAP-021).

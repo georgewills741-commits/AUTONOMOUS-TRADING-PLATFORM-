@@ -11,9 +11,10 @@
 - **PERF-005** Performance engineering techniques · CONFIRMED ARCHITECTURAL PRINCIPLE · §78 — Where justified: event-driven processing; async processing; parallel processing; efficient data structures; caching; batching; precomputation; incremental calculations; connection reuse; concurrency controls; efficient persistence; backpressure; queues; work prioritization; resource isolation.
 - **PERF-006** Measured technology choices · CONSTRAINT · §78 — Technology choices must be based on measured requirements.
 
-## Findings
+## Decisions applied (2026-09-30)
 
-- CF-03: the latency-sensitive path (PERF-003) has no capital-reservation step, but CAP-004 requires reservation before capital is committed.
-- OQ-19: Part 1 gives no latency budgets, throughput targets, or universe size, so PERF-006 cannot be applied yet.
+- **PERF-007** Initial design targets · CONFIRMED REQUIREMENT · DEC-017 — Until measurements replace them (PERF-006), the design targets are: internal decision latency, from market event received to order submitted and excluding venue network time, p99 ≤ 50 ms on arbitrage paths and ≤ 500 ms on directional paths.
 
-See the [findings register](../conflicts/register.md) and the [open-question register](../open-questions/register.md).
+## Findings (all resolved)
+
+CF-03 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (capital reservation is on the latency-sensitive path, CAP-021). OQ-19 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (PERF-007 design targets; data freshness limits in MKD-006).

@@ -33,9 +33,14 @@ The same boundary appears elsewhere as system-level rules: RSK-003 (AI cannot by
 
 Consistent with OPP-008 (AI activated only when its reasoning adds meaningful value) and PERF-004 (AI should not unnecessarily block latency-sensitive execution).
 
+## Decisions applied (2026-09-30)
+
+- **AIL-006** AI gateway · CONFIRMED REQUIREMENT · DEC-013 — All AI calls go through one AI gateway. It abstracts providers; holds AI credentials, kept separate from trading credentials; enforces budgets and rate limits set by the AI Cost Manager; records prompts and outputs in the audit trail; validates outputs against their contracts (AIV-004); and applies timeouts and fallbacks.
+- **AIL-007** Provider-agnostic · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-009 — The platform is not tied to one AI provider. Providers and models are configuration, chosen by the Model Router from Model Evaluation results.
+
 ## Boundary (§92)
 
 - **Owns:** AI reasoning, research, and proposals, always as *input* to deterministic systems.
 - **Must not:** anything in AIL-003.
 - **Failure behavior (§91 example):** if AI is unavailable, deterministic capabilities continue where safe (HLT-005).
-- **Not yet specified in Part 1:** the "AI gateway" listed in §95 (OQ-14), AI providers and models (OQ-16), interfaces, tests.
+- **Not yet specified:** the specific providers and models (chosen in the AI INTELLIGENCE stage by measurement, AIL-007), interfaces, tests. The AI gateway is AIL-006.

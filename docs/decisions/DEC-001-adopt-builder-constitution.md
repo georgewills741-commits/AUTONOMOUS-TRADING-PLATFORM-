@@ -1,6 +1,6 @@
 # DEC-001 — Adopt the builder constitution and load it in every session
 
-- **Status:** PROPOSED (in effect provisionally)
+- **Status:** ACCEPTED (delegated, 2026-09-30: accepted under the owner's instruction to resolve all open items; first recorded as PROPOSED)
 - **Date:** 2026-09-30 (made in the first session; moved here from the project-state file's decision table on the same day)
 - **Affects:** every Claude Code session; `CLAUDE.md`; `docs/builder/`
 

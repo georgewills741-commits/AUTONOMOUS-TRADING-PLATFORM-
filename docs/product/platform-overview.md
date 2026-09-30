@@ -20,7 +20,7 @@ The table maps each §02 capability to the system that owns it. The mapping is a
 | # | Capability (§02, verbatim) | Owning system (see [system registry](../architecture/system-registry.md)) |
 |---|---|---|
 | 1 | Connecting to supported trading venues. | SYS-01 Exchange Adapter Layer |
-| 2 | Establishing authorized capital. | SYS-12 Policy System (capital authorization) with SYS-07 Global Capital Authority; custody model unconfirmed (OQ-01) |
+| 2 | Establishing authorized capital. | SYS-12 Policy System (capital authorization) with SYS-07 Global Capital Authority; no custody: single operator ([DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)) |
 | 3 | Receiving user objectives and restrictions. | SYS-13 Natural Language Policy Interface |
 | 4 | Understanding those instructions through a controlled policy interface. | SYS-13 Natural Language Policy Interface |
 | 5 | Representing them as structured, persistent policy. | SYS-12 Policy System |
@@ -28,7 +28,7 @@ The table maps each §02 capability to the system that owns it. The mapping is a
 | 7 | Monitoring the configured market universe continuously. | SYS-05 Opportunity Detection Engine, on SYS-02 Market Data |
 | 8 | Detecting potential opportunities. | SYS-05 Opportunity Detection Engine |
 | 9 | Evaluating opportunities deterministically. | SYS-06 True Net-Profit Engine |
-| 10 | Selecting appropriate validated strategies. | Unclear: SYS-17 lists "strategy selection"; SYS-14 owns validated versions (DUP-20) |
+| 10 | Selecting appropriate validated strategies. | SYS-17 Directional selects among validated versions owned by SYS-14 Strategy Management ([DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md)) |
 | 11 | Performing quantitative analysis. | SYS-03 Quantitative Engine |
 | 12 | Using AI selectively for reasoning and research. | SYS-22 AI Intelligence Layer with SYS-24 Model Router |
 | 13 | Applying deterministic risk controls. | SYS-09 Risk Engine |
@@ -40,7 +40,7 @@ The table maps each §02 capability to the system that owns it. The mapping is a
 | 19 | Recovering after interruptions. | SYS-11 Recovery and Reconciliation |
 | 20 | Monitoring strategy and platform health. | SYS-21 Performance Controller (strategy); SYS-28 Monitoring and SYS-29 System Health (platform) |
 | 21 | Recording decisions and events. | SYS-30 Auditability / Event and Decision History |
-| 22 | Generating reports and alerts. | **No owner defined in Part 1** (OQ-13) |
+| 22 | Generating reports and alerts. | SYS-28 Monitoring and Observability ([DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md)) |
 | 23 | Improving strategies through controlled research. | SYS-14 Strategy Management |
 | 24 | Preventing unvalidated AI reasoning from directly controlling protected trading infrastructure. | SYS-22 AI Intelligence Layer (hard-safety boundary) with SYS-09 Risk Engine |
 
@@ -53,6 +53,14 @@ The table maps each §02 capability to the system that owns it. The mapping is a
 
 How these principles apply to individual opportunities (positive-net execution, small-profit accumulation, no profit ceiling) is defined in the [True Net-Profit Engine](../systems/true-net-profit-engine.md). How realized results are reinvested is defined in [Global Capital Authority](../systems/capital-management.md).
 
-## Related findings
+## Decisions applied (2026-09-30)
 
-OQ-01 (custody and user model), OQ-13 (reporting), DUP-20 (strategy selection) — see [open questions](../open-questions/register.md) and [findings register](../conflicts/register.md).
+- **PLT-010** Single-operator platform · CONFIRMED REQUIREMENT · DEC-006 — The platform trades for one operator, using the operator's own accounts at supported venues through API keys. It does not take custody of funds and has no deposit, withdrawal, or multi-user account functions.
+- **PLT-011** Instrument scope · CONFIRMED REQUIREMENT · DEC-007 — The platform trades spot, perpetual futures, and margin products.
+- **PLT-012** Instrument types gated by their risk controls · CONSTRAINT · DEC-007 — No instrument type is enabled for live trading until the risk controls specific to it (RSK-013) are implemented and verified.
+
+Sources: [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (owner decision), [DEC-007](../decisions/DEC-007-instrument-scope.md) (owner decision).
+
+## Findings (all resolved)
+
+OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).

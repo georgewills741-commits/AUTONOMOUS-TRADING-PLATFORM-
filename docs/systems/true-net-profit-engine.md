@@ -1,6 +1,6 @@
 # True Net-Profit Engine (Opportunity Economics)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); §95 also lists "True net-profit calculation" under ARBITRAGE (CF-05) · **Sources:** §13–§17
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); ARBITRAGE adds transfer and multi-leg cost components ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §13–§17
 
 Canonical definition of how every opportunity's economics are evaluated. It also holds the platform's rules on small positive opportunities, accumulation, and the absence of profit floors and ceilings. The handoff calls §14 "a critical requirement".
 
@@ -37,17 +37,22 @@ How realized results feed back into available capital (compounding) is defined i
 - **TNP-015** Multi-dimensional quality · CONFIRMED REQUIREMENT · §17 — Opportunity quality should be evaluated using multiple dimensions rather than percentage alone. Possible dimensions: true net profitability; confidence in market data; liquidity; slippage; market impact; execution latency; capital requirement; risk; strategy validity; exchange health; competition with other opportunities; expected repeatability; rebalancing requirements; safety margin.
 - **TNP-016** Percentage thresholds only as configurable filters · CONSTRAINT · §17 — A percentage threshold may be used as a configurable research/filter parameter, but it must not become a universal hard rule that conflicts with the positive-net-opportunity principle.
 
+## Decisions applied (2026-09-30)
+
+- **TNP-017** Sole owner of the true net expected result · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — Only this engine produces the true net expected result. The Quantitative Engine supplies primitive metrics; trading systems supply legs, routes, and sizes, and consume the result.
+- **TNP-018** Formula · CONFIRMED REQUIREMENT · DEC-014 — True net expected result, in quote currency at the intended size = gross edge at executable prices (walking the order book at the intended size) − trading fees at the account's actual fee tier − spread cost − expected slippage − expected market impact − funding and borrow costs over the expected holding period − attributed rebalancing/transfer costs − other execution costs − uncertainty margin. All terms use exact decimal arithmetic.
+- **TNP-019** Uncertainty margin from measured uncertainty · CONSTRAINT · DEC-014 — The uncertainty margin is computed per opportunity as k × √(cost-estimate error² + latency price risk²). Cost-estimate error comes from expected-vs-actual history for that venue, market, and strategy, or a conservative prior when history is thin. Latency price risk is price volatility over the expected execution latency × size. k is an operator-configurable confidence multiplier. The margin must never be a fixed percentage or a universal minimum.
+- **TNP-020** Economic eligibility · CONFIRMED REQUIREMENT · DEC-014 — An opportunity is economically eligible when its true net expected result, after the uncertainty margin, is greater than zero. It must still pass TNP-011.
+- **TNP-021** Comparable quality measure · SYSTEM REQUIREMENT · DEC-011 — For each opportunity this engine also produces the TNP-015 quality dimensions and a risk-adjusted expected net return per unit of capital per unit of time, so opportunities from different trading systems can be compared for allocation.
+- **TNP-022** Continuous calibration · CONFIRMED REQUIREMENT · DEC-014 — Cost estimates and the cost-estimate error are recalibrated continuously from expected-vs-actual results (PFC-001).
+
 ## Boundary (§92)
 
 - **Owns:** the true net expected result of an opportunity (TNP-002), and the eligibility rules TNP-005 to TNP-016.
 - **Consumes:** cost inputs (fees, spread, slippage estimates) and market data. See the [dependency map](../architecture/dependency-map.md).
 - **Does not decide alone:** risk acceptance (Risk Engine), capital availability (Global Capital Authority), execution feasibility at submission time (Execution Engine).
-- **Not yet specified in Part 1:** the formula (TNP-003), how the safety/uncertainty margin is derived, who ranks opportunities by quality, interfaces, tests.
+- **Not yet specified:** the numerical methods for slippage and market impact (order-book walk, impact model), interfaces, tests. The formula is TNP-018, the margin TNP-019, and allocation ranking CAP-017.
 
-## Findings
+## Findings (all resolved)
 
-- OQ-05: the formal formula required by TNP-003 has not been provided.
-- TC-01: the safety/uncertainty margin could quietly become the universal minimum threshold forbidden by TNP-005 unless its derivation is defined per opportunity.
-- TC-04: at small margins such as +0.1%, estimation error in fees or slippage of similar size can flip the sign. This is why expected-vs-actual comparison (PFC-001) matters.
-- DUP-01: net-profit calculation is also listed by the Quantitative Engine, both arbitrage systems, and Arbitrage Intelligence.
-- DUP-10: which system ranks opportunities by the quality dimensions in TNP-015 is unresolved.
+OQ-05 → [DEC-014](../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) (TNP-018). TC-01 → [DEC-014](../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) (TNP-019: the margin scales with measured uncertainty and can never be a universal minimum). TC-04 → [DEC-014](../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) (TNP-022, PAP-003). DUP-01 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (TNP-017). DUP-10 and TC-03 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (TNP-021, CAP-017).

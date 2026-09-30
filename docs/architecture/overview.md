@@ -38,7 +38,7 @@ Every system and capability named in Part 1, with its category, owner, and canon
 - **ARCH-008** Canonical conceptual flow · CONFIRMED ARCHITECTURAL PRINCIPLE · §70 — Data → quantitative computation → opportunity → strategy → AI reasoning → capital / risk → execution → external venue → reconciliation → portfolio state.
 - **ARCH-009** Explicit layer authority · CONSTRAINT · §70 — Each layer must have explicit responsibility. No layer silently assumes another layer's authority.
 
-Part 1 describes this flow in five places, and they do not fully agree on where AI sits or on whether capital or risk is checked first. See CF-01, CF-02 and CF-03 in the [findings register](../conflicts/register.md).
+Part 1 describes this flow in five places that did not fully agree (CF-01, CF-02, CF-03). They are reconciled into one canonical runtime order in [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md).
 
 ## What is deterministic and what belongs to AI
 
@@ -53,7 +53,7 @@ This summarizes rules defined in the linked documents. It adds no new rules.
 | Execution — [execution engine](../systems/execution-engine.md) | Performance interpretation — [agents](../ai/agents.md) |
 | Policy enforcement — [policy system](../systems/policy/policy-system.md) | |
 
-AI output crosses into the deterministic side only through validated, structured contracts ([AI output validation](../ai/ai-output-validation.md)), and the deterministic Risk Engine keeps final authority ([risk hierarchy](../risk/risk-engine.md)). Whether the Market Regime Engine is deterministic is not stated (OQ-10).
+AI output crosses into the deterministic side only through validated, structured contracts ([AI output validation](../ai/ai-output-validation.md)), and the deterministic Risk Engine keeps final authority ([risk hierarchy](../risk/risk-engine.md)). The Market Regime Engine is deterministic (RGM-005, [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md)). The technology used for all of this is in the [technology stack](technology-stack.md).
 
 ## Market monitoring vs operational monitoring
 

@@ -29,16 +29,18 @@ Canonical definition of how strategies are researched, validated, promoted, vers
 - **STR-009** Improvement path · CONFIRMED REQUIREMENT · §38 — When a strategy deteriorates: performance deterioration → investigation → research → hypothesis → new strategy version → backtest → out-of-sample → robustness → paper → approval → canary → production.
 - **STR-010** Forbidden reaction to losses · CONSTRAINT · §38 — Never: loss → AI changes live strategy → risk increases.
 
+## Decisions applied (2026-09-30)
+
+- **STR-011** Canary · CONFIRMED REQUIREMENT · DEC-015 — In canary, a newly approved strategy version trades live with a capped capital allocation and tightened risk limits, for a minimum period and trade count. Promotion to production requires expected-vs-actual results within tolerance and no safety incidents. A breach suspends the version or rolls back to the previous one. Initial operator-configurable defaults: capital cap of 5% of the strategy's target allocation; minimum 14 days and 50 trades.
+- **STR-012** The Strategy Factory owns the research process · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The Strategy Factory owns and coordinates the research process, including "research coordination" (§51). AI agents assist inside it.
+
 ## Boundary (§92)
 
 - **Owns:** strategy versions, lifecycle state, promotion, and retirement.
 - **Uses:** [Backtesting](backtesting.md) and [Paper Trading](paper-trading.md) as lifecycle stages; AI research agents as assistants ([agents](../../ai/agents.md), AGT-012, AGT-013).
 - **Must not:** modify live trading directly (STR-004), or let research change protected production controls (STR-008).
-- **Not yet specified in Part 1:** validation and promotion criteria, who approves, what "canary" means (OQ-09), interfaces, tests.
+- **Not yet specified:** validation thresholds for each lifecycle stage (expected with Part 2 verification architecture), interfaces, tests. The operator approves promotions; canary is STR-011.
 
-## Findings
+## Findings (all resolved)
 
-- DUP-18: research, hypothesis generation, and candidate creation are also AI agent responsibilities (AGT-010, AGT-012).
-- DUP-20: the Directional Trading System lists strategy selection, backtesting, paper trading, and strategy improvement among its own responsibilities (DIR-002).
-- OQ-09: "canary" appears in STR-001, STR-009, and §95 but is not defined.
-- CF-05: strategy lifecycle is mapped to the DIRECTIONAL TRADING stage but also applies to arbitrage.
+DUP-18 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (STR-012). DUP-20 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (DIR-004). OQ-09 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (STR-011). CF-05 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (built in DIRECTIONAL TRADING as shared infrastructure; ARBITRAGE depends on it).

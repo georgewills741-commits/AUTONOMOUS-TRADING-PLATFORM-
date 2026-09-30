@@ -1,9 +1,9 @@
 # DEC-003 — Requirement IDs, classification rules, and spec-embedded requirements
 
-- **Status:** PROPOSED (in effect provisionally)
+- **Status:** ACCEPTED (delegated, 2026-09-30: accepted under the owner's instruction to resolve all open items; first recorded as PROPOSED)
 - **Date:** 2026-09-30
 - **Affects:** every specification; `docs/requirements/`
-- **Resolves (provisionally):** CF-10 · **Raises:** OQ-23
+- **Resolves:** CF-10, OQ-23
 
 ## Context
 
@@ -33,5 +33,6 @@ The handoff requires every feature to be classified with its §96 vocabulary, re
 
 ## Consequences
 
-- The handoff does not define the difference between CONFIRMED REQUIREMENT and SYSTEM REQUIREMENT. The interpretation above needs owner confirmation (OQ-23). If it changes, classes are updated with a record here, not silently (§96).
+- The handoff does not define the difference between CONFIRMED REQUIREMENT and SYSTEM REQUIREMENT. The interpretation above was accepted on 2026-09-30 (OQ-23). If it ever changes, classes are updated through a new decision record, not silently (§96).
+- Requirements created by a decision cite that decision record as their source (e.g. `DEC-011`) instead of a handoff section.
 - A consistency check (every ID unique, in exactly one specification, and indexed in the registry) was run as part of verification. See the [Part 1 verification record](../traceability/part-1-verification.md).

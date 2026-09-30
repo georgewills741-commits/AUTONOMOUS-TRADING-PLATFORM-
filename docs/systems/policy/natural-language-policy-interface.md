@@ -19,4 +19,4 @@ Canonical definition of how the user expresses objectives, restrictions and pref
 - **Hands off to:** the [Policy System](policy-system.md), which versions and activates the change (POL-003, POL-004).
 - **Must not:** activate policy by itself (NLP-003) or widen permissions without surfacing it (NLP-005).
 - **AI controls that apply:** the [AI hard-safety boundary](../../ai/ai-architecture.md) and [structured, validated output](../../ai/ai-output-validation.md).
-- **Not yet specified in Part 1:** the user-facing channel, confirmation flow, how to fall back when the LLM is unavailable (HLT-005), interfaces, tests.
+- **Not yet specified:** the user-facing channel, interfaces, tests. Confirmation follows POL-005. When the LLM is unavailable, the structured operator interface (POL-010) remains available (HLT-005). All LLM calls go through the AI gateway (AIL-006).

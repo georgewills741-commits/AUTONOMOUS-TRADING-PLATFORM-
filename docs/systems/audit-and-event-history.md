@@ -1,6 +1,6 @@
 # Auditability and Event and Decision History
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-30 (named in the handoff as capabilities, "Auditability" and "Event and Decision History"; no implementing system is named) · **Roadmap stage:** **not mapped by §95** (CF-05) · **Sources:** §86, §87 (also §02 item 21)
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-30 (named in the handoff as capabilities, "Auditability" and "Event and Decision History"; no implementing system is named) · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §86, §87 (also §02 item 21)
 
 Canonical definition of what must be traceable and which events must be preserved.
 
@@ -10,14 +10,19 @@ Canonical definition of what must be traceable and which events must be preserve
 - **AUD-002** Audit record contents · SYSTEM REQUIREMENT · §86 — Record where applicable: what happened; when; which system acted; strategy; strategy version; policy version; model/agent; evidence; risk checks; capital reservation; execution; external venue confirmation; final outcome.
 - **AUD-003** Events to preserve · SYSTEM REQUIREMENT · §87 — Preserve meaningful events: opportunity detected; opportunity rejected; trade proposed; risk rejection; capital unavailable; order submitted; order filled; partial fill; cancellation; exchange failure; recovery; strategy suspension; strategy promotion; strategy retirement; policy change; model change; AI disagreement; kill-switch activation.
 
+## Decisions applied (2026-09-30)
+
+- **AUD-004** Append-only and permanent · CONSTRAINT · DEC-009 — Audit records and event history are append-only and are never deleted.
+- **AUD-005** Authoritative event record · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — The event and decision history is the authoritative record of what happened. The arbitrage opportunity database is derived from it (ARB-014).
+- **AUD-006** Separate from operational logs · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-017 — Operational logs (MON-009) are separate from the audit trail. Logs may be rotated; audit records may not.
+
 ## Boundary (§92)
 
 - **Owns:** the audit trail and the event and decision history.
 - **Fed by:** every acting system ("which system acted", AUD-002).
 - **Protected by:** [security](../security/security-architecture.md) ("audit records", SEC-001).
-- **Not yet specified in Part 1:** storage, retention, immutability, the relationship to "logging" (§04), interfaces, tests.
+- **Not yet specified:** event schemas, interfaces, tests. Storage is TEC-006; retention and immutability AUD-004; logging AUD-006.
 
-## Findings
+## Findings (all resolved)
 
-- DUP-21: the arbitrage opportunity database (ARB-003) also records detected and rejected opportunities.
-- CF-05: auditability is not mapped to any roadmap stage, yet the core trading systems produce the events it must record.
+DUP-21 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (AUD-005, ARB-014). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (CORE TRADING FOUNDATION).

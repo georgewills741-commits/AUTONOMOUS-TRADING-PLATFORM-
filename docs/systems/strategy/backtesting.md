@@ -14,4 +14,4 @@ Canonical definition of what backtesting must support and protect against. It is
 
 - **Consumes:** historical [market data](../market-data.md) (MKD-004 applies the same bias protections at the data layer).
 - **Used by:** [Strategy Management](strategy-management.md).
-- **Not yet specified in Part 1:** historical data sources and depth (OQ-22), execution simulation model, interfaces, tests.
+- **Not yet specified:** execution simulation model, interfaces, tests. Historical data comes from the platform's own permanent archives (TEC-012, [DEC-009](../../decisions/DEC-009-technology-stack.md)).

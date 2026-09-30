@@ -18,16 +18,20 @@ Canonical definition of how the platform watches its whole authorized trading un
 - **OPP-007** Detection scope · SYSTEM REQUIREMENT · §09 — It should identify: directional opportunities; cross-exchange arbitrage; triangular arbitrage; market-regime changes; significant anomalies; liquidity changes; strategy conditions; relevant market events.
 - **OPP-008** Deterministic screening, selective AI · CONFIRMED ARCHITECTURAL PRINCIPLE · §09 — Deterministic systems perform high-volume screening. AI is activated only when its reasoning adds meaningful value.
 
+## Decisions applied (2026-09-30)
+
+- **OPP-009** Trading universe · CONFIRMED REQUIREMENT · DEC-008 — The authorized trading universe is every market of an enabled instrument type on an enabled venue, minus exclusions set in the Policy System. It updates automatically as venues list and delist markets.
+- **OPP-010** Single owner of market monitoring · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This engine is the only owner of market monitoring (§08 and §09 describe one system). Exchange health belongs to operational monitoring (SYS-28).
+- **OPP-011** Detection, not allocation ranking · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-011 — This engine detects and filters candidates. Economic quality comes from the True Net-Profit Engine (TNP-021), and ranking for capital is done by the Global Capital Authority (CAP-017).
+- **OPP-012** Tiered monitoring · SYSTEM REQUIREMENT · DEC-017 — Every market in the universe is monitored at ticker level. Full order-book depth is subscribed for markets the scanner flags as candidates, within venue rate limits.
+
 ## Boundary (§92)
 
 - **Owns:** scanning of the configured universe and production of candidate opportunities.
 - **Consumes:** [market data](market-data.md), [quantitative](quantitative-engine.md) outputs, and [regime](market-regime-engine.md) state.
 - **Hands off to:** trading systems, then capital and risk. Economic evaluation belongs to the [True Net-Profit Engine](true-net-profit-engine.md).
-- **Not yet specified in Part 1:** how the "configured" or "authorized" universe is defined and by whom, filtering criteria, what counts as a "significant" event, interfaces, tests.
+- **Not yet specified:** filtering criteria, what counts as a "significant" event, interfaces, tests. The universe is defined by OPP-009.
 
-## Findings
+## Findings (all resolved)
 
-- DUP-05: §08 (whole-universe monitoring) and §09 (Opportunity Detection Engine) describe overlapping capabilities. This document treats them as one system; that grouping is PROPOSED.
-- DUP-10: "opportunity discovery" and "opportunity ranking" are also listed by Arbitrage Intelligence (ARB-001) and Cross-Exchange Arbitrage (XAR-003).
-- CF-02: §08 places AI after strategy/risk/capital; §70 places AI before capital/risk.
-- OQ-03: how the trading universe is authorized and configured.
+DUP-05 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (OPP-010). DUP-10 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (OPP-011). CF-02 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (AI, when used, sits before the capital and risk steps). OQ-03 → [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md) (OPP-009).

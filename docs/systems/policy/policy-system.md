@@ -1,8 +1,8 @@
 # Policy System (Persistent, Versioned Policy)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-12 · **Category:** shared infrastructure · **Roadmap stage:** **not mapped by §95** (CF-06) · **Sources:** §29, §30 (also §02 items 5–6)
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-12 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ([DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §29, §30 (also §02 items 5–6)
 >
-> Canonical location for policy per §98 (`docs/systems/policy/`). §98 also names `docs/product/trading-policy.md`; that file has not been created because its purpose is unclear (CF-08, OQ-15).
+> Canonical location for policy per §98 (`docs/systems/policy/`). §98 also names `docs/product/trading-policy.md`. It is deliberately not created: the operator's policy exists only in this system's runtime store (POL-009, [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md)).
 
 Canonical definition of how user rules are stored, versioned, and changed. The policy system is the policy **authority**. The [Natural Language Policy Interface](natural-language-policy-interface.md) is only a way into it (NLP-003).
 
@@ -25,15 +25,22 @@ Summary of the documents that define each step. No new rules are added here.
 3. The accepted change becomes a new policy version (POL-003, POL-004).
 4. Deterministic systems enforce it. The [Risk Engine](../../risk/risk-engine.md) enforces user hard constraints second only to system safety (RSK-004). The [Global Capital Authority](../capital-management.md) applies user policy to allocation and reinvestment (CAP-006, CAP-011).
 
+## Decisions applied (2026-09-30)
+
+- **POL-005** Important changes need confirmation · CONFIRMED REQUIREMENT · DEC-015 — A policy change is important if it loosens a limit or restriction; increases authorized capital, leverage, or venues; moves a strategy to a more permissive operating mode; or changes a hard constraint. An important change requires the operator's explicit confirmation after seeing the difference, the conflict check, and the risk analysis.
+- **POL-006** Simulation before loosening · CONFIRMED REQUIREMENT · DEC-015 — Simulation (a replay over recent market data, or a paper run) is required before activating a change that loosens risk limits or increases capital or leverage.
+- **POL-007** Tightening changes activate immediately · CONFIRMED REQUIREMENT · DEC-015 — Changes that only reduce risk may activate immediately without confirmation; they are still versioned and audited.
+- **POL-008** Operating mode is policy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-015 — This system owns the platform-wide maximum operating mode and each strategy's mode. A mode change is a policy change.
+- **POL-009** Single location of policy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-015 — The operator's actual policy exists only in this system's versioned store. No repository document holds policy content.
+- **POL-010** Structured editing before the NL interface · CONFIRMED REQUIREMENT · DEC-015 — Until the Natural Language Policy Interface exists, the operator edits structured policy directly through a validated operator interface, under the same versioning and change rules.
+
 ## Boundary (§92)
 
 - **Owns:** the authoritative, versioned user policy.
 - **Used by:** Risk Engine, Global Capital Authority, Recovery ("validate policy", REC-002), Trading Director ("policy" input, AGT-004), audit ("policy version", AUD-002).
 - **Must not:** be replaced by AI memory (POL-001, MEM-004).
-- **Not yet specified in Part 1:** the policy schema, which changes count as "important", when simulation or confirmation is "required" (OQ-17), who confirms, interfaces, tests.
+- **Not yet specified:** the policy schema, interfaces, tests. Change governance is POL-005 to POL-007; the operator confirms.
 
-## Findings
+## Findings (all resolved)
 
-- CF-06: the Risk Engine (CORE TRADING FOUNDATION) depends on user hard constraints, but §95 maps policy only through the NL interface in the later AI INTELLIGENCE stage.
-- CF-08 and OQ-15: §98 gives two canonical locations for policy.
-- DUP-22: AI memory also lists "policy history" (MEM-002).
+CF-06 → [DEC-016](../../decisions/DEC-016-roadmap-stage-placement.md) (this system is in CORE TRADING FOUNDATION). CF-08 and OQ-15 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-009). OQ-17 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-005 to POL-007). OQ-08 → [DEC-015](../../decisions/DEC-015-modes-canary-and-policy-governance.md) (POL-008). DUP-22 → [DEC-011](../../decisions/DEC-011-ownership-of-shared-responsibilities.md) (MEM-005).

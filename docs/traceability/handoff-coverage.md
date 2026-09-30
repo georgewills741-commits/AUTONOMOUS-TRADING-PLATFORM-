@@ -111,6 +111,26 @@
 | 102 | PART 1 EXPECTED DOCUMENTATION COVERAGE | Expected coverage. Checked in the "§102 topics" table below | — |
 | 103 | PART 1 FINAL COMPLETION CONDITION | Completion condition. Checked in the [Part 1 verification record](part-1-verification.md) | — |
 
+## Requirements created by decisions
+
+These did not come from a handoff section. Each cites the decision record that created it.
+
+| Decision | Requirement IDs |
+|---|---|
+| [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) | PLT-010, CAP-019, LED-004, LED-005, LED-006, LED-007 |
+| [DEC-007](../decisions/DEC-007-instrument-scope.md) | PLT-011, PLT-012, EXA-009, CAP-020, PRT-005, RSK-013 |
+| [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md) | EXA-005, EXA-006, EXA-007, EXA-008, OPP-009, EXE-008 |
+| [DEC-009](../decisions/DEC-009-technology-stack.md) | TEC-001, TEC-002, TEC-003, TEC-004, TEC-005, TEC-006, TEC-007, TEC-008, TEC-009, TEC-010, TEC-011, TEC-012, MKD-007, AIL-007, AUD-004, SEC-005, OPS-005 |
+| [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) | CAP-016, CAP-021, RSK-011, REC-007 |
+| [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) | QNT-004, RGM-005, RGM-006, OPP-010, OPP-011, TNP-017, TNP-021, CAP-017, CAP-018, PRT-004, RSK-012, EXE-007, REC-008, STR-012, DIR-004, ARB-012, ARB-014, PFC-006, MEM-005, AUD-005 |
+| [DEC-012](../decisions/DEC-012-safety-architecture.md) | MKD-006, CAP-022, RSK-008, RSK-009, RSK-010, REC-009, PFC-008, HLT-007, HLT-008, HLT-009, HLT-010, SEC-003 |
+| [DEC-013](../decisions/DEC-013-ai-organization.md) | MKD-005, RSK-014, ARB-013, PFC-007, AIL-006, AIV-013, AIV-014, AIV-015, AGT-016, RTR-003, COST-002, MEV-003 |
+| [DEC-014](../decisions/DEC-014-net-profit-formula-and-uncertainty-margin.md) | TNP-018, TNP-019, TNP-020, TNP-022, PAP-003 |
+| [DEC-015](../decisions/DEC-015-modes-canary-and-policy-governance.md) | MODE-003, MODE-004, MODE-005, MODE-006, POL-005, POL-006, POL-007, POL-008, POL-009, POL-010, STR-011, SEC-004, OPS-004 |
+| [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) | RMP-002 |
+| [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) | OPP-012, MON-007, MON-008, MON-009, AUD-006, PERF-007 |
+| [DEC-018](../decisions/DEC-018-initial-directional-research-candidates.md) | DIR-005 |
+
 ## §100 questions — where the repository answers them
 
 §100: "If these questions cannot be answered from the repository, the documentation foundation is incomplete."
@@ -131,7 +151,7 @@
 | How does it evaluate small positive opportunities? | [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-005 to TNP-007, TNP-011 |
 | How does accumulation work? | [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-008 to TNP-010; [Global Capital Authority](../systems/capital-management.md): CAP-010 to CAP-013 |
 | Is there an artificial daily-profit ceiling? | **No.** [True Net-Profit Engine](../systems/true-net-profit-engine.md): TNP-012 to TNP-014; [platform overview](../product/platform-overview.md): PLT-008 |
-| How are strategies promoted? | [Strategy Management](../systems/strategy/strategy-management.md): STR-001, STR-003; "canary" still undefined (OQ-09) |
+| How are strategies promoted? | [Strategy Management](../systems/strategy/strategy-management.md): STR-001, STR-003; canary STR-011 |
 | What happens after interruption? | [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md): REC-001 to REC-006 |
 | What happens after an execution timeout? | [Execution Engine](../systems/execution-engine.md): EXE-005, EXE-006 |
 | How are AI models controlled? | [AI architecture](../ai/ai-architecture.md): AIL-003; [AI output validation](../ai/ai-output-validation.md); [model management](../ai/model-management.md) |
@@ -139,8 +159,8 @@
 | Where does every major feature belong? | [system registry](../architecture/system-registry.md); the section table above |
 | Which features depend on which others? | [dependency map](../architecture/dependency-map.md) |
 | Which requirements are confirmed? | [requirements registry](../requirements/registry.md), "Class" column |
-| Which require confirmation? | [requirements registry](../requirements/registry.md) (PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION, PROPOSED); [custody and ledger](../systems/custody-and-ledger.md); [agents](../ai/agents.md) roster; [open questions](../open-questions/register.md) |
-| What remains for Part 2? | [roadmap](../roadmap/roadmap.md), "What remains for Part 2"; [open questions](../open-questions/register.md); [project state](../project-state.md) |
+| Which require confirmation? | None remain: all were decided on 2026-09-30 ([decision log](../decisions/README.md)). The former items are FUTURE (CUS-001, CUS-002) or DEPRECATED / REPLACED (EXA-002, AGT-001, LED-002) in the [requirements registry](../requirements/registry.md) |
+| What remains for Part 2? | [roadmap](../roadmap/roadmap.md), "What remains for Part 2"; [project state](../project-state.md) |
 
 ## §102 topics — canonical location of each expected topic
 

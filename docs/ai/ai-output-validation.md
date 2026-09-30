@@ -1,6 +1,6 @@
 # AI Output Validation (Hallucination Firewall, Output Contract, Multi-Agent Validation, Calibration)
 
-> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-22 (components of the AI Intelligence Layer) · **Roadmap stage:** AI INTELLIGENCE ("Hallucination Firewall", "Multi-agent validation"); structured output and confidence calibration are not listed in §95 (CF-05) · **Sources:** §64–§67
+> **Status:** DOCUMENTED (Handoff Part 1) — not implemented · **System:** SYS-22 (components of the AI Intelligence Layer) · **Roadmap stage:** AI INTELLIGENCE ("Hallucination Firewall", "Multi-agent validation"); structured output and confidence calibration placed there by [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) · **Sources:** §64–§67
 
 Canonical definition of how AI output is checked before anything deterministic acts on it.
 
@@ -28,8 +28,12 @@ Canonical definition of how AI output is checked before anything deterministic a
 - **AIV-011** Compare confidence with outcomes · CONFIRMED REQUIREMENT · §67 — Compare AI confidence against observed outcomes.
 - **AIV-012** Responses to overconfidence · SYSTEM REQUIREMENT · §67 — If systematic overconfidence occurs, the system may: require stronger evidence; require additional validation; route to another model; reduce the model's role; suspend the model for that task.
 
-## Findings
+## Decisions applied (2026-09-30)
 
-- CF-04: the AIV-005 decision values (BUY / SELL / HOLD / NO_TRADE) cannot express several valid outcomes in RSK-006 (WAIT, REDUCE RISK, UNCERTAIN, I DON'T KNOW, and others), nor multi-leg arbitrage decisions. The schema could force an AI to manufacture a decision, which RSK-007 forbids.
-- OQ-18: which AIV-008 policy applies to which decisions, and what counts as an "important decision".
-- TC-06: AIV-001 depends on data and calculation outputs carrying stable identifiers.
+- **AIV-013** Decision values · CONFIRMED REQUIREMENT · DEC-013 — The Decision field allows BUY, SELL, HOLD, NO_TRADE, WAIT, UNCERTAIN, and INSUFFICIENT_EVIDENCE. AI may also recommend REDUCE_RISK or SUSPEND_STRATEGY, as proposals for deterministic systems to evaluate.
+- **AIV-014** Validation policy · CONFIRMED REQUIREMENT · DEC-013 — Every AI-originated trade proposal gets a mandatory Devil's Advocate review, and unresolved disagreement means NO TRADE. Premium-model confirmation is required when the proposal's capital at risk exceeds an operator-configured threshold.
+- **AIV-015** Important decisions · CONFIRMED REQUIREMENT · DEC-013 — The important decisions of AIV-007 are: every AI-originated trade proposal; every AI-proposed strategy change; every AI interpretation of policy that would loosen a constraint.
+
+## Findings (all resolved)
+
+CF-04 and OQ-12 → [DEC-013](../decisions/DEC-013-ai-organization.md) (AIV-013, RSK-014; arbitrage never uses AI proposals, ARB-013). OQ-18 → [DEC-013](../decisions/DEC-013-ai-organization.md) (AIV-014, AIV-015). TC-06 → [DEC-013](../decisions/DEC-013-ai-organization.md) (MKD-005).
