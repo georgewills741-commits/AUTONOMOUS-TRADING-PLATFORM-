@@ -1,0 +1,3 @@
+# Python bytecode, written for example by `python3 -m py_compile` when the tools in
+# tools/docs/ are checked. Generated, never committed (tools/docs/README.md, "Generated files").
+__pycache__/

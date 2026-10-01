@@ -35,4 +35,21 @@ python3 tools/docs/compare_requirements.py REV --strict  # compare with REV; exi
 
 `compare_requirements.py` parses the requirement lines at a git revision and in the working tree and lists the IDs added, removed, or changed (title, class, source, text, or owning document), with before and after values. It is the check that nothing was dropped or reworded silently (ARCH-033; the owner's checkpoint rule, [DEC-032](../../docs/decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)). Run it before every checkpoint commit.
 
-Run it after every documentation change and commit the regenerated files with the change. It does not check code, schemas, interfaces, or tests, which do not exist yet. That is the rest of ARCH-032.
+Run `build_index.py` after every documentation change and commit the regenerated files with the change. It does not check code, schemas, interfaces, or tests, which do not exist yet. That is the rest of ARCH-032.
+
+## Code checks for the tools
+
+The tools themselves are checked at every checkpoint with the project's linter, formatter, and type checker, ruff and mypy (TEC-009, [DEC-009](../../docs/decisions/DEC-009-technology-stack.md)). They are development checks, not dependencies: the scripts still run with Python 3 and its standard library alone.
+
+```text
+ruff check tools/docs                    # lint
+ruff format --check tools/docs           # formatting (ruff's default style)
+mypy --check-untyped-defs tools/docs     # types, including inside functions without annotations
+```
+
+The versions are not pinned yet: TEC-009's lockfile comes with the development environment at Stage 1. Versions last used: ruff 0.15.8, mypy 1.19.1, Python 3.11 ([integrity verification of 2026-10-01](../../docs/traceability/integrity-verification-2026-10-01.md)).
+
+## Generated files
+
+- The files in "What it generates" are committed: they are documentation that readers use. Their generated parts are always rebuilt by `build_index.py` and never edited by hand; the hand-written parts named in that table are kept. `--check-only` fails if a generated part is out of date.
+- Python bytecode (`__pycache__/`), written for example by `python3 -m py_compile`, is never committed; `.gitignore` excludes it. The ruff and mypy caches (`.ruff_cache/`, `.mypy_cache/`) exclude themselves.

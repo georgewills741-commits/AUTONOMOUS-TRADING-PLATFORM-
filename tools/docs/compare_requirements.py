@@ -9,16 +9,21 @@ Usage: python3 tools/docs/compare_requirements.py [REV] [--strict]
   --strict  exit with status 1 if any requirement that exists at REV was removed or changed
 Standard library only. Reads docs/**/*.md except docs/builder/ and docs/handoffs/, like build_index.py.
 """
+
 import os
 import re
 import subprocess
 import sys
 
-ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+ROOT = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+)
 EXCLUDE = ("docs/builder/", "docs/handoffs/")
 GENERATED = {"docs/requirements/registry.md", "docs/traceability/handoff-coverage.md"}
-LINE_RE = re.compile(r"^- \*\*(?P<id>[A-Z]{2,4}-\d{3})\*\* (?P<title>[^·]+?) · (?P<cls>[A-Z /]+?) · "
-                     r"(?P<src>[^—]+?) — (?P<text>.+)$")
+LINE_RE = re.compile(
+    r"^- \*\*(?P<id>[A-Z]{2,4}-\d{3})\*\* (?P<title>[^·]+?) · (?P<cls>[A-Z /]+?) · "
+    r"(?P<src>[^—]+?) — (?P<text>.+)$"
+)
 
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 REV = args[0] if args else "HEAD"
@@ -52,11 +57,18 @@ def parse(files):
 
 
 def wanted(path):
-    return path.startswith("docs/") and path.endswith(".md") and not path.startswith(EXCLUDE) and path not in GENERATED
+    return (
+        path.startswith("docs/")
+        and path.endswith(".md")
+        and not path.startswith(EXCLUDE)
+        and path not in GENERATED
+    )
 
 
 def git(*a):
-    return subprocess.run(["git", "-C", ROOT, *a], check=True, capture_output=True, text=True).stdout
+    return subprocess.run(
+        ["git", "-C", ROOT, *a], check=True, capture_output=True, text=True
+    ).stdout
 
 
 old_files = {}
@@ -75,7 +87,9 @@ added = sorted(set(new) - set(old))
 removed = sorted(set(old) - set(new))
 changed = []
 for i in sorted(set(old) & set(new)):
-    diffs = [k for k in ("title", "cls", "src", "text", "doc") if old[i][k] != new[i][k]]
+    diffs = [
+        k for k in ("title", "cls", "src", "text", "doc") if old[i][k] != new[i][k]
+    ]
     if diffs:
         changed.append((i, diffs))
 
