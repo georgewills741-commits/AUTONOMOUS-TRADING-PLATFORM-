@@ -172,6 +172,15 @@ Where these stand today:
 - **Feature extensibility (P3§401–P3§410, P3§462–P3§466, P3§472–P3§475, P3§508–P3§512)** is in [Architecture Governance](architecture-governance.md) (GOV).
 - P3§514 (system boundary principle) is ARCH-012. P3§515 (final consolidated operating model) is ARCH-024, with ARCH-035 as its global controller and CAP-016 as its runtime order.
 
+## Decisions applied (2026-10-01)
+
+From the master execution constitution ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)).
+
+- **ARCH-041** Idempotent financial operations · CONSTRAINT · DEC-033 — Financially significant operations must have appropriate idempotency protection. Especially: order submission; order cancellation; capital reservation; capital release; transfers; reconciliation.
+- **ARCH-042** UNKNOWN is never SUCCESS · CONSTRAINT · DEC-033 — Every important external operation must consider: SUCCESS; FAILURE; TIMEOUT; UNKNOWN. UNKNOWN must not be silently interpreted as SUCCESS. Examples: order state; transfer state; balance state; position state; exchange connectivity.
+
+ARCH-041 and ARCH-042 (§139 and §47) make general what several requirements already cover in part: client order IDs and timeout handling (EXE-005, EXE-006, EXE-008), atomic reservation (CAP-027), transfer verification (EXE-009), idempotent recovery and emergency actions (REC-017, RSK-019), and retries that create no duplicate financial action (EXA-014). They add order cancellation, capital release, balance and position state, and exchange connectivity. Indexed as SR-46 and in SR-09 of the [System Rules Register](../requirements/system-rules-register.md).
+
 ## Operating values ([DEC-020](../decisions/DEC-020-value-classification.md))
 
 - **ARCH-018** Values are classified and configurable · CONSTRAINT · DEC-020 — Every concrete operating value in a requirement (percentages, durations, counts, latencies, thresholds, versions) is recorded in the values register with one classification: DEFAULT, DESIGN TARGET, POLICY-CONTROLLED PARAMETER, HARD LIMIT, IMPLEMENTATION CHOICE, or OBSERVED. No value becomes a permanent hard-coded requirement unless the owner explicitly approves it as such; the architecture supports configurable, evidence-driven values. Illustrative examples quoted from a source are not operating values.

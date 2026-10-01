@@ -13,6 +13,7 @@ The single record of where this project currently stands (Constitution Rules 50,
 - The owner answered every Part 2 finding (DEC-026 to DEC-030).
 - The Part 3 reconciliation **awaits human review** (P3§541 items 29–30). Items for the owner: confirm CF-17 and CF-18, answer OQ-27, accept or change TC-08's recommendation, and check two builder readings (DUP-34, DUP-35). TC-09 is decided when OPERATIONALIZATION is planned.
 - The owner's checkpoint and three-stage verification rule is adopted ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)).
+- The owner's master execution constitution and directive on verification and platform independence (2026-10-01) are adopted ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](decisions/DEC-034-verification-and-platform-independence.md)). CF-19 from them is for the owner.
 - Implementation is not authorized.
 
 | Gate | Status |
@@ -26,15 +27,41 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Master handoff Part 2 (consolidated additional systems, paper operation, readiness, arbitrage, deployment portability) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-2-consolidated-additional-systems.md) · [reconciliation](traceability/part-2-reconciliation.md) · [verification and documentation audit](traceability/part-2-verification.md) · [DEC-024](decisions/DEC-024-part-2-reconciliation.md) |
 | Part 2 findings (CF-14, OQ-24 to OQ-26, TC-07, and four items to confirm) | DECIDED by the owner — [DEC-026](decisions/DEC-026-safety-floor-and-layered-control.md) to [DEC-030](decisions/DEC-030-high-availability-and-single-active-copy.md) · [answers](handoffs/owner-decisions-03-part-2-findings.md) · [verification](traceability/owner-decisions-03-verification.md) |
 | Owner's checkpoint, version-control, and three-stage verification rule | ADOPTED — [`builder/checkpoint-and-verification-rule.md`](builder/checkpoint-and-verification-rule.md) ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) |
+| Repository integrity verification (owner request, 2026-10-01) | DONE — [record](traceability/integrity-verification-2026-10-01.md) |
+| Master execution, consistency, verification and continuity constitution | ADOPTED — [`builder/master-execution-constitution.md`](builder/master-execution-constitution.md) ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md)) |
+| Owner's directive on three-level verification and platform independence | ADOPTED — [`builder/verification-and-platform-independence-directive.md`](builder/verification-and-platform-independence-directive.md) ([DEC-034](decisions/DEC-034-verification-and-platform-independence.md)) |
 | Master handoff Part 3 (autonomy, capital scaling, system rules, extensibility, 24/7 operations, rebalancing, readiness) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-3-consolidated-autonomy-capital-scaling.md) · [reconciliation](traceability/part-3-reconciliation.md) · [verification and documentation audit](traceability/part-3-verification.md) · [DEC-031](decisions/DEC-031-part-3-reconciliation.md) |
-| Human review of the Part 3 reconciliation (P3§541 items 29–30), with CF-17, CF-18, OQ-27, TC-08, and the DUP-34, DUP-35 readings | **AWAITING THE OWNER — next step** |
+| Human review of the Part 3 reconciliation (P3§541 items 29–30), with CF-17, CF-18, OQ-27, TC-08, and the DUP-34, DUP-35 readings; and CF-19 | **AWAITING THE OWNER — next step** |
 | Complete documentation review (handoff §101; P2§329) | NOT STARTED — after the Part 3 review |
 | Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; P3§541; constitution Part XXIII) |
 | Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
-The owner reviews the Part 3 reconciliation (P3§541 item 29) and answers the items listed under "Open questions" below (TC-09 is recorded now and decided when OPERATIONALIZATION is planned). Then the complete documentation review (§101, P2§329) and the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
+The owner reviews the Part 3 reconciliation (P3§541 item 29) and answers the items listed under "Open questions" below, CF-19 included (TC-09 is recorded now and decided when OPERATIONALIZATION is planned). Then the complete documentation review (§101, P2§329) and the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
+
+## Continuation contract
+
+What the next session needs before it does anything (master execution constitution §03, §04, §87; DEC-033). Updated at every checkpoint and before a session ends. If this contract and the repository disagree, stop and reconcile first (§05).
+
+| Field | Now |
+|---|---|
+| Current stage and substage | FOUNDATION — documentation initialization; the governance texts of 2026-10-01 are adopted; waiting for the owner's review |
+| Current task | None in progress. The next task is the owner's (see "Next approved step") |
+| Completed | See "Completed work" and the checkpoint log below |
+| In progress, possibly partial | Nothing |
+| Blocked | The documentation review and Stage 1 planning wait for the owner's Part 3 review and answers ("Blockers") |
+| Failed verification | None open |
+| Pending verification | None |
+| Verified | Every checkpoint in the checkpoint log, by its verification record |
+| Not verified | Platform behavior: nothing is implemented |
+| Latest verified commit | The last row of the checkpoint log (a commit cannot record its own hash; the next checkpoint fills it in) |
+| Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
+| Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
+| Known risks | Owner answers still due (CF-17, CF-18, CF-19, OQ-27, TC-08) may change requirements; nothing is built on them. The tools' check versions are not pinned until Stage 1 ([tools README](../tools/docs/README.md)) |
+| Next safe action | The owner's review ("Next approved step", item 1). The builder makes no further change until then, unless the owner asks |
+| Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand |
+| Do not implement yet | Anything. Implementation is not authorized (handoff §101; constitution Rules 134–135); FUTURE and PROPOSED items stay unbuilt even then |
 
 ## Owner decisions on the Part 2 findings (2026-09-30)
 
@@ -126,11 +153,15 @@ Builder readings you may want to check, all stated in the decision records:
   - Every piece of work from the earlier rounds is in the repository; the branch change set was reviewed area by area; no secrets, stray, binary, or duplicate files.
   - Two tooling defects found and fixed: formatting (`ruff format`) and type errors (`mypy`) in `tools/docs/`, with no change in behavior. Generated Python bytecode is now excluded by `.gitignore`.
   - Record: [integrity verification](traceability/integrity-verification-2026-10-01.md).
+- **Master execution constitution and owner directive (2026-10-01):**
+  - Both kept word for word as ACTIVE builder texts (round-trip verified), loaded by `CLAUDE.md` with the two earlier ones. Where the four differ, the stricter applies; they share one three-gate procedure (DEC-033, DUP-39).
+  - 8 new requirements: PLT-029, OPS-021, GOV-021 to GOV-023 (DEC-034: the platform runs without Claude Code; continuous lifecycle; future changes are upgrades under the same governance); ARCH-041, ARCH-042, PERF-023 (DEC-033: idempotent financial operations; UNKNOWN is never SUCCESS; no unsafe fast path). No existing requirement changed.
+  - The constitution's other 58 platform-facing sections map onto existing requirements (DEC-033's table). System rules SR-46, SR-47, and ARCH-042 in SR-09.
+  - New: this continuation contract; the verification-record format ([traceability README](traceability/README.md)); glossary aliases for the constitution's authority names; tooling that makes verification repeatable: a check that the preserved verbatim texts never change, an orphaned-document check, and a self-test of the tools ([tools README](../tools/docs/README.md)). Findings CF-19 (feature lifecycle, open for the owner), DUP-39 (resolved), TC-10 (shared state names, open until the state machines are specified).
 
 ## In-progress work
 
-- The Part 3 reconciliation is complete and awaits human review.
-- **Being adopted (next checkpoint):** the "Claude Code Master Execution, Consistency, Verification & Continuity Constitution" and the owner's directive on three-level verification and platform independence, both received on 2026-10-01. They are not in the repository until that checkpoint commit. If a session ends before it, ask the owner to send them again.
+None. The Part 3 reconciliation is complete and awaits human review.
 
 ## Blockers
 
@@ -140,7 +171,7 @@ Builder readings you may want to check, all stated in the decision records:
 
 ## Open questions
 
-For the owner ([DEC-031](decisions/DEC-031-part-3-reconciliation.md), "Left for the owner"):
+For the owner ([DEC-031](decisions/DEC-031-part-3-reconciliation.md), "Left for the owner"; CF-19 and TC-10 from [DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md)):
 
 | Item | Question | Where |
 |---|---|---|
@@ -149,6 +180,8 @@ For the owner ([DEC-031](decisions/DEC-031-part-3-reconciliation.md), "Left for 
 | OQ-27 | Is a separate Part 4 coming? | [Open-question register](open-questions/register.md) |
 | TC-08 | Older decision records mostly lack "Alternatives": add them only when a record is next amended and only where they can be sourced | [Open-question register](open-questions/register.md) |
 | Readings | Check the mapping of the rebalancing decisions (DUP-34) and of Part 3's emergency state names (DUP-35) | [Findings register](conflicts/register.md) |
+| CF-19 | Which feature lifecycle is canonical: the master execution constitution's (§107: IDEA … RETIRED, "must") or Part 3's proposed statuses (GOV-018)? The builder recommends §107's, with Part 3's names mapped onto it | [Findings register](conflicts/register.md) |
+| TC-10 | Shared state names (SUSPENDED, DEGRADED, ACTIVE, and SAFE MODE as Part 1 listed it) get one meaning each when the state machines are specified; no answer needed now | [Open-question register](open-questions/register.md) |
 | TC-09 | How a standby gets trading keys for automatic takeover without being able to trade before it holds the lease; decided when OPERATIONALIZATION is planned | [Open-question register](open-questions/register.md) |
 
 What stays unapproved by design (proposals, future items) is shown in the [registry](requirements/registry.md)'s Approval column.
@@ -196,6 +229,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - DEC-024 (Part 2 reconciliation) and DEC-025 (documentation tooling in the repository) added the same day.
 - DEC-026 to DEC-030 (owner decisions on the Part 2 findings) added the same day. DEC-024 confirmed by the owner.
 - DEC-031 (Part 3 reconciliation; awaiting review) and DEC-032 (the owner's checkpoint and verification rule) added the same day.
+- DEC-033 (master execution constitution) and DEC-034 (owner's directive on verification and platform independence) added on 2026-10-01.
 
 ## Recent changes
 
@@ -208,11 +242,11 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-09-30: applied owner decisions 3 on the Part 2 findings (DEC-026 to DEC-030): 24 new requirements; CAP-028 and OPS-009 replaced; REC-021 reclassified. No code, configuration, or infrastructure created.
 - 2026-09-30: integrated Handoff Part 3 (DEC-031) and adopted the checkpoint and verification rule (DEC-032): 111 new requirements, GOV set, System Rules Register, reliability and production-readiness models, findings CF-17, CF-18, DUP-32 to DUP-38, OQ-27, TC-08, TC-09. No existing requirement changed. No platform code, configuration, or infrastructure created.
 - 2026-10-01: repository integrity verification at the owner's request: tooling lint and type fixes, `.gitignore` for generated bytecode, code checks documented in the tools README. No requirement or decision changed.
+- 2026-10-01: adopted the master execution constitution and the owner's directive (DEC-033, DEC-034): 8 new requirements, SR-46, SR-47, CF-19, DUP-39, TC-10, continuation contract, verification-record format. No existing requirement changed. No platform code, configuration, or infrastructure created.
 
 ## Next approved step
 
-0. Builder (in progress): add the master execution constitution and the owner's directive of 2026-10-01 to the repository verbatim and adopt them, with their own three-gate checkpoint. This needs no owner decision.
-1. The owner's review of the Part 3 reconciliation and answers to CF-17, CF-18, OQ-27, TC-08, and the DUP-34, DUP-35 readings (P3§541 items 29–30). TC-09 is decided when OPERATIONALIZATION is planned.
+1. The owner's review of the Part 3 reconciliation and answers to CF-17, CF-18, CF-19, OQ-27, TC-08, and the DUP-34, DUP-35 readings (P3§541 items 29–30). TC-09 is decided when OPERATIONALIZATION is planned.
 2. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1.
 3. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140).
 4. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
@@ -221,7 +255,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 
 A new session can reconstruct the project from the repository:
 
-- this file for the state;
+- this file for the state, starting with its continuation contract;
 - [`docs/README.md`](README.md) for every document;
 - the [registry](requirements/registry.md) for every requirement;
 - the registers for everything open;
@@ -243,4 +277,5 @@ Each checkpoint commit and its verification record. Hashes are those on branch `
 | b6f005e | Handoff Part 2 integrated (DEC-024, DEC-025) | [Part 2 verification](traceability/part-2-verification.md) |
 | a9034ce | Owner decisions on the Part 2 findings (DEC-026 to DEC-030) | [Owner decisions 3 verification](traceability/owner-decisions-03-verification.md) |
 | a2c8e92 | Handoff Part 3 integrated; checkpoint rule adopted (DEC-031, DEC-032) | [Part 3 verification](traceability/part-3-verification.md) |
-| The commit that adds this row | Repository integrity verification; tooling lint and type fixes | [Integrity verification 2026-10-01](traceability/integrity-verification-2026-10-01.md) |
+| 5846675 | Repository integrity verification; tooling lint and type fixes | [Integrity verification 2026-10-01](traceability/integrity-verification-2026-10-01.md) |
+| The commit that adds this row | Master execution constitution and owner directive adopted (DEC-033, DEC-034) | [Governance adoption verification](traceability/governance-adoption-verification.md) |

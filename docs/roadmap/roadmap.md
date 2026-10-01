@@ -77,6 +77,16 @@ The 29 areas are not new stages: each belongs to one of the seven stages (RMP-00
 | 6 | AI INTELLIGENCE | AI degradation triggers, fallback quality, scale with need, Governor admission factors (AIL-018 to AIL-021) [15] |
 | 7 | OPERATIONALIZATION | 24/7/365 operation, availability targets from evidence, production change records (OPS-018 to OPS-020) [20, 22, 28]; disaster-recovery scope, migration vs failover (MIG-031, MIG-032) [21, 23]; incident lifecycle and learning (INC-004, INC-005) [20]; standby is not active (REC-029) [21]; scale-aware infrastructure (HLT-017) [20, 27]; readiness matrix exposed to the operator (RDY-023 with DSI) [25]; production-readiness model [28] |
 
+### Additions of 2026-10-01 by stage ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md))
+
+| # | Stage | Added |
+|---|---|---|
+| 1 | FOUNDATION | Governance of every later change and of future requests (GOV-021 to GOV-023); idempotent financial operations, "UNKNOWN is never SUCCESS", and no unsafe fast path as design rules for every component from the first (ARCH-041, ARCH-042, PERF-023); the stage record, completion certificate, and transition checklist used from this stage on ([traceability README](../traceability/README.md)) |
+| 3 | CORE TRADING FOUNDATION | ARCH-041 and ARCH-042 enforced in execution, capital, and recovery (SR-46, SR-09) |
+| 7 | OPERATIONALIZATION | Performance hardening re-verified against PERF-023 (SR-47); the continuous engineering lifecycle after release (OPS-021) |
+
+PLT-029 (the platform operates without Claude Code) is platform-wide: every stage must leave the platform able to run without the builder.
+
 Part 3's areas 10 (execution), 12 (portfolio), 16 (policy), 24 (security), 25 (monitoring), and 26 (testing) add no new requirement beyond those above; they stay where Parts 1 and 2 placed them. Area 29 (controlled self-improvement) remains STR-009 under the lifecycle. Not in any stage: the feature status registry (GOV-018, PROPOSED).
 
 Not in any stage: domain command language (ARCH-034, PROPOSED, kept as an idea by the owner); adaptive execution (EXE-011, FUTURE until the owner approves it); custody additions (CUS-004, CUS-005, LED-008 apply only if custody is approved).

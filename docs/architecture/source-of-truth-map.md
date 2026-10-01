@@ -1,6 +1,6 @@
 # Source-of-Truth Map
 
-> **Status:** ACTIVE — 2026-09-30. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
+> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
 >
 > If two documents seem to disagree, the one listed here wins, and the disagreement is recorded in the [findings register](../conflicts/register.md).
 
@@ -10,7 +10,11 @@
 |---|---|
 | Builder operating rules | [docs/builder/claude-code-builder-constitution.md](../builder/claude-code-builder-constitution.md) |
 | Owner's checkpoint, version-control, and three-stage verification rule | [docs/builder/checkpoint-and-verification-rule.md](../builder/checkpoint-and-verification-rule.md) ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) |
-| Current project state and next step | [docs/project-state.md](../project-state.md) |
+| Master execution, consistency, verification and continuity constitution (builder rules) | [docs/builder/master-execution-constitution.md](../builder/master-execution-constitution.md) ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)) |
+| Owner's directive on three-level verification and platform independence | [docs/builder/verification-and-platform-independence-directive.md](../builder/verification-and-platform-independence-directive.md) ([DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)) |
+| How the builder texts combine; the one three-gate procedure | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (DUP-39) |
+| Current project state, next step, and continuation contract | [docs/project-state.md](../project-state.md) |
+| Verification records and their format | [docs/traceability/README.md](../traceability/README.md) |
 | Documentation index | [docs/README.md](../README.md) |
 | Requirement text | The specification that owns the requirement (each requirement ID appears in exactly one specification) |
 | Requirement index (ID → owner, class, source, stage) | [docs/requirements/registry.md](../requirements/registry.md) |
@@ -96,6 +100,8 @@ Part 2 requires exactly one of each fundamental authority (P2§184). Each has on
 | Opportunity Registry (Opportunity Database) | SYS-05 Opportunity Detection Engine | OPP-016 — [opportunity-detection.md](../systems/opportunity-detection.md) |
 | Execution state (P3§467) | SYS-10 Execution Engine | EXE-002, ARCH-037 — [execution-engine.md](../systems/execution-engine.md) |
 | Financial ledger (P3§467) | SYS-33 Trading Ledger | LED-004, LED-006, ARCH-037 — [custody-and-ledger.md](../systems/custody-and-ledger.md) |
+
+The master execution constitution (§26) names the same authorities in its own words: Execution Authority is execution state, Market Data Authority the market-data normalization layer, Canonical Financial Ledger the financial ledger, and Audit System the audit system ([glossary](../glossary.md); [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)).
 
 Other Part 2 concepts and where they are defined:
 

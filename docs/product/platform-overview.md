@@ -127,6 +127,14 @@ How these fit what already exists:
 
 The principles index above gains no new rows: Part 3's system rules are indexed in the [System Rules Register](../requirements/system-rules-register.md), which points to each canonical requirement (ARCH-038).
 
+## Decisions applied (2026-10-01)
+
+From the owner's directive on verification and platform independence ([DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)).
+
+- **PLT-029** Platform independent of Claude Code · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-034 — The production platform must exist independently of Claude Code. Claude Code is the engineering agent responsible for building, maintaining, upgrading, extending, testing, documenting, and improving the platform; it is not the platform. The platform must be capable of: operating without an active Claude Code session; operating without an active Claude conversation; continuing 24/7 operation within its authorized operating boundaries; maintaining persistent state; recovering from supported failures; enforcing deterministic risk and capital controls; executing authorized trading operations; monitoring itself; recording audit history; maintaining configuration and strategy versions; being deployed independently; being upgraded through controlled engineering processes; being restored after failure; being migrated between supported environments; receiving future features and improvements. Claude Code may return later and continue engineering the platform, but the platform must never depend on Claude Code being continuously active in order to operate.
+
+PLT-029 states for the platform what constitution Rule 198 asks of the builder. It is about Claude Code, the builder. AI models the platform itself uses through its AI gateway (AIL-006) are platform components: provider-agnostic (AIL-007), with deterministic fallback when unavailable (AIL-011). Rebuilding production without the owner is OPS-017; how the platform keeps its knowledge is GOV-023.
+
 ## Findings (all resolved)
 
 OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).

@@ -1,0 +1,13 @@
+# SHA-256 of each file under docs/handoffs/ and docs/builder/. For a Markdown text: its title line and
+# everything after its status banner (the first block of '>' lines). Checked by build_index.py. A verbatim
+# text never changes; add a line only when a decision record adds a new preserved text (tools/docs/README.md).
+92a13f18aa174f461508a4e0d11d39dbb11a9872bca3114cb631258ead783ce8  docs/builder/checkpoint-and-verification-rule.md
+4629a5577adb6d4d5d6e7e498d2fc015aa2bb3be4b381bf22f8d5674dc289f0f  docs/builder/claude-code-builder-constitution.md
+6734b7cfc69a9fb33ff6ac386a123e1874cccfa17759238e162dbd66b3061131  docs/builder/master-execution-constitution.md
+0e8c1bd1d067b3090066f9cc35d639c3bc855fd83a47fe4ae2169812a2ba13b9  docs/builder/verification-and-platform-independence-directive.md
+c50c11988c6b4db256d5b40723317fb1c019beb7f57e152679e560890f52a174  docs/handoffs/owner-correction-01-autonomous-operating-defaults.md
+0d3395d6a674d7a2a41221b890eb4c30805ba8c27267b99a09a5316575b35332  docs/handoffs/owner-decisions-02-cf-11-to-cf-13.md
+0f697f26832942a804f7c78535985b15167c495247aa22c9e5b41b8139f03742  docs/handoffs/owner-decisions-03-part-2-findings.md
+b2516ce35faee882e5c02c1bda61b73120e919e0311d300153d2305b539c473a  docs/handoffs/part-1-core-platform-features.md
+0fce0aade48bde7adb4de4cfa45155d28f9f11f96d182d0d2fcb7461c0afa92d  docs/handoffs/part-2-consolidated-additional-systems.md
+8dbedf77ba5b74522ed305e76df0027ee52608cf1c7c008962476c6782d50ac2  docs/handoffs/part-3-consolidated-autonomy-capital-scaling.md

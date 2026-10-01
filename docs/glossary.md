@@ -1,8 +1,8 @@
 # Glossary
 
-> **Status:** ACTIVE — updated 2026-09-30 with decisions DEC-006 to DEC-031 and Handoff Parts 2 and 3. Canonical terminology (constitution Rules 33, 59, 144).
+> **Status:** ACTIVE — updated 2026-10-01 with decisions DEC-006 to DEC-033 and Handoff Parts 2 and 3. Canonical terminology (constitution Rules 33, 59, 144).
 >
-> **MERGED:** different names in the handoff refer to the same thing, so one canonical name is used. **DISTINCT:** similar names refer to different things and are kept apart. Renaming a canonical term requires a decision record. No term is currently open.
+> **MERGED:** different names in the handoff refer to the same thing, so one canonical name is used. **DISTINCT:** similar names refer to different things and are kept apart. Renaming a canonical term requires a decision record. One entry is open: the state names shared by several state machines (TC-10).
 
 | Canonical term | Meaning | Variants seen | Status | Canonical document |
 |---|---|---|---|---|
@@ -76,4 +76,9 @@
 | Hot path / cold path | Hot: the latency-sensitive path from market data to execution (PERF-003, PERF-019). Cold: research, reports, evaluation, simulations | P3§396 | Defined | [performance-and-latency.md](architecture/performance-and-latency.md) |
 | Restart vs resume | A service may restart automatically; trading resumes only after state validation, reconciliation, and a readiness check (REC-025) | P3§489, P3§526 | DISTINCT | [recovery-and-reconciliation.md](systems/recovery-and-reconciliation.md) |
 | Aggressive (opportunity discovery) | Breadth, depth, speed, and continuity of search; never aggressive risk-taking (OPP-017) | "opportunity-aggressive" (P3§386, P3§542) | Defined | [opportunity-detection.md](systems/opportunity-detection.md) |
-| Capital Authority | The Global Capital Authority, SYS-07 | "Capital Authority" (P3§359, §366, §400, §442) | ALIAS | [capital-management.md](systems/capital-management.md) |
+| Capital Authority | The Global Capital Authority, SYS-07 | "Capital Authority" (P3§359, §366, §400, §442; master execution constitution §16, §26, §35) | ALIAS | [capital-management.md](systems/capital-management.md) |
+| Capital Manager, Capital Controller, Capital Engine | Not system names. Where they appear they mean the Global Capital Authority, SYS-07; the master execution constitution (§35) forbids them naming different systems or one system three ways, so specifications use "Global Capital Authority" | Master execution constitution §35 | ALIAS — do not use ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md)) | [capital-management.md](systems/capital-management.md) |
+| Execution Authority | The Execution Engine, SYS-10, owner of execution state (ARCH-037) | "Execution Authority" (master execution constitution §16, §26) | ALIAS (DEC-033) | [execution-engine.md](systems/execution-engine.md) |
+| Market Data Authority | Market-Data Infrastructure, SYS-02, owner of normalized market data (the market-data normalization layer of ARCH-027) | "Market Data Authority" (master execution constitution §26) | ALIAS (DEC-033) | [market-data.md](systems/market-data.md) |
+| Canonical Financial Ledger | The Trading Ledger, SYS-33 (LED-004, LED-006, ARCH-037) | "Canonical Financial Ledger" (master execution constitution §26) | ALIAS (DEC-033) | [custody-and-ledger.md](systems/custody-and-ledger.md) |
+| Shared state names: SUSPENDED, DEGRADED, ACTIVE, SAFE MODE | One name used by more than one state machine. Today: SUSPENDED in readiness (RDY-004, RDY-017) and the strategy lifecycle (STR-024); DEGRADED in platform health (HLT-011), component readiness (RDY-017), and feature capability states (RDY-011); ACTIVE in readiness states such as PAPER_ACTIVE (RDY-004) and feature statuses (GOV-009); SAFE MODE is a safety level (RSK-015), also listed among Part 1's health states (HLT-001), whose meaning HLT-011 moved to the safety levels. BLOCKED and READY are used by readiness alone. Each shared name must get one meaning, or a different name, when the state machines are specified | "READY, ACTIVE, SUSPENDED, BLOCKED, DEGRADED, SAFE_MODE" (master execution constitution §36) | OPEN — TC-10 | [open-questions/register.md](open-questions/register.md) |

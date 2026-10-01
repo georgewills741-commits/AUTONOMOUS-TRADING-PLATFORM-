@@ -67,6 +67,14 @@ Notes:
 - **OPS-019.** The availability target is value V-36, not set. Part 3's 99.9999% is an example of what must not be invented, not a target.
 - **OPS-020:** adds the scope and the record to OPS-007's change process. Approval follows the owner of each change: policy changes through the Policy System (POL-005 to POL-007), strategy versions through the Readiness System (STR-019 to STR-022), infrastructure through OPS-016.
 
+## Decisions applied (2026-10-01)
+
+From the owner's directive on verification and platform independence ([DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)).
+
+- **OPS-021** Continuous engineering lifecycle · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-034 — The platform is a persistent, long-lived financial technology platform. Its lifecycle is: build → verify → release → deploy → operate → monitor → maintain → identify improvement → design → implement → verify → release → deploy → operate → continue. This cycle continues throughout the life of the platform.
+
+For OPS-021, each step of the cycle already has its owner: verification (VER-001 to VER-003, GOV-012), release and deployment (OPS-007, OPS-011, OPS-012, OPS-020), monitoring (MON, HLT), improvement (STR-009 for strategies, GOV-002 for features). Every pass through the cycle follows the same governance as the first build (GOV-021).
+
 ## Production-readiness model (P3§541 item 23)
 
 This section explains how production readiness is decided. It adds no requirement.

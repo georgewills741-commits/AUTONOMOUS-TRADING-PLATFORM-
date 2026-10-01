@@ -51,6 +51,12 @@ New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-
 
 PERF-019's hot path is PERF-003's latency-sensitive path in Part 3's words; PERF-016 already isolates research. PERF-018's targets become DESIGN TARGET values per service (like V-06 and V-07), replaced by measured baselines (PERF-010, PERF-012). PERF-022 lists what concurrency must not create; the mechanisms are CAP-027 (atomic reservation), EXE-008 and REC-017 (no duplicate orders), and CAP-017 (one allocator, so strategies cannot make conflicting allocation decisions). P3§400 is CAP-027.
 
+## Decisions applied (2026-10-01)
+
+From the master execution constitution ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)). PERF-023 (§43) says for performance work what RSK-034 (the safety floor), REC-018 (recovery), and STR-022 (canary gates) say for their areas; it is indexed as SR-47 in the [System Rules Register](../requirements/system-rules-register.md).
+
+- **PERF-023** No unsafe fast path · CONSTRAINT · DEC-033 — Performance optimization must never bypass: risk; capital; execution validation; authorization; reconciliation; audit. There is no "fast path" that is allowed to become an unsafe path.
+
 ## Findings (all resolved)
 
 CF-03 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (capital reservation is on the latency-sensitive path, CAP-021). OQ-19 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md), superseded by [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) (PERF-008 to PERF-012; data freshness limits in MKD-006).

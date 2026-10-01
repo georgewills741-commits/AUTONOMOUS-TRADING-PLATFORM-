@@ -142,6 +142,8 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-029](../decisions/DEC-029-infrastructure-as-code.md) | OPS-014, OPS-015, OPS-016, OPS-017 |
 | [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md) | REC-023, REC-024, MIG-029, MIG-030 |
 | [DEC-031](../decisions/DEC-031-part-3-reconciliation.md) | RSK-048, RDY-026 |
+| [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) | ARCH-041, ARCH-042, PERF-023 |
+| [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md) | PLT-029, OPS-021, GOV-021, GOV-022, GOV-023 |
 
 ## §100 questions — where the repository answers them
 

@@ -1,13 +1,16 @@
 # Documentation tooling
 
-Project tooling, not platform code ([DEC-025](../../docs/decisions/DEC-025-documentation-tooling-in-repository.md); extended for Handoff Part 3 by [DEC-031](../../docs/decisions/DEC-031-part-3-reconciliation.md)). It needs only Python 3 and its standard library.
+Project tooling, not platform code ([DEC-025](../../docs/decisions/DEC-025-documentation-tooling-in-repository.md); extended for Handoff Part 3 by [DEC-031](../../docs/decisions/DEC-031-part-3-reconciliation.md) and for the master execution constitution by [DEC-033](../../docs/decisions/DEC-033-adopt-master-execution-constitution.md)). It needs only Python 3.10 or later and its standard library (and git, for the comparison and the self-test).
 
 ```text
 python3 tools/docs/build_index.py              # check everything, then regenerate the indexes
 python3 tools/docs/build_index.py --check-only # check only; writes nothing; fails if a generated file is out of date
 python3 tools/docs/compare_requirements.py     # requirements added, removed, or changed since HEAD
 python3 tools/docs/compare_requirements.py REV --strict  # compare with REV; exit 1 if an existing requirement was removed or changed
+python3 tools/docs/selftest.py                 # negative tests: the checker and the comparison must fail on broken input
 ```
+
+At every checkpoint run the three checking commands (`--check-only`, the comparison with the previous checkpoint, and the self-test) and the code checks below. With the round trip of any newly preserved text, they are Verification 1 until code exists (DEC-033).
 
 ## What it generates
 
@@ -30,6 +33,13 @@ python3 tools/docs/compare_requirements.py REV --strict  # compare with REV; exi
 - **Decisions:** every decision record is listed in the decision log.
 - **Generated files are current** (`--check-only`): the generated files are rebuilt in memory and compared with the files on disk; any difference fails.
 - **Requirement text** includes indented continuation lines under a requirement line (for example RSK-015's safety levels), in this checker and in `compare_requirements.py`.
+- **Preserved texts never change:** every file under `docs/handoffs/` and `docs/builder/`, in subdirectories too and of any type, is listed in [`preserved-texts.sha256`](preserved-texts.sha256) with its SHA-256. For a Markdown text the hash covers the title line and everything after the status banner; the banner is the first block of `>` lines after the title, so a `>` line anywhere later is part of the text. Files are read byte-exact, so changed line endings fail too. A changed text, a file not listed, or a listed file that is missing fails. A banner may change by decision; the text never does. A new line is added only when a decision record adds a new preserved text, after its round trip against the text as received.
+- **Status banners of preserved texts:** their links resolve (the texts themselves are not checked for references or links: they are kept as received).
+- **No orphaned documents** (master execution constitution §71, §73): every document under `docs/` is reachable by links, outside code, from `README.md`, `CLAUDE.md`, `docs/README.md`, or this README. Two documents that link only to each other are orphaned. This checks reachability only; a document's purpose and owner are checked in review.
+
+## Self-test
+
+`selftest.py` copies `docs/`, `tools/`, `README.md`, and `CLAUDE.md` into a temporary directory, breaks one thing at a time, and expects the checker or the comparison to fail with the right message: a broken link, a duplicate or unknown ID, a gap in numbering, a stale generated file, a decision missing from the log, a system rule resting on a proposal, a changed or unlisted preserved text (a changed word, a `>` line added after the banner, a new file in a subdirectory or of another type, changed line endings), an orphaned document (unlinked, linked only from inside code, or linked only by another orphan), and a reworded, reclassified, or removed requirement. An unmodified copy, and one whose only change is a preserved text's status banner, must pass. It never touches the repository itself. It makes Verification 1's negative tests repeatable (master execution constitution §22).
 
 ## Requirement comparison
 

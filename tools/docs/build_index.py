@@ -5,15 +5,17 @@ Reads the specifications under docs/ and (re)writes:
   - docs/traceability/handoff-coverage.md         (generated; the hand-written tail from "## §100 questions" is kept)
   - docs/traceability/part-2-reconciliation.md    (the "New requirements" column is generated; every
   - docs/traceability/part-3-reconciliation.md     other column and section is hand-written and kept)
-and checks cross-references, links, handoff coverage, and the System Rules Register.
+and checks cross-references, links, handoff coverage, the System Rules Register, that the
+preserved verbatim texts are unchanged, and that no document is orphaned.
 With --check-only it writes nothing and also fails if any generated file is out of date.
-See tools/docs/README.md, DEC-025, and DEC-031.
+See tools/docs/README.md, DEC-025, DEC-031, and DEC-033.
 
 Usage: python3 tools/docs/build_index.py [--check-only]
 Standard library only.
 """
 
 import collections
+import hashlib
 import os
 import re
 import sys
@@ -30,6 +32,7 @@ COVERAGE1 = os.path.join(DOCS, "traceability", "handoff-coverage.md")
 RECON2 = os.path.join(DOCS, "traceability", "part-2-reconciliation.md")
 RECON3 = os.path.join(DOCS, "traceability", "part-3-reconciliation.md")
 RULES = os.path.join(DOCS, "requirements", "system-rules-register.md")
+PRESERVED = os.path.join(ROOT, "tools", "docs", "preserved-texts.sha256")
 GENERATED = {REGISTRY, COVERAGE1}
 STATIC1_HEADING = "## §100 questions"
 
@@ -463,6 +466,107 @@ for link in re.findall(r"\]\(\.\./([^)]+)\)", sysreg):
 for i in ids:
     if reqs[i]["src"].startswith("DEC-") and reqs[i]["src"] not in decs:
         errors.append(f"{i}: source {reqs[i]['src']} is not a decision record")
+
+
+# ---------- preserved verbatim texts (docs/handoffs/, docs/builder/) ----------
+def preserved_paths() -> list[str]:
+    """Every file under docs/handoffs/ and docs/builder/, in subdirectories too, of any type."""
+    out = []
+    for d in sorted(EXCLUDE_DIRS):
+        for dp, dn, fn in os.walk(d):
+            dn.sort()
+            out += [os.path.join(dp, f) for f in sorted(fn)]
+    return out
+
+
+def split_preserved(path: str) -> tuple[list[str], list[str]]:
+    """(banner, body) of a preserved Markdown text, read without newline translation.
+    The banner is the first block of '>' lines after the title (only blank lines may come
+    between). The body is the title line plus everything after that block, blank lines and
+    any later '>' line included. A banner may change by decision; the body never changes."""
+    lines = open(path, encoding="utf-8", newline="").read().split("\n")
+    i = 1
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    j = i
+    while j < len(lines) and lines[j].startswith(">"):
+        j += 1
+    return lines[i:j], [lines[0]] + lines[j:]
+
+
+expected: dict[str, str] = {}
+if os.path.exists(PRESERVED):
+    for n, line in enumerate(open(PRESERVED, encoding="utf-8").read().splitlines(), 1):
+        if not line or line.startswith("#"):
+            continue
+        pm = re.match(r"^([0-9a-f]{64})  (docs/(?:handoffs|builder)/\S+)$", line)
+        if not pm:
+            errors.append(f"preserved-texts.sha256:{n}: malformed line")
+            continue
+        expected[pm.group(2)] = pm.group(1)
+else:
+    errors.append("tools/docs/preserved-texts.sha256 is missing")
+preserved_md = []
+for path in preserved_paths():
+    rel = os.path.relpath(path, ROOT).replace(os.sep, "/")
+    if path.endswith(".md"):
+        preserved_md.append(path)
+        banner, body = split_preserved(path)
+        digest = hashlib.sha256("\n".join(body).encode("utf-8")).hexdigest()
+        if "\r" in "\n".join(body):
+            errors.append(f"{rel}: preserved text has CR line endings")
+        for link in re.findall(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", "\n".join(banner)):
+            if not re.match(r"^[a-z]+://", link) and not os.path.exists(
+                os.path.normpath(os.path.join(os.path.dirname(path), link))
+            ):
+                errors.append(f"{rel}: broken link in status banner {link}")
+    else:
+        digest = hashlib.sha256(open(path, "rb").read()).hexdigest()
+    if rel not in expected:
+        errors.append(
+            f"{rel}: preserved text not listed in tools/docs/preserved-texts.sha256 (hash {digest})"
+        )
+    elif expected[rel] != digest:
+        errors.append(
+            f"{rel}: preserved text changed (hash now {digest}); verbatim texts never change"
+        )
+for rel in sorted(expected):
+    if not os.path.exists(os.path.join(ROOT, rel)):
+        errors.append(f"preserved-texts.sha256: {rel} does not exist")
+
+
+# ---------- orphaned documents (master execution constitution §71, §73) ----------
+def doc_links(path: str) -> list[str]:
+    """Targets of the relative links in a Markdown file, outside code blocks and inline code."""
+    text = re.sub(r"`[^`\n]*`", "", strip_code(open(path, encoding="utf-8").read()))
+    out = []
+    for link in re.findall(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", text):
+        if not re.match(r"^[a-z]+://", link):
+            out.append(os.path.normpath(os.path.join(os.path.dirname(path), link)))
+    return out
+
+
+# Every document must be reachable by links from the entry points, not merely linked from
+# some other document (two documents linking only to each other are still orphaned).
+roots = [
+    os.path.join(ROOT, x)
+    for x in ("README.md", "CLAUDE.md", "docs/README.md", "tools/docs/README.md")
+]
+reached = set()
+todo = [os.path.normpath(r) for r in roots if os.path.exists(r)]
+while todo:
+    cur = todo.pop()
+    if cur in reached:
+        continue
+    reached.add(cur)
+    if cur.endswith(".md") and os.path.isfile(cur):
+        todo += [t for t in doc_links(cur) if t not in reached and os.path.isfile(t)]
+for path in list(md_files()) + preserved_md:
+    if os.path.normpath(path) not in reached:
+        errors.append(
+            f"{os.path.relpath(path, DOCS)}: not reachable by links from README.md, CLAUDE.md, "
+            "docs/README.md, or tools/docs/README.md (orphaned)"
+        )
 
 if errors:
     print("ERRORS:")
