@@ -1,6 +1,6 @@
 # System Health, Failure Handling and Controlled Degradation
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91; Part 3: P3§428, P3§487–P3§488, P3§504, P3§518
 
 Canonical definition of the platform health states, the failures the platform must expect, and how it degrades safely.
 
@@ -44,6 +44,22 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **HLT-013** Clock-drift detection · SYSTEM REQUIREMENT · P2§51 — Time is critical to market data, orders, fills, funding, arbitrage, latency, reconciliation, and backtesting. The system should detect meaningful clock drift.
 
 What the platform does when drift is detected (for example marking data degraded) is specified when DATA FOUNDATION is planned; P2§51 requires detection only.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **HLT-014** Reliable time synchronization · CONFIRMED REQUIREMENT · P3§428 — The platform should maintain reliable time synchronization because timing affects: market data; order sequencing; latency measurement; funding; opportunity validity; reconciliation; audit records.
+- **HLT-015** Operational intelligence · SYSTEM REQUIREMENT · P3§487, P3§518 — The system should monitor not only the market but itself. It should understand: system health; service health; data health; exchange health; AI health; capital health; strategy health; deployment health; storage health; network health. The complete system-health loop is: continuous health monitoring → service health → data health → exchange health → AI health → capital health → strategy health → infrastructure health → detect degradation → automatic safe recovery where appropriate → reconciliation → readiness reassessment → resume or safe state.
+- **HLT-016** Self-monitoring is not uncontrolled self-repair · CONSTRAINT · P3§488 — The platform may automatically recover known safe failures. Complex or financially dangerous failures should enter controlled recovery rather than arbitrary self-modification.
+- **HLT-017** Scale-aware infrastructure · SYSTEM REQUIREMENT · P3§504 — As workload increases, the system should recognize pressure on: CPU; memory; network; database; queues; exchange connections; storage; AI providers. The platform should scale or degrade intentionally.
+
+Notes:
+
+- **HLT-015 reads, it does not own.** Capital health comes from the Global Capital Authority, strategy health from the Performance Controller (PFC-005), AI health from the AI gateway and Model Evaluation, exchange health from the adapters (EXA-015). This system aggregates them into the platform state it already owns (HLT-010); the Risk Engine still decides what may trade (HLT-011). The readiness reassessment step is the Readiness System's (RDY-024).
+- **HLT-014.** Keeping host clocks synchronized is infrastructure configuration, kept as code (OPS-014); detecting drift is HLT-013.
+- **HLT-016:** matches the kill-switch rules: transient, known conditions recover automatically (RSK-021); everything else stays latched until authorized (RSK-022).
+- **HLT-017:** acts through the existing controls: backpressure and resource priority (PERF-014, PERF-015, PERF-021) and degradation handling (PERF-011).
 
 ## Findings (all resolved)
 

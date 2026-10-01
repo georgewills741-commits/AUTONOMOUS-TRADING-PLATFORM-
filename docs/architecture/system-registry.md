@@ -1,8 +1,8 @@
 # System and Capability Registry
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-025 and Handoff Part 2. No system is implemented.
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031 and Handoff Parts 2 and 3. No system is implemented.
 >
-> The single list of every system and capability named in Parts 1 and 2: what it is, which document is canonical for it, which requirement IDs it owns, and which §95 roadmap stage it belongs to. Names are the handoff's own. No system has been invented; capabilities that a handoff names without an owning system are marked. Part 2 added one system (SYS-34) and no other: every other Part 2 name was assigned to an existing owner (table at the end, [DEC-024](../decisions/DEC-024-part-2-reconciliation.md)). Every entry must meet the §92 boundary fields (ARCH-012). Each specification records the fields Part 1 supplies.
+> The single list of every system and capability named in Parts 1, 2, and 3: what it is, which document is canonical for it, which requirement IDs it owns, and which §95 roadmap stage it belongs to. Names are the handoff's own. No system has been invented; capabilities that a handoff names without an owning system are marked. Part 2 added one system (SYS-34) and no other: every other Part 2 name was assigned to an existing owner (table at the end, [DEC-024](../decisions/DEC-024-part-2-reconciliation.md)). Every entry must meet the §92 boundary fields (ARCH-012). Each specification records the fields Part 1 supplies.
 
 ## Registry
 
@@ -41,7 +41,7 @@
 | SYS-31 | Security Architecture | Cross-cutting | [security/security-architecture.md](../security/security-architecture.md) | SEC | FOUNDATION ("Security foundation") | Confirmed |
 | SYS-32 | Platform Account / Custody | Conditional | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | CUS | None — FUTURE | **FUTURE**: not built; single operator ([DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)) |
 | SYS-33 | Ledger / Accounting Foundation (internal trading ledger) | Shared infrastructure | [systems/custody-and-ledger.md](../systems/custody-and-ledger.md) | LED | CORE TRADING FOUNDATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) | Confirmed (LED-004 to LED-007, [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)) |
-| SYS-34 | Readiness System (Governance and Readiness Engine) | Shared infrastructure (deterministic) | [systems/readiness-system.md](../systems/readiness-system.md) | RDY | DIRECTIONAL TRADING | Confirmed; one system under two names (DUP-24); performs the APPROVAL stage (STR-019 to STR-022); registered by [DEC-024](../decisions/DEC-024-part-2-reconciliation.md) |
+| SYS-34 | Readiness System (Governance and Readiness Engine) | Shared infrastructure (deterministic) | [systems/readiness-system.md](../systems/readiness-system.md) | RDY | DIRECTIONAL TRADING | Confirmed; one system under two names (DUP-24); performs the APPROVAL stage (STR-019 to STR-022); registered by [DEC-024](../decisions/DEC-024-part-2-reconciliation.md). Since Part 3 also holds the capability registry, capability availability, and the readiness matrix (RDY-020 to RDY-026; DUP-33) |
 
 ## Cross-cutting requirement sets (not systems)
 
@@ -56,6 +56,7 @@
 | TEC | Technology stack | [architecture/technology-stack.md](technology-stack.md) |
 | MIG | Hosting, portability, backup, migration, disaster recovery | [operations/hosting-and-migration.md](../operations/hosting-and-migration.md) |
 | VER | Platform verification: performance, load, and chaos testing; map of all verification requirements | [architecture/verification-architecture.md](verification-architecture.md) |
+| GOV | Architecture governance: feature integration gate, duplicate and conflict detection, compatibility, removal, deprecation, ADRs, complexity budget | [architecture/architecture-governance.md](architecture-governance.md) |
 
 ## Named in Part 1 but not defined — how each was resolved
 
@@ -70,6 +71,28 @@ None of these became a new system (§00 item 21). Each was assigned to an existi
 | Logging | §04 | SYS-28 operational logs (MON-009), separate from audit (AUD-006) |
 | Canary | §34, §38, §95 | SYS-14 (STR-011, [DEC-015](../decisions/DEC-015-modes-canary-and-policy-governance.md)) |
 | Market universe | §08, §95 | SYS-05 (OPP-009, [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md)) with exclusions from SYS-12 |
+
+## Named in Part 3 — how each was resolved
+
+Part 3 adds no system. Every name it uses is a component or alias of an existing owner ([DEC-031](../decisions/DEC-031-part-3-reconciliation.md)).
+
+| Name in Part 3 | Where it appears | Resolution |
+|---|---|---|
+| Eligibility Engine | P3§354 | Component of SYS-34 (RDY-011, RDY-026; DUP-33) |
+| Canary Readiness Engine | P3§379 | Component of SYS-34 (RDY-015, RDY-026; DUP-33) |
+| Capability registry | P3§411, §412, §535 | Component of SYS-34 (RDY-020, RDY-026; DUP-33) |
+| Readiness matrix | P3§480 | Produced by SYS-34 (RDY-023), shown through SYS-28's daily report (DSI-002) |
+| Rebalancing Engine | P3§361 to §366 | Rebalancing-decision component of SYS-07 using SYS-20's evaluation (CAP-037 to CAP-042; DUP-34) |
+| Capital Authority | P3§359, §366, §400, §442 | SYS-07 Global Capital Authority |
+| AI Resource Governor | P3§449, §535 | Component of the AI gateway in SYS-22 (AIL-008, AIL-009, AIL-021) |
+| Global controller | P3§515 | ARCH-035: SYS-12, SYS-09's emergency controller, and SYS-29 together |
+| Policy compiler | P3§515, §535 | As for Part 2: NLP-004 in SYS-13, deterministic compilation in SYS-12 |
+| Liquidity Engine, Market Quality Engine, Liquidity Manager | P3§403 (examples in the duplicate-detection rule) | Not systems. Liquidity evaluation is SYS-06's (TNP-024) with SYS-03 metrics; market-data quality is SYS-02's (MKD-008, MKD-012) |
+| System Rules Register | P3§468, §537 | Documentation: [requirements/system-rules-register.md](../requirements/system-rules-register.md) (ARCH-038) |
+| Future feature registry | P3§509 | GOV-018, PROPOSED; not created |
+| Emergency state model | P3§372 | Mapped onto SYS-09's safety levels and SYS-29's health states without merging meanings; mapping in the [Risk Engine](../risk/risk-engine.md) (DUP-35) |
+| Strategy Optimizer, Model Evaluation Agent, Quant Research Agent, Strategy Research Agent | P3§535 | Mapped to DEC-013's agents and services as for Part 2 (AGT-017; [agents](../ai/agents.md)) |
+| Execution state authority, financial ledger authority | P3§467 | SYS-10 (EXE-002) and SYS-33 (LED-004, LED-006); ARCH-037 |
 
 ## Named in Part 2 — how each was resolved
 

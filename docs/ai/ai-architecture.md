@@ -1,6 +1,6 @@
 # AI Intelligence Layer
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-22 · **Category:** AI · **Roadmap stage:** AI INTELLIGENCE · **Sources:** §51–§53
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-22 · **Category:** AI · **Roadmap stage:** AI INTELLIGENCE · **Sources:** §51–§53; Part 3: P3§449–P3§450, P3§452, P3§506
 >
 > Canonical location for AI per §98 (`docs/ai/`).
 
@@ -58,6 +58,17 @@ Notes:
 - **AIL-012 vs System Health.** "AI DEGRADED" in HLT-011 is an observed health condition. The AI degradation state of AIL-012 is the operating level the Governor chooses in response. The two are different things and are not merged.
 - **AIL-014.** The approved deployment architecture gives promotion to the deterministic Governance and Readiness Engine (STR-019, RDY-006), never to an AI component.
 - **P2§26 / P2§276 (no AI on every tick)** is AIL-004, with OPP-004 and PERF-004.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **AIL-018** AI degradation triggers · SYSTEM REQUIREMENT · P3§450 — If AI services become: expensive; slow; unavailable; unreliable; rate-limited; the system should degrade gracefully. Possible behavior, depending on the task: deterministic path; lower-cost model; fallback model; wait; no trade.
+- **AIL-019** Fallback meets minimum quality · CONSTRAINT · P3§452 — Where multiple approved models/providers exist: primary model → failure / degraded → fallback model → validation → continue / wait. The fallback model must still satisfy the task's minimum quality requirements.
+- **AIL-020** AI scales with need, not with compute · CONSTRAINT · P3§506 — AI usage should scale according to: opportunity volume; financial consequence; available budget; latency; model availability; task importance. The platform should not call more AI simply because more compute is available.
+- **AIL-021** Governor admission factors · SYSTEM REQUIREMENT · P3§449 — AI usage should be treated as a resource. In addition to what AIL-008 controls, the AI Resource Governor should determine whether an AI call is justified based on: expected value; task importance; financial consequence; latency; cost; available model; current workload.
+
+AIL-018 widens AIL-011 (provider unavailable) to the other ways AI can degrade; the states themselves are AIL-012. AIL-019 adds a quality floor to AIL-011's fallback; the quality requirement per task is the Model Router's (RTR-005). AIL-020 and AIL-021 are decided by the Governor (AIL-008, AIL-009); the Model Router's routing factors (RTR-002) are a different decision, made after admission. P3§451 and §453 to §456 are AIL-010, RTR-001, RTR-002, PERF-015, AIL-003, AIL-013, SEC-008, and AGT-022.
 
 ## Boundary (§92)
 

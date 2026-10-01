@@ -1,6 +1,6 @@
 # Dependency Map
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-030 and Handoff Part 2 (edges D-54 to D-65). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030).
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031, Handoff Part 2 (edges D-54 to D-65), and Handoff Part 3 (edges D-66 to D-71). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030).
 >
 > Canonical record of which systems depend on which (ARCH-014). **STATED** edges come directly from handoff text (source given). **DECIDED** edges were fixed by a decision record. **INFERRED** edges are the builder's reading of the text. System IDs are from the [system registry](system-registry.md).
 
@@ -84,6 +84,12 @@ This is a build-dependency chain. The runtime order, with the capital authority 
 | D-63 | SYS-06 True Net-Profit Engine | SYS-03 Fee Engine and Slippage Engine (restates D-08 with Part 2's names) | DECIDED (DEC-011, DEC-024) | QNT-007 |
 | D-64 | SYS-11 standby takeover (high availability) | One shared execution-lease authority (TEC-013), SYS-11 reconciliation, SYS-29 System Health | DECIDED (DEC-030) | REC-023, REC-024 |
 | D-65 | SYS-34 Readiness System (capability eligibility) | SYS-07 Global Capital Authority (capital figures), SYS-12 Policy (authorizations) | DECIDED (DEC-028) | RDY-008, CAP-032 |
+| D-66 | SYS-34 Readiness System (capability registry, availability, readiness matrix) | SYS-07 (capital states and change events), SYS-01 (venue health), SYS-02 (data quality), SYS-29 (service health), SYS-12 (policy permissions), deployment records (OPS-005, OPS-012) | DECIDED (DEC-031) | RDY-011, RDY-013, RDY-015, RDY-020, RDY-024 |
+| D-67 | SYS-07 capital change events | SYS-33 Ledger (realized P&L), SYS-08 Portfolio | DECIDED (DEC-031) | CAP-046, CAP-019 |
+| D-68 | SYS-07 Rebalancing Engine | SYS-20 evaluation (ARB-006), SYS-05 Opportunity Database (historical opportunity frequency), SYS-01 (venue health, transfer support), SYS-10 (transfer execution), SYS-09 (risk authorization), SYS-12 (rebalancing controls) | DECIDED (DEC-031) | CAP-037 to CAP-042 |
+| D-69 | SYS-11 service-level recovery | SYS-29 (detection, isolation), infrastructure supervision (TEC-013), SYS-34 (readiness check) | DECIDED (DEC-031) | REC-025, REC-026 |
+| D-70 | SYS-29 operational intelligence | SYS-07 (capital health), SYS-21 (strategy health), SYS-22 (AI health), SYS-01 (exchange health), SYS-28 (metrics) | DECIDED (DEC-031) | HLT-015 |
+| D-71 | SYS-21 false-opportunity analysis | SYS-04 Market Regime Engine (regime changes); the Opportunity Database edge is D-57 | INFERRED (P3§393 names no system) | P3§392, P3§393; PFC-016 |
 
 ## Stage-level dependencies (DECIDED, [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md); Performance Controller placement changed by [DEC-024](../decisions/DEC-024-part-2-reconciliation.md))
 

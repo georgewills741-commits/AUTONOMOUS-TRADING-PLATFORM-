@@ -29,7 +29,7 @@ P2§22's state list (TRENDING, RANGING, HIGH_VOLATILITY, LOW_VOLATILITY, PANIC, 
 
 - **Owns:** the current regime classification, including the uncertain and unknown states.
 - **Used by:** the Directional Trading System ("regime compatibility", §05), the Opportunity Detection Engine (scans market regimes, §08), and the Trading Director (receives regime, §55).
-- **Not yet specified:** the specific classification rules and their inputs (expected with Part 2 contracts), tests.
+- **Not yet specified:** the specific classification rules and their inputs (specified with the interface contracts when DATA FOUNDATION is planned, ARCH-025), tests.
 
 ## Findings (all resolved)
 

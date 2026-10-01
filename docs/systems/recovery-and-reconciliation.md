@@ -1,6 +1,6 @@
 # Recovery and Reconciliation
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-11 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Reconciliation") and OPERATIONALIZATION ("Recovery", "Reconciliation"), see CF-05 · **Sources:** §71–§73
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-11 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Reconciliation") and OPERATIONALIZATION ("Recovery", "Reconciliation"), see CF-05 · **Sources:** §71–§73; Part 3: P3§368, P3§370, P3§377, P3§489, P3§492, P3§496, P3§520, P3§526, P3§549
 
 Canonical definition of what happens after a restart or interruption and how internal state is reconciled with venues.
 
@@ -70,12 +70,30 @@ From [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)
 
 The owner chose automatic takeover. The "explicit activation" of REC-022 is therefore the standby acquiring the lease under a policy authorization, after state validation and reconciliation; it is not a human action (DEC-030, builder reading). Where the lease authority lives, a replicated database or an external coordinator, is chosen when OPERATIONALIZATION is planned.
 
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **REC-025** Restart is not resume · CONSTRAINT · P3§368, P3§489, P3§526, P3§549 — Services should support controlled automatic recovery where appropriate, and routine infrastructure/service failures should support automatic restart. Example: service failure → health detection → isolate failure → automatic restart → health check → state recovery → reconciliation → safe resume. Restart must be followed by: health check; state recovery; reconciliation; readiness check; only then: resume. A service can restart automatically; trading can resume only after state validation and reconciliation. Automatic restart does not mean restart → immediately trade: the system must first determine whether state is trustworthy.
+- **REC-026** Service-level recovery · CONFIRMED REQUIREMENT · P3§370, P3§520 — Not every failure requires the entire platform to restart. Where possible: failed service → isolate → restart service → reconnect → reconcile → resume. The system should avoid unnecessary global disruption. The complete 24/7 recovery loop is: service failure → detect → isolate → restart → health check → recover persistent state → reconcile external state → readiness check → resume or safe mode.
+- **REC-027** Recovery never bypasses access controls · CONSTRAINT · P3§377 — In addition to the controls of REC-018, automatic restart/recovery must never bypass: authentication; authorization; security; active-instance protection.
+- **REC-028** Backup is not reconciliation · CONSTRAINT · P3§492 — Restoring a backup does not automatically make financial state correct. After restoration, backup state vs external state must be reconciled.
+- **REC-029** Standby is not active · CONSTRAINT · P3§496 — A standby environment must remain incapable of uncontrolled live execution. It may: monitor; validate; receive replicated state; prepare recovery; but should not trade until activation requirements are satisfied.
+
+Notes:
+
+- **REC-025 and REC-026 vs REC-015.** REC-015 is the full platform restart sequence. REC-026 applies the same discipline to a single service, so a failure in one service does not stop healthy ones (RSK-038). The "readiness check" is the recovery decision of REC-016 plus the Readiness System's reassessment of affected capabilities (RDY-024). P3§369 (restart safety) is REC-004 and REC-015.
+- **REC-027.** Active-instance protection is REC-013 and EXE-010; a restarted or recovering instance holds no authority until it holds the execution lease.
+- **REC-028:** applies REC-014 (persisted state is untrusted context) to restores from backup, including disaster recovery (MIG-031).
+- **REC-029:** a standby holds no execution lease, so the platform's own Execution Engine refuses its orders (EXE-010, REC-024). Failover relies on the lease, not on key rotation ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)). The lease is enforced by the platform, not by the venue (TC-07), so whether a standby may hold usable trading keys, and how it gets them at takeover, is TC-09.
+- **Failover (P3§493 to P3§495)** is REC-021 to REC-024 and REC-019, REC-020: failover begins with ownership and reconciliation, and one lease authority means that at most one copy can trade. P3§494 allows an exception only "unless a formally designed distributed execution architecture explicitly permits otherwise". No such architecture is designed or approved, so REC-013 and REC-020 apply without exception; proposing one would be a major architecture change (GOV-016).
+
 ## Boundary (§92)
 
 - **Owns:** the restart sequence, reconciliation of internal vs venue state, and the safe-resume decision.
 - **Consumes:** venue state via the [Exchange Adapter Layer](exchange-adapters.md). Validates against the [Risk Engine](../risk/risk-engine.md), [Global Capital Authority](capital-management.md), [Policy System](policy/policy-system.md), and [Strategy Management](strategy/strategy-management.md).
 - **Called by:** the Execution Engine after a timeout (EXE-006).
-- **Not yet specified:** mismatch-resolution procedures per mismatch type (expected with Part 2 contracts), interfaces, tests. Resuming is governed by REC-009.
+- **Not yet specified:** mismatch-resolution procedures per mismatch type (specified with the interface contracts when CORE TRADING FOUNDATION is planned, ARCH-025), interfaces, tests. Resuming is governed by REC-015 and REC-016, which replaced REC-009.
 
 ## Findings
 

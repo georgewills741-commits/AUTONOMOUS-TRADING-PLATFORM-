@@ -9,12 +9,13 @@
 | Concept | Canonical location |
 |---|---|
 | Builder operating rules | [docs/builder/claude-code-builder-constitution.md](../builder/claude-code-builder-constitution.md) |
+| Owner's checkpoint, version-control, and three-stage verification rule | [docs/builder/checkpoint-and-verification-rule.md](../builder/checkpoint-and-verification-rule.md) ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) |
 | Current project state and next step | [docs/project-state.md](../project-state.md) |
 | Documentation index | [docs/README.md](../README.md) |
 | Requirement text | The specification that owns the requirement (each requirement ID appears in exactly one specification) |
 | Requirement index (ID → owner, class, source, stage) | [docs/requirements/registry.md](../requirements/registry.md) |
 | Requirement conventions and classification | [docs/requirements/README.md](../requirements/README.md) |
-| Handoff section → canonical location | Part 1: [docs/traceability/handoff-coverage.md](../traceability/handoff-coverage.md); Part 2: [docs/traceability/part-2-reconciliation.md](../traceability/part-2-reconciliation.md) |
+| Handoff section → canonical location | Part 1: [docs/traceability/handoff-coverage.md](../traceability/handoff-coverage.md); Part 2: [docs/traceability/part-2-reconciliation.md](../traceability/part-2-reconciliation.md); Part 3: [docs/traceability/part-3-reconciliation.md](../traceability/part-3-reconciliation.md) |
 | Systems and ownership | [docs/architecture/system-registry.md](system-registry.md) |
 | Dependencies | [docs/architecture/dependency-map.md](dependency-map.md) |
 | Roadmap and stage mapping | [docs/roadmap/roadmap.md](../roadmap/roadmap.md) |
@@ -24,8 +25,11 @@
 | Terminology | [docs/glossary.md](../glossary.md) |
 | Technology stack | [docs/architecture/technology-stack.md](technology-stack.md) |
 | Operating values and their classification | [docs/requirements/values-register.md](../requirements/values-register.md) |
-| Original handoffs (HISTORICAL, not active) | [Part 1](../handoffs/part-1-core-platform-features.md), [Part 2](../handoffs/part-2-consolidated-additional-systems.md), and the owner's directives in [docs/handoffs/](../handoffs/owner-correction-01-autonomous-operating-defaults.md) |
+| Original handoffs (HISTORICAL, not active) | [Part 1](../handoffs/part-1-core-platform-features.md), [Part 2](../handoffs/part-2-consolidated-additional-systems.md), [Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), and the owner's directives in [docs/handoffs/](../handoffs/owner-correction-01-autonomous-operating-defaults.md) |
 | Non-negotiable platform principles (index) | [docs/product/platform-overview.md](../product/platform-overview.md) (ARCH-028) |
+| System rules (index of enforceable behavioral rules) | [docs/requirements/system-rules-register.md](../requirements/system-rules-register.md) (ARCH-038) |
+| Feature-extensibility governance | [docs/architecture/architecture-governance.md](architecture-governance.md) (GOV) |
+| Reliability and recovery model (index) | [docs/operations/reliability-and-recovery-model.md](../operations/reliability-and-recovery-model.md) |
 | Documentation generator and checker | [tools/docs/](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) |
 
 ## Product domains
@@ -90,6 +94,8 @@ Part 2 requires exactly one of each fundamental authority (P2§184). Each has on
 | Strategy Registry | SYS-14 Strategy Management | STR-023 — [strategy-management.md](../systems/strategy/strategy-management.md) |
 | Readiness System | SYS-34 Readiness System | RDY-001, RDY-006 — [readiness-system.md](../systems/readiness-system.md) |
 | Opportunity Registry (Opportunity Database) | SYS-05 Opportunity Detection Engine | OPP-016 — [opportunity-detection.md](../systems/opportunity-detection.md) |
+| Execution state (P3§467) | SYS-10 Execution Engine | EXE-002, ARCH-037 — [execution-engine.md](../systems/execution-engine.md) |
+| Financial ledger (P3§467) | SYS-33 Trading Ledger | LED-004, LED-006, ARCH-037 — [custody-and-ledger.md](../systems/custody-and-ledger.md) |
 
 Other Part 2 concepts and where they are defined:
 
@@ -113,3 +119,11 @@ Other Part 2 concepts and where they are defined:
 | Capital buckets and progressive capability activation | SYS-07 (buckets), SYS-34 (eligibility) | CAP-029 to CAP-033, RDY-008 — [capital-management.md](../systems/capital-management.md) |
 | High availability and failover | SYS-11 Recovery and Reconciliation | REC-021, REC-023, REC-024 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Infrastructure as code | Deployment and operational readiness | OPS-014 to OPS-017 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |
+| Capability registry, capability availability, blockers, readiness matrix | SYS-34 Readiness System | RDY-009 to RDY-026 — [readiness-system.md](../systems/readiness-system.md) |
+| Rebalancing Engine (decision model, anti-churn, emergency rebalancing) | SYS-07 Global Capital Authority | CAP-037 to CAP-042 — [capital-management.md](../systems/capital-management.md) |
+| Capital change events and capital states | SYS-07 Global Capital Authority | CAP-044, CAP-046 — [capital-management.md](../systems/capital-management.md) |
+| Rule precedence including Part 3's layers | SYS-09 Risk Engine | RSK-004, RSK-048 — [risk-engine.md](../risk/risk-engine.md) |
+| Safe Mode permissions, emergency priority | SYS-09 Risk Engine | RSK-041 to RSK-043 — [risk-engine.md](../risk/risk-engine.md) |
+| Service-level recovery; restart is not resume | SYS-11 Recovery and Reconciliation | REC-025, REC-026 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
+| Operational intelligence | SYS-29 System Health | HLT-015 — [system-health.md](../operations/system-health.md) |
+| Production-readiness model | Deployment and operational readiness, with SYS-34 | RDY-022, RMP-010 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |

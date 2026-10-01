@@ -1,6 +1,6 @@
 # Architecture Overview
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — conceptual architecture; no implementation exists · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — conceptual architecture; no implementation exists · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98; Part 3: P3§444, P3§467–P3§470, P3§540
 >
 > Canonical home for the structural principles that apply to every system. System-specific rules live in each system's own specification; this document links to them rather than restating them.
 
@@ -152,6 +152,25 @@ Where these stand today:
 - **ARCH-030:** the [registry](../requirements/registry.md) holds ID, title, source, class, owner/system, specification, stage, status, and approval state. Dependencies are recorded between systems in the [dependency map](dependency-map.md); they will be recorded per requirement when interfaces are designed. The verification method is assigned when each stage is planned (constitution Rule 140). No priority is invented: order comes from the roadmap's dependency sequence (RMP-002, RMP-011).
 - **ARCH-034:** the owner decided to keep it as an idea; it stays PROPOSED and nothing is built ([DEC-027](../decisions/DEC-027-part-2-open-questions.md)).
 - **ARCH-032, ARCH-033:** the documentation checker in [`tools/docs/`](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) is the first increment. It checks the documentation only, not code, schemas, or tests.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **ARCH-036** Reversible where possible · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§444 — Execution must be reversible where possible. Architecture should support, where technically possible: cancellation; rollback; recovery; strategy suspension; deployment rollback; configuration rollback. Irreversible financial actions require stronger authorization boundaries.
+- **ARCH-037** Additional canonical authorities · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§467 — In addition to the authorities of ARCH-027, the system should maintain one canonical authority for: execution state; the financial ledger where applicable.
+- **ARCH-038** System Rules Register · CONFIRMED REQUIREMENT · P3§468 — The repository should contain a canonical System Rules Register. Each rule should have: rule ID; rule statement; classification; source; owner; related systems; dependencies; enforcement location; verification method; status.
+- **ARCH-039** Rules are enforceable · CONFIRMED REQUIREMENT · P3§469, P3§470 — A rule should not exist only as prose. Where a rule is approved and machine-enforceable, the architecture should identify where, how, and when it is enforced, and what happens if it is violated. A violation may trigger: reject; block; safe mode; alert; suspend; rollback; human review; depending on severity.
+- **ARCH-040** Traceability includes rules and interfaces · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§540 — In addition to the chain of ARCH-031, the final traceability system must connect the rule and the interface: source → requirement → rule → architecture → system → interface → implementation → test → verification → roadmap → approval.
+
+Where these stand today:
+
+- **ARCH-037:** execution state is owned by the Execution Engine (EXE-002, "execution-state management"); the financial ledger is the Trading Ledger (LED-004, LED-006). Both are added to the [source-of-truth map](source-of-truth-map.md#canonical-authorities-arch-027).
+- **ARCH-038, ARCH-039:** the register is [`docs/requirements/system-rules-register.md`](../requirements/system-rules-register.md). It is an index: each rule's full wording stays in its canonical requirement, so the register never becomes a second copy (DUP-38). Enforcement location and violation handling are recorded per rule; the verification method is assigned when the owning stage is planned, as for every requirement (ARCH-030).
+- **ARCH-040:** requirement → rule is the register's "canonical requirements" column. Rule → interface → implementation → test are filled in as each stage is built.
+- **Rule precedence (P3§471)** is kept with the risk hierarchy it extends: RSK-048 in the [Risk Engine](../risk/risk-engine.md) (CF-17).
+- **Feature extensibility (P3§401–P3§410, P3§462–P3§466, P3§472–P3§475, P3§508–P3§512)** is in [Architecture Governance](architecture-governance.md) (GOV).
+- P3§514 (system boundary principle) is ARCH-012. P3§515 (final consolidated operating model) is ARCH-024, with ARCH-035 as its global controller and CAP-016 as its runtime order.
 
 ## Operating values ([DEC-020](../decisions/DEC-020-value-classification.md))
 

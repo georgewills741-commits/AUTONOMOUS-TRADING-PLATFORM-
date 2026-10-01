@@ -1,6 +1,6 @@
 # True Net-Profit Engine (Opportunity Economics)
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); ARBITRAGE adds transfer and multi-leg cost components ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §13–§17
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-06 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Opportunity economics"); ARBITRAGE adds transfer and multi-leg cost components ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §13–§17; Part 3: P3§394, P3§424, P3§440
 
 Canonical definition of how every opportunity's economics are evaluated. It also holds the platform's rules on small positive opportunities, accumulation, and the absence of profit floors and ceilings. The handoff calls §14 "a critical requirement".
 
@@ -57,6 +57,15 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **TNP-024** Liquidity protection · CONSTRAINT · P2§32 — A theoretical opportunity may be rejected if actual liquidity cannot support execution. Liquidity evaluation should be deterministic wherever possible.
 
 Already covered: true executable net economics rather than headline spread, gross percentage, AI prediction, or a fixed return (P2§29, §345) is TNP-001, TNP-002, TNP-004, TNP-018, and PLT-007. Funding costs (P2§33) are a term of TNP-018. No guaranteed returns (P2§34) is PLT-007, PLT-008, and TNP-014. Opportunity accumulation (P2§35) is TNP-008 and TNP-010, with PLT-019. The percentages previously discussed are analytical categories or filters (TNP-016, ARB-015), never guarantees.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **TNP-025** Execution probability and time · SYSTEM REQUIREMENT · P3§394, P3§424 — Opportunity discovery may be aggressive; execution must still require true executable net economics. In addition to the terms of TNP-018 and the latency decay of TNP-023, the system must account for: precision; execution probability. Time is a financial input: the system should account for data age; network latency; exchange latency; order-book changes; opportunity decay; transfer latency; AI latency; queue delay. A theoretically profitable opportunity may become unprofitable because of time.
+- **TNP-026** No artificial daily profit ceiling unless policy requires it · CONSTRAINT · P3§440 — The platform must not artificially stop profitable operation simply because a daily percentage target has been reached unless an explicit risk/capital policy requires it. The system should continue evaluating opportunities subject to: risk; capital; policy; market conditions; execution quality.
+
+P3§429 to P3§432 (fees, slippage, liquidity, funding and carry are real) are TNP-001, TNP-002, TNP-004, TNP-018, TNP-024, QNT-005, and QNT-006. P3§439 (no fixed daily profit requirement) is PLT-008 and TNP-014. TNP-026 keeps TNP-012 in force: the architecture has no built-in ceiling; only the operator's explicit risk or capital policy can stop operation for the day.
 
 ## Boundary (§92)
 

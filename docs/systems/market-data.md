@@ -1,6 +1,6 @@
 # Market Data Infrastructure
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10; Part 3: P3§425–P3§427
 
 Canonical definition of market-data ingestion, validation, normalization, and quality.
 
@@ -27,6 +27,15 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **MKD-011** Single market-data normalization layer · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — This system is the one market-data normalization layer of ARCH-027. Adapters translate venue formats into canonical objects (EXA-013); validation, deduplication, ordering, quality scoring, and quarantine happen here, once.
 
 Decision lineage from market event to result is AUD-012; MKD-010 is its data side and extends the evidence identifiers of MKD-005. Clock-drift detection (P2§51) is HLT-013.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **MKD-012** Freshness states; data quality precedes decisions · SYSTEM REQUIREMENT · P3§425, P3§426 — Stale data is not fresh data: data must carry freshness information. If data exceeds acceptable age, STABLE/VALID may become STALE and eventually INVALID/QUARANTINED. The exact thresholds must be strategy- and data-type-specific. The system must not make high-confidence decisions from low-quality data. Conceptually: data quality → decision eligibility.
+- **MKD-013** Quarantine causes · SYSTEM REQUIREMENT · P3§427 — Suspicious or corrupted data should be quarantined rather than silently incorporated into trading decisions. Possible causes: invalid timestamps; missing fields; impossible prices; duplicate events; sequence gaps; exchange inconsistency; outlier corruption; clock problems.
+
+MKD-012 keeps MKD-006: each stream's freshness limit is the platform-wide hard limit (V-08; part of the safety floor, RSK-034). A strategy may require fresher data than that limit, never staler. MKD-013 lists causes for the quarantine of MKD-009. P3§428 (time synchronization) is HLT-013 and HLT-014. P3§447 (data lineage) is MKD-010.
 
 ## Boundary (§92)
 

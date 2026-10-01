@@ -1,6 +1,6 @@
 # Risk Engine, Risk Hierarchy and No-Trade Outcomes
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-09 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Risk") · **Sources:** §25–§27
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-09 · **Category:** shared infrastructure · **Roadmap stage:** CORE TRADING FOUNDATION ("Risk") · **Sources:** §25–§27; Part 3: P3§371, P3§373–P3§375, P3§417–P3§418, P3§435–P3§438
 >
 > Canonical location for risk per §98 (`docs/risk/`).
 
@@ -102,6 +102,29 @@ How these fit is set out in [DEC-026](../decisions/DEC-026-safety-floor-and-laye
 - The safety floor is RSK-034 together with the system safety rules of RSK-010.
 - The HARD LIMIT values in the [values register](../requirements/values-register.md) are the numbers inside the invariants, so changing one is an RSK-039 change.
 - RSK-036's automatic adjustments are operating decisions inside the bounds the operator sets in policy. Widening a bound or an authorization still needs the operator (POL-005).
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **RSK-040** Critical subsystem failure · CONFIRMED REQUIREMENT · P3§371 — If a critical subsystem fails (risk; capital; execution; reconciliation; market-data integrity; security), the system may transition to: SAFE MODE; NO NEW POSITIONS; WAIT; or another explicitly defined safety state. Existing positions must continue to be managed according to the safest validated behavior.
+- **RSK-041** Emergencies without chaos · CONSTRAINT · P3§373 — An emergency must not trigger uncontrolled simultaneous actions. For example, emergency → all services panic → everything sells → everything transfers → system collapses is unacceptable. Instead: emergency → classify failure → protect capital → stop prohibited actions → preserve valid state → reconcile → execute approved recovery policy.
+- **RSK-042** Emergency priority · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§374 — Conceptually: 1. protect financial state; 2. prevent unauthorized execution; 3. preserve external state; 4. determine actual state; 5. reduce uncontrolled exposure; 6. restore critical services; 7. reconcile; 8. resume only when safe.
+- **RSK-043** Safe Mode permissions · CONFIRMED REQUIREMENT · P3§375 — Safe Mode is a deliberate operating state. It may disable: new positions; new strategies; new deployments; unvalidated AI decisions; high-risk execution; while preserving: monitoring; reconciliation; risk evaluation; position management; emergency controls; data collection; recovery. The exact Safe Mode permissions must be formally defined.
+- **RSK-044** No chasing and no forced trading · CONSTRAINT · P3§417, P3§418 — The system should not enter a trade merely because an opportunity disappeared or because another opportunity was profitable. A missed opportunity does not justify lowering safety standards. The platform must never trade merely to: increase activity; hit a daily target; keep AI busy; use available capital; recover losses; compensate for missed opportunities; satisfy a trade-count target. NO TRADE is valid.
+- **RSK-045** Additional loss-streak responses · SYSTEM REQUIREMENT · P3§435 — In addition to the responses of RSK-026, possible responses to abnormal loss sequences include: throttle; enter safe state. The exact thresholds must be validated rather than arbitrarily fixed.
+- **RSK-046** Additional excessive-trading signals · SYSTEM REQUIREMENT · P3§436 — In addition to the triggers of RSK-027, the system should detect abnormal increases in: order cancellations; re-entry; churn; capital turnover; and determine whether the behavior is legitimate or pathological.
+- **RSK-047** No revenge trading, no martingale by default · CONSTRAINT · P3§437, P3§438 — Losses must not automatically increase: position size; trade frequency; risk; leverage. The system must not automatically increase exposure after losses unless an explicitly validated strategy and policy authorize such behavior.
+- **RSK-048** Where Part 3's layers sit in the hierarchy · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-031 — P3§471's precedence layers are placed within RSK-004's hierarchy, highest first: system safety (the safety floor: RSK-034 with RSK-010) → user hard constraints (Part 3's "user hard policy") → security → portfolio / risk policy → capital → execution → validated strategy rules → deterministic market conditions → AI analysis / proposal (Part 3's "AI preference"). No lower layer may override a higher-level hard constraint (RSK-005).
+
+How these fit what already exists:
+
+- **Precedence (CF-17; builder reading, awaiting the owner's confirmation).** P3§471 puts user hard policy above system safety, as P2§101 did. The owner already decided this question for P2§101: the safety floor stays on top and can only be changed through RSK-039 ([DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)). RSK-048 applies that decision and adds Part 3's security, capital, and execution layers in Part 3's own order. RSK-004 is unchanged. As a result, security controls outside the safety floor (for example SEC-006 to SEC-008) rank below the user's hard constraints; the owner is asked to confirm this.
+- **Emergency state names (DUP-35; builder reading, listed for the owner).** P3§372's possible states map onto existing states without merging different meanings: NORMAL = safety level NORMAL; DEGRADED = the health state DEGRADED (HLT-011), which feeds the safety level (typically CAUTION) and is not itself a safety level; PROTECTIVE = safety level RESTRICTED; EMERGENCY = EMERGENCY; SAFE MODE = SAFE MODE; RECOVERY = recovery in progress, either recovery from a transient condition (RSK-021 to RSK-023) or CRITICAL RECOVERY when financial or external state is uncertain, with health state RECOVERING; RESUMING = the limited-recovery step of RSK-023. P3§372 itself leaves the final state machine to architecture, as HLT-002 does.
+- **RSK-040:** adds execution failure and the NO NEW POSITIONS and WAIT outcomes to the Safe Mode triggers of RSK-030; position handling stays policy-driven and deterministic (RSK-017, RSK-018).
+- **RSK-043:** makes formal definition of Safe Mode's permissions a requirement; OPS-006 already keeps recovery and monitoring running in SAFE MODE.
+- **RSK-044:** extends RSK-031 and RSK-032. P3§419 (quality over trade count) is PLT-019. P3§376 (no-new-position mode) is RSK-029. P3§422 (unknown means unknown) is PLT-018, RSK-007, and RSK-014.
+- **RSK-045, RSK-046** thresholds are values V-30 and V-31. RSK-045's loss-streak thresholds (V-30) must now also be validated, not only configured (P3§435); RSK-046 adds signals to V-31 and requires deciding whether abnormal activity is legitimate or pathological (P3§436).
 
 ## Boundary (§92)
 

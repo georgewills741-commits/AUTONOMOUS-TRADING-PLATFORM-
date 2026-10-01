@@ -1,6 +1,6 @@
 # Hosting, Backup, and Migration
 
-> **Status:** DOCUMENTED (Handoff Part 2) — not implemented · **Owner:** cross-cutting requirement set (MIG); the modules that implement it are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341
+> **Status:** DOCUMENTED (Handoff Parts 2 and 3) — not implemented · **Owner:** cross-cutting requirement set (MIG); the modules that implement it are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341; Part 3: P3§491, P3§497
 >
 > Canonical definition of where the platform can run and how its state is backed up and moved between hosts. Split-brain protection, the active execution authority, failover, and standby are defined in [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md) (REC-019 to REC-022). The deployment package and change control are in [Deployment and Operational Readiness](deployment-and-operational-readiness.md) (OPS-007 to OPS-013). Requirement line format: [`docs/requirements/README.md`](../requirements/README.md).
 
@@ -51,6 +51,11 @@ From [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)
 ## Backup and disaster recovery
 
 - **MIG-028** Disaster recovery · CONFIRMED REQUIREMENT · P2§167 — The project must eventually define: backup strategy; recovery points; recovery procedures; recovery validation; environment restoration; financial reconciliation; operational restart; incident procedures.
+
+- **MIG-031** Disaster-recovery scope · CONFIRMED REQUIREMENT · P3§491 — The system must support recovery from: service failure; host failure; database failure; network failure; exchange outage; deployment failure; configuration corruption; security incident; infrastructure migration.
+- **MIG-032** Migration and failover are distinct · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§497 — Migration is intentional movement; failover is an unexpected failure response. Both require reconciliation but have different operational workflows.
+
+MIG-031 and MIG-032 come from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md) ([Part 3 reconciliation](../traceability/part-3-reconciliation.md), [DEC-031](../decisions/DEC-031-part-3-reconciliation.md)). MIG-031 lists what the disaster-recovery definition of MIG-028 must cover. A restore is followed by reconciliation, never trusted as it is (REC-028). Migration follows MIG-007 to MIG-021 and MIG-029, MIG-030; failover follows REC-021 to REC-024. The reliability and recovery model that ties these together is in [Reliability and recovery](reliability-and-recovery-model.md).
 
 ## How this fits the rest of the platform
 

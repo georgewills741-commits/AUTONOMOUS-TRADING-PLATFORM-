@@ -8,9 +8,11 @@ The single record of where this project currently stands (Constitution Rules 50,
 
 **FOUNDATION — documentation initialization.**
 
-- Handoff Parts 1 and 2 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md)).
+- Handoff Parts 1, 2, and 3 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md), [DEC-031](decisions/DEC-031-part-3-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
-- The owner answered every Part 2 finding (DEC-026 to DEC-030). No open questions or findings remain.
+- The owner answered every Part 2 finding (DEC-026 to DEC-030).
+- The Part 3 reconciliation **awaits human review** (P3§541 items 29–30). Items for the owner: confirm CF-17 and CF-18, answer OQ-27, accept or change TC-08's recommendation, and check two builder readings (DUP-34, DUP-35). TC-09 is decided when OPERATIONALIZATION is planned.
+- The owner's checkpoint and three-stage verification rule is adopted ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)).
 - Implementation is not authorized.
 
 | Gate | Status |
@@ -23,13 +25,16 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Conflicts raised by the correction (CF-11 to CF-13) | DECIDED by the owner — [DEC-021](decisions/DEC-021-kill-switch-recovery.md), [DEC-022](decisions/DEC-022-restart-recovery-sequence.md), [DEC-023](decisions/DEC-023-autonomous-canary-approval.md) · [answers](handoffs/owner-decisions-02-cf-11-to-cf-13.md) · [verification](traceability/owner-decisions-02-verification.md) |
 | Master handoff Part 2 (consolidated additional systems, paper operation, readiness, arbitrage, deployment portability) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-2-consolidated-additional-systems.md) · [reconciliation](traceability/part-2-reconciliation.md) · [verification and documentation audit](traceability/part-2-verification.md) · [DEC-024](decisions/DEC-024-part-2-reconciliation.md) |
 | Part 2 findings (CF-14, OQ-24 to OQ-26, TC-07, and four items to confirm) | DECIDED by the owner — [DEC-026](decisions/DEC-026-safety-floor-and-layered-control.md) to [DEC-030](decisions/DEC-030-high-availability-and-single-active-copy.md) · [answers](handoffs/owner-decisions-03-part-2-findings.md) · [verification](traceability/owner-decisions-03-verification.md) |
-| Complete documentation review (handoff §101; P2§329) | NOT STARTED — **next step** |
-| Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; constitution Part XXIII) |
-| Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330) |
+| Owner's checkpoint, version-control, and three-stage verification rule | ADOPTED — [`builder/checkpoint-and-verification-rule.md`](builder/checkpoint-and-verification-rule.md) ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) |
+| Master handoff Part 3 (autonomy, capital scaling, system rules, extensibility, 24/7 operations, rebalancing, readiness) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-3-consolidated-autonomy-capital-scaling.md) · [reconciliation](traceability/part-3-reconciliation.md) · [verification and documentation audit](traceability/part-3-verification.md) · [DEC-031](decisions/DEC-031-part-3-reconciliation.md) |
+| Human review of the Part 3 reconciliation (P3§541 items 29–30), with CF-17, CF-18, OQ-27, TC-08, and the DUP-34, DUP-35 readings | **AWAITING THE OWNER — next step** |
+| Complete documentation review (handoff §101; P2§329) | NOT STARTED — after the Part 3 review |
+| Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; P3§541; constitution Part XXIII) |
+| Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
-Carry out the complete documentation review (§101, P2§329) and plan Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
+The owner reviews the Part 3 reconciliation (P3§541 item 29) and answers the items listed under "Open questions" below (TC-09 is recorded now and decided when OPERATIONALIZATION is planned). Then the complete documentation review (§101, P2§329) and the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
 
 ## Owner decisions on the Part 2 findings (2026-09-30)
 
@@ -108,19 +113,40 @@ Builder readings you may want to check, all stated in the decision records:
   - Class-only changes: CAP-028 and OPS-009 replaced; REC-021 reclassified from FUTURE to CONFIRMED REQUIREMENT. No requirement wording changed.
   - Values register now has 35 entries.
 
+- **Handoff Part 3 and the checkpoint rule (2026-09-30):**
+  - Both kept word for word: Part 3 as HISTORICAL (round-trip verified, sections §351 to §550), the rule as an ACTIVE builder rule loaded by `CLAUDE.md` (DEC-032).
+  - Every section §351 to §550 is traced in the [Part 3 reconciliation](traceability/part-3-reconciliation.md).
+  - 111 new requirements: 109 from Part 3 sections, 2 from DEC-031 (RDY-026, RSK-048). New prefix GOV. No existing requirement changed, was reclassified, or was removed (checked with `tools/docs/compare_requirements.py`).
+  - New documents: [Architecture governance](architecture/architecture-governance.md) (GOV-001 to GOV-020); [System Rules Register](requirements/system-rules-register.md) (SR-01 to SR-45); [Reliability and recovery model](operations/reliability-and-recovery-model.md) (index). The [Readiness System](systems/readiness-system.md) now documents the capability and readiness model; [Deployment and operational readiness](operations/deployment-and-operational-readiness.md) the production-readiness model.
+  - Registers: CF-17, CF-18, DUP-32 to DUP-38 (resolved by DEC-031; CF-17 and CF-18 await confirmation); OQ-27, TC-08, TC-09 (open); values V-36 to V-39.
+  - Updated: roadmap (RMP-012 and "Part 3 additions by stage"), dependency map (D-66 to D-71), system registry, source-of-truth map, glossary, indexes. Six stale notes from earlier rounds corrected.
+  - Tooling: the checker reads P3 sources and checks the System Rules Register; `compare_requirements.py` added.
+  - Verified in three gates: [Part 3 verification record](traceability/part-3-verification.md). Gate 3, by an independent reviewer, failed first (2 blocking, 14 non-blocking defects, all fixed, including two missing requirements now PERF-022 and AIL-021) and passed on an independent re-run.
+
 ## In-progress work
 
-None.
+None. The Part 3 reconciliation is complete and awaits human review.
 
 ## Blockers
 
 | Problem | Impact | Required resolution |
 |---|---|---|
-| None | — | — |
+| Human review of the Part 3 reconciliation (P3§541 items 29–30) | Normal implementation cannot begin, as intended | The owner reviews DEC-031 and answers the items below |
 
 ## Open questions
 
-None. Every conflict, duplicate, open question, and technical concern is resolved ([findings register](conflicts/register.md), [open-question register](open-questions/register.md)). What stays unapproved by design (proposals, future items) is shown in the [registry](requirements/registry.md)'s Approval column.
+For the owner ([DEC-031](decisions/DEC-031-part-3-reconciliation.md), "Left for the owner"):
+
+| Item | Question | Where |
+|---|---|---|
+| CF-17 | Confirm rule precedence: the safety floor first (your DEC-026 decision), then user hard constraints, security, risk, capital, execution, strategy, market conditions, AI (RSK-048). In particular, security controls outside the floor (transfer restrictions, AI least privilege) then rank below your hard policy: is that what you want? | [Findings register](conflicts/register.md) |
+| CF-18 | Confirm: capital growth raises limits or authorized capital only where your policy already authorizes that scaling and readiness validates it; otherwise it is a policy change needing you | [Findings register](conflicts/register.md) |
+| OQ-27 | Is a separate Part 4 coming? | [Open-question register](open-questions/register.md) |
+| TC-08 | Older decision records mostly lack "Alternatives": add them only when a record is next amended and only where they can be sourced | [Open-question register](open-questions/register.md) |
+| Readings | Check the mapping of the rebalancing decisions (DUP-34) and of Part 3's emergency state names (DUP-35) | [Findings register](conflicts/register.md) |
+| TC-09 | How a standby gets trading keys for automatic takeover without being able to trade before it holds the lease; decided when OPERATIONALIZATION is planned | [Open-question register](open-questions/register.md) |
+
+What stays unapproved by design (proposals, future items) is shown in the [registry](requirements/registry.md)'s Approval column.
 
 ## Operating model now in force (replaces the earlier "defaults")
 
@@ -146,6 +172,15 @@ None. Every conflict, duplicate, open question, and technical concern is resolve
 - **Infrastructure.** All production infrastructure is kept as code and rebuildable without you (OPS-014 to OPS-017).
 - **High availability.** A standby takes over automatically after reconciling (REC-023). Only one copy ever trades, and a migration swaps exchange keys (MIG-029).
 
+**From Part 3 (awaiting your review):**
+
+- **Capability scales with the account, not with capital alone.** Small accounts are first-class; capabilities unlock automatically when economics, liquidity, risk, readiness, and policy allow, never because a balance crossed a fixed number; growth never raises exposure by itself (RDY-009 to RDY-026, CAP-034, PLT-023).
+- **Search aggressively, act conservatively.** Broad, continuous discovery; a detected opportunity is only a candidate (PLT-022, OPP-017 to OPP-020).
+- **Rebalancing** decides among NO ACTION, now, later, partial, pre-position, wait, or emergency, without churn, always through the capital authority (CAP-037 to CAP-042).
+- **System rules** are indexed with owner, enforcement point, and violation handling in the [System Rules Register](requirements/system-rules-register.md).
+- **Restart is not resume;** failures are isolated to the service that failed (REC-025, REC-026).
+- **New features** pass the governance gate before approval (GOV-001 to GOV-020).
+
 ## Recent decisions
 
 [Decision log](decisions/README.md):
@@ -155,6 +190,7 @@ None. Every conflict, duplicate, open question, and technical concern is resolve
 - DEC-019 and DEC-020 (owner correction) and DEC-021 to DEC-023 (owner decisions on CF-11 to CF-13) added the same day.
 - DEC-024 (Part 2 reconciliation) and DEC-025 (documentation tooling in the repository) added the same day.
 - DEC-026 to DEC-030 (owner decisions on the Part 2 findings) added the same day. DEC-024 confirmed by the owner.
+- DEC-031 (Part 3 reconciliation; awaiting review) and DEC-032 (the owner's checkpoint and verification rule) added the same day.
 
 ## Recent changes
 
@@ -165,12 +201,14 @@ None. Every conflict, duplicate, open question, and technical concern is resolve
 - 2026-09-30: applied owner decisions on CF-11 to CF-13 (DEC-021 to DEC-023): 16 new requirements, 3 superseded. No code, configuration, or infrastructure created.
 - 2026-09-30: integrated Handoff Part 2 (DEC-024, DEC-025): 194 new requirements, SYS-34, five new specifications, findings CF-14 to CF-16, DUP-23 to DUP-31, OQ-24 to OQ-26, TC-07. No existing requirement changed. No platform code, configuration, or infrastructure created; the only code is the documentation checker in `tools/docs/`.
 - 2026-09-30: applied owner decisions 3 on the Part 2 findings (DEC-026 to DEC-030): 24 new requirements; CAP-028 and OPS-009 replaced; REC-021 reclassified. No code, configuration, or infrastructure created.
+- 2026-09-30: integrated Handoff Part 3 (DEC-031) and adopted the checkpoint and verification rule (DEC-032): 111 new requirements, GOV set, System Rules Register, reliability and production-readiness models, findings CF-17, CF-18, DUP-32 to DUP-38, OQ-27, TC-08, TC-09. No existing requirement changed. No platform code, configuration, or infrastructure created.
 
 ## Next approved step
 
-1. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1.
-2. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140).
-3. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
+1. The owner's review of the Part 3 reconciliation and answers to CF-17, CF-18, OQ-27, TC-08, and the DUP-34, DUP-35 readings (P3§541 items 29–30). TC-09 is decided when OPERATIONALIZATION is planned.
+2. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1.
+3. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140).
+4. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
 
 ## Memory check (constitution Rule 175)
 
@@ -180,6 +218,21 @@ A new session can reconstruct the project from the repository:
 - [`docs/README.md`](README.md) for every document;
 - the [registry](requirements/registry.md) for every requirement;
 - the registers for everything open;
-- [`tools/docs/`](../tools/docs/README.md) to rebuild and check the indexes.
+- [`tools/docs/`](../tools/docs/README.md) to rebuild and check the indexes and to compare requirements with any earlier commit.
 
 No conversation history is needed.
+
+## Checkpoint log ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md))
+
+Each checkpoint commit and its verification record. Hashes are those on branch `claude/code-builder-constitution-rrewgf`; a commit cannot contain its own hash, so each checkpoint's hash is recorded by the next one.
+
+| Commit | Contents | Verification record |
+|---|---|---|
+| 16d317c | Constitution adopted; project state created | — (before the rule) |
+| b850eaa | Handoff Part 1 documented | [Part 1 verification](traceability/part-1-verification.md) |
+| 9fdbc3f | Part 1 open items resolved (DEC-006 to DEC-018) | [Resolution verification](traceability/resolution-verification.md) |
+| 419b8da | Owner correction 1 (DEC-019, DEC-020) | [Owner correction 1 verification](traceability/owner-correction-01-verification.md) |
+| 03716bf | Owner decisions on CF-11 to CF-13 (DEC-021 to DEC-023) | [Owner decisions 2 verification](traceability/owner-decisions-02-verification.md) |
+| b6f005e | Handoff Part 2 integrated (DEC-024, DEC-025) | [Part 2 verification](traceability/part-2-verification.md) |
+| a9034ce | Owner decisions on the Part 2 findings (DEC-026 to DEC-030) | [Owner decisions 3 verification](traceability/owner-decisions-03-verification.md) |
+| The commit that adds this row | Handoff Part 3 integrated; checkpoint rule adopted (DEC-031, DEC-032) | [Part 3 verification](traceability/part-3-verification.md) |

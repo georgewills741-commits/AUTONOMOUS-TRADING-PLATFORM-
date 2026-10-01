@@ -1,6 +1,6 @@
 # Performance Controller (Expected vs Actual)
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-21 · **Category:** shared infrastructure (§49 is platform-wide) · **Roadmap stage:** ARBITRAGE ("Performance controller"), although it serves all strategies (CF-05) · **Sources:** §48–§50
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-21 · **Category:** shared infrastructure (§49 is platform-wide) · **Roadmap stage:** DIRECTIONAL TRADING (core) and ARBITRAGE (arbitrage tracking); §95 lists "Performance controller" under ARBITRAGE, and [DEC-024](../decisions/DEC-024-part-2-reconciliation.md) moved the core (CF-16) · **Sources:** §48–§50; Part 3: P3§392–P3§393, P3§433–P3§434
 
 Canonical definition of comparing expected with actual results, detecting deterioration, and keeping model health separate from strategy health.
 
@@ -47,6 +47,16 @@ Notes:
 - **Actions.** The controller still acts only through PFC-008: it raises alerts, proposes suspension, trips a configured kill switch, and triggers recalibration. Throttling (PFC-014) and controlled suspension (PFC-009) are applied by the Risk Engine through safety levels (RSK-015) or by Strategy Management, never by rewriting a live strategy (STR-010).
 - **Preserved opportunities** (PFC-012) are records in the Opportunity Database (OPP-014, OPP-015). Interpreting causes is the Performance Analyst's work (AGT-015, AGT-021).
 - **Stage (CF-16).** Paper evidence and the Readiness System, both built in DIRECTIONAL TRADING, need the expected-vs-actual comparison. That core (PFC-001 to PFC-003, PFC-009 to PFC-013) is therefore built in DIRECTIONAL TRADING. The arbitrage-specific tracking (PFC-014, PFC-015) stays in ARBITRAGE ([DEC-024](../decisions/DEC-024-part-2-reconciliation.md)).
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **PFC-016** Additional missed- and false-opportunity factors · SYSTEM REQUIREMENT · P3§392, P3§393 — If an opportunity was not executed, the system should preserve the reason; in addition to the reasons of PFC-012, examples include: slippage; strategy disabled; capital allocated elsewhere; unknown state. Later analysis should determine whether the rejection was correct. In addition to what PFC-013 detects, false-opportunity analysis helps identify: latency; execution assumptions; regime changes.
+- **PFC-017** Additional expected-vs-actual dimensions · SYSTEM REQUIREMENT · P3§433 — Strategy performance must be measured against expectation. In addition to the comparisons of PFC-001, the system should compare expected vs actual for: risk; drawdown; opportunity capture.
+- **PFC-018** Drift responses · CONFIRMED REQUIREMENT · P3§434 — When a strategy's real-world behavior materially differs from validated expectations (PFC-009), possible actions are: reduce allocation; suspend; review; revalidate; retire. It should not silently rewrite the strategy.
+
+PFC-018's actions are applied through PFC-008 and the owning systems (the Global Capital Authority reduces allocation; the Risk Engine suspends; Strategy Management revalidates or retires), never by this controller editing a strategy (STR-006, STR-010). P3§382 (canary failure) is STR-017.
 
 ## Boundary (§92)
 

@@ -1,6 +1,6 @@
 # Strategy Management (Lifecycle, Strategy Factory, Versioning)
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-14 · **Category:** shared infrastructure ("Strategy lifecycle", §04) · **Roadmap stage:** DIRECTIONAL TRADING ("Strategy lifecycle"), although it serves all trading systems (CF-05) · **Sources:** §34–§38
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-14 · **Category:** shared infrastructure ("Strategy lifecycle", §04) · **Roadmap stage:** DIRECTIONAL TRADING ("Strategy lifecycle"), although it serves all trading systems (CF-05) · **Sources:** §34–§38; Part 3: P3§460–P3§461, P3§507
 
 Canonical definition of how strategies are researched, validated, promoted, versioned, improved, and retired, and of what research may and may not touch.
 
@@ -70,12 +70,21 @@ Notes:
 - **Lifecycle state vs readiness.** This system's Strategy Registry records which lifecycle stage a strategy version is in (STR-024). The Readiness System records whether the evidence allows it to progress (RDY-004, RDY-007).
 - The Strategy Registry is the canonical registry of ARCH-027.
 
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../../decisions/DEC-031-part-3-reconciliation.md).
+
+- **STR-027** Failures are learning evidence · CONFIRMED REQUIREMENT · P3§460, P3§461 — The system should learn from failures: failures should become structured learning data. Examples: failed execution; missed opportunity; false opportunity; strategy loss; unexpected slippage; exchange outage; data failure; AI hallucination; model failure; rebalancing mistake; deployment failure. A failure is evidence; it is not automatically a justification for changing production behavior, and it must not automatically create a new strategy.
+- **STR-028** Capital growth triggers research · CONFIRMED REQUIREMENT · P3§507 — When capital grows, the system may identify new strategy opportunities requiring: research; validation; paper trading; infrastructure; additional risk analysis. Capability expansion should therefore be forward-looking.
+
+P3§458 (autonomous learning must be controlled) and P3§459 (the self-improvement loop) are STR-002, STR-009, and AGT-013 (DUP-37). Failure data comes from its owners (incidents INC-002, missed and false opportunities PFC-012, PFC-013, PFC-016, expected vs actual PFC-001) and is referenced, not copied. STR-028's research runs in the research environment and follows the lifecycle (STR-001); it never activates a capability, which remains the Readiness System's decision (RDY-008, RDY-016).
+
 ## Boundary (§92)
 
 - **Owns:** strategy versions, lifecycle state, promotion, and retirement.
 - **Uses:** [Backtesting](backtesting.md) and [Paper Trading](paper-trading.md) as lifecycle stages; AI research agents as assistants ([agents](../../ai/agents.md), AGT-012, AGT-013).
 - **Must not:** modify live trading directly (STR-004), or let research change protected production controls (STR-008).
-- **Not yet specified:** validation thresholds for each lifecycle stage (expected with Part 2 verification architecture), interfaces, tests. The operator approves promotions; canary is STR-011.
+- **Not yet specified:** validation thresholds for each lifecycle stage (readiness evidence per transition, V-33, set when DIRECTIONAL TRADING is planned), interfaces, tests. Promotion is approved by the deterministic Readiness System (STR-019, RDY-006), or by the operator where policy requires it (STR-021); canary is STR-013 to STR-022, which replaced STR-011.
 
 ## Findings
 

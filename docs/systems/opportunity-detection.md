@@ -1,6 +1,6 @@
 # Opportunity Detection Engine (Whole-Universe Market Monitoring)
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-05 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market universe", "Opportunity monitoring") · **Sources:** §08, §09
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-05 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market universe", "Opportunity monitoring") · **Sources:** §08, §09; Part 3: P3§386–P3§388, P3§416, P3§505, P3§523
 
 Canonical definition of how the platform watches its whole authorized trading universe and finds candidate opportunities. This is **market monitoring**. It is separate from operational monitoring (ARCH-005).
 
@@ -35,6 +35,17 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **OPP-016** One platform-wide Opportunity Database · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-024 — This engine owns the single Opportunity Database, the "Opportunity Registry" of ARCH-027. Like the arbitrage opportunity database it now includes (ARB-003, ARB-014), it is an analytical store derived from the event and decision history and linked to it by event identifiers. Arbitrage records are the arbitrage view of this database, not a second database.
 
 **Universe-selection architecture (OPP-013).** What is in the universe: OPP-009. How it is monitored: ticker level for every market, full depth for candidates (OPP-012). What bounds it: OPP-013. What screens events before deeper processing: the Opportunity Filter, a fast deterministic filter (OPP-005, OPP-008; P2§25). The candidate-promotion rules, tier thresholds, and resource budgets are specified when DATA FOUNDATION is planned.
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **OPP-017** Aggressive opportunity discovery · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§386 — The system should aggressively search for legitimate trading opportunities across the approved market universe. "Aggressive" refers to: breadth of search; depth of analysis; speed of detection; continuous scanning; cross-market comparison; cross-venue comparison; strategy diversity; efficient use of computation. It does NOT mean aggressive risk-taking.
+- **OPP-018** Continuous whole-market discovery · CONFIRMED REQUIREMENT · P3§387, P3§388, P3§416 — The system should continuously evaluate the approved market universe. In addition to the dimensions of OPP-002, where technically and economically feasible it should search across: strategies; cross-market relationships. The system should not wait for the user to tell it "Look for opportunities": opportunity discovery is an inherent platform responsibility. Conceptually: continuous market data → fast filtering → opportunity detection → economic validation → risk → capital → execution eligibility. It should not artificially restrict opportunity discovery merely because a single strategy is currently active.
+- **OPP-019** An opportunity is only a candidate · CONSTRAINT · P3§523 — A detected opportunity is only a candidate. It must pass the full execution pipeline.
+- **OPP-020** Opportunity search scaling · SYSTEM REQUIREMENT · P3§505 — As computational resources grow, the opportunity engine may expand: number of markets; number of venues; number of strategies; number of arbitrage routes; analysis depth; provided the resulting workload remains safe and economically justified.
+
+OPP-017 to OPP-020 stay within OPP-013: whole-market scanning remains bounded by data quality, liquidity, venue availability, resource constraints, risk policy, and market eligibility, and never runs everything through AI (OPP-004). The platform-wide principle is PLT-022. P3§516 (the complete opportunity loop) is OPP-005 with the economic, capital, and risk steps of TNP-020, CAP-016, and AIV-016. Missed and false opportunities (P3§392, P3§393) are analysed by the Performance Controller (PFC-012, PFC-013, PFC-016) from this system's Opportunity Database (OPP-014, OPP-015).
 
 ## Boundary (§92)
 

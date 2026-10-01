@@ -3,9 +3,11 @@
 Reads the specifications under docs/ and (re)writes:
   - docs/requirements/registry.md                 (fully generated)
   - docs/traceability/handoff-coverage.md         (generated; the hand-written tail from "## §100 questions" is kept)
-  - docs/traceability/part-2-reconciliation.md    (the "New requirements" column is generated; every other
-                                                   column and section is hand-written and kept)
-and checks cross-references, links, and handoff coverage. See tools/docs/README.md and DEC-025.
+  - docs/traceability/part-2-reconciliation.md    (the "New requirements" column is generated; every
+  - docs/traceability/part-3-reconciliation.md     other column and section is hand-written and kept)
+and checks cross-references, links, handoff coverage, and the System Rules Register.
+With --check-only it writes nothing and also fails if any generated file is out of date.
+See tools/docs/README.md, DEC-025, and DEC-031.
 
 Usage: python3 tools/docs/build_index.py [--check-only]
 Standard library only.
@@ -22,6 +24,8 @@ EXCLUDE_DIRS = {os.path.join(DOCS, "builder"), os.path.join(DOCS, "handoffs")}
 REGISTRY = os.path.join(DOCS, "requirements", "registry.md")
 COVERAGE1 = os.path.join(DOCS, "traceability", "handoff-coverage.md")
 RECON2 = os.path.join(DOCS, "traceability", "part-2-reconciliation.md")
+RECON3 = os.path.join(DOCS, "traceability", "part-3-reconciliation.md")
+RULES = os.path.join(DOCS, "requirements", "system-rules-register.md")
 GENERATED = {REGISTRY, COVERAGE1}
 STATIC1_HEADING = "## §100 questions"
 
@@ -32,7 +36,7 @@ NOT_APPROVED = {"PROPOSED": "Not approved (proposal)", "FUTURE": "Not approved (
                 "PREVIOUSLY DISCUSSED / REQUIRES CONFIRMATION": "Awaiting owner confirmation",
                 "DEPRECATED / REPLACED": "Withdrawn (replaced)"}
 LINE_RE = re.compile(r"^- \*\*(?P<id>[A-Z]{2,4}-\d{3})\*\* (?P<title>[^·]+?) · (?P<cls>[A-Z /]+?) · "
-                     r"(?P<src>(?:P2)?§[0-9§P,–\- ]+?|DEC-\d{3}) — (?P<text>.+)$")
+                     r"(?P<src>(?:P[23])?§[0-9§P,–\- ]+?|DEC-\d{3}) — (?P<text>.+)$")
 
 # prefix -> (owner, stage)
 OWNERS = collections.OrderedDict([
@@ -82,6 +86,7 @@ OWNERS = collections.OrderedDict([
     ("OPS", ("Deployment and operational readiness", "OPERATIONALIZATION")),
     ("MIG", ("Hosting, backup, and migration (cross-cutting)", "OPERATIONALIZATION (MIG-004, MIG-010 from FOUNDATION)")),
     ("VER", ("Verification (cross-cutting)", "OPERATIONALIZATION (production hardening)")),
+    ("GOV", ("Architecture governance (cross-cutting)", "FOUNDATION (applies to every stage)")),
 ])
 
 # Part 1 sections whose content is process/meta rather than requirement lines.
@@ -124,8 +129,9 @@ def parse_src(src):
     out = set()
     for part in src.split(","):
         part = part.strip()
-        p2 = part.startswith("P2§")
-        body = part.replace("P2§", "").replace("§", "")
+        m = re.match(r"^P([23])§", part)
+        which = int(m.group(1)) if m else 1
+        body = re.sub(r"^P[23]§", "", part).replace("§", "")
         m = re.match(r"^(\d+)\s*[–-]\s*(\d+)$", body)
         if m:
             nums = range(int(m.group(1)), int(m.group(2)) + 1)
@@ -135,7 +141,7 @@ def parse_src(src):
             errors.append(f"bad source {src!r}")
             nums = []
         for n in nums:
-            out.add((2 if p2 else 1, n))
+            out.add((which, n))
     return out
 
 
@@ -150,12 +156,18 @@ for path in md_files():
         continue
     rel = os.path.relpath(path, DOCS)
     in_code = False
+    last = None  # requirement whose indented continuation lines (e.g. RSK-015's levels) belong to its text
     for n, line in enumerate(open(path, encoding="utf-8").read().splitlines(), 1):
         if line.startswith("```"):
             in_code = not in_code
+            last = None
             continue
         if in_code:
             continue
+        if last and line.startswith("  ") and line.strip():
+            reqs[last]["text"] += " " + line.strip()
+            continue
+        last = None
         if re.match(r"^- \*\*[A-Z]{2,4}-\d{3}\*\*", line):
             m = LINE_RE.match(line)
             if not m:
@@ -171,6 +183,7 @@ for path in md_files():
             d["doc"] = rel
             d["secs"] = parse_src(d["src"])
             reqs[d["id"]] = d
+            last = d["id"]
 
 order = {p: i for i, p in enumerate(OWNERS)}
 ids = sorted(reqs, key=lambda i: (order.get(i.split("-")[0], 99), int(i.split("-")[1])))
@@ -190,15 +203,18 @@ titles1 = titles_of(os.path.join(DOCS, "handoffs", "part-1-core-platform-feature
 titles2 = titles_of(os.path.join(DOCS, "handoffs", "part-2-consolidated-additional-systems.md"), r"^## (\d{1,3}) — (.+)$")
 if sorted(titles2) != list(range(1, 351)):
     errors.append("Part 2 historical copy does not have sections 1..350")
+titles3 = titles_of(os.path.join(DOCS, "handoffs", "part-3-consolidated-autonomy-capital-scaling.md"), r"^## (\d{3}) — (.+)$")
+if sorted(titles3) != list(range(351, 551)):
+    errors.append("Part 3 historical copy does not have sections 351..550")
+TITLES = {1: titles1, 2: titles2, 3: titles3}
+PREFIX = {1: "§", 2: "P2§", 3: "P3§"}
 
-sec_ids = {1: collections.defaultdict(list), 2: collections.defaultdict(list)}
+sec_ids = {1: collections.defaultdict(list), 2: collections.defaultdict(list), 3: collections.defaultdict(list)}
 for i in ids:
     for part, s in reqs[i]["secs"]:
         sec_ids[part][s].append(i)
-        if part == 2 and s not in titles2:
-            errors.append(f"{i}: source P2§{s} does not exist")
-        if part == 1 and s not in titles1:
-            errors.append(f"{i}: source §{s} does not exist")
+        if s not in TITLES[part]:
+            errors.append(f"{i}: source {PREFIX[part]}{s} does not exist")
 for s in sorted(titles1):
     if not sec_ids[1].get(s) and s not in META1:
         errors.append(f"§{s:02d} has no requirement and no meta mapping")
@@ -221,27 +237,33 @@ def approval(r):
     if r["src"].startswith("DEC-"):
         who = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", decided_by.get(r["src"], "?"))
         return f"Decided by: {who}"
-    return ("Handoff Part 2" if r["src"].startswith("P2") else "Handoff Part 1") + " — pending documentation review"
+    part = {"P2": "Handoff Part 2", "P3": "Handoff Part 3"}.get(r["src"][:2], "Handoff Part 1")
+    return part + " — pending documentation review"
 
 
-# ---------- Part 2 reconciliation: read the hand-written columns ----------
-recon_rows = collections.OrderedDict()
-recon_text = open(RECON2, encoding="utf-8").read() if os.path.exists(RECON2) else ""
+# ---------- Part 2 and Part 3 reconciliations: read the hand-written columns ----------
 ROW_RE = re.compile(r"^\| (?P<key>\d{1,3}|—) \| (?P<title>[^|]+) \| (?P<new>[^|]*) \| (?P<notes>[^|]*) \|$")
-for line in recon_text.splitlines():
-    m = ROW_RE.match(line)
-    if m:
-        recon_rows[m.group("key")] = m.groupdict()
-if recon_text:
-    for s in range(1, 351):
+recon_texts = {}
+for part, path, name in ((2, RECON2, "part-2-reconciliation"), (3, RECON3, "part-3-reconciliation")):
+    recon_rows = collections.OrderedDict()
+    recon_text = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
+    recon_texts[part] = recon_text
+    if not recon_text:
+        errors.append(f"{name}.md is missing")
+        continue
+    for line in recon_text.splitlines():
+        m = ROW_RE.match(line)
+        if m:
+            recon_rows[m.group("key")] = m.groupdict()
+    for s in sorted(TITLES[part]):
         row = recon_rows.get(str(s))
         if not row:
-            errors.append(f"part-2-reconciliation: no row for P2§{s}")
+            errors.append(f"{name}: no row for {PREFIX[part]}{s}")
             continue
-        if not sec_ids[2].get(s) and row["notes"].strip() in ("", "—"):
-            errors.append(f"P2§{s}: no new requirement and no disposition")
-        if row["title"].strip() != titles2[s]:
-            errors.append(f"P2§{s}: title mismatch in reconciliation")
+        if not sec_ids[part].get(s) and row["notes"].strip() in ("", "—"):
+            errors.append(f"{PREFIX[part]}{s}: no new requirement and no disposition")
+        if row["title"].strip() != TITLES[part][s]:
+            errors.append(f"{PREFIX[part]}{s}: title mismatch in reconciliation")
 
 # ---------- cross-reference checks ----------
 defined_findings = set()
@@ -251,6 +273,32 @@ for reg in ("conflicts/register.md", "open-questions/register.md"):
     defined_findings |= set(re.findall(r"^\| ((?:DUP|OQ|TC)-\d{2}) \|", txt, re.M))
 sysreg = open(os.path.join(DOCS, "architecture", "system-registry.md"), encoding="utf-8").read()
 defined_sys = set(re.findall(r"^\| (SYS-\d{2}) \|", sysreg, re.M))
+
+# ---------- System Rules Register (ARCH-038) ----------
+RULE_RE = re.compile(r"^\| (SR-\d{2}) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| "
+                     r"([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$")
+defined_rules = []
+rules_text = open(RULES, encoding="utf-8").read() if os.path.exists(RULES) else ""
+if not rules_text:
+    errors.append("system-rules-register.md is missing")
+for line in rules_text.splitlines():
+    if line.startswith("| SR-"):
+        m = RULE_RE.match(line)
+        if not m:
+            errors.append(f"system-rules-register: malformed row {line[:40]!r}")
+            continue
+        rid, canon, cls = m.group(1), m.group(3), m.group(4).strip()
+        defined_rules.append(rid)
+        canon_ids = re.findall(r"\b[A-Z]{2,4}-\d{3}\b", canon)
+        if not canon_ids:
+            errors.append(f"{rid}: no canonical requirement")
+        elif canon_ids[0] in reqs and reqs[canon_ids[0]]["cls"] != cls:
+            errors.append(f"{rid}: classification {cls!r} is not the class of {canon_ids[0]} ({reqs[canon_ids[0]]['cls']})")
+        for i in canon_ids:
+            if i in reqs and reqs[i]["cls"] in NOT_APPROVED:
+                errors.append(f"{rid}: canonical requirement {i} is not approved ({reqs[i]['cls']})")
+if defined_rules != [f"SR-{n:02d}" for n in range(1, len(defined_rules) + 1)]:
+    errors.append(f"system-rules-register: SR IDs not unique and sequential: {defined_rules}")
 
 refs = collections.Counter()
 for path in md_files():
@@ -266,6 +314,9 @@ for path in md_files():
     for tok in re.findall(r"\b(SYS-\d{2})\b", txt):
         if tok not in defined_sys:
             errors.append(f"{rel}: reference to undefined system {tok}")
+    for tok in re.findall(r"\b(SR-\d{2})\b", txt):
+        if tok not in defined_rules:
+            errors.append(f"{rel}: reference to undefined system rule {tok}")
     for tok in re.findall(r"\b([A-Z]{2,4}-\d{3})\b", txt):
         if not tok.startswith("DEC-") and tok not in reqs:
             errors.append(f"{rel}: reference to undefined requirement {tok}")
@@ -290,18 +341,19 @@ if errors:
 cls_count = collections.Counter(reqs[i]["cls"] for i in ids)
 n_p1 = sum(1 for i in ids if reqs[i]["src"].startswith("§"))
 n_p2 = sum(1 for i in ids if reqs[i]["src"].startswith("P2"))
+n_p3 = sum(1 for i in ids if reqs[i]["src"].startswith("P3"))
 dec_ids = collections.defaultdict(list)
 for i in ids:
     if reqs[i]["src"].startswith("DEC-"):
         dec_ids[reqs[i]["src"]].append(i)
 n_dec = sum(map(len, dec_ids.values()))
-print(f"requirements: {len(ids)} (Part 1: {n_p1}, Part 2: {n_p2}, decisions: {n_dec}); prefixes: {len(byp)}; "
-      f"findings: {len(defined_findings)}; decisions: {len(decs)}; systems: {len(defined_sys)}")
+print(f"requirements: {len(ids)} (Part 1: {n_p1}, Part 2: {n_p2}, Part 3: {n_p3}, decisions: {n_dec}); prefixes: {len(byp)}; "
+      f"findings: {len(defined_findings)}; decisions: {len(decs)}; systems: {len(defined_sys)}; system rules: {len(defined_rules)}")
 print("by class:", dict(cls_count))
 print("findings never referenced outside their register:", sorted(defined_findings - set(refs)))
 print(f"Part 2 sections with new requirements: {len([s for s in titles2 if sec_ids[2].get(s)])} of 350")
-if CHECK_ONLY:
-    sys.exit(0)
+print(f"Part 3 sections with new requirements: {len([s for s in titles3 if sec_ids[3].get(s)])} of 200")
+OUT = collections.OrderedDict()  # path -> generated content
 
 # ---------- registry.md ----------
 L = ["# Requirements Registry", "",
@@ -309,7 +361,7 @@ L = ["# Requirements Registry", "",
      "[`tools/docs/build_index.py`](../../tools/docs/README.md) from the specifications; do not edit it by hand. "
      "Conventions: [README](README.md).",
      ">",
-     f"> **Sources:** Handoff Part 1 ({n_p1}), Handoff Part 2 ({n_p2}), decision records ({n_dec}) · "
+     f"> **Sources:** Handoff Part 1 ({n_p1}), Handoff Part 2 ({n_p2}), Handoff Part 3 ({n_p3}), decision records ({n_dec}) · "
      f"**Status of every entry:** DOCUMENTED — not implemented, not verified · **Total:** {len(ids)} requirements",
      "", "## Summary by class", "", "| Class | Count |", "|---|---|"]
 for c in CLASSES:
@@ -320,21 +372,24 @@ L += ["",
       "specification. LED-001 stays conditional on a user-facing platform, which the platform currently is not (DEC-006). "
       "Conflicts and open questions that affect requirements are in the [findings register](../conflicts/register.md) and the "
       "[open-question register](../open-questions/register.md). Concrete values used by requirements are classified in the "
-      "[values register](values-register.md).",
+      "[values register](values-register.md). Enforceable behavioral rules are indexed in the "
+      "[System Rules Register](system-rules-register.md).",
       "",
       "**Approval** says where the requirement's authority comes from: a handoff section, pending the complete documentation "
       "review before implementation (handoff §101); or a decision record and who decided it. PROPOSED, FUTURE, and "
       "REQUIRES CONFIRMATION entries are not approved (ARCH-029). **Dependencies** are recorded between systems in the "
-      "[dependency map](../architecture/dependency-map.md); **verification methods** are assigned when each stage is planned (ARCH-030).",
+      "[dependency map](../architecture/dependency-map.md); **verification methods** are assigned when each stage is planned (ARCH-030). "
+      "**Default stage** is the owning system's stage; where the [roadmap](../roadmap/roadmap.md) places an individual "
+      "requirement in another stage (its \"additions by stage\" tables), the roadmap is authoritative.",
       "", "## Registry", "",
-      "| ID | Title | Class | Source | Owner | Specification | Stage | Approval |",
+      "| ID | Title | Class | Source | Owner | Specification | Default stage | Approval |",
       "|---|---|---|---|---|---|---|---|"]
 for i in ids:
     r = reqs[i]
     owner, stage = OWNERS[i.split("-")[0]]
     L.append(f"| {i} | {r['title'].strip()} | {r['cls']} | {r['src'].strip()} | {owner} | "
              f"[{r['doc']}](../{r['doc']}) | {stage} | {approval(r)} |")
-open(REGISTRY, "w", encoding="utf-8").write("\n".join(L) + "\n")
+OUT[REGISTRY] = "\n".join(L) + "\n"
 
 # ---------- handoff-coverage.md (Part 1) ----------
 old = open(COVERAGE1, encoding="utf-8").read()
@@ -344,7 +399,8 @@ C = ["# Handoff Coverage — Part 1", "",
      "The section table and the decision table are generated by [`tools/docs/build_index.py`](../../tools/docs/README.md) "
      "from requirement sources; the §100 and §102 tables were written by hand and checked. A section with no requirement IDs "
      "is process/meta content, and its mapping is stated. Handoff Part 2 is traced in the "
-     "[Part 2 reconciliation](part-2-reconciliation.md).",
+     "[Part 2 reconciliation](part-2-reconciliation.md) and Handoff Part 3 in the "
+     "[Part 3 reconciliation](part-3-reconciliation.md).",
      "", "## Section → canonical location", "",
      "| § | Handoff section | Canonical document(s) | Requirement IDs |", "|---|---|---|---|"]
 for s in sorted(titles1):
@@ -367,16 +423,28 @@ for d in sorted(dec_ids):
     f = [x for x in os.listdir(os.path.join(DOCS, "decisions")) if x.startswith(d + "-")][0]
     C.append(f"| [{d}](../decisions/{f}) | {', '.join(dec_ids[d])} |")
 C += ["", static]
-open(COVERAGE1, "w", encoding="utf-8").write("\n".join(C) + "\n")
+OUT[COVERAGE1] = "\n".join(C) + "\n"
 
-# ---------- part-2-reconciliation.md: regenerate the "New requirements" column ----------
-out = []
-for line in recon_text.splitlines():
-    m = ROW_RE.match(line)
-    if m and m.group("key").isdigit():
-        s = int(m.group("key"))
-        new = ", ".join(sec_ids[2].get(s, [])) or "—"
-        line = f"| {s} | {titles2[s]} | {new} | {m.group('notes').strip()} |"
-    out.append(line)
-open(RECON2, "w", encoding="utf-8").write("\n".join(out).rstrip("\n") + "\n")
-print("wrote registry.md, handoff-coverage.md, part-2-reconciliation.md")
+# ---------- part-2 and part-3 reconciliations: regenerate the "New requirements" column ----------
+for part, path in ((2, RECON2), (3, RECON3)):
+    out = []
+    for line in recon_texts[part].splitlines():
+        m = ROW_RE.match(line)
+        if m and m.group("key").isdigit():
+            s = int(m.group("key"))
+            new = ", ".join(sec_ids[part].get(s, [])) or "—"
+            line = f"| {s} | {TITLES[part][s]} | {new} | {m.group('notes').strip()} |"
+        out.append(line)
+    OUT[path] = "\n".join(out).rstrip("\n") + "\n"
+
+if CHECK_ONLY:
+    stale = [os.path.relpath(p, ROOT) for p, c in OUT.items() if open(p, encoding="utf-8").read() != c]
+    if stale:
+        print("ERRORS:")
+        for p in stale:
+            print(f"  {p} is out of date: run python3 tools/docs/build_index.py")
+        sys.exit(1)
+    sys.exit(0)
+for p, c in OUT.items():
+    open(p, "w", encoding="utf-8").write(c)
+print("wrote " + ", ".join(os.path.basename(p) for p in OUT))

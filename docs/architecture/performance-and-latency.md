@@ -1,6 +1,6 @@
 # Performance, Latency and Continuous Operation
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — no measurements exist yet · **Owner:** cross-cutting · **Roadmap stage:** OPERATIONALIZATION ("Performance engineering", §95), but §76 requires it from architecture design onward · **Sources:** §75–§78
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — no measurements exist yet · **Owner:** cross-cutting · **Roadmap stage:** OPERATIONALIZATION ("Performance engineering", §95), but §76 requires it from architecture design onward · **Sources:** §75–§78; Part 3: P3§395–P3§399
 
 ## Requirements
 
@@ -38,6 +38,18 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **PERF-017** Overhead to minimize · CONFIRMED ARCHITECTURAL PRINCIPLE · P2§344 — Latency-sensitive paths should remain deterministic wherever possible. Minimize: internal computation overhead; unnecessary AI calls; unnecessary network calls; repeated calculations; database bottlenecks; queue congestion; lock contention. Measure performance rather than assuming it.
 
 Atomic capital reservation specifically is CAP-027. Performance, load, and chaos testing (P2§168 to §170) are in the [verification architecture](verification-architecture.md).
+
+## Handoff Part 3 applied (2026-09-30)
+
+New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N. Part 3 sections that only restate an existing requirement add nothing here; where each section went is in the [Part 3 reconciliation](../traceability/part-3-reconciliation.md). Placement, duplicate, and conflict resolutions: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
+
+- **PERF-018** Service-specific latency targets · CONFIRMED REQUIREMENT · P3§395 — The platform should be designed for low-latency deterministic processing. However, Claude must not invent arbitrary universal latency guarantees before benchmarking the architecture and infrastructure. The correct principle is: minimize latency; measure latency; set service-specific targets; validate targets under realistic load. In addition to the latencies of PERF-008, latency targets should be defined separately for: normalization; reconciliation; AI activation; database writes; monitoring.
+- **PERF-019** Hot path and cold path · CONFIRMED ARCHITECTURAL PRINCIPLE · P3§396 — The architecture should distinguish the hot path from the cold path. The hot path may include: market data → normalization → quant → opportunity → risk → capital → execution. The cold path may include: research; historical analysis; reports; model evaluation; strategy discovery; long-running simulations. Heavy cold-path work must not block latency-sensitive execution.
+- **PERF-020** Additional performance measurements · SYSTEM REQUIREMENT · P3§397 — In addition to the measurements of PERF-010 and VER-001, the system must measure: storage latency; error rate; backpressure. Performance optimization must be evidence-driven.
+- **PERF-021** Bounded queues; critical state never discarded · CONSTRAINT · P3§398 — If incoming events exceed processing capacity, the system must not simply allow queues to grow without limit. In addition to the controls of PERF-014, it should implement where appropriate: sampling where safe; aggregation where safe; dropping of non-critical derived events; scaling; load shedding. Critical financial state must not be silently discarded.
+- **PERF-022** What concurrency must not create · CONSTRAINT · P3§399 — In addition to PERF-013, concurrent opportunities must not create: double capital allocation; duplicate orders; conflicting strategy decisions; race conditions; incorrect position state. Capital reservation and other critical state transitions should be atomic where required.
+
+PERF-019's hot path is PERF-003's latency-sensitive path in Part 3's words; PERF-016 already isolates research. PERF-018's targets become DESIGN TARGET values per service (like V-06 and V-07), replaced by measured baselines (PERF-010, PERF-012). PERF-022 lists what concurrency must not create; the mechanisms are CAP-027 (atomic reservation), EXE-008 and REC-017 (no duplicate orders), and CAP-017 (one allocator, so strategies cannot make conflicting allocation decisions). P3§400 is CAP-027.
 
 ## Findings (all resolved)
 
