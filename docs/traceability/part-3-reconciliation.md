@@ -140,7 +140,7 @@
 | 471 | RULE PRIORITY | — | Conflicts with RSK-004 as decided in DEC-026: CF-17. Placed first by RSK-048, now replaced by RSK-049: the owner put security above the user's hard policy (DEC-035); rule SR-02 |
 | 472 | NEW FEATURE MUST ENTER THE MASTER KNOWLEDGE SYSTEM | GOV-015 | Also ARCH-013; rule SR-38 |
 | 473 | DOCUMENTATION UPDATE MUST ACCOMPANY ARCHITECTURAL CHANGE | GOV-015 | Also ARCH-006, ARCH-007 |
-| 474 | ARCHITECTURAL DECISION RECORDS | GOV-016 | Older decision records mostly lack alternatives: TC-08 (decided by the owner, DEC-035: added now where sourced) |
+| 474 | ARCHITECTURAL DECISION RECORDS | GOV-016 | Older decision records mostly lacked alternatives: TC-08 (decided by the owner, DEC-035: added now where sourced; done 2026-10-02, every record from DEC-001 to DEC-030 has one) |
 | 475 | NO SILENT ARCHITECTURAL CHANGES | GOV-016 | Also ARCH-007; rule SR-38 |
 | 476 | MASTER ROADMAP INTEGRATION | RMP-012 | Areas placed in the seven stages ([roadmap](../roadmap/roadmap.md), "Part 3 additions by stage") |
 | 477 | DEPENDENCY-FIRST DEVELOPMENT | — | Covered by RMP-011, RMP-007, ARCH-014; rule SR-39 |

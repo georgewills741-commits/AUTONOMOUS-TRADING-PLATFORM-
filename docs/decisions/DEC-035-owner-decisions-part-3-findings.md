@@ -3,6 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-10-02
 - **Decided by:** project owner ([owner decisions 4](../handoffs/owner-decisions-04-part-3-findings.md), eight multiple-choice answers); the wording of RSK-049 and GOV-024, taken from the options the owner chose, and the reading notes are the builder's
+- **Later changes:** TC-08's work is done: DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 ([TC-08 verification](../traceability/tc-08-alternatives-verification.md)). The text below is kept as written.
 
 ## Context
 

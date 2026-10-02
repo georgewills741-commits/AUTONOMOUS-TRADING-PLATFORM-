@@ -25,3 +25,11 @@ Stages run **sequentially** in §95 order: FOUNDATION → DATA FOUNDATION → CO
 | Custody (SYS-32) | None (FUTURE) | DEC-006 |
 
 The [roadmap](../roadmap/roadmap.md) and the [system registry](../architecture/system-registry.md) are updated to match.
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **CF-06, the §95 mapping as written:** only the natural-language policy interface is mapped, to AI INTELLIGENCE, and the structured Policy System has no stage. Not taken: the Risk Engine, in CORE TRADING FOUNDATION, enforces user hard constraints, so the Policy System is built there (CF-06's proposal).
+- **CF-05, the rest of the §95 mapping as written,** with some items in two stages, some shared items in one trading stage, and some in no stage: not kept. The table above places each item and, where an item spans stages, says which part goes where. §95 itself says exact sequencing is finalized after dependency analysis (CF-05).
+- **Parallel trading stages:** the order the builder PROPOSED when Part 1 was first documented (the roadmap and the dependency map at commit `b850eaa`): "the two trading stages can run in parallel, and AI INTELLIGENCE follows CORE". Not taken: stages run sequentially in §95's order (RMP-002). No reason is recorded.

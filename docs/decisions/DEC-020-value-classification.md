@@ -37,6 +37,12 @@ Handoff §96 already defines a closed list of classes for *features*. Most of it
 3. **ARCH-018:** every concrete operating value in a requirement is in the values register. None is a permanent hard-coded requirement unless the owner explicitly approves it as one. So far, none has been approved.
 4. **Reclassification:** TEC-001 and TEC-004 to TEC-012 change from CONFIRMED ARCHITECTURAL PRINCIPLE / CONFIRMED REQUIREMENT to IMPLEMENTATION CHOICE. TEC-002 (Rust only for measured hot paths) and TEC-003 (exact decimal arithmetic) remain CONSTRAINT: they limit implementation to protect correctness and PERF-006.
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Redefining §96's feature classes to hold OC-1 item 31's categories:** not taken. Most of those categories describe values, not features, so they became a second classification (Context).
+
 ## Consequences
 
 The former 5% / 14 days / 50 trades are withdrawn as rules; the corresponding parameters are POLICY-CONTROLLED, with no value adopted. The former 50 ms / 500 ms are DESIGN TARGETS only.

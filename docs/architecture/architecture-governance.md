@@ -71,7 +71,7 @@ When implementation starts, GOV-002's steps become part of each stage's plan, an
 
 **After the first release (GOV-021 to GOV-023, the owner's directive of 2026-10-01, [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)).** The gate does not end when the platform is first released: every later change passes it (GOV-021). GOV-022 is the same gate seen from a user's request: GOV-002 owns the steps, and GOV-022 adds that work starts from an inspection of the existing platform and never from a rebuild. GOV-023 is the platform's side of continuity; the builder's side (checkpoints, the continuation contract) is in the [project state](../project-state.md).
 
-**ADRs (GOV-016).** Decision records from DEC-031 onward include an "Alternatives" section. Most earlier records (DEC-001 to DEC-030) do not; this is TC-08 in the [open-question register](../open-questions/register.md). The owner decided to add them now, wherever the repository shows what was considered ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)); that is the next checkpoint.
+**ADRs (GOV-016).** Every decision record has an "Alternatives considered" section. Records from DEC-031 onward were written with one. Most earlier records (DEC-001 to DEC-030) were not (TC-08 in the [open-question register](../open-questions/register.md)); on the owner's decision ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)) they got one on 2026-10-02, listing only alternatives the repository records, each with its source. A record with none says so.
 
 ## Boundary (§92)
 

@@ -15,6 +15,12 @@ Part 1 contains overlapping responsibilities (e.g. four places that compute net 
 - The builder's preferred resolution is written in the register as **RECOMMENDED — NOT YET APPROVED**.
 - A resolution is applied to the specifications only after the project owner accepts it. That acceptance is recorded as a new decision record.
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Resolving each overlap or conflict directly in the specifications while organizing them:** ruled out, because it would silently change requirements or architecture (handoff §00 items 18–19; constitution Rules 56–58; Context). The findings were recorded instead, and later resolved by decision records, as the registers show.
+
 ## Consequences
 
 - Specifications contain known overlaps until they are resolved. Anyone reading a specification sees the finding IDs next to the affected text.

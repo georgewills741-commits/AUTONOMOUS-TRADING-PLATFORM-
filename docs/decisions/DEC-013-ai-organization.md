@@ -49,3 +49,16 @@ It is provider-agnostic (AIL-007).
 ## Evidence identifiers (TC-06)
 
 Every stored data item and calculation output carries a stable identifier, source, and timestamp (MKD-005), so AI claims can cite them (AIV-001).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **DUP-11, a News/Sentiment Agent with its own documented scope** (the register's other option): not taken. It has the same inputs and output as the Market Analyst (roster above).
+- **DUP-12 and DUP-13, separate research agents with documented scopes** (Research, Quant Research, Strategy Research, Strategy Optimizer; the register's other option): not taken. They share one boundary and set of constraints, and differ only by task type, which the Model Router can route.
+- **TC-02 and DUP-15, Model Evaluation and the AI Cost Manager as LLM agents,** as the §54 roster names them: not taken. Their work, like the Model Router's, is measurement, accounting, and rules, so all three are deterministic services (constitution Rules 87 and 201).
+- **CF-04 and OQ-12, a route/leg form of the AI output contract for arbitrage** (CF-04's proposal as first written): not needed, because AI never proposes or approves arbitrage trades (ARB-013).
+- **DUP-14, deterioration detected by the Performance Analyst or by strategy research** (§60, §59; claimants DUP-14 lists): not taken. As the register proposed, the Performance Controller detects deterministically and the Performance Analyst interprets and attributes causes (PFC-007).
+- **OQ-18, §66's other validation policies** (AIV-008): DEC-013 names three of the five for AI-originated trade proposals (a mandatory Devil's Advocate, no trade on unresolved disagreement, premium confirmation). It does not name single-agent analysis or multi-agent agreement, and records no reason.
+- **A premium-confirmation threshold on expected profit:** not taken. The threshold is on capital at risk, so it does not conflict with TNP-005 ("Validation policy" above).
+- No other alternatives were recorded for the uncertainty values (OQ-12), the AI gateway (OQ-14), or the evidence identifiers (TC-06).

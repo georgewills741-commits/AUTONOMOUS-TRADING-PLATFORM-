@@ -37,3 +37,11 @@ CAP-002 already holds the available, reserved, arbitrage-allocated, reserve, per
 | RSK-034 to RSK-036 (safety floor, adaptive operation) | Bucket sizing is adaptive operation inside the envelope. CAP-033 restates the floor for capital |
 
 The sizing rules and the eligibility thresholds are policy values V-34 and V-35 in the [values register](../requirements/values-register.md).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **No** (Q6 in [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md): keep the current capital categories): not chosen. The owner's own answer begins with the recommended option ("Yes — policy-set") and goes further: dynamic sizing, automatic rebalancing, and progressive capability activation.
+- **Amounts fixed in code:** ruled out by the option shown ("with the amounts set in your policy rather than fixed in code") and by the owner's answer ("not fixed hard-coded amounts"; CAP-029).
+- **A new system for the "Capital Allocation & Treasury Engine"** the owner named: not created. It is the owner's name for the Global Capital Authority, the one capital authority (ARCH-027; "Placement and terminology" above).

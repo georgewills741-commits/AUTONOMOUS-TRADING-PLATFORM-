@@ -27,6 +27,14 @@ Each responsibility has exactly one owner (ARCH-016, constitution Rule 92). Hand
 | DUP-21 opportunity records | Event history is the authoritative record | The arbitrage opportunity database is an analytical store, linked by event IDs and rebuildable from events | AUD-005, ARB-014 |
 | DUP-22 AI memory | Each canonical owner keeps its own history | Memory references versioned records, never copies them | MEM-005 |
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **More than one owner for a responsibility,** as Part 1 has it for each finding (the claimants listed in the [findings register](../conflicts/register.md)): not taken. Each responsibility has exactly one owner (ARCH-016, constitution Rule 92; "Principle" above). Except for DUP-10, each owner chosen is the one the register proposed when the finding was first recorded.
+- **DUP-10 and TC-03, ranking by one of the other systems DUP-10 lists for discovery and ranking:** Opportunity Detection (§09), Arbitrage Intelligence ("opportunity ranking", §43), or Cross-Exchange Arbitrage ("opportunity ranking", §06). The register left the ranking owner open. Not taken: the Global Capital Authority ranks for allocation, and Opportunity Detection only detects and filters (OPP-011). The §17 quality dimensions DUP-10 also lists are kept: the True Net-Profit Engine produces them, with a measure that compares opportunities across trading systems (TNP-021).
+- **OQ-10, a Market Regime Engine that is not deterministic:** not taken. RGM-005 makes it deterministic and versioned, with no LLM; the Market Analyst interprets but never sets regime state (DUP-08, RGM-006).
+
 ## Consequences
 
 The dependency map marks these edges DECIDED. Part 2 interfaces must follow this ownership.

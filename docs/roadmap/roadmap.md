@@ -2,7 +2,7 @@
 
 > **Status:** ACTIVE — the single master roadmap (RMP-003). Stage classification from Handoff Part 1 (§95). Sequence and placement decided in [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md); items from the owner's correction placed by [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md); Handoff Part 2 items placed by [DEC-024](../decisions/DEC-024-part-2-reconciliation.md); Handoff Part 3 items placed by [DEC-031](../decisions/DEC-031-part-3-reconciliation.md).
 >
-> **Implementation has not started and is not authorized.** Current position: FOUNDATION; Parts 1, 2, and 3 documented and reconciled; the owner has answered the Part 2 findings (DEC-026 to DEC-030) and approved the Part 3 reconciliation (DEC-035); next are the older decision records' alternatives (TC-08) and the complete documentation review (see [project state](../project-state.md)).
+> **Implementation has not started and is not authorized.** Current position: FOUNDATION; Parts 1, 2, and 3 documented and reconciled; the owner has answered the Part 2 findings (DEC-026 to DEC-030) and approved the Part 3 reconciliation (DEC-035); the older decision records' alternatives are added (TC-08); next is the complete documentation review (see [project state](../project-state.md)).
 
 ## Stage classification and sequence
 

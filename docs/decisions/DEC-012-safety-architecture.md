@@ -54,6 +54,14 @@ Part 1 puts kill switches, emergency shutdown, and safe mode in four places (§2
 - Rebalancing transfers (§45) are therefore proposed by the platform and executed after operator confirmation by default (CAP-022).
 - Automated transfers can be enabled only by an important policy change. They use a separate key restricted to the venue's withdrawal-address whitelist, containing only the operator's own venue accounts.
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **DUP-04 and OQ-06, safety stops left in each of the places Part 1 puts them** (the Risk Engine, §25; the §27 outcomes; the arbitrage kill switch, §47; System Health's states, §74), **or a separate "global safety architecture"**, which §47 names but never defines (the claimants DUP-04 lists; Context): not taken. The register's candidate was adopted: the Risk Engine owns kill switches and trading authorization, System Health owns platform state, and the arbitrage kill switch is a Risk Engine rule set (RSK-008, HLT-010).
+- **OQ-07, §74's states as one flat list of overall states** (HLT-001), with WARNING and the per-component DEGRADED states among them. OQ-07 asked "DEGRADED vs WARNING" and how component states combine with the overall state. Not taken: WARNING became an alert severity, and EXCHANGE, DATA, and AI DEGRADED became component conditions that make the overall state DEGRADED (HLT-007, since replaced by HLT-011, [DEC-019](DEC-019-company-grade-autonomous-operating-model.md)).
+- No alternatives were recorded for the system safety rules (OQ-20), the kill-switch rules, or the rebalancing and withdrawal permission.
+
 ## Consequences
 
 "Global safety architecture" in §47 now has a definition. The health state machine is formal enough for Part 2 contracts, satisfying HLT-002's intent.

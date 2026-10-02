@@ -19,3 +19,15 @@
 
 - **PAP-013 and the paper architecture.** The paper environment reads market data through public or read-only access; it holds no exchange trading credentials (MODE-006, PAP-011). Paper evidence flows one way, read-only, to the Readiness System in production. Production accepts evidence from it, never commands. A strategy version that passes readiness is then deployed to production for canary as the same, unchanged version (STR-025).
 - **EXE-011 belongs to the Execution Engine.** Like all execution it must be deterministic (EXE-001), and its adjustments stay within the safety envelope (RSK-034, RSK-036).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+The options the owner did not choose, quoted in full in [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md):
+
+- OQ-25 (Q2): run inside the live system, with its orders sent to the simulator.
+- OQ-24 (Q3): a new, separate system.
+- OQ-26 (Q4): keep it as an undefined idea; or drop it.
+- ARCH-034 (Q8): approve it as a planned feature; or drop it.
+- DEC-024 (Q10): change some of the five choices.

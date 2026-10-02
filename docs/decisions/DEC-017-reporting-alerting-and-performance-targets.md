@@ -19,3 +19,10 @@ Reporting and alerting are owned by **Monitoring and Observability (SYS-28)**. N
 - Internal decision latency (market event received → order submitted, excluding venue network time): p99 ≤ 50 ms on arbitrage paths, ≤ 500 ms on directional paths.
 - Market-data freshness limits are set per stream (MKD-006).
 - **Tiered monitoring:** every market in the universe is monitored at ticker level, and full order-book depth is subscribed for markets the scanner flags as candidates, within venue rate limits (OPP-012). This keeps whole-universe coverage (OPP-001) within venue connection and rate limits.
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **A separate system for reporting and alerting:** the record rules it out ("No new system is created"); both belong to Monitoring and Observability (SYS-28).
+- No alternatives were recorded for the performance targets (OQ-19) or the tiered monitoring.

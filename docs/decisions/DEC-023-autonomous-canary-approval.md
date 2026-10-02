@@ -24,3 +24,12 @@ The owner names the Governance and Readiness Engine. It is registered as a **com
 ## Consistency
 
 STR-014 (automatic canary unless policy designates a human gate), MODE-007, and PLT-014 already express the same model; STR-019 to STR-022 make it specific. Which deployments need a human is a policy value (V-28 in the [values register](../requirements/values-register.md)).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **APPROVAL always a human decision:** CF-13's proposal named it as the owner's other choice. Not taken: human approval is needed only where policy requires it (STR-021).
+- **The builder's proposal** (CF-13): the deterministic canary authorization (STR-013) performs APPROVAL by default, and the operator can designate it human-controlled in policy, globally or per strategy. The owner answered in free text (applied above). Builder's reading: the answer keeps this model, automatic approval with human gates set in policy, and makes it specific.
+- **Registering the Governance and Readiness Engine as a new system:** not done here ("Placement" above). [DEC-024](DEC-024-part-2-reconciliation.md) later did so (SYS-34, DUP-24).
+- The options listed with the question are not in the repository: [owner decisions 2](../handoffs/owner-decisions-02-cf-11-to-cf-13.md) records the question and the owner's free-text answer only. They are not reconstructed here.

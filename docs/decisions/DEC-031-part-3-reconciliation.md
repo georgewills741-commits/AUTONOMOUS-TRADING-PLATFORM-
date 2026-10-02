@@ -1,6 +1,6 @@
 # DEC-031 — Reconciliation of Handoff Part 3 with Parts 1 and 2 and the owner's decisions
 
-- **Status:** ACCEPTED; **confirmed by the owner on 2026-10-02** ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)), with CF-17 changed by the owner (RSK-049 replaces RSK-048) and TC-08 decided differently from this record's recommendation: the older records' alternatives are added now, where sourced. The text below is the reconciliation as made; the owner's answers are in DEC-035.
+- **Status:** ACCEPTED; **confirmed by the owner on 2026-10-02** ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)), with CF-17 changed by the owner (RSK-049 replaces RSK-048) and TC-08 decided differently from this record's recommendation: the older records' alternatives are added now, where sourced (done on 2026-10-02). The text below is the reconciliation as made; the owner's answers are in DEC-035.
 - **Original status (2026-09-30):** ACCEPTED (builder reconciliation under Part 3 §351 and §541, constitution Rules 30–34, and the owner's checkpoint rule). **Awaiting human review** (P3§541 item 29): the owner may override any placement or reading here. CF-17 and CF-18 are listed under "Left for the owner" for confirmation.
 - **Date:** 2026-09-30
 - **Source:** [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), cited as P3§N

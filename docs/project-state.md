@@ -11,7 +11,7 @@ The single record of where this project currently stands (Constitution Rules 50,
 - Handoff Parts 1, 2, and 3 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md), [DEC-031](decisions/DEC-031-part-3-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
 - The owner answered every Part 2 finding (DEC-026 to DEC-030).
-- The owner **approved the Part 3 reconciliation** and answered every open item on 2026-10-02 ([DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md)): security ranks above the user's hard policy (RSK-049), CF-18 confirmed, the constitution's feature lifecycle is canonical (GOV-024), no Part 4 is coming, older decision records get their alternatives now (TC-08), and the DUP-34 and DUP-35 readings are confirmed.
+- The owner **approved the Part 3 reconciliation** and answered every open item on 2026-10-02 ([DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md)): security ranks above the user's hard policy (RSK-049), CF-18 confirmed, the constitution's feature lifecycle is canonical (GOV-024), no Part 4 is coming, older decision records get their alternatives now (TC-08; done, see below), and the DUP-34 and DUP-35 readings are confirmed.
 - The owner's checkpoint and three-stage verification rule is adopted ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)).
 - The owner's master execution constitution and directive on verification and platform independence (2026-10-01) are adopted ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](decisions/DEC-034-verification-and-platform-independence.md)). The owner decided CF-19 from them (DEC-035).
 - Implementation is not authorized.
@@ -32,14 +32,14 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Owner's directive on three-level verification and platform independence | ADOPTED — [`builder/verification-and-platform-independence-directive.md`](builder/verification-and-platform-independence-directive.md) ([DEC-034](decisions/DEC-034-verification-and-platform-independence.md)) |
 | Master handoff Part 3 (autonomy, capital scaling, system rules, extensibility, 24/7 operations, rebalancing, readiness) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-3-consolidated-autonomy-capital-scaling.md) · [reconciliation](traceability/part-3-reconciliation.md) · [verification and documentation audit](traceability/part-3-verification.md) · [DEC-031](decisions/DEC-031-part-3-reconciliation.md) |
 | Human review of the Part 3 reconciliation (P3§541 items 29–30), with CF-17, CF-18, CF-19, OQ-27, TC-08, and the DUP-34, DUP-35 readings | APPROVED and ANSWERED by the owner on 2026-10-02 — [DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md) · [answers](handoffs/owner-decisions-04-part-3-findings.md) |
-| TC-08: alternatives in DEC-001 to DEC-030 (owner's choice: add now where sourced) | **NEXT — not started; the builder's next checkpoint** |
-| Complete documentation review (handoff §101; P2§329) | NOT STARTED — after the TC-08 checkpoint |
+| TC-08: alternatives in DEC-001 to DEC-030 (owner's choice: add now where sourced) | DONE — [TC-08 verification](traceability/tc-08-alternatives-verification.md) |
+| Complete documentation review (handoff §101; P2§329) | **NEXT — not started** |
 | Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; P3§541; constitution Part XXIII) |
 | Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
-Add the alternatives the repository can source to DEC-001 to DEC-030 (TC-08, the owner's choice). Then the complete documentation review (§101, P2§329) and the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
+The complete documentation review (§101, P2§329), then the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
 
 ## Continuation contract
 
@@ -47,8 +47,8 @@ What the next session needs before it does anything (master execution constituti
 
 | Field | Now |
 |---|---|
-| Current stage and substage | FOUNDATION — documentation initialization; Part 3 approved and every owner item answered (DEC-035); TC-08's alternatives next |
-| Current task | None in progress at this checkpoint. Next: TC-08, adding sourced alternatives to DEC-001 to DEC-030 |
+| Current stage and substage | FOUNDATION — documentation initialization; Part 3 approved and every owner item answered (DEC-035); TC-08's alternatives added; the complete documentation review next |
+| Current task | None in progress at this checkpoint. Next: the complete documentation review |
 | Completed | See "Completed work" and the checkpoint log below |
 | In progress, possibly partial | Nothing |
 | Blocked | Nothing. Implementation waits for the owner's explicit approval after the documentation review, as designed |
@@ -60,7 +60,7 @@ What the next session needs before it does anything (master execution constituti
 | Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
 | Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
 | Known risks | TC-09 and TC-10 stay open until their stages are planned. The tools' check versions are not pinned until Stage 1 ([tools README](../tools/docs/README.md)) |
-| Next safe action | TC-08 ("Next approved step", item 1), then the complete documentation review |
+| Next safe action | The complete documentation review ("Next approved step", item 1) |
 | Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand |
 | Do not implement yet | Anything. Implementation is not authorized (handoff §101; constitution Rules 134–135); FUTURE and PROPOSED items stay unbuilt even then |
 
@@ -163,10 +163,13 @@ Builder readings you may want to check, all stated in the decision records:
   - Answers kept word for word ([owner decisions 4](handoffs/owner-decisions-04-part-3-findings.md)); applied by [DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md).
   - CF-17: security ranks above the user's hard policy, below the safety floor: RSK-049 replaces RSK-048. CF-18 confirmed. CF-19: the master execution constitution's feature lifecycle is canonical: GOV-024 replaces GOV-018. Both replaced requirements keep their wording; only their class changed.
   - OQ-27 answered (no Part 4). TC-08 decided (alternatives added now, where sourced). DUP-34 and DUP-35 confirmed. The Part 3 reconciliation is approved.
+- **TC-08, alternatives in the older decision records (2026-10-02, the owner's choice):**
+  - DEC-002, DEC-004, DEC-005, DEC-007, DEC-008, DEC-010 to DEC-013, and DEC-015 to DEC-030 now have an "Alternatives considered" section; DEC-001, DEC-003, DEC-006, DEC-009, and DEC-014 already had one. Each alternative names where the repository records it: an option shown to the owner, a proposal or candidate in the registers, the side of a finding not chosen, an option the record itself rules out, an earlier version of a document in git history, or an approach the owner's own text explicitly sets against the chosen one. DEC-003 and DEC-009 gained one such alternative each, under a line marking the addition. DEC-018 says none were recorded; nothing was reconstructed from memory.
+  - No decision, requirement, or finding changed. TC-08 is RESOLVED. Record: [TC-08 verification](traceability/tc-08-alternatives-verification.md).
 
 ## In-progress work
 
-None at this checkpoint. Next: TC-08 (see "Next approved step").
+None at this checkpoint. Next: the complete documentation review (see "Next approved step").
 
 ## Blockers
 
@@ -230,6 +233,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - DEC-031 (Part 3 reconciliation; approved by the owner on 2026-10-02) and DEC-032 (the owner's checkpoint and verification rule) added the same day.
 - DEC-033 (master execution constitution) and DEC-034 (owner's directive on verification and platform independence) added on 2026-10-01.
 - DEC-035 (owner decisions on the Part 3 findings; Part 3 approved) added on 2026-10-02. DEC-031 confirmed by the owner, with CF-17 changed.
+- DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 (TC-08, DEC-035). No decision changed.
 
 ## Recent changes
 
@@ -244,13 +248,13 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-10-01: repository integrity verification at the owner's request: tooling lint and type fixes, `.gitignore` for generated bytecode, code checks documented in the tools README. No requirement or decision changed.
 - 2026-10-01: adopted the master execution constitution and the owner's directive (DEC-033, DEC-034): 8 new requirements, SR-46, SR-47, CF-19, DUP-39, TC-10, continuation contract, verification-record format. No existing requirement changed. No platform code, configuration, or infrastructure created.
 - 2026-10-02: applied owner decisions 4 (DEC-035): RSK-049 and GOV-024 added; RSK-048 and GOV-018 replaced (class only); every conflict resolved; OQ-27 answered; Part 3 approved. The requirement comparison gained `--expect-changed` for decided changes. No platform code, configuration, or infrastructure created.
+- 2026-10-02: TC-08: "Alternatives considered" sections added to the 25 older decision records that lacked one, each alternative with its source; TC-08 resolved. No requirement, decision, or finding changed.
 
 ## Next approved step
 
-1. TC-08 (the owner's choice): add an Alternatives section to DEC-001 to DEC-030 wherever the repository shows what was considered; records with no sourced alternatives say so. Its own three-gate checkpoint.
-2. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1.
-3. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140; the stage record of the [traceability README](traceability/README.md)).
-4. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
+1. The complete documentation review (§101, P2§329): read the whole documentation set as one, looking for gaps, contradictions, and anything not ready for Stage 1. It includes the two observations recorded by the [TC-08 verification](traceability/tc-08-alternatives-verification.md): the owner's first-round answers (DEC-006 to DEC-009) exist only inside those decision records, as short quotes or summaries, without the questions asked, so the repository cannot show, for example, whether the owner's "all" for instruments (DEC-007) covered OQ-04's "other derivatives"; and the options shown with CF-11 to CF-13 are not recorded.
+2. Plan Stage 1 (FOUNDATION) with its objective, scope, tests, verification, and completion criteria (constitution Rule 140; the stage record of the [traceability README](traceability/README.md)).
+3. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
 
 ## Memory check (constitution Rule 175)
 
@@ -280,4 +284,5 @@ Each checkpoint commit and its verification record. Hashes are those on branch `
 | a2c8e92 | Handoff Part 3 integrated; checkpoint rule adopted (DEC-031, DEC-032) | [Part 3 verification](traceability/part-3-verification.md) |
 | 5846675 | Repository integrity verification; tooling lint and type fixes | [Integrity verification 2026-10-01](traceability/integrity-verification-2026-10-01.md) |
 | 3b6f372 | Master execution constitution and owner directive adopted (DEC-033, DEC-034) | [Governance adoption verification](traceability/governance-adoption-verification.md) |
-| The commit that adds this row | Owner decisions on the Part 3 findings applied; Part 3 approved (DEC-035) | [Owner decisions 4 verification](traceability/owner-decisions-04-verification.md) |
+| 0b3f97a | Owner decisions on the Part 3 findings applied; Part 3 approved (DEC-035) | [Owner decisions 4 verification](traceability/owner-decisions-04-verification.md) |
+| The commit that adds this row | TC-08: alternatives added to the older decision records | [TC-08 verification](traceability/tc-08-alternatives-verification.md) |

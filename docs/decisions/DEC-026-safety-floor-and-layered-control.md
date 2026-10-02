@@ -36,3 +36,13 @@ System safety stays first, so RSK-004 is unchanged. Part 2's "user hard policy a
 | PLT-014 (human intervention by exception) | Invariant changes (RSK-039) are among the human-controlled changes |
 | RSK-003, AIL-003 | RSK-034's last invariant says the same for AI |
 | EXE-011 (adaptive execution, FUTURE, [DEC-027](DEC-027-part-2-open-questions.md)) | RSK-036 allows execution methods to be adjusted. The adaptive-execution feature itself is built only when the owner approves it |
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+The options shown with Q1 in [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md):
+
+- **Safety floor** (recommended): nobody can switch off a safety rule, and above the floor the user's hard rules beat everything else. The owner wrote a separate answer instead, which keeps system safety first and goes further: the layered model above (CF-14's status).
+- **My rules win outright** (P2§101 as written): not adopted ("CF-14 outcome" above).
+- **Safety, named exceptions** (the owner may switch off one named safety rule through an explicit, confirmed, logged change): not chosen. In the owner's answer an invariant can only be changed through a formal, human-controlled change (RSK-039), never overridden.

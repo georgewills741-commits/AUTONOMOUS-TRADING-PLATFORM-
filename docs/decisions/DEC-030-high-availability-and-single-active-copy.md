@@ -21,3 +21,14 @@
 - **Two different mechanisms.** Failover (REC-023) is fast and automatic, so it relies on the shared lease (REC-024), not on key rotation. Migration (MIG-029) is a planned move between hosts with separate databases, so it relies on freezing the source and rotating keys, which the venue enforces.
 - **Where the lease lives** (a replicated database or an external coordinator) is an implementation choice made when OPERATIONALIZATION is planned.
 - **Stage:** OPERATIONALIZATION, as part of production hardening. Infrastructure as code covers the failover configuration ([DEC-029](DEC-029-infrastructure-as-code.md)).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Decide later** (Q5 in [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md): leave TC-07 open until the migration feature is planned): not chosen.
+- **A lease held outside both hosts** for migration (one of TC-07's candidates): not taken. Key rotation is the only candidate the venue itself enforces (TC-07). A shared lease authority is used for failover instead (REC-024).
+- **Key rotation for failover too:** not used. Builder's reading ("Notes" above): failover is fast and automatic, so it relies on the shared lease.
+- **Not now** (Q9, the builder's recommendation: one active copy that restarts itself automatically, revisited after the platform goes live): not chosen. The owner chose to plan high availability now.
+- **"Explicit activation" (REC-022) as a human action:** not taken. Builder's reading ("Notes" above): because the owner chose a standby that takes over automatically, explicit activation is acquiring the execution lease under a policy authorization.
+- **Where the lease lives,** a replicated database or an external coordinator: deferred, as an implementation choice made when OPERATIONALIZATION is planned ("Notes" above).

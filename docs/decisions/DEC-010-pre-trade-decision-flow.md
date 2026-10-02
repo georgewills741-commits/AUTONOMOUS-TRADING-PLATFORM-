@@ -32,6 +32,16 @@ MARKET EVENT → data validation (freshness, MKD-006)
 4. **DUP-19:** the strategy proposes a size using Quantitative Engine calculations. The Risk Engine sets the final size as the smallest of the proposal, the risk limits, and the allocated capital. It may reduce a size but never increase it (RSK-011).
 5. **CF-09:** database integrity is verified *before* internal state is loaded from it (REC-007).
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **CF-01, the risk check before the capital authority** (§94's order: strategy → risk → capital → execution): not the runtime order. §94 is read as a build-dependency chain, as CF-01's proposal said. In the chosen order the Risk Engine still authorizes before anything is reserved.
+- **CF-02, AI after the risk and capital steps** (a literal reading of §08): not taken, so risk always has the final word. §08's "AI only when justified" is read as a condition on whether AI runs.
+- **CF-03, a latency-sensitive path without capital reservation** (a literal reading of §77): not taken. It would allow orders without a reservation, against CAP-003 and CAP-004 (CF-03's impact).
+- **CF-09, §71's order as written** (load verified internal state, then verify the database), **or CF-09's proposed reading of it** (load the last checkpoint verified before the interruption): not taken; REC-007 verifies the database first. REC-007 was later replaced by the owner's staged recovery ([DEC-022](DEC-022-restart-recovery-sequence.md)), which loads persisted state first, as untrusted context.
+- **DUP-19:** the register's proposal (the Quantitative Engine computes, the strategy proposes, the Risk Engine enforces limits) was adopted; no other option was recorded.
+
 ## Consequences
 
 This sequence is the reference for interface contracts in Part 2 and for the CORE TRADING FOUNDATION stage.

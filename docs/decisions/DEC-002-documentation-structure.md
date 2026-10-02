@@ -43,6 +43,13 @@ Create a directory only when it holds real content from Part 1, and follow §98 
 | `implementation/` | not created | Implementation is not authorized, and the technology stack is unknown (OQ-16, constitution Rule 104) |
 | — | `docs/glossary.md` added | Needed for terminology normalization (constitution Rules 33, 59) |
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **§99's folder target as given** (`systems/directional/`, `systems/market-data/`, `systems/exchanges/`, `systems/recovery/`, `ai/agents/`, `implementation/`): not followed for these folders. The reason for each is in "Deviations from the §99 target" above: §98 gives a file path, one document is enough for now, or implementation is not authorized. CF-07 recorded the clash between §98's files and §99's folders.
+- **Creating every possible folder up front:** ruled out by handoff §00 item 5 and §99, and by constitution Rules 9–16 (Context).
+
 ## Consequences
 
 - Folders will be added when Part 2 or later stages introduce new responsibilities (Rule 12). The file paths used now are expected to stay stable.

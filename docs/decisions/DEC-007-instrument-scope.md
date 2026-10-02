@@ -17,6 +17,13 @@ Part 1 mentions funding rates, funding costs, leverage limits, and positions, bu
 3. Required controls for derivatives and margin (RSK-013): maximum leverage; minimum distance to liquidation; margin-ratio limits with automatic de-risking before liquidation; funding and borrow cost limits; limits on total derivatives notional.
 4. The capital state tracks collateral, borrowed funds, and required margin (CAP-020). The portfolio tracks leverage, notional, margin, liquidation prices, and funding and borrow accruals (PRT-005). Adapters expose each venue's supported instrument types and settings (EXA-009).
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Spot only:** the builder's recommendation (Context). Not chosen: the owner chose all three instrument types, relying on the risk controls. PLT-012 orders how each type is switched on.
+- **Other derivatives,** which OQ-04 also named: not in the decided scope (PLT-011). The question put to the owner is not recorded, only the answer ("all, because the control risks are there"), so the repository cannot show whether this option was offered.
+
 ## Consequences
 
 The CORE TRADING FOUNDATION risk model must be designed for leveraged positions from the start. Each venue supports a different subset of instrument types, so availability is per venue.

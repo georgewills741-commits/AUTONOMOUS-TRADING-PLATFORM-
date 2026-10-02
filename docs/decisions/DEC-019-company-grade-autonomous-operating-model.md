@@ -111,6 +111,18 @@ These are **not** changed by this decision. The existing requirement stays in fo
 | 33 | This reconciliation; CF-11 to CF-13 |
 | Closing note ("automatic + verified") | Recorded as the intent behind PLT-013 and PLT-015 |
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **The five operating defaults shown to the owner before this decision** (Context): rebalancing needs confirmation; emergency cancels orders but keeps positions; no automatic resume after restart; canary at 5% for 14 days and 50 trades; 50 ms / 500 ms latency targets. The owner replaced them with the model above ([OC-1](../handoffs/owner-correction-01-autonomous-operating-defaults.md)). The requirements that held them are DEPRECATED / REPLACED ("Requirements superseded" above).
+- **Other approaches OC-1 rules out, each set against the one it wants:**
+  - moving funds whenever balances differ: "The platform should not move funds simply because balances are unequal" (item 1; CAP-023);
+  - closing every position in an emergency: "The system must not blindly close every position during an emergency" (item 9; RSK-017);
+  - readiness from elapsed time alone: "A strategy should not become production-ready merely because: “14 days passed.”" (item 21; STR-018);
+  - waiting for the owner to activate canary by hand: "rather than waiting for you to manually activate it" (closing note; STR-014);
+  - "restart → immediately send orders", set against "restart → reconcile → verify → resume automatically" (closing note; REC-010 to REC-013).
+
 ## Consequences
 
 - Autonomous rebalancing, automatic canary, and automatic resumption cannot run until their policy boundaries are set (POL-011; values register). An unset boundary means that autonomous action is outside authorization (CAP-025, PLT-015).

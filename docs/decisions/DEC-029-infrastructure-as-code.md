@@ -23,3 +23,12 @@
 | Choice of infrastructure-as-code tool | An implementation choice made when OPERATIONALIZATION is planned, under the stack delegation of [DEC-009](DEC-009-technology-stack.md). No tool is chosen now (P2§146) |
 | SEC-005, MIG-009 (secrets) | OPS-016 is consistent |
 | MIG-011 (configuration compiler), MIG-006 (migration) | Infrastructure code is how the target environment is provisioned during a migration |
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+The options shown with Q7 in [owner decisions 3](../handoffs/owner-decisions-03-part-2-findings.md):
+
+- **Not separately** (recommended): no separate commitment for now, because the Docker setup file kept in the repository already covers it. Not chosen: the owner made infrastructure as code a mandatory production requirement.
+- **Yes, approve now:** the owner wrote an answer instead, which approves it and adds the scope and conditions of OPS-014 to OPS-017.

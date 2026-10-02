@@ -14,6 +14,13 @@
 4. **Trading universe (builder):** every market of an enabled instrument type on an enabled venue, minus exclusions set in the Policy System. It updates automatically as venues list and delist markets (OPP-009).
 5. **Adapter requirement (TC-05):** every adapter must support client-assigned order IDs and querying order state after a timeout. A venue lacking either cannot be used for automated trading (EXA-008, EXE-008).
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Only the three venues previously discussed** (Binance, OKX, Coinbase; §42, EXA-002, OQ-03): not the decided set, which is five initial venues and room for more (EXA-005, EXA-006), decided on the owner's answer ("all, add more space for more exchanges like Bybit and KuCoin"); EXA-002 is DEPRECATED / REPLACED. The question put to the owner is not recorded.
+- No alternatives were recorded for the builder's parts (legitimate access, the trading universe, the adapter requirement). OQ-03 listed no options for the trading universe, and TC-05's recommendation was adopted.
+
 ## Consequences
 
 Cross-exchange arbitrage has five venues to compare. Venue availability depends on the operator's jurisdiction; that remains the operator's responsibility.

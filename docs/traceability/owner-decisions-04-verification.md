@@ -1,6 +1,8 @@
 # Owner Decisions 4 — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that applies the owner's answers of 2026-10-02 on the Part 3 findings and the Part 3 review ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md).
+>
+> **Later changes:** TC-08's work, which this record lists as the next checkpoint, was done on 2026-10-02 ([TC-08 verification](tc-08-alternatives-verification.md)). This record is kept as written.
 
 ## Identity
 

@@ -51,6 +51,10 @@ Constitution Rule 104 forbids choosing a stack silently, and PERF-006 requires t
 - **Microservices from day one:** operational cost with no measured need.
 - **Redis instead of NATS:** viable. NATS was chosen because the use is pure messaging with fan-out and backpressure; caching needs are covered in process.
 
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). The alternatives above were written with this record; the one below is named in this record's "Retention" paragraph, in answer to OQ-22._
+
+- **External historical-data vendors** (OQ-22 asked for the historical data sources): deferred as FUTURE; the platform collects its own data from venues from day one ("Retention" above).
+
 ## Consequences
 
 Python is now an approved project language, which also clears the way to commit documentation-consistency tooling. Licenses must be rechecked when each dependency is added (constitution Rule 99). TimescaleDB community features are under the Timescale License, which permits self-hosted use.

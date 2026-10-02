@@ -30,3 +30,11 @@ A newly approved strategy version trades live with a capped capital allocation a
 ## Policy location (CF-08, OQ-15)
 
 The operator's actual policy exists only in the Policy System's versioned runtime store (POL-009). `docs/product/trading-policy.md` from §98 is **not created**: a repository copy of runtime policy would be a second source of truth. The product-level description of what the operator controls is NLP-002.
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **CF-08 and OQ-15, policy in both places §98 lists** (`docs/product/trading-policy.md` and `docs/systems/policy/`): not taken. A repository copy of runtime policy would be a second source of truth (constitution Rule 44; "Policy location" above).
+- **OQ-08, one mode for all strategies** (OQ-08 asked whether strategies can run in different modes at once): not taken. Each strategy has its own mode, capped by the platform maximum (MODE-003).
+- No alternatives were recorded for canary (OQ-09) or policy governance (OQ-17).

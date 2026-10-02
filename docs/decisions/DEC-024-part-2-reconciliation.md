@@ -91,6 +91,18 @@ All of these were answered on 2026-09-30 ([owner decisions 3](../handoffs/owner-
 | TC-07 | How is split-brain prevented across two hosts with separate databases? Decide before migration is planned |
 | CAP-028, OPS-009, ARCH-034, REC-021 | Confirm, or leave as they are: extra capital categories, infrastructure as code, domain command language, high availability |
 
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **CF-15, canary as a separate environment** (P2§161, P2§236): not taken. It would need live credentials outside production, which P2§161 forbids. **Dropping research as an environment,** since Part 2's list omits it: not taken. OPS-004 and constitution Rule 109 have it, and Part 2 does not remove it.
+- **CF-16, the whole Performance Controller in ARBITRAGE** ([DEC-016](DEC-016-roadmap-stage-placement.md)): not taken. Paper evidence and the Readiness System, built in DIRECTIONAL TRADING, depend on it (RMP-011).
+- **DUP-23, Part 2's nine AI roles as nine agents:** not taken. P2§200 allows the decomposition to follow documented ownership, and P2§6 warns against overlapping agents. Every role is kept and mapped to its performer.
+- **DUP-24, the Governance and Readiness Engine kept inside Strategy Management (SYS-14),** where [DEC-023](DEC-023-autonomous-canary-approval.md) placed it: not taken. Part 2 lists it as a separate canonical authority (P2§184), it aggregates evidence from many owners (P2§67), and it judges system changes too (P2§65).
+- **DUP-25 to DUP-30, Part 2's separately named parts as second owners:** an AI Resource & Decision Governor of its own, a second opportunity database, separate Fee and Slippage Engines, a second normalization layer in the adapters, a second strategy lifecycle, and a separate dashboard authority. Not taken: each responsibility kept one owner (Decision 2).
+- **DUP-31, a new requirement for each Part 2 restatement:** not taken. Each restatement is mapped to its canonical requirement (Decision 1).
+- **"Constitution" as the name of the platform principles** (P2§174 lets architecture choose) **and "unsupported" for AIV-002's UNVERIFIED claims:** not adopted. "Platform principles" avoids confusion with the builder constitution, and the existing term UNVERIFIED is kept (Decision 4).
+
 ## Consequences
 
 - There are 194 new requirements: 185 cite a Part 2 section and 9 cite this record (AIL-009, OPP-016, QNT-007, MKD-011, RDY-006, RDY-007, DSI-006, INC-003, OPS-013). No existing requirement's text or class changed, and none was deprecated. Stale notes were corrected:

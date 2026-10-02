@@ -18,6 +18,7 @@
 | [Integrity verification 2026-10-01](integrity-verification-2026-10-01.md) | Repository integrity check requested by the owner |
 | [Governance adoption verification](governance-adoption-verification.md) | Master execution constitution and the owner's directive adopted (DEC-033, DEC-034) |
 | [Owner decisions 4 verification](owner-decisions-04-verification.md) | Owner decisions on the Part 3 findings applied; Part 3 approved (DEC-035) |
+| [TC-08 verification](tc-08-alternatives-verification.md) | "Alternatives considered" added to DEC-001 to DEC-030, where sourced (TC-08, DEC-035) |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 

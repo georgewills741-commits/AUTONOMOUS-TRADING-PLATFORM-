@@ -32,6 +32,10 @@ The handoff requires every feature to be classified with its §96 vocabulary, re
 - **Full requirement text in both the specification and the registry:** rejected. It creates two sources of truth.
 - **One ID per bullet item:** rejected. It would produce roughly 700 IDs without adding meaning; each list stays whole inside one requirement.
 
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). The alternatives above were written with this record; the one below is recorded elsewhere in the repository, and its source is named._
+
+- **CF-10, the constitution's types (Rule 20) as requirement classes:** not taken. §96's classes classify requirements; the constitution's vocabularies describe status and findings (decision 5 above; CF-10).
+
 ## Consequences
 
 - The handoff does not define the difference between CONFIRMED REQUIREMENT and SYSTEM REQUIREMENT. The interpretation above was accepted on 2026-09-30 (OQ-23). If it ever changes, classes are updated through a new decision record, not silently (§96).

@@ -26,3 +26,12 @@ RSK-009 also said that kill switches may be activated automatically by determini
 ## Interpretation (builder), for owner awareness
 
 The answer makes automatic recovery apply to "known, transient and measurable infrastructure conditions", and keeps "any other high-risk or uncertain condition" latched. A cause in neither list therefore stays latched by default. That includes a kill switch the operator activated by hand, which is a human decision rather than a transient infrastructure condition. RSK-022 states this default. The classification of causes is a policy value (V-27 in the [values register](../requirements/values-register.md)).
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)). Each alternative below is one the repository records as proposed, weighed, or ruled out, and its source is named. Nothing is reconstructed from memory (constitution Rule 181)._
+
+- **Operator-only reset** (RSK-009, [DEC-012](DEC-012-safety-architecture.md)), the rule in force when CF-11 was raised: replaced. With it, every automatic trip stops that part of the platform until a human acts, even after the condition has cleared (CF-11).
+- **Fully automatic reset:** CF-11 names its safety risk, for example a kill switch tripped by repeated losses (§47). Not taken: serious or uncertain causes stay latched (RSK-022). The owner's answer also says: "The system must not automatically resume full trading merely because the original error appears to have disappeared" (RSK-023).
+- **The builder's proposal** (CF-11): reset by cause. The operator resets kill switches tripped by the operator, by a security event, by unknown financial state, or by loss-based triggers; recoverable, measurable conditions reset automatically once cleared and checked; the cause-to-reset mapping lives in policy. The owner's own answer extends it with more latched causes, a progressive recovery path, and audit (CF-11's status).
+- The options listed with the question are not in the repository: [owner decisions 2](../handoffs/owner-decisions-02-cf-11-to-cf-13.md) records the question and the owner's free-text answer only. They are not reconstructed here.

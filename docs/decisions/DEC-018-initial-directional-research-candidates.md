@@ -17,3 +17,9 @@ These are research candidates, not approved strategies. Each must pass the full 
 ## Why these
 
 They use only Quantitative Engine metrics that Part 1 already lists (moving averages, ATR, momentum, volatility; QNT-002). They are well understood and testable, and they exercise the whole directional path before more complex strategies are added.
+
+## Alternatives considered
+
+_Added on 2026-10-02 under the owner's decision on TC-08 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)): records with no sourced alternatives say so. Nothing is reconstructed from memory (constitution Rule 181)._
+
+None recorded. OQ-21 listed no options, and the record names no other candidate strategies, so none are listed here.
