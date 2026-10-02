@@ -1,6 +1,6 @@
 # System and Capability Registry
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031 and Handoff Parts 2 and 3. No system is implemented.
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031 and Handoff Parts 2 and 3, and on 2026-10-02 with DEC-035 (the future feature registry row). No system is implemented.
 >
 > The single list of every system and capability named in Parts 1, 2, and 3: what it is, which document is canonical for it, which requirement IDs it owns, and which §95 roadmap stage it belongs to. Names are the handoff's own. No system has been invented; capabilities that a handoff names without an owning system are marked. Part 2 added one system (SYS-34) and no other: every other Part 2 name was assigned to an existing owner (table at the end, [DEC-024](../decisions/DEC-024-part-2-reconciliation.md)). Every entry must meet the §92 boundary fields (ARCH-012). Each specification records the fields Part 1 supplies.
 
@@ -89,7 +89,7 @@ Part 3 adds no system. Every name it uses is a component or alias of an existing
 | Policy compiler | P3§515, §535 | As for Part 2: NLP-004 in SYS-13, deterministic compilation in SYS-12 |
 | Liquidity Engine, Market Quality Engine, Liquidity Manager | P3§403 (examples in the duplicate-detection rule) | Not systems. Liquidity evaluation is SYS-06's (TNP-024) with SYS-03 metrics; market-data quality is SYS-02's (MKD-008, MKD-012) |
 | System Rules Register | P3§468, §537 | Documentation: [requirements/system-rules-register.md](../requirements/system-rules-register.md) (ARCH-038) |
-| Future feature registry | P3§509 | GOV-018, PROPOSED; not created |
+| Future feature registry | P3§509 | GOV-018, replaced by GOV-024 (the canonical feature lifecycle, DEC-035); where feature statuses are kept is decided when Stage 1 is planned; no separate registry created |
 | Emergency state model | P3§372 | Mapped onto SYS-09's safety levels and SYS-29's health states without merging meanings; mapping in the [Risk Engine](../risk/risk-engine.md) (DUP-35) |
 | Strategy Optimizer, Model Evaluation Agent, Quant Research Agent, Strategy Research Agent | P3§535 | Mapped to DEC-013's agents and services as for Part 2 (AGT-017; [agents](../ai/agents.md)) |
 | Execution state authority, financial ledger authority | P3§467 | SYS-10 (EXE-002) and SYS-33 (LED-004, LED-006); ARCH-037 |

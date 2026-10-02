@@ -10,7 +10,7 @@
   - "Also" lists existing requirements the new ones extend. They are cross-referenced, never copied.
   - "Rule SR-nn" points to the section's entry in the [System Rules Register](../requirements/system-rules-register.md).
   - Process sections say where they were applied.
-- Nothing in Part 3 was dropped. A section is either mapped to requirements, recorded as a finding (CF-17, CF-18, DUP-32 to DUP-38, OQ-27, TC-08, TC-09), or applied as process. Classification follows the wording ([DEC-031](../decisions/DEC-031-part-3-reconciliation.md), decision 1).
+- Nothing in Part 3 was dropped. A section is either mapped to requirements, recorded as a finding (CF-17, CF-18, DUP-32 to DUP-38, OQ-27, TC-08, TC-09; CF-17, CF-18, OQ-27, and TC-08 since decided by the owner in [DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md), which also confirmed DUP-34 and DUP-35 and approved this reconciliation), or applied as process. Classification follows the wording ([DEC-031](../decisions/DEC-031-part-3-reconciliation.md), decision 1).
 
 ## Section → where it went
 
@@ -24,7 +24,7 @@
 | 355 | AUTOMATIC CAPABILITY UNLOCKING | RDY-012 | Dollar amounts are illustrations, not values ([values register](../requirements/values-register.md)) |
 | 356 | CAPABILITY SCALING MUST BE MULTI-DIMENSIONAL | RDY-013 | Also PLT-023 |
 | 357 | NO ARTIFICIAL FEATURE LOCKING | RDY-014 | — |
-| 358 | CAPITAL GROWTH MUST NOT AUTOMATICALLY CREATE RECKLESS EXPOSURE | CAP-034 | Reconciled with RSK-036, CAP-030, CAP-032, POL-005 in CF-18 |
+| 358 | CAPITAL GROWTH MUST NOT AUTOMATICALLY CREATE RECKLESS EXPOSURE | CAP-034 | Reconciled with RSK-036, CAP-030, CAP-032, POL-005 in CF-18 (confirmed by the owner, DEC-035) |
 | 359 | CAPITAL ALLOCATION SHOULD SCALE INTELLIGENTLY | CAP-035 | Also CAP-006, CAP-030 |
 | 360 | CAPITAL EFFICIENCY | CAP-036 | Also CAP-006, CAP-007, CAP-017 |
 | 361 | INTELLIGENT REBALANCING — CORRECTED REQUIREMENT | CAP-037 | Also CAP-023, CAP-024, CAP-031. "Rebalancing Engine" is a component of SYS-07 (DUP-34) |
@@ -137,10 +137,10 @@
 | 468 | MASTER SYSTEM RULES REGISTER | ARCH-038 | The register: [System Rules Register](../requirements/system-rules-register.md); index only (DUP-38) |
 | 469 | RULES MUST BE ENFORCEABLE | ARCH-039 | Enforcement location and violation handling recorded per rule in the register |
 | 470 | RULE VIOLATION HANDLING | ARCH-039 | — |
-| 471 | RULE PRIORITY | — | Conflicts with RSK-004 as decided in DEC-026: CF-17. Placement in RSK-048; rule SR-02 |
+| 471 | RULE PRIORITY | — | Conflicts with RSK-004 as decided in DEC-026: CF-17. Placed first by RSK-048, now replaced by RSK-049: the owner put security above the user's hard policy (DEC-035); rule SR-02 |
 | 472 | NEW FEATURE MUST ENTER THE MASTER KNOWLEDGE SYSTEM | GOV-015 | Also ARCH-013; rule SR-38 |
 | 473 | DOCUMENTATION UPDATE MUST ACCOMPANY ARCHITECTURAL CHANGE | GOV-015 | Also ARCH-006, ARCH-007 |
-| 474 | ARCHITECTURAL DECISION RECORDS | GOV-016 | Older decision records mostly lack alternatives: TC-08 |
+| 474 | ARCHITECTURAL DECISION RECORDS | GOV-016 | Older decision records mostly lack alternatives: TC-08 (decided by the owner, DEC-035: added now where sourced) |
 | 475 | NO SILENT ARCHITECTURAL CHANGES | GOV-016 | Also ARCH-007; rule SR-38 |
 | 476 | MASTER ROADMAP INTEGRATION | RMP-012 | Areas placed in the seven stages ([roadmap](../roadmap/roadmap.md), "Part 3 additions by stage") |
 | 477 | DEPENDENCY-FIRST DEVELOPMENT | — | Covered by RMP-011, RMP-007, ARCH-014; rule SR-39 |
@@ -175,7 +175,7 @@
 | 506 | AI SCALE-AWARENESS | AIL-020 | Also AIL-004, AIL-008 |
 | 507 | CAPITAL GROWTH SHOULD TRIGGER RESEARCH, NOT ONLY EXECUTION | STR-028 | Also STR-001 |
 | 508 | SYSTEM SHOULD PREPARE FOR FUTURE CAPABILITIES | GOV-017 | Also EXA-006, ARCH-029 |
-| 509 | FUTURE FEATURE REGISTRY | GOV-018 | PROPOSED: "may maintain"; see DUP-32 |
+| 509 | FUTURE FEATURE REGISTRY | GOV-018 | GOV-018 (PROPOSED: "may maintain") is replaced by GOV-024, the canonical feature lifecycle the owner chose for CF-19 (DEC-035); see DUP-32 |
 | 510 | NO FEATURE SHOULD BE ADDED JUST BECAUSE IT SOUNDS POWERFUL | GOV-019 | Also constitution Rule 84; rule SR-29 |
 | 511 | POWERFUL BUT REASONABLE PRINCIPLE | GOV-019 | Rule SR-29 |
 | 512 | COMPLEXITY BUDGET | GOV-020 | Also TEC-008, AGT-003; rule SR-29 |

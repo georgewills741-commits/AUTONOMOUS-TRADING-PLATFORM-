@@ -4,9 +4,14 @@ Lists every requirement that was added, removed, moved to another document, or w
 source, or text changed. Use it after any documentation change to confirm that only the intended
 requirements changed and nothing was dropped silently (ARCH-033; owner's checkpoint rule, DEC-032).
 
-Usage: python3 tools/docs/compare_requirements.py [REV] [--strict]
+Usage: python3 tools/docs/compare_requirements.py [REV] [--strict] [--expect-changed=ID,ID]
   REV       git revision to compare against (default: HEAD)
   --strict  exit with status 1 if any requirement that exists at REV was removed or changed
+  --expect-changed=ID[:FIELDS],ID[:FIELDS]
+            with --strict: the requirements a decision record deliberately changes. The check
+            passes only if exactly these, and no others, were removed or changed, in exactly the
+            way given: "ID" = changed in any field but not removed; "ID:cls" or "ID:cls+text" =
+            changed in exactly those fields (title, cls, src, text, doc); "ID:removed" = removed.
 Standard library only. Reads docs/**/*.md except docs/builder/ and docs/handoffs/, like build_index.py.
 """
 
@@ -28,6 +33,16 @@ LINE_RE = re.compile(
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 REV = args[0] if args else "HEAD"
 STRICT = "--strict" in sys.argv
+EXPECTED: dict[
+    str, str
+] = {}  # ID -> "" (any change), "removed", or "+"-joined field names
+for a in sys.argv[1:]:
+    if a.startswith("--expect-changed="):
+        for x in a.split("=", 1)[1].split(","):
+            rid, sep, fields = x.strip().partition(":")
+            if not rid or rid in EXPECTED or (sep and not fields):
+                sys.exit(f"--expect-changed: duplicate or empty entry {x.strip()!r}")
+            EXPECTED[rid] = "+".join(sorted(fields.split("+"))) if fields else ""
 
 
 def parse(files):
@@ -102,5 +117,27 @@ for i, diffs in changed:
     for k in diffs:
         print(f"    - {k} before: {old[i][k]}")
         print(f"    + {k} now:    {new[i][k]}")
-if STRICT and (removed or changed):
+actual = {i: "removed" for i in removed}
+actual.update({i: "+".join(sorted(d)) for i, d in changed})
+
+
+def matches(rid: str) -> bool:
+    want, got = EXPECTED.get(rid), actual.get(rid)
+    if want is None or got is None:
+        return False
+    if want == "":
+        return got != "removed"
+    return want == got
+
+
+mismatched = sorted(i for i in set(actual) | set(EXPECTED) if not matches(i))
+if EXPECTED:
+    shown = [f"{i}:{f}" if f else i for i, f in sorted(EXPECTED.items())]
+    print(f"expected to change ({len(EXPECTED)}): {', '.join(shown)}")
+    for i in mismatched:
+        print(
+            f"  mismatch {i}: expected {EXPECTED.get(i, 'no change') or 'a change'}, "
+            f"got {actual.get(i, 'no change')}"
+        )
+if STRICT and mismatched:
     sys.exit(1)

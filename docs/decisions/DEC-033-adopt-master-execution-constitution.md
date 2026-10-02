@@ -1,6 +1,6 @@
 # DEC-033 — Adopt the master execution, consistency, verification and continuity constitution
 
-- **Status:** ACCEPTED
+- **Status:** ACCEPTED. CF-19, raised here, was decided by the owner on 2026-10-02 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)): GOV-024 replaced GOV-018.
 - **Date:** 2026-10-01
 - **Decided by:** project owner (constitution sent on 2026-10-01, marked "non-negotiable development governance"); the builder's: how the four builder texts combine, the reading notes, the placement of the platform-facing sections, and the wording of ARCH-041, ARCH-042, and PERF-023 taken from §139, §47, and §43
 - **Text:** [`docs/builder/master-execution-constitution.md`](../builder/master-execution-constitution.md) (verbatim, ACTIVE)
@@ -36,7 +36,7 @@ Most of it is about how Claude works: session continuity, verification, Git, and
 
 5. **Terminology (§26, §35, §36).** The constitution's authority names are aliases of existing systems ([glossary](../glossary.md), [source-of-truth map](../architecture/source-of-truth-map.md)). State names used by more than one state machine are TC-10, decided when the state machines are specified.
 
-6. **Feature lifecycle (§107).** It conflicts with Part 3's proposed feature statuses (GOV-018): CF-19, for the owner.
+6. **Feature lifecycle (§107).** It conflicts with Part 3's proposed feature statuses (GOV-018): CF-19, for the owner (since decided: GOV-024 replaced GOV-018, [DEC-035](DEC-035-owner-decisions-part-3-findings.md)).
 
 ## Reading notes (builder)
 
@@ -48,7 +48,7 @@ Most of it is about how Claude works: session continuity, verification, Git, and
 | §41 "CANARY … remain correctly separated" | Canary is a production stage, separated by its own allocation and deterministic controls (OPS-013, STR-020), not a separate environment. No conflict |
 | §85, §86 session limits | Stop starting new work, checkpoint the current unit, persist state; never rush completion. The integrity checkpoint was committed before this adoption began |
 | §121 build order | Dependency order of the [roadmap](../roadmap/roadmap.md), never conversation order |
-| §156 human review gate | The Part 3 human review (P3§541 items 29–30) and the implementation gate (handoff §101) stay; neither is passed by an unrelated "continue" |
+| §156 human review gate | The Part 3 human review (P3§541 items 29–30) and the implementation gate (handoff §101) stay; neither is passed by an unrelated "continue" (the owner approved the Part 3 review on 2026-10-02, DEC-035) |
 
 ## Platform-facing sections and their owners
 
@@ -88,7 +88,7 @@ Every other section is a builder rule: it governs Claude's work and needs no pla
 | §104 | Canary eligibility is not permission to trade | RDY-015, RDY-016, STR-013, STR-020, STR-022, OPS-011 |  |
 | §105 | Production safety gate | RMP-010, RDY-022 |  |
 | §106, §173 | No self-authorized production expansion; capital enables capability, not authority | PLT-023, CAP-034, POL-005 |  |
-| §107, §108, §109 | Feature lifecycle, completeness, known status | GOV-018, GOV-009, GOV-019, RDY-020 | CF-19, open for the owner |
+| §107, §108, §109 | Feature lifecycle, completeness, known status | GOV-018, GOV-009, GOV-019, RDY-020 | CF-19, then open for the owner; since decided: GOV-024 replaced GOV-018 (DEC-035) |
 | §115, §116, §117 | Resource, backpressure, and rate-limit safety | PERF-015, PERF-016, PERF-014, PERF-021, EXA-014 |  |
 | §118, §119, §120 | Observability; auditability; reproducibility | MON-001, MON-002, MON-007, MON-009, MON-010, AUD-003, AUD-012, STR-026 |  |
 | §122 | No user request overrides safety | RSK-034, RSK-039 |  |
@@ -109,6 +109,6 @@ Every other section is a builder rule: it governs Claude's work and needs no pla
 
 - `CLAUDE.md` loads all four builder texts in every session.
 - Every checkpoint leaves a verification record in the format of the [traceability README](../traceability/README.md), and the project state's continuation contract is updated at every checkpoint and before a session ends.
-- New: ARCH-041, ARCH-042, PERF-023; SR-46, SR-47; CF-19 (open), DUP-39 (resolved), TC-10 (open).
+- New: ARCH-041, ARCH-042, PERF-023; SR-46, SR-47; CF-19 (open; since decided, DEC-035), DUP-39 (resolved), TC-10 (open).
 - Verification is repeatable from the repository (§22): the checker now also fails if a preserved text changes ([`preserved-texts.sha256`](../../tools/docs/preserved-texts.sha256)) or a document is orphaned (§71, §73), and `tools/docs/selftest.py` runs the negative tests that were only in the builder's scratch area before.
 - Nothing here authorizes implementation (handoff §101; constitution Rules 134–135).

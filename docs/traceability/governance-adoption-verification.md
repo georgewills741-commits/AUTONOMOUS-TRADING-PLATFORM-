@@ -1,6 +1,8 @@
 # Governance Adoption — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that adopts the master execution constitution and the owner's directive on verification and platform independence ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)). Format: [traceability README](README.md). Made under the three-gate procedure of DEC-033.
+>
+> **Later changes:** the owner decided CF-19, which this record lists as open, on 2026-10-02 ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)): GOV-024 replaces GOV-018. TC-10 stays open until the state machines are specified. This record is kept as written.
 
 ## Identity
 

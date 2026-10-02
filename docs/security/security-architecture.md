@@ -37,6 +37,10 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 Already covered: live credentials never in lower environments and paper/live credential separation (P2§161, §162) are SEC-004, MODE-006, and PAP-011. Trading permission not implying withdrawal (P2§116, §305) is SEC-006. No plain-text secrets in migration packages (P2§135) is MIG-009. Per-role permission scopes are AGT-022, and tool access is AIL-013. Security incidents use the incident record of INC-002.
 
+## Precedence of security controls ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md))
+
+The owner ranked security controls above the user's hard policy, below the safety floor (RSK-049 in the [Risk Engine](../risk/risk-engine.md)). A user hard policy cannot override, for example, the transfer-authority restrictions (SEC-006, SEC-007) or AI least privilege (SEC-008); changing a security control needs a formal, audited security change.
+
 ## Not yet specified
 
 Threat model, authentication for the operator interface, and tests. Key management for custody is FUTURE (CUS-002).

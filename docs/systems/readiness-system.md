@@ -81,7 +81,7 @@ This section explains how the requirements above fit together. It adds no requir
 | May this strategy version progress to its next lifecycle step? | RDY-004 readiness states (NOT_READY … PRODUCTION_ACTIVE, SUSPENDED, REJECTED) | Strategy versions | This system |
 | Is this component ready for a given use? | RDY-017 component readiness (NOT_READY, READY_FOR_RESEARCH … READY_FOR_PRODUCTION, BLOCKED, SUSPENDED, DEGRADED, REQUIRES_REVIEW) | Components and capabilities, including system changes | This system |
 | Is this capability available right now, and how much of it? | RDY-011 availability (ENABLED, LIMITED, DEGRADED, DEFERRED, UNAVAILABLE, REQUIRES REVIEW) | Capabilities in the capability registry | This system |
-| Where is this feature in the repository's life? | GOV-009 deprecation statuses (ACTIVE … REPLACED) and the proposed GOV-018 feature registry (PROPOSED … RETIRED) | Documented features | [Architecture governance](../architecture/architecture-governance.md) (documentation, not runtime) |
+| Where is this feature in the repository's life? | The canonical feature lifecycle GOV-024 (IDEA … RETIRED, which replaced GOV-018) and GOV-009's deprecation statuses (ACTIVE … REPLACED) | Documented features | [Architecture governance](../architecture/architecture-governance.md) (documentation, not runtime) |
 
 The lifecycle stage of a strategy version (STR-024) stays in the Strategy Registry (RDY-007). The final state models are fixed when DIRECTIONAL TRADING is planned, as RDY-004 and RDY-017 both allow.
 

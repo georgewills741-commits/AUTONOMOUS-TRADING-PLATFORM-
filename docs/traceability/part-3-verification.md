@@ -1,6 +1,8 @@
 # Handoff Part 3 — Verification Record
 
 > **Status:** ACTIVE record of the Part 3 checkpoint (2026-09-30), made under the owner's [checkpoint and three-stage verification rule](../builder/checkpoint-and-verification-rule.md) ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)). What was reconciled: [DEC-031](../decisions/DEC-031-part-3-reconciliation.md) and the [Part 3 reconciliation](part-3-reconciliation.md).
+>
+> **Later changes:** the owner decided the items this record lists as open on 2026-10-02 ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)): CF-17 changed (RSK-049 replaces RSK-048), CF-18 confirmed, OQ-27 answered, TC-08 decided, DUP-34 and DUP-35 confirmed, and the Part 3 reconciliation approved. CF-19, raised after this record (DEC-033), was decided at the same time (GOV-024 replaces GOV-018). TC-09 stays open until OPERATIONALIZATION is planned. This record is kept as written.
 
 ## Scope
 

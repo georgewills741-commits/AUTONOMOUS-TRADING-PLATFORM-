@@ -1,6 +1,6 @@
 # Source-of-Truth Map
 
-> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
+> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01 and 2026-10-02. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
 >
 > If two documents seem to disagree, the one listed here wins, and the disagreement is recorded in the [findings register](../conflicts/register.md).
 
@@ -29,7 +29,7 @@
 | Terminology | [docs/glossary.md](../glossary.md) |
 | Technology stack | [docs/architecture/technology-stack.md](technology-stack.md) |
 | Operating values and their classification | [docs/requirements/values-register.md](../requirements/values-register.md) |
-| Original handoffs (HISTORICAL, not active) | [Part 1](../handoffs/part-1-core-platform-features.md), [Part 2](../handoffs/part-2-consolidated-additional-systems.md), [Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), and the owner's directives in [docs/handoffs/](../handoffs/owner-correction-01-autonomous-operating-defaults.md) |
+| Original handoffs (HISTORICAL, not active) | [Part 1](../handoffs/part-1-core-platform-features.md), [Part 2](../handoffs/part-2-consolidated-additional-systems.md), [Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md), and the owner's directives and answers in [docs/handoffs/](../handoffs/owner-correction-01-autonomous-operating-defaults.md) (latest: [owner decisions 4](../handoffs/owner-decisions-04-part-3-findings.md)) |
 | Non-negotiable platform principles (index) | [docs/product/platform-overview.md](../product/platform-overview.md) (ARCH-028) |
 | System rules (index of enforceable behavioral rules) | [docs/requirements/system-rules-register.md](../requirements/system-rules-register.md) (ARCH-038) |
 | Feature-extensibility governance | [docs/architecture/architecture-governance.md](architecture-governance.md) (GOV) |
@@ -128,7 +128,7 @@ Other Part 2 concepts and where they are defined:
 | Capability registry, capability availability, blockers, readiness matrix | SYS-34 Readiness System | RDY-009 to RDY-026 — [readiness-system.md](../systems/readiness-system.md) |
 | Rebalancing Engine (decision model, anti-churn, emergency rebalancing) | SYS-07 Global Capital Authority | CAP-037 to CAP-042 — [capital-management.md](../systems/capital-management.md) |
 | Capital change events and capital states | SYS-07 Global Capital Authority | CAP-044, CAP-046 — [capital-management.md](../systems/capital-management.md) |
-| Rule precedence including Part 3's layers | SYS-09 Risk Engine | RSK-004, RSK-048 — [risk-engine.md](../risk/risk-engine.md) |
+| Rule precedence including Part 3's layers | SYS-09 Risk Engine | RSK-004, RSK-049 (RSK-048 replaced, DEC-035) — [risk-engine.md](../risk/risk-engine.md) |
 | Safe Mode permissions, emergency priority | SYS-09 Risk Engine | RSK-041 to RSK-043 — [risk-engine.md](../risk/risk-engine.md) |
 | Service-level recovery; restart is not resume | SYS-11 Recovery and Reconciliation | REC-025, REC-026 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Operational intelligence | SYS-29 System Health | HLT-015 — [system-health.md](../operations/system-health.md) |

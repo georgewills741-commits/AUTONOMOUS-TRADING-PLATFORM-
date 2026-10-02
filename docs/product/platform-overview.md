@@ -92,7 +92,7 @@ Part 2 asks for a central statement of the platform's non-negotiable principles 
 | Deterministic core | PLT-016, ARCH-019, ARCH-021, QNT-003, RSK-001, EXE-001 |
 | AI boundary | ARCH-020, ARCH-022, AIL-002, AIL-003, AIV-016 |
 | Capital preservation | PLT-006 |
-| Risk precedence and the safety floor | RSK-004, RSK-005, RSK-034, RSK-039, AIV-009 (CF-14 decided by the owner, [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md)) |
+| Risk precedence and the safety floor | RSK-004, RSK-005, RSK-034, RSK-039, RSK-049, AIV-009 (CF-14 and CF-17 decided by the owner, [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md), [DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)) |
 | No fixed returns | PLT-005, PLT-007, PLT-008, TNP-014, ARB-015 |
 | True net profitability | TNP-001, TNP-004, TNP-018, TNP-020 |
 | Unknown-state safety | PLT-018, RSK-014, RGM-008, REC-014, REC-016, DSI-004 |

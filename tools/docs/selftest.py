@@ -336,6 +336,90 @@ def comparison_cases() -> bool:
             if not passed:
                 print(out[-2000:])
             open(os.path.join(tmp, RISK), "w", encoding="utf-8").write(original)
+        # --expect-changed: passes only when exactly the listed requirements changed
+        reclass = cases[1][1]
+        reword = cases[0][1]
+        expect_cases: list[tuple[str, list[Callable[[str], str]], str, int, str]] = [
+            (
+                "accepts exactly the expected change",
+                [reclass],
+                "RSK-002",
+                0,
+                r"expected to change \(1\): RSK-002",
+            ),
+            (
+                "accepts the expected class-only change",
+                [reclass],
+                "RSK-002:cls",
+                0,
+                r"RSK-002:cls",
+            ),
+            (
+                "rejects an unexpected change beside the expected one",
+                [reclass, reword],
+                "RSK-002",
+                1,
+                r"mismatch RSK-001",
+            ),
+            (
+                "rejects an expected change that did not happen",
+                [],
+                "RSK-002",
+                1,
+                r"mismatch RSK-002: expected a change, got no change",
+            ),
+            (
+                "rejects a reworded text where only a class change is expected",
+                [reword],
+                "RSK-001:cls",
+                1,
+                r"mismatch RSK-001: expected cls, got text",
+            ),
+            (
+                "rejects a removal where only a change is expected",
+                [drop_line("- **RSK-048** ")],
+                "RSK-048",
+                1,
+                r"mismatch RSK-048: expected a change, got removed",
+            ),
+            (
+                "accepts an expected removal",
+                [drop_line("- **RSK-048** ")],
+                "RSK-048:removed",
+                0,
+                r"RSK-048:removed",
+            ),
+        ]
+        for name, fns, expected, want, pattern in expect_cases:
+            for fn in fns:
+                edit(tmp, RISK, fn)
+            code, out = run(
+                tmp,
+                "tools/docs/compare_requirements.py",
+                "HEAD",
+                "--strict",
+                f"--expect-changed={expected}",
+            )
+            passed = code == want and re.search(pattern, out) is not None
+            ok &= passed
+            print(
+                f"{'PASS' if passed else 'FAIL'}  comparison with --expect-changed {name} (exit {code})"
+            )
+            if not passed:
+                print(out[-2000:])
+            open(os.path.join(tmp, RISK), "w", encoding="utf-8").write(original)
+        code, out = run(
+            tmp,
+            "tools/docs/compare_requirements.py",
+            "HEAD",
+            "--strict",
+            "--expect-changed=RSK-002:text,RSK-002:cls",
+        )
+        passed = code != 0 and "duplicate or empty entry" in out
+        ok &= passed
+        print(
+            f"{'PASS' if passed else 'FAIL'}  comparison with --expect-changed rejects a duplicated entry (exit {code})"
+        )
     return ok
 
 

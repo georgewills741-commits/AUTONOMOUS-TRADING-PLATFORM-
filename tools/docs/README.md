@@ -7,6 +7,7 @@ python3 tools/docs/build_index.py              # check everything, then regenera
 python3 tools/docs/build_index.py --check-only # check only; writes nothing; fails if a generated file is out of date
 python3 tools/docs/compare_requirements.py     # requirements added, removed, or changed since HEAD
 python3 tools/docs/compare_requirements.py REV --strict  # compare with REV; exit 1 if an existing requirement was removed or changed
+python3 tools/docs/compare_requirements.py REV --strict --expect-changed=ID:cls,ID:removed  # the same, when a decision record deliberately changes exactly these, in exactly these fields
 python3 tools/docs/selftest.py                 # negative tests: the checker and the comparison must fail on broken input
 ```
 
@@ -39,11 +40,13 @@ At every checkpoint run the three checking commands (`--check-only`, the compari
 
 ## Self-test
 
-`selftest.py` copies `docs/`, `tools/`, `README.md`, and `CLAUDE.md` into a temporary directory, breaks one thing at a time, and expects the checker or the comparison to fail with the right message: a broken link, a duplicate or unknown ID, a gap in numbering, a stale generated file, a decision missing from the log, a system rule resting on a proposal, a changed or unlisted preserved text (a changed word, a `>` line added after the banner, a new file in a subdirectory or of another type, changed line endings), an orphaned document (unlinked, linked only from inside code, or linked only by another orphan), and a reworded, reclassified, or removed requirement. An unmodified copy, and one whose only change is a preserved text's status banner, must pass. It never touches the repository itself. It makes Verification 1's negative tests repeatable (master execution constitution §22).
+`selftest.py` copies `docs/`, `tools/`, `README.md`, and `CLAUDE.md` into a temporary directory, breaks one thing at a time, and expects the checker or the comparison to fail with the right message: a broken link, a duplicate or unknown ID, a gap in numbering, a stale generated file, a decision missing from the log, a system rule resting on a proposal, a changed or unlisted preserved text (a changed word, a `>` line added after the banner, a new file in a subdirectory or of another type, changed line endings), an orphaned document (unlinked, linked only from inside code, or linked only by another orphan), and a reworded, reclassified, or removed requirement; with `--expect-changed`, the comparison must accept exactly the listed changes (including a listed class-only change and a listed removal) and reject an extra one, a missing one, a reworded text where only a class change is expected, a removal where only a change is expected, and a duplicated entry. An unmodified copy, and one whose only change is a preserved text's status banner, must pass. It never touches the repository itself. It makes Verification 1's negative tests repeatable (master execution constitution §22).
 
 ## Requirement comparison
 
 `compare_requirements.py` parses the requirement lines at a git revision and in the working tree and lists the IDs added, removed, or changed (title, class, source, text, or owning document), with before and after values. It is the check that nothing was dropped or reworded silently (ARCH-033; the owner's checkpoint rule, [DEC-032](../../docs/decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)). Run it before every checkpoint commit.
+
+When a decision record deliberately changes existing requirements, list them with `--expect-changed`: `ID` means changed in any field but not removed; `ID:cls` (or `ID:cls+text`, any of title, cls, src, text, doc) means changed in exactly those fields; `ID:removed` means removed. With `--strict`, the check passes only if exactly the listed requirements changed, exactly as listed; a duplicated or empty entry is refused. The decision record names the command it was checked with.
 
 Run `build_index.py` after every documentation change and commit the regenerated files with the change. It does not check code, schemas, interfaces, or tests, which do not exist yet. That is the rest of ARCH-032.
 

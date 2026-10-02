@@ -168,7 +168,7 @@ Where these stand today:
 - **ARCH-037:** execution state is owned by the Execution Engine (EXE-002, "execution-state management"); the financial ledger is the Trading Ledger (LED-004, LED-006). Both are added to the [source-of-truth map](source-of-truth-map.md#canonical-authorities-arch-027).
 - **ARCH-038, ARCH-039:** the register is [`docs/requirements/system-rules-register.md`](../requirements/system-rules-register.md). It is an index: each rule's full wording stays in its canonical requirement, so the register never becomes a second copy (DUP-38). Enforcement location and violation handling are recorded per rule; the verification method is assigned when the owning stage is planned, as for every requirement (ARCH-030).
 - **ARCH-040:** requirement → rule is the register's "canonical requirements" column. Rule → interface → implementation → test are filled in as each stage is built.
-- **Rule precedence (P3§471)** is kept with the risk hierarchy it extends: RSK-048 in the [Risk Engine](../risk/risk-engine.md) (CF-17).
+- **Rule precedence (P3§471)** is kept with the risk hierarchy it extends: RSK-049 in the [Risk Engine](../risk/risk-engine.md), which replaced RSK-048 when the owner decided CF-17 (DEC-035).
 - **Feature extensibility (P3§401–P3§410, P3§462–P3§466, P3§472–P3§475, P3§508–P3§512)** is in [Architecture Governance](architecture-governance.md) (GOV).
 - P3§514 (system boundary principle) is ARCH-012. P3§515 (final consolidated operating model) is ARCH-024, with ARCH-035 as its global controller and CAP-016 as its runtime order.
 

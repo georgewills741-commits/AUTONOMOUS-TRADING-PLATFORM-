@@ -23,7 +23,7 @@ Summary of the documents that define each step. No new rules are added here.
 1. The user states objectives and restrictions in ordinary language (NLP-001, NLP-002).
 2. The instruction is interpreted into structured policy, validated, and checked for conflicts and ambiguity. Ambiguity is surfaced, and interpretation is never silently made more permissive (NLP-004 to NLP-006).
 3. The accepted change becomes a new policy version (POL-003, POL-004).
-4. Deterministic systems enforce it. The [Risk Engine](../../risk/risk-engine.md) enforces user hard constraints second only to system safety (RSK-004). The [Global Capital Authority](../capital-management.md) applies user policy to allocation and reinvestment (CAP-006, CAP-011).
+4. Deterministic systems enforce it. The [Risk Engine](../../risk/risk-engine.md) enforces user hard constraints below system safety and security (RSK-004, RSK-049: the owner ranked security controls above the user's hard policy, [DEC-035](../../decisions/DEC-035-owner-decisions-part-3-findings.md)). The [Global Capital Authority](../capital-management.md) applies user policy to allocation and reinvestment (CAP-006, CAP-011).
 
 ## Decisions applied (2026-09-30)
 
