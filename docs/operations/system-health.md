@@ -63,4 +63,4 @@ Notes:
 
 ## Findings (all resolved)
 
-OQ-07 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (HLT-007 to HLT-010). DUP-04 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (RSK-008). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (CORE TRADING FOUNDATION).
+OQ-07 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (HLT-007 to HLT-010; HLT-007 to HLT-009 since replaced by HLT-011, HLT-012, and RSK-015 to RSK-017 and RSK-020, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)). DUP-04 → [DEC-012](../decisions/DEC-012-safety-architecture.md) (RSK-008). CF-05 → [DEC-016](../decisions/DEC-016-roadmap-stage-placement.md) (CORE TRADING FOUNDATION).

@@ -4,6 +4,8 @@
 >
 > **Result: VERIFIED for Part 1 documentation.** Initialization as a whole is not complete, because Handoff Part 2 has not been received.
 >
+> **Later changes:** Handoff Parts 2 and 3 have since been received and reconciled (DEC-024, DEC-031). This record is kept as written; the current state is in the [project state](../project-state.md).
+>
 > **HISTORICAL in part:** the "Remaining issues" below were all resolved on 2026-09-30. See the [resolution verification record](resolution-verification.md).
 
 The constitution requires three materially different verification passes (Rules 118–122) and a record of the evidence (Rule 124). The checks below were run by scripts in the session's scratch space. They are not committed, because adding tooling would introduce Python as a project dependency without approval (constitution Rule 104). Committing them as a documentation-consistency check is RECOMMENDED — NOT YET APPROVED.

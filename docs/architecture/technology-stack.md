@@ -25,6 +25,10 @@
 - High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host. The single-host Docker Compose deployment remains for development and the early stages.
 - All production infrastructure, including the container definitions, is kept as code (OPS-014, [DEC-029](../decisions/DEC-029-infrastructure-as-code.md)). The infrastructure-as-code tool is chosen when OPERATIONALIZATION is planned.
 
+## Findings
+
+**Open:** DUP-40: MKD-007 and MON-009 restate TEC-012's market-data and operational-log retention values with different classes ([findings register](../conflicts/register.md); [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+
 ## Not yet decided
 
 Specific versions of each library (fixed in the lockfile when implementation starts), the AI providers and models (chosen in the AI INTELLIGENCE stage from Model Evaluation results, AIL-007), and hosting location. The hosting location should minimise network latency to the enabled venues, and is to be chosen with measurements.

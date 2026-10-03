@@ -49,7 +49,7 @@ This is a build-dependency chain. The runtime order, with the capital authority 
 | D-28 | SYS-17/18/19 trading systems | SYS-14 Strategy Management (validated strategy versions) | STATED | §02 item 10, §34, §36 |
 | D-29 | SYS-16 Paper Trading | SYS-09 Risk, SYS-07 Capital, SYS-08 Portfolio, SYS-10 Execution (production architecture) | STATED | §32 |
 | D-30 | SYS-15 Backtesting | SYS-02 Market Data (historical), with risk, capital, and portfolio constraints | STATED | §33 |
-| D-31 | SYS-21 Performance Controller | SYS-20 Arbitrage Intelligence (opportunity database), SYS-30 Audit, SYS-08 Portfolio | DECIDED (DEC-011) | §44, §48, §49 |
+| D-31 | SYS-21 Performance Controller | SYS-20 Arbitrage Intelligence (opportunity database; since DUP-26 the arbitrage view of SYS-05's Opportunity Database, see D-57), SYS-30 Audit, SYS-08 Portfolio | DECIDED (DEC-011) | §44, §48, §49 |
 | D-32 | SYS-23 AI Agents | SYS-22 AI Intelligence Layer (validation), SYS-24 Model Router | INFERRED | §63–§66 |
 | D-33 | SYS-23 Trading Director | Market data, quantitative features, regime, portfolio, policy, risk state | STATED (listed inputs) | §55 |
 | D-34 | SYS-09 Risk Engine | SYS-23 Trading Director proposals (validated) | STATED | §55, §66 |

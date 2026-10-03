@@ -3,6 +3,7 @@
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
 - **Date:** 2026-09-30
 - **Resolves:** OQ-05, TC-01, TC-04
+- **Later changes:** Part 2 did not supply the numerical methods for slippage and market impact that this record expected from it; they are specified with the True Net-Profit Engine's interface contract when its stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
 
 ## Context
 

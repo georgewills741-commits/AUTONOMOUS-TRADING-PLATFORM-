@@ -35,6 +35,10 @@ This system also owns two components that Part 2 adds, each specified in its own
 - the [Daily System Intelligence Dashboard and Report](daily-system-intelligence.md) (DSI), which extends the daily report of MON-008;
 - [Incident Management](incident-management.md) (INC).
 
+## Findings
+
+**Open:** DUP-40: MON-009 restates TEC-012's operational-log retention (90 days, V-19) with a different class ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+
 ## Not yet specified
 
 Specific alert channels (operator configuration), dashboard layouts, and tests. How monitoring feeds platform state is HLT-010.

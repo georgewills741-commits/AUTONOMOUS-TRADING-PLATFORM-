@@ -1,7 +1,7 @@
 # DEC-012 — Safety architecture: kill switches, health state machine, system safety rules
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
-- **Later changes:** CAP-022, SEC-003, HLT-007, HLT-008, HLT-009, and REC-009 are superseded by [DEC-019](DEC-019-company-grade-autonomous-operating-model.md). RSK-009 (kill-switch reset) is superseded by [DEC-021](DEC-021-kill-switch-recovery.md).
+- **Later changes:** CAP-022, SEC-003, HLT-007, HLT-008, HLT-009, and REC-009 are superseded by [DEC-019](DEC-019-company-grade-autonomous-operating-model.md). RSK-009 (kill-switch reset) is superseded by [DEC-021](DEC-021-kill-switch-recovery.md). Part 2 did not supply the interface contracts this record's health state machine was to feed; they are produced when each stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
 - **Date:** 2026-09-30
 - **Resolves:** DUP-04, OQ-06, OQ-07, OQ-20
 

@@ -41,6 +41,10 @@ Already covered: live credentials never in lower environments and paper/live cre
 
 The owner ranked security controls above the user's hard policy, below the safety floor (RSK-049 in the [Risk Engine](../risk/risk-engine.md)). A user hard policy cannot override, for example, the transfer-authority restrictions (SEC-006, SEC-007) or AI least privilege (SEC-008); changing a security control needs a formal, audited security change.
 
+## Findings
+
+**Open:** CF-21: PLT-010's wording ("no deposit, withdrawal, or multi-user account functions") vs DEC-006 ("for others") and SEC-006's separate rebalancing transfer authority ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). SEC-006 and SEC-007 stand as written.
+
 ## Not yet specified
 
 Threat model, authentication for the operator interface, and tests. Key management for custody is FUTURE (CUS-002).

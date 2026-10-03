@@ -1,7 +1,7 @@
 # DEC-010 — Canonical pre-trade decision flow
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
-- **Later changes:** REC-007 (CF-09) is superseded by [DEC-022](DEC-022-restart-recovery-sequence.md).
+- **Later changes:** REC-007 (CF-09) is superseded by [DEC-022](DEC-022-restart-recovery-sequence.md). Part 2 did not supply the interface contracts this record expected from it; they are produced when each stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
 - **Date:** 2026-09-30
 - **Resolves:** CF-01, CF-02, CF-03, CF-09, DUP-19
 

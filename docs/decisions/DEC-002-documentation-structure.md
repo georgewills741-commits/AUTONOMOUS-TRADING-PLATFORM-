@@ -4,6 +4,7 @@
 - **Date:** 2026-09-30
 - **Affects:** everything under `docs/`
 - **Resolves:** CF-07
+- **Later changes:** OQ-15 is answered: `docs/product/trading-policy.md` is not created; runtime policy lives only in the Policy System ([DEC-015](DEC-015-modes-canary-and-policy-governance.md)). Splitting documents waits on content, not on Part 2 ([DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
 
 ## Context
 

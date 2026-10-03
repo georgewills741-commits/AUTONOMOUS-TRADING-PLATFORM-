@@ -3,6 +3,8 @@
 > **Date:** 2026-09-30 · **Scope:** applying [OC-1](../handoffs/owner-correction-01-autonomous-operating-defaults.md) through [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) and [DEC-020](../decisions/DEC-020-value-classification.md). Documentation only; nothing was implemented.
 >
 > **Result: VERIFIED.** OC-1 is fully applied. Three conflicts with established requirements (CF-11 to CF-13) are recorded and surfaced for owner review, as OC-1 item 33 requires; the requirements they concern were **not** changed.
+>
+> **Later changes:** the owner decided CF-11 to CF-13 the same day ([DEC-021](../decisions/DEC-021-kill-switch-recovery.md) to [DEC-023](../decisions/DEC-023-autonomous-canary-approval.md); [verification](owner-decisions-02-verification.md)). This record is kept as written.
 
 ## Pass 1 — Was the correction captured correctly?
 

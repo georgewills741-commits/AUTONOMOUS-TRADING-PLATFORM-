@@ -5,6 +5,7 @@
 - **Decided by:** project owner ([owner decisions 3, Q6](../handoffs/owner-decisions-03-part-2-findings.md)); the placement notes below are the builder's
 - **Resolves:** CAP-028 (previously discussed, requiring confirmation)
 - **Supersedes:** CAP-028, now DEPRECATED / REPLACED by CAP-029 to CAP-033
+- **Later changes:** the builder's note below that "withdrawal constraints" means the operator's own withdrawals, and that the platform "withdraws nothing", is refined in [Capital Management](../systems/capital-management.md) (master knowledge-base audit, 2026-10-02): CAP-030's constraints also include venue withdrawal and deposit restrictions (CAP-037), and the platform holds no *general* withdrawal or custody authority (SEC-006). The owner's decision is unchanged.
 
 ## Decision
 

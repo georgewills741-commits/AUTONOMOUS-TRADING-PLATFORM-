@@ -83,6 +83,10 @@ This section explains how production readiness is decided. It adds no requiremen
 - **Before any production trading:** the hardening list of RMP-010, the stage's three verification gates (VER; [checkpoint and verification rule](../builder/checkpoint-and-verification-rule.md)), and the operator raising the platform's maximum mode (MODE-003, POL-005).
 - **"Production ready"** is claimed only when those criteria and their evidence are met (constitution Rule 214). The per-dimension criteria are set with each stage's completion criteria (constitution Rule 140) when OPERATIONALIZATION is planned.
 
+## Findings
+
+**Open:** CF-20: whether production may run on the owner's own computer (MIG-001, MIG-002, PLT-017 vs the owner's audit request); it affects the production-readiness model here ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+
 ## Not yet specified
 
 What counts as an "approved operational milestone" (to come from each stage's exit criteria when that stage is planned), the per-dimension production-readiness criteria (constitution Rule 214; model above), the availability target (V-36), and hosting location. Canary is defined in STR-013 to STR-022 (which replaced STR-011) and OPS-011, OPS-013.

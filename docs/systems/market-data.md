@@ -42,8 +42,10 @@ MKD-012 keeps MKD-006: each stream's freshness limit is the platform-wide hard l
 - **Owns:** raw, validated, normalized, and stored market data (MKD-003).
 - **Consumes:** raw data from the [Exchange Adapter Layer](exchange-adapters.md).
 - **Used by:** Quantitative Engine, Opportunity Detection Engine, trading systems, Backtesting (historical data, §33).
-- **Not yet specified in Part 1:** storage technology and retention, data schemas, latency targets, failure behavior when data is degraded (the DATA DEGRADED health state exists in §74 but is not defined), tests.
+- **Not yet specified in Part 1:** storage technology and retention, data schemas, latency targets, failure behavior when data is degraded (the DATA DEGRADED health state exists in §74 but is not defined), tests. Since specified: storage and retention (MKD-007, TEC-006, TEC-012; DEC-009); DATA DEGRADED as a component condition of platform health (HLT-011); freshness states and data quality before decisions (MKD-012); path-specific latency budgets, measured rather than fixed (PERF-008 to PERF-012). Still open: data schemas, the exact failure behavior per stream, and tests, specified when DATA FOUNDATION is planned (ARCH-025).
 
-## Findings (all resolved)
+## Findings
 
-OQ-22 → [DEC-009](../decisions/DEC-009-technology-stack.md) (storage and retention, MKD-007; the operational meaning of "logging" is MON-009). TC-06 → [DEC-013](../decisions/DEC-013-ai-organization.md) (MKD-005).
+**Open:** DUP-40: MKD-007 restates the market-data retention values of TEC-012 with a different class (MON-009 does the same for operational logs) ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). Until the owner decides, both stand and V-18 holds the value.
+
+Resolved: OQ-22 → [DEC-009](../decisions/DEC-009-technology-stack.md) (storage and retention, MKD-007; the operational meaning of "logging" is MON-009). TC-06 → [DEC-013](../decisions/DEC-013-ai-organization.md) (MKD-005).

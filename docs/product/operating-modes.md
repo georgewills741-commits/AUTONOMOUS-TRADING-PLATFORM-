@@ -34,4 +34,4 @@ The same words appear elsewhere with different meanings. They are kept distinct 
 
 ## Resolved questions
 
-OQ-08 is resolved by [DEC-015](../decisions/DEC-015-modes-canary-and-policy-governance.md): mode ownership (POL-008), granularity (MODE-003), transitions (MODE-004), supervised authorization (MODE-005), and separation from environments (MODE-006).
+OQ-08 is resolved by [DEC-015](../decisions/DEC-015-modes-canary-and-policy-governance.md): mode ownership (POL-008), granularity (MODE-003), transitions (MODE-004, since replaced by MODE-007, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)), supervised authorization (MODE-005), and separation from environments (MODE-006).

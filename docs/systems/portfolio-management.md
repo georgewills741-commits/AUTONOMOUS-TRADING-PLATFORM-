@@ -30,6 +30,10 @@ P2§43 (one Portfolio Authority) is PRT-001 to PRT-003. Realized P&L comes from 
 - **Used by:** trading systems, the Risk Engine (exposure and portfolio limits), the Trading Director (portfolio state, existing positions), and monitoring.
 - **Not yet specified in Part 1:** interfaces, update ordering, failure behavior, tests.
 
-## Findings (all resolved)
+## Findings
+
+**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. PRT-005 tracks leverage, margin, liquidation, and funding.
+
+Resolved:
 
 DUP-02 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (PRT-004). DUP-17 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (the ledger is authoritative for realized P&L, LED-006).

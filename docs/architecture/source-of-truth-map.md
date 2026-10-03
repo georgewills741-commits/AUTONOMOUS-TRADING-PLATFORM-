@@ -133,3 +133,19 @@ Other Part 2 concepts and where they are defined:
 | Service-level recovery; restart is not resume | SYS-11 Recovery and Reconciliation | REC-025, REC-026 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Operational intelligence | SYS-29 System Health | HLT-015 — [system-health.md](../operations/system-health.md) |
 | Production-readiness model | Deployment and operational readiness, with SYS-34 | RDY-022, RMP-010 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |
+
+## Further canonical sources (master knowledge-base audit, 2026-10-02)
+
+Added by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md), which found these had canonical requirements but no row here. Nothing new is decided; where a source is not yet specified, the row says so.
+
+| Concept | Owner | Canonical rule |
+|---|---|---|
+| Security controls, credentials, secrets | SYS-31 Security Architecture; precedence above the user's hard policy is RSK-049 | SEC-001, SEC-002, SEC-004 to SEC-009 — [security-architecture.md](../security/security-architecture.md) |
+| Reconciliation logic (orders, balances, positions, ledger) | SYS-11 Recovery and Reconciliation; other systems invoke it | REC-008 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
+| Deployment definition and configuration | The repository's deployment definition (OPS-010); portable vs environment-specific configuration (MIG-010, MIG-011). Policy content is never kept in the repository: it lives in the Policy System's versioned store (POL-009). MIG-010 counts policies as portable configuration, which moves with the platform state (MIG-008), not with the deployment definition. Secrets are never in the repository (SEC-005) | OPS-010 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md); MIG-010, MIG-011 — [hosting-and-migration.md](../operations/hosting-and-migration.md) |
+| Production version and change record | Production change control | OPS-012, OPS-020 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md). Where the runtime release record is kept is not yet specified (OPERATIONALIZATION) |
+| Database schemas | Each owning system, through its contracts (ARCH-025; data schemas are a contract type, GOV-007) | GOV-006 (versioned or migrated), OPS-020 (a schema change is a recorded production change), MIG-008 (schema version in the platform state). Not yet specified per system |
+| AI gateway, model routing, AI budgets | SYS-22 (gateway), SYS-24 Model Router, SYS-25 AI Cost Manager | AIL-006, AIL-007, RTR-003, COST-002 — [ai-architecture.md](../ai/ai-architecture.md), [model-management.md](../ai/model-management.md) |
+| Risk-limit values (runtime) | SYS-12 Policy System, versioned runtime store (autonomy bounds: the "Autonomy boundaries" row above); how each value is classified is the [values register](../requirements/values-register.md) | POL-009 — [policy-system.md](../systems/policy/policy-system.md) |
+| Feature lifecycle | Architecture governance | GOV-024 — [architecture-governance.md](architecture-governance.md) |
+| Platform lifecycle; the platform is independent of Claude Code | Platform overview and deployment | PLT-029 — [platform-overview.md](../product/platform-overview.md); OPS-021 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md); GOV-021 to GOV-023 — [architecture-governance.md](architecture-governance.md) |

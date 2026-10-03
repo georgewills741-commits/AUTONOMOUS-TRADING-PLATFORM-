@@ -79,7 +79,7 @@ From [DEC-028](../decisions/DEC-028-capital-buckets-and-progressive-activation.m
 Notes:
 
 - **Eligibility.** Whether a capability is eligible is decided by the [Readiness System](readiness-system.md) (RDY-008), from this system's capital figures. Eligibility never exceeds the operator's authorizations (MODE-003, POL-011, PLT-020).
-- **Withdrawals.** "Withdrawal constraints" means the operator's own withdrawals at venues, which the ledger detects (LED-005); the platform itself withdraws nothing (DEC-006).
+- **Withdrawals.** CAP-030's "withdrawal/transfer constraints" include venue withdrawal and deposit restrictions (CAP-037) and the operator's own withdrawals at venues, which the ledger detects (LED-005). "The platform itself holds no general withdrawal or custody authority" (SEC-006; custody is FUTURE, DEC-006). Rebalancing transfers between the operator's own approved venue accounts use the separate rebalancing transfer authority, which "must not become a general-purpose withdrawal mechanism" (SEC-006, SEC-007; OC-1 item 4; [glossary](../glossary.md)). PLT-010's wording is CF-21.
 - **Values.** The sizing rules and eligibility thresholds are V-34 and V-35 in the [values register](../requirements/values-register.md).
 
 ## Handoff Part 3 applied (2026-09-30)
@@ -116,6 +116,10 @@ How these fit what already exists ([DEC-031](../decisions/DEC-031-part-3-reconci
 - **Must not:** let any strategy assume capital (CAP-003) or hold capital state outside this system (ARB-009).
 - **Not yet specified in Part 1:** failure behavior, reservation timeouts, interfaces, tests.
 
-## Findings (all resolved)
+## Findings
+
+**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. CAP-020 tracks collateral, borrowed funds, and margin.
+
+Resolved:
 
 CF-01 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (CAP-016). CF-03 → [DEC-010](../decisions/DEC-010-pre-trade-decision-flow.md) (CAP-021). DUP-02 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (PRT-004). DUP-06 and DUP-07 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md) (CAP-017, CAP-018). OQ-02 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (CAP-019). OQ-04 → [DEC-007](../decisions/DEC-007-instrument-scope.md) (CAP-020).

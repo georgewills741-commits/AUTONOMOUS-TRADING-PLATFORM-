@@ -77,7 +77,7 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 - **PLT-019** What the objective is not · CONSTRAINT · P2§313, P2§35 — The objective (PLT-009) is not: maximum trades; maximum AI activity; maximum leverage; maximum percentage per trade; fixed daily return. The architecture should optimize for quality, executability, risk-adjusted economics, and capital efficiency, not artificial trade-count targets.
 - **PLT-020** Autonomy is bounded · CONSTRAINT · P2§106, P2§278, P2§343 — Autonomous operation means the system can act within authorized boundaries. It does not mean: unlimited capital; unlimited leverage; unlimited strategy changes; unlimited AI authority; unlimited withdrawals; unlimited deployment access. The user provides high-level objectives and boundaries, the platform translates them into structured policies, deterministic infrastructure enforces them, and AI provides intelligence inside those boundaries. The system must never invent authorization.
 
-Part 2 §312 (capital-preservation hierarchy) is PLT-006 and §313's objective is PLT-009, both unchanged. "Failover/standby where approved" in PLT-017 stays conditional: failover is FUTURE until high availability is approved (REC-021).
+Part 2 §312 (capital-preservation hierarchy) is PLT-006 and §313's objective is PLT-009, both unchanged. "Failover/standby where approved" in PLT-017 was conditional on approval; the owner has since approved high availability ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md): REC-021, REC-023, REC-024).
 
 - **PLT-021** Maximum autonomy inside a deterministic safety envelope · CONFIRMED ARCHITECTURAL PRINCIPLE · DEC-026 — The objective is maximum autonomy inside a deterministic safety envelope: the system should be capable of operating 24/7 and recovering intelligently without sacrificing the fundamental safety guarantees of the platform.
 
@@ -135,6 +135,10 @@ From the owner's directive on verification and platform independence ([DEC-034](
 
 PLT-029 states for the platform what constitution Rule 198 asks of the builder. It is about Claude Code, the builder. AI models the platform itself uses through its AI gateway (AIL-006) are platform components: provider-agnostic (AIL-007), with deterministic fallback when unavailable (AIL-011). Rebuilding production without the owner is OPS-017; how the platform keeps its knowledge is GOV-023.
 
-## Findings (all resolved)
+## Findings
 
-OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).
+**Open:** OQ-28: whether the instrument scope of PLT-011 includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). PLT-011 stands as written until the owner answers.
+
+**Open:** CF-20: "local hosting" (PLT-017; MIG-001, MIG-002) vs the owner's statement that production must not depend on the owner's laptop. **Open:** CF-21: PLT-010 says the platform has "no deposit, withdrawal, or multi-user account functions", where DEC-006 says "no deposit or withdrawal handling for others"; rebalancing transfers between the operator's own venue accounts follow SEC-006 ([DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md), Reconciliation notes). Both are in the [findings register](../conflicts/register.md); the requirements stand as written until the owner decides.
+
+Resolved: OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).

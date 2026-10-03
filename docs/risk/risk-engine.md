@@ -17,6 +17,8 @@ Canonical definition of deterministic risk enforcement, the authority hierarchy,
 - **RSK-004** Risk decision hierarchy · CONFIRMED ARCHITECTURAL PRINCIPLE · §26 — Authority, highest first: system safety → user hard constraints → portfolio / risk policy → validated strategy rules → deterministic market conditions → AI analysis / proposal.
 - **RSK-005** No override from below · CONSTRAINT · §26 — Lower layers cannot override higher layers.
 
+RSK-004 is §26's wording. Where security, capital, and execution sit within it is RSK-049 (below): the owner placed security controls above the user's hard constraints, under the safety floor ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)).
+
 The platform-level priority order (capital preservation first, opportunity targets last) is PLT-006 in the [platform overview](../product/platform-overview.md).
 
 ## No-trade and uncertainty outcomes
@@ -143,4 +145,6 @@ RSK-049 keeps RSK-004's layers in their order and places Part 3's security, capi
 
 ## Findings
 
-All resolved. CF-14 → [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md) (RSK-034 to RSK-039). DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).
+**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. RSK-013 holds the derivatives and margin controls.
+
+Otherwise all resolved. CF-14 → [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md) (RSK-034 to RSK-039). DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).

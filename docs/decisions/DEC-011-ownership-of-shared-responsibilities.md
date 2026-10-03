@@ -2,6 +2,7 @@
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
 - **Date:** 2026-09-30
+- **Later changes:** Part 2 did not supply the interface contracts this record expected from it; they are produced when each stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
 - **Resolves:** DUP-01, DUP-02, DUP-03, DUP-05, DUP-06, DUP-07, DUP-08, DUP-09, DUP-10, DUP-16, DUP-18, DUP-20, DUP-21, DUP-22, TC-03, OQ-10
 
 ## Principle

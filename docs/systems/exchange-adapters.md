@@ -43,6 +43,10 @@ P2§44 names Binance, OKX, and Coinbase; the initial venues also include Bybit a
 - **Used by:** Market Data (raw data, §10), Execution Engine (orders, §02 item 16), Recovery and Reconciliation (balances, positions, open orders, fills, §71). Full list: [dependency map](../architecture/dependency-map.md).
 - **Not yet specified in Part 1:** the standardized interface itself, per-venue failure behavior, credential handling (see [security](../security/security-architecture.md)), tests.
 
-## Findings (all resolved)
+## Findings
+
+**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. EXA-009 exposes the instrument types per venue.
+
+Resolved:
 
 OQ-03 → [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md) (EXA-005; trading universe in OPP-009). OQ-04 → [DEC-007](../decisions/DEC-007-instrument-scope.md) (EXA-009). TC-05 → [DEC-008](../decisions/DEC-008-venues-and-trading-universe.md) (EXA-008).

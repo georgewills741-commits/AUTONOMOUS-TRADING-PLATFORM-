@@ -61,7 +61,7 @@ PFC-018's actions are applied through PFC-008 and the owning systems (the Global
 ## Boundary (§92)
 
 - **Owns:** the comparison of expected against actual results, and deterioration detection (PFC-002, PFC-003).
-- **Consumes:** expected values (e.g. from the [True Net-Profit Engine](true-net-profit-engine.md)), actual outcomes (execution, portfolio), and the [arbitrage opportunity database](arbitrage/arbitrage-intelligence.md) (ARB-004).
+- **Consumes:** expected values (e.g. from the [True Net-Profit Engine](true-net-profit-engine.md)), actual outcomes (execution, portfolio), and the [arbitrage opportunity database](arbitrage/arbitrage-intelligence.md) (ARB-004), which is the arbitrage view of the platform-wide Opportunity Database owned by the Opportunity Detection Engine (OPP-016; DUP-26, [DEC-024](../decisions/DEC-024-part-2-reconciliation.md)).
 - **Must not:** take actions outside deterministic policy (PFC-004).
 - **Not yet specified:** detection thresholds (operator policy), interfaces, tests. Permitted actions are PFC-008.
 

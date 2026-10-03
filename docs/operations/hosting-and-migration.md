@@ -66,6 +66,10 @@ MIG-031 and MIG-032 come from [Handoff Part 3](../handoffs/part-3-consolidated-a
 - **A migration failure** is a Safe Mode trigger (RSK-030) and an incident (INC-002).
 - **Monitoring** covers migration and backup (MON-010). **Tests:** MIG-023 and MIG-024, and the [verification architecture](../architecture/verification-architecture.md).
 
+## Findings
+
+**Open:** CF-20: MIG-001 and MIG-002 (local hosting supported) vs the owner's statement that production must not depend on the owner's laptop ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). MIG-001 and MIG-002 stand as written until the owner decides.
+
 ## Not yet specified
 
 Package format, backup schedule and retention, recovery point and recovery time objectives (values to be added to the values register when set), minimum and recommended host resources (MIG-002), where the failover lease authority lives (REC-024), interfaces, tests. All infrastructure is kept as code (OPS-014), so the target environment is provisioned automatically (OPS-017).

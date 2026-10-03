@@ -81,6 +81,6 @@ ARB-015 is consistent with TNP-005 and TNP-016: the tiers never gate execution. 
 
 ## Boundary (§92)
 
-- **Owns (uncontested):** the arbitrage opportunity database, liquidity intelligence, and rebalancing *evaluation*.
+- **Owns (uncontested):** liquidity intelligence and rebalancing *evaluation*. The arbitrage opportunity database is the arbitrage view of the platform-wide Opportunity Database, which the Opportunity Detection Engine owns (OPP-016; DUP-26, [DEC-024](../../decisions/DEC-024-part-2-reconciliation.md)).
 - **Must not:** hold capital state outside the Global Capital Authority (ARB-009), or override global safety (ARB-011).
-- **Not yet specified in Part 1:** kill-switch reset rules, database retention, interfaces, tests.
+- **Not yet specified in Part 1:** kill-switch reset rules, database retention, interfaces, tests. Since specified: kill-switch reset and recovery (RSK-021 to RSK-025, [DEC-021](../../decisions/DEC-021-kill-switch-recovery.md)); the arbitrage kill switch is a Risk Engine rule set (RSK-008). Still open: retention of the arbitrage records, interfaces, tests.
