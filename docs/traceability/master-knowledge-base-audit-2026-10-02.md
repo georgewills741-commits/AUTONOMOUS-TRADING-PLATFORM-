@@ -3,6 +3,8 @@
 > **Status:** ACTIVE record of the pre-implementation audit the owner asked for on 2026-10-02 (the request is quoted in full in appendix B). It is the complete documentation review that handoff §101 and P2§329 require before implementation. Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md); format: [traceability README](README.md).
 >
 > **Verdict: B — READY WITH NON-BLOCKING FINDINGS** (for Stage 1 planning). No critical or high finding. Four items need the owner's decision (CF-20, CF-21, OQ-28, DUP-40); none blocks Stage 1 planning. Implementation is not authorized.
+>
+> **Later changes:** on 2026-10-03 the owner accepted this review, decided CF-20, CF-21, OQ-28, and DUP-40, confirmed the feature process, and authorized Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md); [owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md)). This record is kept as written.
 
 ## Identity
 

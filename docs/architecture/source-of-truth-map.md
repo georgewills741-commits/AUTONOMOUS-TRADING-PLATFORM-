@@ -113,7 +113,7 @@ Other Part 2 concepts and where they are defined:
 | Readiness states, evidence, blockers | SYS-34 Readiness System | RDY-002 to RDY-005 — [readiness-system.md](../systems/readiness-system.md) |
 | Daily System Intelligence Dashboard and Report | SYS-28 Monitoring and Observability | DSI-001 to DSI-006 — [daily-system-intelligence.md](../operations/daily-system-intelligence.md) |
 | Incident records | SYS-28 Monitoring and Observability | INC-001 to INC-003 — [incident-management.md](../operations/incident-management.md) |
-| Hosting, portability, migration, backup, disaster recovery | Hosting, backup, and migration set | MIG-001 to MIG-028 — [hosting-and-migration.md](../operations/hosting-and-migration.md) |
+| Hosting, portability, migration, backup, disaster recovery | Hosting, backup, and migration set | MIG-001 to MIG-028; MIG-029 to MIG-033 (owner decisions DEC-030 and DEC-036; Part 3) — [hosting-and-migration.md](../operations/hosting-and-migration.md) |
 | Active execution authority across hosts, split-brain, standby, failover | SYS-11 Recovery and Reconciliation | REC-019 to REC-022 — [recovery-and-reconciliation.md](../systems/recovery-and-reconciliation.md) |
 | Environments (canary is a production stage) | Deployment and operational readiness | OPS-004, OPS-013 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md) |
 | Platform verification (performance, load, chaos) | Verification set | VER-001 to VER-003 — [verification-architecture.md](verification-architecture.md) |

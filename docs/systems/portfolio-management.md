@@ -32,7 +32,7 @@ P2§43 (one Portfolio Authority) is PRT-001 to PRT-003. Realized P&L comes from 
 
 ## Findings
 
-**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. PRT-005 tracks leverage, margin, liquidation, and funding.
+**Resolved:** OQ-28 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): the owner confirmed the instrument scope of PLT-011 ([DEC-007](../decisions/DEC-007-instrument-scope.md)): spot, perpetual futures, and margin, no other derivatives ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). PRT-005 tracks leverage, margin, liquidation, and funding.
 
 Resolved:
 

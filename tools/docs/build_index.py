@@ -356,7 +356,7 @@ def approval(r):
     part = {"P2": "Handoff Part 2", "P3": "Handoff Part 3"}.get(
         r["src"][:2], "Handoff Part 1"
     )
-    return part + " — pending documentation review"
+    return part + " — reviewed (DEC-036)"
 
 
 # ---------- Part 2 and Part 3 reconciliations: read the hand-written columns ----------
@@ -628,8 +628,9 @@ L += [
     "[values register](values-register.md). Enforceable behavioral rules are indexed in the "
     "[System Rules Register](system-rules-register.md).",
     "",
-    "**Approval** says where the requirement's authority comes from: a handoff section, pending the complete documentation "
-    "review before implementation (handoff §101); or a decision record and who decided it. PROPOSED, FUTURE, and "
+    "**Approval** says where the requirement's authority comes from: a handoff section, reviewed in the complete documentation "
+    "review before implementation (handoff §101), which the owner accepted ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)); "
+    "or a decision record and who decided it. PROPOSED, FUTURE, and "
     "REQUIRES CONFIRMATION entries are not approved (ARCH-029). **Dependencies** are recorded between systems in the "
     "[dependency map](../architecture/dependency-map.md); **verification methods** are assigned when each stage is planned (ARCH-030). "
     "**Default stage** is the owning system's stage; where the [roadmap](../roadmap/roadmap.md) places an individual "

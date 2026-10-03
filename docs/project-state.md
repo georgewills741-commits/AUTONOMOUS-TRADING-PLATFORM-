@@ -14,8 +14,8 @@ The single record of where this project currently stands (Constitution Rules 50,
 - The owner **approved the Part 3 reconciliation** and answered every open item on 2026-10-02 ([DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md)): security ranks above the user's hard policy (RSK-049), CF-18 confirmed, the constitution's feature lifecycle is canonical (GOV-024), no Part 4 is coming, older decision records get their alternatives now (TC-08; done, see below), and the DUP-34 and DUP-35 readings are confirmed.
 - The owner's checkpoint and three-stage verification rule is adopted ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)).
 - The owner's master execution constitution and directive on verification and platform independence (2026-10-01) are adopted ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](decisions/DEC-034-verification-and-platform-independence.md)). The owner decided CF-19 from them (DEC-035).
-- The **complete documentation review** was done on 2026-10-02 and 2026-10-03 as the owner's master knowledge-base audit ([record](traceability/master-knowledge-base-audit-2026-10-02.md)): verdict **B — ready with non-blocking findings** for Stage 1 planning. It awaits the owner's acceptance, and four items need the owner's decision (CF-20, CF-21, OQ-28, DUP-40); none blocks Stage 1 planning.
-- Implementation is not authorized.
+- The **complete documentation review** was done on 2026-10-02 and 2026-10-03 as the owner's master knowledge-base audit ([record](traceability/master-knowledge-base-audit-2026-10-02.md)): verdict **B — ready with non-blocking findings** for Stage 1 planning. On 2026-10-03 the owner **accepted the review**, decided its four findings (CF-20, CF-21, OQ-28, DUP-40), confirmed the feature process, and **authorized Stage 1 planning** ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)).
+- Stage 1 planning is authorized; implementation is not.
 
 | Gate | Status |
 |---|---|
@@ -34,14 +34,15 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Master handoff Part 3 (autonomy, capital scaling, system rules, extensibility, 24/7 operations, rebalancing, readiness) | RECEIVED, DOCUMENTED, and RECONCILED — [historical copy](handoffs/part-3-consolidated-autonomy-capital-scaling.md) · [reconciliation](traceability/part-3-reconciliation.md) · [verification and documentation audit](traceability/part-3-verification.md) · [DEC-031](decisions/DEC-031-part-3-reconciliation.md) |
 | Human review of the Part 3 reconciliation (P3§541 items 29–30), with CF-17, CF-18, CF-19, OQ-27, TC-08, and the DUP-34, DUP-35 readings | APPROVED and ANSWERED by the owner on 2026-10-02 — [DEC-035](decisions/DEC-035-owner-decisions-part-3-findings.md) · [answers](handoffs/owner-decisions-04-part-3-findings.md) |
 | TC-08: alternatives in DEC-001 to DEC-030 (owner's choice: add now where sourced) | DONE — [TC-08 verification](traceability/tc-08-alternatives-verification.md) |
-| Complete documentation review (handoff §101; P2§329) | DONE by the builder on 2026-10-02 and 2026-10-03, verdict B — [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md); **awaiting the owner's acceptance** |
-| Owner decisions raised by the audit: CF-20 (local hosting vs production independent of the owner's computer), CF-21 (PLT-010's wording on withdrawals), OQ-28 (instrument scope), DUP-40 (duplicated retention values) | **OPEN — for the owner**; none blocks Stage 1 planning |
-| Human approval to implement | **NOT GIVEN** — required after the documentation review (handoff §101; P2§330; P3§541; constitution Part XXIII) |
+| Complete documentation review (handoff §101; P2§329) | DONE by the builder on 2026-10-02 and 2026-10-03, verdict B — [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md); **ACCEPTED by the owner** on 2026-10-03 — [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md) |
+| Owner decisions raised by the audit: CF-20 (local hosting vs production independent of the owner's computer), CF-21 (PLT-010's wording on withdrawals), OQ-28 (instrument scope), DUP-40 (duplicated retention values) | DECIDED by the owner on 2026-10-03 — [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md) · [answers](handoffs/owner-decisions-05-audit-findings.md) · [verification](traceability/owner-decisions-05-verification.md) |
+| Stage 1 (FOUNDATION) planning | **AUTHORIZED** by the owner on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)); the plan is next, for the owner's approval |
+| Human approval to implement | **NOT GIVEN** — needs the owner's explicit approval of the Stage 1 plan, such as "Begin Stage 1" (handoff §101; P2§330; P3§541; constitution Part XXIII) |
 | Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
-The owner's acceptance of the complete documentation review (the master knowledge-base audit) and decisions on CF-20, CF-21, OQ-28, and DUP-40; then the plan for Stage 1 (FOUNDATION) with its objective, scope, tests, and completion criteria. After that the owner decides whether to approve implementation of Stage 1.
+The plan for Stage 1 (FOUNDATION), authorized by the owner ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)): its objective, scope, out-of-scope, dependencies, outputs, tests, verification, and completion criteria (constitution Rule 140), for the owner's approval. After that the owner decides whether to approve implementation of Stage 1.
 
 ## Continuation contract
 
@@ -49,11 +50,11 @@ What the next session needs before it does anything (master execution constituti
 
 | Field | Now |
 |---|---|
-| Current stage and substage | FOUNDATION — documentation initialization; the complete documentation review done (verdict B), awaiting the owner's acceptance |
-| Current task | None in progress at this checkpoint. Waiting for the owner: acceptance of the review, decisions on CF-20, CF-21, OQ-28, DUP-40, and authorization of Stage 1 planning |
+| Current stage and substage | FOUNDATION — documentation initialization; the complete documentation review done (verdict B) and accepted by the owner; Stage 1 planning authorized (DEC-036) |
+| Current task | None in progress at this checkpoint. Next: the Stage 1 plan (authorized, DEC-036) |
 | Completed | See "Completed work" and the checkpoint log below |
 | In progress, possibly partial | Nothing |
-| Blocked | Nothing. Stage 1 planning waits for the owner's acceptance of the review; implementation waits for the owner's explicit approval of the Stage 1 plan, as designed |
+| Blocked | Nothing. Implementation waits for the owner's explicit approval of the Stage 1 plan, as designed |
 | Failed verification | None open |
 | Pending verification | None |
 | Verified | Every checkpoint in the checkpoint log, by its verification record |
@@ -61,11 +62,25 @@ What the next session needs before it does anything (master execution constituti
 | Latest verified commit | The last row of the checkpoint log (a commit cannot record its own hash; the next checkpoint fills it in) |
 | Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
 | Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
-| Known risks | CF-20, CF-21, OQ-28, DUP-40 are open for the owner (not blocking Stage 1 planning). TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The tools' check versions are not pinned until Stage 1 ([tools README](../tools/docs/README.md)) |
-| Next safe action | Wait for the owner ("Next approved step", item 1); then the Stage 1 plan |
-| Documentation state | Consistent and checked (`build_index.py --check-only`); the registry's Approval column reads "pending documentation review" for the 512 handoff requirements until the owner accepts the review |
+| Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The tools' check versions are not pinned until Stage 1 ([tools README](../tools/docs/README.md)) |
+| Next safe action | Write the Stage 1 plan ("Next approved step", item 1), then stop for the owner's approval |
+| Documentation state | Consistent and checked (`build_index.py --check-only`); the registry's Approval column reads "reviewed (DEC-036)" for the 512 handoff requirements, since the owner accepted the review |
 | Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand |
 | Do not implement yet | Anything. Implementation is not authorized (handoff §101; constitution Rules 134–135); FUTURE and PROPOSED items stay unbuilt even then |
+
+## Owner decisions on the audit findings (2026-10-03)
+
+All answered ([owner decisions 5](handoffs/owner-decisions-05-audit-findings.md)); applied by [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md):
+
+| Item | Owner's decision | Applied |
+|---|---|---|
+| CF-20: hosting | Production never depends on any one machine, your computer included: an active host plus a standby, rebuilt without you. Your computer may be a production host only if it meets the same readiness bar as a server | MIG-033; local hosting stays supported (MIG-001, MIG-002) |
+| OQ-28: instruments | Spot, perpetual futures, and margin; no other derivatives | PLT-011 confirmed |
+| CF-21: withdrawal wording | PLT-010 matches DEC-006: "no deposit or withdrawal handling for others", naming SEC-006 for rebalancing transfers | PLT-010 reworded |
+| DUP-40: retention values | Only in TEC-012; MKD-007 and MON-009 point to it | MKD-007, MON-009 reworded; V-18, V-19 |
+| Feature process | GOV-002 with GOV-022, your sequence mapped onto it | Confirmed; no change |
+| Documentation review | Accepted | Registry Approval column: "reviewed (DEC-036)" |
+| Stage 1 planning | Authorized | The Stage 1 plan is next, for your approval |
 
 ## Owner decisions on the Part 2 findings (2026-09-30)
 
@@ -171,29 +186,26 @@ Builder readings you may want to check, all stated in the decision records:
   - No decision, requirement, or finding changed. TC-08 is RESOLVED. Record: [TC-08 verification](traceability/tc-08-alternatives-verification.md).
 - **Master knowledge-base audit, the complete documentation review (2026-10-02, the owner's request):**
   - The whole repository audited as one knowledge system against the owner's 28-point request: decisions, duplicates, conflicts, classification, ownership, sources of truth, traceability, boundaries, capital, security, safety, performance, extensibility, platform independence, roadmap, verification, structure, documentation, implementation.
-  - Verdict B, ready with non-blocking findings for Stage 1 planning; no critical or high finding. Raised for the owner: CF-20, CF-21, OQ-28, DUP-40. Fixed: the documentation defects listed in the record. No requirement changed.
+  - Verdict B, ready with non-blocking findings for Stage 1 planning; no critical or high finding. Raised for the owner: CF-20, CF-21, OQ-28, DUP-40 (decided on 2026-10-03, DEC-036). Fixed: the documentation defects listed in the record. No requirement changed.
   - Record, with the findings, the consistency matrix, the human review package, and the request verbatim: [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md).
+- **Owner decisions 5 (audit findings, review acceptance, Stage 1 planning, 2026-10-03):**
+  - Answers kept word for word ([owner decisions 5](handoffs/owner-decisions-05-audit-findings.md)); applied by [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md).
+  - CF-20: MIG-033 added (production never depends on one machine). CF-21: PLT-010 reworded to match DEC-006. DUP-40: MKD-007 and MON-009 reworded to point to TEC-012. OQ-28: PLT-011 confirmed. The feature process (GOV-002 with GOV-022) confirmed.
+  - The complete documentation review is accepted: the registry's Approval column for the 512 handoff requirements reads "reviewed (DEC-036)". Stage 1 planning is authorized.
 
 ## In-progress work
 
-None at this checkpoint. Next: the owner's answers (see "Next approved step").
+None at this checkpoint. Next: the Stage 1 plan (see "Next approved step").
 
 ## Blockers
 
 | Problem | Impact | Required resolution |
 |---|---|---|
-| None open | — | Implementation still waits, by design, for the owner's explicit approval after the documentation review |
+| None open | — | Implementation waits, by design, for the owner's explicit approval of the Stage 1 plan |
 
 ## Open questions
 
-Waiting for the owner (raised by the [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md); none blocks Stage 1 planning):
-
-| Item | Question | Where |
-|---|---|---|
-| CF-20 | May production run on the owner's own computer? MIG-001 requires local hosting to be supported; the owner's audit request says production must not depend on the owner's laptop. Recommended reading: production must not depend on any single machine, the owner's included (active and standby hosts, DEC-030); local hosting stays supported on hosts meeting the production-readiness criteria | [Findings register](conflicts/register.md) |
-| CF-21 | PLT-010 says the platform has "no deposit, withdrawal, or multi-user account functions"; DEC-006 says "no deposit or withdrawal handling for others", and rebalancing transfers between the operator's own accounts follow SEC-006. Approve aligning PLT-010's wording with DEC-006 (a decision record), or delegate it | [Findings register](conflicts/register.md) |
-| OQ-28 | Is the instrument scope exactly spot, perpetual futures, and margin (PLT-011), or does it include other derivatives? | [Open-question register](open-questions/register.md) |
-| DUP-40 | MKD-007 restates TEC-012's retention values with a different class: approve making MKD-007 refer to TEC-012 (a decision record), or delegate it | [Findings register](conflicts/register.md) |
+Nothing is waiting for the owner. CF-20, CF-21, OQ-28, and DUP-40, raised by the [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md), were decided on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)).
 
 Recorded now and decided when their stages are planned:
 
@@ -218,7 +230,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 
 - **Deterministic first.** AI provides intelligence and deterministic infrastructure provides authority (PLT-016, ARCH-019 to ARCH-022).
 - **Paper and readiness.** Paper trading is a continuous evidence source (PAP-004 to PAP-012). Progression is decided by one Readiness System, never by a single number (RDY-001 to RDY-007).
-- **Hosting.** The same platform runs locally or on a server, with migration only through a formal, reconciled process (MIG-001 to MIG-028).
+- **Hosting.** The same platform runs locally or on a server, with migration only through a formal, reconciled process (MIG-001 to MIG-028). Production never depends on one machine, your computer included (MIG-033, from your answer on CF-20).
 - **Canary.** Canary is a production stage (OPS-013).
 
 **From your answers on the Part 2 findings:**
@@ -250,6 +262,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - DEC-033 (master execution constitution) and DEC-034 (owner's directive on verification and platform independence) added on 2026-10-01.
 - DEC-035 (owner decisions on the Part 3 findings; Part 3 approved) added on 2026-10-02. DEC-031 confirmed by the owner, with CF-17 changed.
 - DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 (TC-08, DEC-035). No decision changed.
+- DEC-036 (owner decisions on the audit findings; documentation review accepted; Stage 1 planning authorized) added on 2026-10-03.
 
 ## Recent changes
 
@@ -266,11 +279,12 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-10-02: applied owner decisions 4 (DEC-035): RSK-049 and GOV-024 added; RSK-048 and GOV-018 replaced (class only); every conflict resolved; OQ-27 answered; Part 3 approved. The requirement comparison gained `--expect-changed` for decided changes. No platform code, configuration, or infrastructure created.
 - 2026-10-02: TC-08: "Alternatives considered" sections added to the 25 older decision records that lacked one, each alternative with its source; TC-08 resolved. No requirement, decision, or finding changed.
 - 2026-10-02: master knowledge-base audit (the complete documentation review), verdict B: CF-20, CF-21, DUP-40, OQ-28 raised for the owner; documentation defects fixed (glossary aliases, TC-10 inventory, source-of-truth rows, stale notes); no requirement changed ([record](traceability/master-knowledge-base-audit-2026-10-02.md)).
+- 2026-10-03: applied owner decisions 5 (DEC-036): MIG-033 added; PLT-010, MKD-007, and MON-009 reworded; CF-20, CF-21, DUP-40, OQ-28 resolved; documentation review accepted (registry Approval column "reviewed"); Stage 1 planning authorized. No platform code, configuration, or infrastructure created.
 
 ## Next approved step
 
-1. **The owner:** accept the complete documentation review ([master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md)) or ask for changes; decide CF-20 and OQ-28, and decide CF-21 and DUP-40 or delegate them. None of the four blocks Stage 1 planning. On acceptance, the registry's Approval column for the handoff requirements changes from "pending documentation review" to reviewed.
-2. On the owner's authorization, plan Stage 1 (FOUNDATION) with its objective, scope, out-of-scope, dependencies, outputs, tests, verification, and completion criteria (constitution Rule 140; the stage record of the [traceability README](traceability/README.md)), for the owner's approval.
+1. **The builder:** write the Stage 1 (FOUNDATION) plan, authorized by the owner on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)): objective, scope, out-of-scope, dependencies, outputs, tests, verification, and completion criteria (constitution Rule 140; the stage record of the [traceability README](traceability/README.md)); pass it through the three gates, commit it, and stop.
+2. **The owner:** approve the plan or ask for changes.
 3. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
 
 ## Memory check (constitution Rule 175)
@@ -303,4 +317,5 @@ Each checkpoint commit and its verification record. Hashes are those on branch `
 | 3b6f372 | Master execution constitution and owner directive adopted (DEC-033, DEC-034) | [Governance adoption verification](traceability/governance-adoption-verification.md) |
 | 0b3f97a | Owner decisions on the Part 3 findings applied; Part 3 approved (DEC-035) | [Owner decisions 4 verification](traceability/owner-decisions-04-verification.md) |
 | 74928b4 | TC-08: alternatives added to the older decision records | [TC-08 verification](traceability/tc-08-alternatives-verification.md) |
-| The commit that adds this row | Master knowledge-base audit (the complete documentation review), verdict B | [Master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md) |
+| 16df57f | Master knowledge-base audit (the complete documentation review), verdict B | [Master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md) |
+| The commit that adds this row | Owner decisions on the audit findings; documentation review accepted; Stage 1 planning authorized (DEC-036) | [Owner decisions 5 verification](traceability/owner-decisions-05-verification.md) |

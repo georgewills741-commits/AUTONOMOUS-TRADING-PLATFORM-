@@ -1,7 +1,7 @@
 # DEC-017 — Reporting, alerting, logging, and initial performance targets
 
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
-- **Later changes:** The performance targets (PERF-007) are superseded by [DEC-019](DEC-019-company-grade-autonomous-operating-model.md); the 50 ms / 500 ms figures remain only as DESIGN TARGETS ([DEC-020](DEC-020-value-classification.md)).
+- **Later changes:** The performance targets (PERF-007) are superseded by [DEC-019](DEC-019-company-grade-autonomous-operating-model.md); the 50 ms / 500 ms figures remain only as DESIGN TARGETS ([DEC-020](DEC-020-value-classification.md)). MON-009 no longer states the 90 days itself; it points to TEC-012, where the value is kept ([DEC-036](DEC-036-owner-decisions-audit-findings.md), DUP-40).
 - **Date:** 2026-09-30
 - **Resolves:** OQ-13, OQ-19
 

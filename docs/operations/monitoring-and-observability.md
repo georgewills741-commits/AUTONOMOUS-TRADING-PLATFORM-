@@ -15,9 +15,11 @@ Canonical definition of **operational** monitoring: whether the platform itself 
 
 ## Decisions applied (2026-09-30)
 
+MON-009's wording since 2026-10-03: [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) (owner decision, DUP-40).
+
 - **MON-007** Alerting · CONFIRMED REQUIREMENT · DEC-017 — Alerts have severities INFO, WARNING, CRITICAL, and EMERGENCY, and are delivered to at least one operator-configured channel. CRITICAL and EMERGENCY alerts require acknowledgement.
 - **MON-008** Reporting · CONFIRMED REQUIREMENT · DEC-017 — The platform produces daily and on-demand reports of P&L, exposure, strategy performance, expected vs actual, AI cost, and incidents, as read-only views over the ledger, portfolio, audit trail, and Performance Controller.
-- **MON-009** Operational logs · SYSTEM REQUIREMENT · DEC-017 — Structured operational logs are kept here and rotated after 90 days. They are separate from the audit trail (AUD-006).
+- **MON-009** Operational logs · SYSTEM REQUIREMENT · DEC-017 — Structured operational logs are kept here and rotated after the retention period set in TEC-012 (V-19). They are separate from the audit trail (AUD-006).
 
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
@@ -37,7 +39,7 @@ This system also owns two components that Part 2 adds, each specified in its own
 
 ## Findings
 
-**Open:** DUP-40: MON-009 restates TEC-012's operational-log retention (90 days, V-19) with a different class ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+**Resolved:** DUP-40 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): MON-009 no longer restates TEC-012's operational-log retention; it points to TEC-012 and V-19 ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
 ## Not yet specified
 

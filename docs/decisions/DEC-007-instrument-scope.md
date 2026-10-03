@@ -1,6 +1,7 @@
 # DEC-007 — Instrument scope: spot, perpetual futures, and margin
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-03 the owner confirmed this scope (spot, perpetual futures, and margin; no other derivatives), answering OQ-28 ([DEC-036](DEC-036-owner-decisions-audit-findings.md)). The text below is kept as written.
 - **Date:** 2026-09-30
 - **Decided by:** project owner ("all, because the control risks are there")
 - **Resolves:** OQ-04

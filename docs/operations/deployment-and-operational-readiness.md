@@ -85,7 +85,7 @@ This section explains how production readiness is decided. It adds no requiremen
 
 ## Findings
 
-**Open:** CF-20: whether production may run on the owner's own computer (MIG-001, MIG-002, PLT-017 vs the owner's audit request); it affects the production-readiness model here ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+**Resolved:** CF-20 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): production never depends on any one machine; a machine of the owner's may host production only if it meets the same production-readiness criteria as any other production host (MIG-033; the model above) ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
 ## Not yet specified
 

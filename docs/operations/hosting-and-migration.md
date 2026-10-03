@@ -1,6 +1,6 @@
 # Hosting, Backup, and Migration
 
-> **Status:** DOCUMENTED (Handoff Parts 2 and 3) — not implemented · **Owner:** cross-cutting requirement set (MIG); the modules that implement it are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341; Part 3: P3§491, P3§497
+> **Status:** DOCUMENTED (Handoff Parts 2 and 3) — not implemented · **Owner:** cross-cutting requirement set (MIG); the modules that implement it are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341; Part 3: P3§491, P3§497; owner decisions: DEC-030, DEC-036
 >
 > Canonical definition of where the platform can run and how its state is backed up and moved between hosts. Split-brain protection, the active execution authority, failover, and standby are defined in [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md) (REC-019 to REC-022). The deployment package and change control are in [Deployment and Operational Readiness](deployment-and-operational-readiness.md) (OPS-007 to OPS-013). Requirement line format: [`docs/requirements/README.md`](../requirements/README.md).
 
@@ -57,9 +57,15 @@ From [DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)
 
 MIG-031 and MIG-032 come from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-capital-scaling.md) ([Part 3 reconciliation](../traceability/part-3-reconciliation.md), [DEC-031](../decisions/DEC-031-part-3-reconciliation.md)). MIG-031 lists what the disaster-recovery definition of MIG-028 must cover. A restore is followed by reconciliation, never trusted as it is (REC-028). Migration follows MIG-007 to MIG-021 and MIG-029, MIG-030; failover follows REC-021 to REC-024. The reliability and recovery model that ties these together is in [Reliability and recovery](reliability-and-recovery-model.md).
 
+## Production does not depend on one machine (owner decision)
+
+From [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) ([owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md), Q1), resolving CF-20.
+
+- **MIG-033** Production does not depend on one machine · CONSTRAINT · DEC-036 — Production must not depend on any single machine, the owner's own computer included: it runs as an active copy with a standby that can take over (REC-023) and can be rebuilt without the owner (OPS-017). Local hosting stays supported (MIG-001, MIG-002); a machine of the owner's may host production only if it meets the same production-readiness criteria as any other production host (RDY-022, RMP-010).
+
 ## How this fits the rest of the platform
 
-- **Technology.** The initial deployment is Docker Compose on one host (TEC-011, [DEC-009](../decisions/DEC-009-technology-stack.md)). That host can be the operator's computer or a server, so MIG-001 holds without a second deployment. The Compose definition is the single deployment source of truth (OPS-010); local and server differ only through explicit overrides.
+- **Technology.** The initial deployment is Docker Compose on one host (TEC-011, [DEC-009](../decisions/DEC-009-technology-stack.md)). That host can be the operator's computer or a server, so MIG-001 holds without a second deployment. Production runs on at least an active and a standby host (DEC-030), each meeting the production-readiness criteria (MIG-033). The Compose definition is the single deployment source of truth (OPS-010); local and server differ only through explicit overrides.
 - **Reconciliation.** Every reconciliation step above is performed by Recovery and Reconciliation (REC-008), with the same rules as a restart (REC-014 to REC-018): the migrated database is recovery context, never authoritative financial state.
 - **One active instance.** The source is frozen before the destination acts (MIG-013, MIG-014). Only one instance may trade an account (REC-019, REC-020). The execution lease (REC-013) protects instances that share a lease authority. Between two hosts with separate databases, the exchange keys are rotated instead (MIG-029, MIG-030). Automatic failover under high availability uses one shared lease authority (REC-023, REC-024).
 - **Secrets** are never in a package (MIG-009, SEC-005). The destination receives newly issued keys (MIG-029) through the secret manager (SEC-005).
@@ -68,7 +74,7 @@ MIG-031 and MIG-032 come from [Handoff Part 3](../handoffs/part-3-consolidated-a
 
 ## Findings
 
-**Open:** CF-20: MIG-001 and MIG-002 (local hosting supported) vs the owner's statement that production must not depend on the owner's laptop ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). MIG-001 and MIG-002 stand as written until the owner decides.
+**Resolved:** CF-20 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): production never depends on any one machine, the owner's computer included (MIG-033); local hosting stays supported (MIG-001, MIG-002) ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
 ## Not yet specified
 

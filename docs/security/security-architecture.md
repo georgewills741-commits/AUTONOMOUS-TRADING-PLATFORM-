@@ -43,7 +43,7 @@ The owner ranked security controls above the user's hard policy, below the safet
 
 ## Findings
 
-**Open:** CF-21: PLT-010's wording ("no deposit, withdrawal, or multi-user account functions") vs DEC-006 ("for others") and SEC-006's separate rebalancing transfer authority ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). SEC-006 and SEC-007 stand as written.
+**Resolved:** CF-21 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): PLT-010 now matches DEC-006 ("no deposit or withdrawal handling for others") and names SEC-006 and SEC-007, which are unchanged ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
 ## Not yet specified
 

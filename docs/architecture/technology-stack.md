@@ -22,12 +22,12 @@
 
 **Later decisions affecting TEC-011:**
 
-- High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host. The single-host Docker Compose deployment remains for development and the early stages.
+- High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host; production never depends on one machine, the owner's computer included (MIG-033, [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). The single-host Docker Compose deployment remains for development and the early stages.
 - All production infrastructure, including the container definitions, is kept as code (OPS-014, [DEC-029](../decisions/DEC-029-infrastructure-as-code.md)). The infrastructure-as-code tool is chosen when OPERATIONALIZATION is planned.
 
 ## Findings
 
-**Open:** DUP-40: MKD-007 and MON-009 restate TEC-012's market-data and operational-log retention values with different classes ([findings register](../conflicts/register.md); [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
+**Resolved:** DUP-40 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): TEC-012 is the one place of the market-data and operational-log retention values (V-18, V-19); MKD-007 and MON-009 point to it ([findings register](../conflicts/register.md); [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
 ## Not yet decided
 

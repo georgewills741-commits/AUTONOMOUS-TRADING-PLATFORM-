@@ -25,8 +25,8 @@
 | V-15 | Premium-model confirmation threshold (capital at risk) | AIV-014 | POLICY-CONTROLLED PARAMETER | Not set | |
 | V-16 | SUPERVISED proposal expiry time | MODE-005 | POLICY-CONTROLLED PARAMETER | Not set | |
 | V-17 | Market-data freshness limit per stream | MKD-006 | HARD LIMIT (value in policy) | Not set | From measurements |
-| V-18 | Market-data retention in TimescaleDB | TEC-012, MKD-007 | DEFAULT | 30 days | Then permanent Parquet archive |
-| V-19 | Operational log retention | MON-009, TEC-012 | DEFAULT | 90 days | |
+| V-18 | Market-data retention in TimescaleDB | TEC-012 (MKD-007 refers to it) | DEFAULT | 30 days | Then permanent Parquet archive. No other requirement states it (DUP-40, DEC-036) |
+| V-19 | Operational log retention | TEC-012 (MON-009 refers to it) | DEFAULT | 90 days | No other requirement states it (DUP-40, DEC-036) |
 | V-20 | Initial directional research timeframes | DIR-005 | DEFAULT | 1 hour, 4 hours | Research candidates only |
 | V-21 | Python version | TEC-001 | IMPLEMENTATION CHOICE | 3.12 or later | |
 | V-22 | PostgreSQL version | TEC-006 | IMPLEMENTATION CHOICE | 16 | |

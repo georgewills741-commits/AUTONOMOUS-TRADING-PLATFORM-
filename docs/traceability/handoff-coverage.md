@@ -145,6 +145,7 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) | ARCH-041, ARCH-042, PERF-023 |
 | [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md) | PLT-029, OPS-021, GOV-021, GOV-022, GOV-023 |
 | [DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md) | RSK-049, GOV-024 |
+| [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) | MIG-033 |
 
 ## §100 questions — where the repository answers them
 

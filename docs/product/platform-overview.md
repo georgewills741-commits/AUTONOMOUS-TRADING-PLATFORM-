@@ -55,11 +55,11 @@ How these principles apply to individual opportunities (positive-net execution, 
 
 ## Decisions applied (2026-09-30)
 
-- **PLT-010** Single-operator platform · CONFIRMED REQUIREMENT · DEC-006 — The platform trades for one operator, using the operator's own accounts at supported venues through API keys. It does not take custody of funds and has no deposit, withdrawal, or multi-user account functions.
+- **PLT-010** Single-operator platform · CONFIRMED REQUIREMENT · DEC-006 — The platform trades for one operator, using the operator's own accounts at supported venues through API keys. It does not take custody of funds, has no deposit or withdrawal handling for others, and has no multi-user account functions. Rebalancing transfers between the operator's own approved accounts use a separate transfer credential (SEC-006) with the restrictions of SEC-007; the platform holds no general withdrawal or custody authority (SEC-006).
 - **PLT-011** Instrument scope · CONFIRMED REQUIREMENT · DEC-007 — The platform trades spot, perpetual futures, and margin products.
 - **PLT-012** Instrument types gated by their risk controls · CONSTRAINT · DEC-007 — No instrument type is enabled for live trading until the risk controls specific to it (RSK-013) are implemented and verified.
 
-Sources: [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (owner decision), [DEC-007](../decisions/DEC-007-instrument-scope.md) (owner decision).
+Sources: [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (owner decision), [DEC-007](../decisions/DEC-007-instrument-scope.md) (owner decision). PLT-010's wording since 2026-10-03: [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) (owner decision, CF-21).
 
 ## Owner correction applied (OC-1, [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md))
 
@@ -137,8 +137,8 @@ PLT-029 states for the platform what constitution Rule 198 asks of the builder. 
 
 ## Findings
 
-**Open:** OQ-28: whether the instrument scope of PLT-011 includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). PLT-011 stands as written until the owner answers.
+**Resolved:** OQ-28 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): the owner confirmed PLT-011's instrument scope (spot, perpetual futures, margin; no other derivatives) ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).
 
-**Open:** CF-20: "local hosting" (PLT-017; MIG-001, MIG-002) vs the owner's statement that production must not depend on the owner's laptop. **Open:** CF-21: PLT-010 says the platform has "no deposit, withdrawal, or multi-user account functions", where DEC-006 says "no deposit or withdrawal handling for others"; rebalancing transfers between the operator's own venue accounts follow SEC-006 ([DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md), Reconciliation notes). Both are in the [findings register](../conflicts/register.md); the requirements stand as written until the owner decides.
+**Resolved:** CF-20 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): "local hosting" (PLT-017; MIG-001, MIG-002) stays supported, and production never depends on any one machine, the owner's computer included (MIG-033). **Resolved:** CF-21 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): PLT-010 now says "no deposit or withdrawal handling for others", as DEC-006 does, and names SEC-006 and SEC-007 for rebalancing transfers between the operator's own accounts. Both are in the [findings register](../conflicts/register.md).
 
 Resolved: OQ-01 → [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md) (single operator, no custody). OQ-13 → [DEC-017](../decisions/DEC-017-reporting-alerting-and-performance-targets.md) (reporting and alerting owned by Monitoring and Observability). DUP-20 → [DEC-011](../decisions/DEC-011-ownership-of-shared-responsibilities.md).

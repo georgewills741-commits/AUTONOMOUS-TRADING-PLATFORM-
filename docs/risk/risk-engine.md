@@ -145,6 +145,6 @@ RSK-049 keeps RSK-004's layers in their order and places Part 3's security, capi
 
 ## Findings
 
-**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. RSK-013 holds the derivatives and margin controls.
+**Resolved:** OQ-28 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): the owner confirmed the instrument scope of PLT-011 ([DEC-007](../decisions/DEC-007-instrument-scope.md)): spot, perpetual futures, and margin, no other derivatives ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). RSK-013 holds the derivatives and margin controls.
 
 Otherwise all resolved. CF-14 → [DEC-026](../decisions/DEC-026-safety-floor-and-layered-control.md) (RSK-034 to RSK-039). DUP-04 and OQ-06 → DEC-012 (RSK-008). OQ-20 → DEC-012 (RSK-010). DUP-09 → DEC-011 (RSK-012). DUP-19 → DEC-010 (RSK-011). CF-01 → DEC-010 (CAP-016). CF-06 → DEC-016. OQ-04 → DEC-007 (RSK-013). CF-04 → DEC-013 (RSK-014). CF-11 → [DEC-021](../decisions/DEC-021-kill-switch-recovery.md) (RSK-021 to RSK-025).

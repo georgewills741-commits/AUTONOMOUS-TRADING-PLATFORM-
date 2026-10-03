@@ -45,7 +45,7 @@ P2§44 names Binance, OKX, and Coinbase; the initial venues also include Bybit a
 
 ## Findings
 
-**Open:** OQ-28: whether the instrument scope (PLT-011, [DEC-007](../decisions/DEC-007-instrument-scope.md)) includes derivatives beyond perpetual futures and margin ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). The requirements here stand as written until the owner answers. EXA-009 exposes the instrument types per venue.
+**Resolved:** OQ-28 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): the owner confirmed the instrument scope of PLT-011 ([DEC-007](../decisions/DEC-007-instrument-scope.md)): spot, perpetual futures, and margin, no other derivatives ([open-question register](../open-questions/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)). EXA-009 exposes the instrument types per venue.
 
 Resolved:
 

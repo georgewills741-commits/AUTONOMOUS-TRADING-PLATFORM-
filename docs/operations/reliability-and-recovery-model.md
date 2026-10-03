@@ -42,7 +42,7 @@ The safety level (RSK-015) and the health state (HLT-011) are two different thin
 | Standby while main is healthy | Monitors, validates, receives replicated state, prepares recovery; cannot trade without the lease | REC-020, REC-022, REC-029 |
 | Intentional move local ↔ server | Formal migration; freeze the source; new keys; no trading before the old key is revoked | MIG-007 to MIG-021, MIG-029, MIG-030, MIG-032 |
 | Restore from backup | Restored state is reconciled against external state before any trading | REC-028, MIG-022, MIG-028, MIG-031 |
-| Disaster | Recovery from service, host, database, network, exchange, deployment, configuration, security, and migration failures | MIG-028, MIG-031, OPS-014 to OPS-017 |
+| Disaster | Recovery from service, host, database, network, exchange, deployment, configuration, security, and migration failures; production never depends on one machine | MIG-028, MIG-031, MIG-033, OPS-014 to OPS-017 |
 
 No distributed execution architecture is designed or approved, so P3§494's exception does not apply (see [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md)).
 
