@@ -4,7 +4,7 @@
 - **Date:** 2026-09-30
 - **Affects:** everything under `docs/`
 - **Resolves:** CF-07
-- **Later changes:** OQ-15 is answered: `docs/product/trading-policy.md` is not created; runtime policy lives only in the Policy System ([DEC-015](DEC-015-modes-canary-and-policy-governance.md)). Splitting documents waits on content, not on Part 2 ([DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
+- **Later changes:** OQ-15 is answered: `docs/product/trading-policy.md` is not created; runtime policy lives only in the Policy System ([DEC-015](DEC-015-modes-canary-and-policy-governance.md)). Splitting documents waits on content, not on Part 2 ([DEC-024](DEC-024-part-2-reconciliation.md), Consequences). The reason given below for not creating `implementation/` no longer holds: the stack is decided ([DEC-009](DEC-009-technology-stack.md)), and on 2026-10-05 the owner approved the Stage 1 plan and authorized Stage 1 implementation ([DEC-038](DEC-038-stage-1-plan-approved.md)). The plan's decision D2 places code and its artifacts in `src/`, `tests/`, `contracts/`, and `config/examples/`, so `implementation/` is still not created. The text below is kept as written.
 
 ## Context
 

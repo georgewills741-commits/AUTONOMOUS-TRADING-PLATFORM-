@@ -1,6 +1,8 @@
 # Stage 1 Plan — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that adds the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), written for the owner's approval after the owner authorized Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md). This is not the stage record: that is created when the stage starts, after the owner's approval.
+>
+> **Later changes:** on 2026-10-05 the owner approved the plan with D1 to D11 as recommended and authorized Stage 1 implementation ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). This record is kept as written.
 
 ## Identity
 

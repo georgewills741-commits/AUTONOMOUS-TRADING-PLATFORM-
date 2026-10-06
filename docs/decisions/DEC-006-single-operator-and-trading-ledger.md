@@ -1,7 +1,7 @@
 # DEC-006 — Single-operator platform, no custody, internal trading ledger
 
 - **Status:** ACCEPTED
-- **Later changes:** PLT-010's wording was brought in line with this record's decision text ("no deposit or withdrawal handling for others") and now names SEC-006 and SEC-007 for rebalancing transfers between the operator's own accounts ([DEC-036](DEC-036-owner-decisions-audit-findings.md), CF-21). The text below is kept as written.
+- **Later changes:** PLT-010's wording was brought in line with this record's decision text ("no deposit or withdrawal handling for others") and now names SEC-006 and SEC-007 for rebalancing transfers between the operator's own accounts ([DEC-036](DEC-036-owner-decisions-audit-findings.md), CF-21). The owner's answer is preserved verbatim in [owner decisions 1](../handoffs/owner-decisions-01-part-1-open-items.md) ([DEC-037](DEC-037-final-decision-and-integrity-checkpoint.md)): the option chosen read "No custody, deposits, withdrawals, or user accounts"; "for others" in the decision text below is the builder's wording. Rebalancing transfers between the operator's own approved accounts rest on the owner's later instructions (owner correction 1, items 1 and 4; owner decisions 3, Q6) and on the owner's CF-21 decision. The text below is kept as written.
 - **Date:** 2026-09-30
 - **Decided by:** project owner (operator and custody model, OQ-01); builder under the owner's instruction to resolve all open items (ledger scope, OQ-02, DUP-17). The owner may override the delegated parts.
 - **Resolves:** OQ-01, OQ-02, DUP-17

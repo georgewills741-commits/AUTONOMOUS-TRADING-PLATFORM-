@@ -4,7 +4,7 @@
 - **Date:** 2026-09-30
 - **Decided by:** project owner ([owner decisions 2, CF-13](../handoffs/owner-decisions-02-cf-11-to-cf-13.md))
 - **Resolves:** CF-13
-- **Later changes:** the engine is registered as its own system, SYS-34 [Readiness System](../systems/readiness-system.md), by [DEC-024](DEC-024-part-2-reconciliation.md) (DUP-24). The owner's decision below is unchanged; only the builder's placement paragraph is superseded.
+- **Later changes:** the engine is registered as its own system, SYS-34 [Readiness System](../systems/readiness-system.md), by [DEC-024](DEC-024-part-2-reconciliation.md) (DUP-24). The owner's decision below is unchanged; only the builder's placement paragraph is superseded. The options shown with the question are now preserved in [owner decisions 2: options shown](../handoffs/owner-decisions-02-options-shown.md) ([DEC-037](DEC-037-final-decision-and-integrity-checkpoint.md)); the statement under "Alternatives considered" that they are not in the repository no longer holds. The text below is kept as written.
 
 ## Decision
 

@@ -21,7 +21,8 @@
 | [TC-08 verification](tc-08-alternatives-verification.md) | "Alternatives considered" added to DEC-001 to DEC-030, where sourced (TC-08, DEC-035) |
 | [Master knowledge-base audit](master-knowledge-base-audit-2026-10-02.md) | The complete documentation review (handoff §101, P2§329), at the owner's request of 2026-10-02: verdict, findings, consistency matrix, human review package; accepted by the owner (DEC-036) |
 | [Owner decisions 5 verification](owner-decisions-05-verification.md) | Owner decisions on the audit findings applied; documentation review accepted; Stage 1 planning authorized (DEC-036) |
-| [Stage 1 plan verification](stage-01-plan-verification.md) | The [Stage 1 plan](../roadmap/stage-01-foundation-plan.md) written for the owner's approval |
+| [Stage 1 plan verification](stage-01-plan-verification.md) | The [Stage 1 plan](../roadmap/stage-01-foundation-plan.md) written for the owner's approval; approved (DEC-038) |
+| [Final decision checkpoint 2026-10-05](final-decision-checkpoint-2026-10-05.md) | The owner's final human-decision, knowledge-base, consistency, and repository checkpoint: every open or deferred item classified, every owner decision verified against the owner's answers; DEC-037, DEC-038 |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 

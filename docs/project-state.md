@@ -6,7 +6,7 @@ The single record of where this project currently stands (Constitution Rules 50,
 
 ## Current stage
 
-**FOUNDATION — documentation initialization.**
+**FOUNDATION — documentation initialization complete; Stage 1 implementation authorized, not yet started.**
 
 - Handoff Parts 1, 2, and 3 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md), [DEC-031](decisions/DEC-031-part-3-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
@@ -15,7 +15,8 @@ The single record of where this project currently stands (Constitution Rules 50,
 - The owner's checkpoint and three-stage verification rule is adopted ([DEC-032](decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)).
 - The owner's master execution constitution and directive on verification and platform independence (2026-10-01) are adopted ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](decisions/DEC-034-verification-and-platform-independence.md)). The owner decided CF-19 from them (DEC-035).
 - The **complete documentation review** was done on 2026-10-02 and 2026-10-03 as the owner's master knowledge-base audit ([record](traceability/master-knowledge-base-audit-2026-10-02.md)): verdict **B — ready with non-blocking findings** for Stage 1 planning. On 2026-10-03 the owner **accepted the review**, decided its four findings (CF-20, CF-21, OQ-28, DUP-40), confirmed the feature process, and **authorized Stage 1 planning** ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)).
-- Stage 1 planning is authorized; the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) is written (PROPOSED) and awaits the owner's approval. Implementation is not authorized.
+- On 2026-10-05 the owner's final decision checkpoint ([final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md)) found two matters needing the owner. The owner **approved the [Stage 1 plan](roadmap/stage-01-foundation-plan.md)** with its decisions D1 to D11 as recommended and **authorized Stage 1 implementation** ("Begin Stage 1", [DEC-038](decisions/DEC-038-stage-1-plan-approved.md)). The owner's first-round answers of 2026-09-30 are now preserved verbatim ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)).
+- Implementation of Stage 1 is authorized and has not started: no platform code exists yet. No later stage is authorized.
 
 | Gate | Status |
 |---|---|
@@ -36,13 +37,14 @@ The single record of where this project currently stands (Constitution Rules 50,
 | TC-08: alternatives in DEC-001 to DEC-030 (owner's choice: add now where sourced) | DONE — [TC-08 verification](traceability/tc-08-alternatives-verification.md) |
 | Complete documentation review (handoff §101; P2§329) | DONE by the builder on 2026-10-02 and 2026-10-03, verdict B — [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md); **ACCEPTED by the owner** on 2026-10-03 — [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md) |
 | Owner decisions raised by the audit: CF-20 (local hosting vs production independent of the owner's computer), CF-21 (PLT-010's wording on withdrawals), OQ-28 (instrument scope), DUP-40 (duplicated retention values) | DECIDED by the owner on 2026-10-03 — [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md) · [answers](handoffs/owner-decisions-05-audit-findings.md) · [verification](traceability/owner-decisions-05-verification.md) |
-| Stage 1 (FOUNDATION) planning | **AUTHORIZED** by the owner on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)); the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) is WRITTEN (PROPOSED) — [verification](traceability/stage-01-plan-verification.md); **awaiting the owner's approval** |
-| Human approval to implement | **NOT GIVEN** — needs the owner's explicit approval of the Stage 1 plan, such as "Begin Stage 1" (handoff §101; P2§330; P3§541; constitution Part XXIII) |
-| Product implementation | **NOT STARTED, NOT AUTHORIZED.** Nothing is deployed, and live trading is not active (handoff §00 items 22–25; P2§330; Part 3 header) |
+| Stage 1 (FOUNDATION) planning | AUTHORIZED on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)); the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) WRITTEN and verified ([verification](traceability/stage-01-plan-verification.md)); **APPROVED by the owner** on 2026-10-05, D1 to D11 as recommended — [DEC-038](decisions/DEC-038-stage-1-plan-approved.md) · [answers](handoffs/owner-decisions-06-stage-1-plan.md) |
+| Final human-decision, knowledge-base, consistency, and repository checkpoint (owner request, 2026-10-05) | DONE — [final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md); two owner decisions found and answered (DEC-038); first-round answers preserved ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)) |
+| Human approval to implement | **GIVEN for Stage 1 only** — "Begin Stage 1", 2026-10-05 ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md)). Every later stage needs its own approved plan and the owner's explicit approval (handoff §101; P2§330; P3§541; constitution Part XXIII, Rule 136) |
+| Product implementation | **Stage 1 AUTHORIZED, NOT STARTED.** No platform code exists; nothing is deployed; live trading is not active and is not part of Stage 1 (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
-The owner's decision on the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (authorized by [DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md); its objective, scope, out-of-scope, dependencies, outputs, tests, verification, and completion criteria per constitution Rule 140, and eleven decisions D1 to D11 it asks for): approve it, with or without changes, and authorize implementation, or ask for changes.
+Stage 1 (FOUNDATION) as the approved [Stage 1 plan](roadmap/stage-01-foundation-plan.md) defines it ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md)): a reproducible development environment, exact amounts, the contract kernel, configuration, the security foundation, machine checks, and the verification matrix, in checkpoints A to D, each through the three gates. No trading capability.
 
 ## Continuation contract
 
@@ -50,23 +52,32 @@ What the next session needs before it does anything (master execution constituti
 
 | Field | Now |
 |---|---|
-| Current stage and substage | FOUNDATION — documentation initialization; the Stage 1 plan written (PROPOSED), awaiting the owner's approval |
-| Current task | None in progress at this checkpoint. Waiting for the owner: approval of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) and its decisions D1 to D11 |
+| Current stage and substage | FOUNDATION — Stage 1 implementation authorized (DEC-038); the plan's checkpoint A not yet started |
+| Current task | None in progress at this checkpoint. Next: checkpoint A of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (create the stage record; U1 development environment; U6 testing foundation and machine checks) |
 | Completed | See "Completed work" and the checkpoint log below |
 | In progress, possibly partial | Nothing |
-| Blocked | Nothing. Implementation waits for the owner's explicit approval of the Stage 1 plan, as designed |
+| Blocked | Nothing. A refused push of the workflow file (the plan's risk table) would be recorded as a blocker for the owner |
 | Failed verification | None open |
 | Pending verification | None |
 | Verified | Every checkpoint in the checkpoint log, by its verification record |
-| Not verified | Platform behavior: nothing is implemented |
+| Not verified | Platform behavior: nothing is implemented yet |
 | Latest verified commit | The last row of the checkpoint log (a commit cannot record its own hash; the next checkpoint fills it in) |
 | Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
 | Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
-| Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The tools' check versions are not pinned until Stage 1 ([tools README](../tools/docs/README.md)) |
-| Next safe action | Wait for the owner ("Next approved step", item 1). On approval: record it in a decision record, create the stage record, start checkpoint A of the plan |
+| Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The tools' check versions are pinned at Stage 1's checkpoint A ([tools README](../tools/docs/README.md)) |
+| Next safe action | Start checkpoint A ("Next approved step", item 1): re-check the environment, create the stage record, then U1 and U6 through the three gates |
 | Documentation state | Consistent and checked (`build_index.py --check-only`); the registry's Approval column reads "reviewed (DEC-036)" for the 512 handoff requirements, since the owner accepted the review |
 | Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand |
-| Do not implement yet | Anything. Implementation is not authorized (handoff §101; constitution Rules 134–135); FUTURE and PROPOSED items stay unbuilt even then |
+| Do not implement yet | Anything outside the approved Stage 1 plan: no later stage, no trading, no credentials, no deployment, no system contracts (they wait for their stages' plans); FUTURE and PROPOSED items stay unbuilt (handoff §101; constitution Rules 134–136) |
+
+## Owner decisions on the Stage 1 plan (2026-10-05)
+
+Both answered ([owner decisions 6](handoffs/owner-decisions-06-stage-1-plan.md)); applied by [DEC-038](decisions/DEC-038-stage-1-plan-approved.md):
+
+| Item | Owner's decision | Applied |
+|---|---|---|
+| The Stage 1 plan's D1 to D11 | Approved, all as recommended | The [Stage 1 plan](roadmap/stage-01-foundation-plan.md) is APPROVED; D5 (feature-status table in the roadmap) and D6 (GOV-009's statuses next to GOV-024) in Architecture governance; D11's added dependencies in the technology stack |
+| Stage 1 implementation | "Begin Stage 1" | Authorized for Stage 1 only; checkpoint A is next |
 
 ## Owner decisions on the audit findings (2026-10-03)
 
@@ -80,7 +91,7 @@ All answered ([owner decisions 5](handoffs/owner-decisions-05-audit-findings.md)
 | DUP-40: retention values | Only in TEC-012; MKD-007 and MON-009 point to it | MKD-007, MON-009 reworded; V-18, V-19 |
 | Feature process | GOV-002 with GOV-022, your sequence mapped onto it | Confirmed; no change |
 | Documentation review | Accepted | Registry Approval column: "reviewed (DEC-036)" |
-| Stage 1 planning | Authorized | The [Stage 1 plan](roadmap/stage-01-foundation-plan.md) is written, for your approval |
+| Stage 1 planning | Authorized | The [Stage 1 plan](roadmap/stage-01-foundation-plan.md) was written and verified, and you approved it on 2026-10-05 (DEC-038) |
 
 ## Owner decisions on the Part 2 findings (2026-09-30)
 
@@ -118,9 +129,9 @@ Builder readings you may want to check, all stated in the decision records:
   - 61 findings and questions recorded.
   - Verified in three passes.
 - **Resolution round (owner instruction: resolve every open item before Part 2):**
-  - **Owner decisions:** single operator with no custody (DEC-006); spot, perpetual futures, and margin (DEC-007); venues Binance, OKX, Coinbase, Bybit, KuCoin, and extensible (DEC-008).
+  - **Owner decisions:** single operator with no custody (DEC-006); spot, perpetual futures, and margin (DEC-007); venues Binance, OKX, Coinbase, Bybit, KuCoin, and extensible (DEC-008; Bybit and KuCoin as initial venues are the builder's reading of the owner's written answer, reported to the owner the same day).
   - **Owner-delegated:** technology stack — Python 3.12 core, Rust only for measured hot paths, PostgreSQL + TimescaleDB, Parquet/DuckDB, NATS, CCXT (DEC-009).
-  - **Decided under the owner's instruction:** DEC-010 to DEC-018 — pre-trade flow, ownership of every overlapping responsibility, safety architecture, AI organization (five agents plus three deterministic services), net-profit formula and uncertainty margin, modes/canary/policy governance, stage placement, reporting and performance targets, initial directional research candidates.
+  - **Decided under the owner's instruction:** DEC-001 to DEC-005 accepted (first recorded as PROPOSED); DEC-010 to DEC-018 — pre-trade flow, ownership of every overlapping responsibility, safety architecture, AI organization (five agents plus three deterministic services), net-profit formula and uncertainty margin, modes/canary/policy governance, stage placement, reporting and performance targets, initial directional research candidates.
   - **Applied to the specifications:** 109 new requirements that cite their decision record. Five handoff requirements were reclassified (EXA-002, AGT-001, and LED-002 to DEPRECATED / REPLACED; CUS-001 and CUS-002 to FUTURE); no handoff requirement text was changed or removed.
   - All 10 conflicts, 22 duplicate responsibilities, 23 open questions, and 6 technical concerns are marked RESOLVED, with links, in the registers.
 - **Owner correction 1 (company-grade autonomous operating model):**
@@ -193,22 +204,26 @@ Builder readings you may want to check, all stated in the decision records:
   - CF-20: MIG-033 added (production never depends on one machine). CF-21: PLT-010 reworded to match DEC-006. DUP-40: MKD-007 and MON-009 reworded to point to TEC-012. OQ-28: PLT-011 confirmed. The feature process (GOV-002 with GOV-022) confirmed.
   - The complete documentation review is accepted: the registry's Approval column for the 512 handoff requirements reads "reviewed (DEC-036)". Stage 1 planning is authorized.
 - **Stage 1 plan (written 2026-10-03, revised after the independent reviews 2026-10-05; planning authorized by DEC-036):**
-  - The [Stage 1 plan](roadmap/stage-01-foundation-plan.md), PROPOSED for the owner's approval: objective, entry gate, the requirements Stage 1 covers, eight work units (development environment, testing and machine checks, exact amounts, contract kernel, configuration, security foundation, verification matrix, stage record) in four checkpoints, out of scope, outputs, tests, verification, completion criteria, and eleven decisions for the owner (D1 to D11).
+  - The [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (approved on 2026-10-05, [DEC-038](decisions/DEC-038-stage-1-plan-approved.md)): objective, entry gate, the requirements Stage 1 covers, eight work units (development environment, testing and machine checks, exact amounts, contract kernel, configuration, security foundation, verification matrix, stage record) in four checkpoints, out of scope, outputs, tests, verification, completion criteria, and eleven decisions for the owner (D1 to D11).
   - No requirement or decision changed; no code written. Record: [Stage 1 plan verification](traceability/stage-01-plan-verification.md).
+- **Final human-decision, knowledge-base, consistency, and repository checkpoint (2026-10-05, the owner's request):**
+  - The open, deferred, conditional, recommended, and replaced items found by scripted sweeps of every active document classified; every decision the repository attributes to the owner checked against the owner's answers as given; conflict, duplicate, stale-statement, and canonical-source sweeps re-run. Record: [final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md).
+  - Two matters needed the owner: the Stage 1 plan's D1 to D11 and the authorization to implement. Both answered: approved as recommended, and "Begin Stage 1" ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md); [owner decisions 6](handoffs/owner-decisions-06-stage-1-plan.md)).
+  - The owner's first-round instruction and answers (OQ-01, OQ-03, OQ-04, OQ-16) preserved verbatim as [owner decisions 1](handoffs/owner-decisions-01-part-1-open-items.md), and the options shown with CF-11 to CF-13 as [owner decisions 2: options shown](handoffs/owner-decisions-02-options-shown.md); the edited quotations in DEC-006 to DEC-009 annotated, not rewritten; the CF-21 question's wording point recorded (finding F-02) ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)). No requirement changed.
 
 ## In-progress work
 
-None at this checkpoint. Next: the owner's decision on the Stage 1 plan (see "Next approved step").
+None at this checkpoint. Next: checkpoint A of the Stage 1 plan (see "Next approved step").
 
 ## Blockers
 
 | Problem | Impact | Required resolution |
 |---|---|---|
-| None open | — | Implementation waits, by design, for the owner's explicit approval of the Stage 1 plan |
+| None open | — | — |
 
 ## Open questions
 
-Nothing is waiting for the owner. CF-20, CF-21, OQ-28, and DUP-40, raised by the [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md), were decided on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)).
+Nothing is waiting for the owner. CF-20, CF-21, OQ-28, and DUP-40, raised by the [master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md), were decided on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)). The Stage 1 plan's D1 to D11 and the authorization to implement were decided on 2026-10-05 ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md)).
 
 Recorded now and decided when their stages are planned:
 
@@ -266,6 +281,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - DEC-035 (owner decisions on the Part 3 findings; Part 3 approved) added on 2026-10-02. DEC-031 confirmed by the owner, with CF-17 changed.
 - DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 (TC-08, DEC-035). No decision changed.
 - DEC-036 (owner decisions on the audit findings; documentation review accepted; Stage 1 planning authorized) added on 2026-10-03.
+- DEC-037 (final decision and integrity checkpoint; first-round answers preserved) and DEC-038 (Stage 1 plan approved; Stage 1 implementation authorized) added on 2026-10-05.
 
 ## Recent changes
 
@@ -284,12 +300,13 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-10-02: master knowledge-base audit (the complete documentation review), verdict B: CF-20, CF-21, DUP-40, OQ-28 raised for the owner; documentation defects fixed (glossary aliases, TC-10 inventory, source-of-truth rows, stale notes); no requirement changed ([record](traceability/master-knowledge-base-audit-2026-10-02.md)).
 - 2026-10-03: applied owner decisions 5 (DEC-036): MIG-033 added; PLT-010, MKD-007, and MON-009 reworded; CF-20, CF-21, DUP-40, OQ-28 resolved; documentation review accepted (registry Approval column "reviewed"); Stage 1 planning authorized. No platform code, configuration, or infrastructure created.
 - 2026-10-03 to 2026-10-05: wrote the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (PROPOSED), revised after two independent reviews: objective, entry gate, requirements, eight work units in four checkpoints, out of scope, outputs, tests, verification, completion criteria, and eleven decisions for the owner (D1 to D11). No requirement or decision changed; no code written.
+- 2026-10-05: final human-decision, knowledge-base, consistency, and repository checkpoint: two owner decisions found and answered (DEC-038: Stage 1 plan approved, Stage 1 implementation authorized); first-round instruction and answers, and the options shown with CF-11 to CF-13, preserved verbatim (DEC-037); TC-10's GOV-009/GOV-024 part decided (D6); feature statuses to be kept in one roadmap table (D5). No requirement changed; no platform code written.
 
 ## Next approved step
 
-1. **The owner:** read the [Stage 1 plan](roadmap/stage-01-foundation-plan.md); approve it, with or without changes to its decisions D1 to D11, and authorize implementation (for example "Begin Stage 1"), or ask for changes.
-2. **The builder, on approval:** record the approval and D1 to D11 in a decision record; create the stage record (the [traceability README](traceability/README.md)); start checkpoint A of the plan, then B, C, and D, each through the three gates.
-3. Only explicit approval such as "Begin Stage 1" authorizes implementation (constitution Rules 134–135). Approval to implement does not approve later architecture changes (Rule 136).
+1. **The builder: checkpoint A of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md).** Re-check the environment (Python 3.12, uv, access to the package index) and record it; create the stage record `docs/traceability/stage-01-foundation.md` (the [traceability README](traceability/README.md)) and the roadmap's feature-status table (D5, kept current at every checkpoint); then U1 (development environment, with the repository test for secrets as the first real test; the licenses of the dependencies D11 adds checked and recorded, DEC-009's rule; the build backend pinned to one exact version) and U6 (testing foundation and machine checks); three gates; commit; push.
+2. **Then checkpoints B, C, and D** in order (U2 and U3; U4 and U5; U7 and U8), each through the three gates, and the stage's completion certificate, whose "approved to proceed" is the owner's.
+3. **Authorization limits.** DEC-038 authorizes Stage 1 only (constitution Rules 134–136). Stage 2 needs its own plan and the owner's explicit approval.
 
 ## Memory check (constitution Rule 175)
 
@@ -323,4 +340,5 @@ Each checkpoint commit and its verification record. Hashes are those on branch `
 | 74928b4 | TC-08: alternatives added to the older decision records | [TC-08 verification](traceability/tc-08-alternatives-verification.md) |
 | 16df57f | Master knowledge-base audit (the complete documentation review), verdict B | [Master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md) |
 | bb19a60 | Owner decisions on the audit findings; documentation review accepted; Stage 1 planning authorized (DEC-036) | [Owner decisions 5 verification](traceability/owner-decisions-05-verification.md) |
-| The commit that adds this row | Stage 1 plan written (PROPOSED), for the owner's approval | [Stage 1 plan verification](traceability/stage-01-plan-verification.md) |
+| 47f5348 | Stage 1 plan written (PROPOSED), for the owner's approval | [Stage 1 plan verification](traceability/stage-01-plan-verification.md) |
+| The commit that adds this row | Final decision checkpoint; Stage 1 plan approved and Stage 1 implementation authorized (DEC-037, DEC-038) | [Final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md) |

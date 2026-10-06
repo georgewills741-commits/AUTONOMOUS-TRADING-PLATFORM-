@@ -4,7 +4,7 @@
 >
 > **Verdict: B — READY WITH NON-BLOCKING FINDINGS** (for Stage 1 planning). No critical or high finding. Four items need the owner's decision (CF-20, CF-21, OQ-28, DUP-40); none blocks Stage 1 planning. Implementation is not authorized.
 >
-> **Later changes:** on 2026-10-03 the owner accepted this review, decided CF-20, CF-21, OQ-28, and DUP-40, confirmed the feature process, and authorized Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md); [owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md)). This record is kept as written.
+> **Later changes:** on 2026-10-03 the owner accepted this review, decided CF-20, CF-21, OQ-28, and DUP-40, confirmed the feature process, and authorized Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md); [owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md)). On 2026-10-05 finding A-17 was resolved: the owner's first-round answers are preserved verbatim ([owner decisions 1](../handoffs/owner-decisions-01-part-1-open-items.md)), and so are the options shown with CF-11 to CF-13 ([owner decisions 2: options shown](../handoffs/owner-decisions-02-options-shown.md)) ([DEC-037](../decisions/DEC-037-final-decision-and-integrity-checkpoint.md)); and the owner approved the Stage 1 plan (finding A-04) and authorized Stage 1 implementation ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). This record is kept as written.
 
 ## Identity
 

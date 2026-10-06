@@ -1,6 +1,8 @@
 # TC-08 Alternatives — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that adds an "Alternatives considered" section to the older decision records, as the owner decided for TC-08 on 2026-10-02 ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md).
+>
+> **Later changes:** the two observations at the end of this record became the master knowledge-base audit's finding A-17, resolved on 2026-10-05: the owner's first-round questions and answers are preserved in [owner decisions 1](../handoffs/owner-decisions-01-part-1-open-items.md), and the options shown with CF-11 to CF-13 in [owner decisions 2: options shown](../handoffs/owner-decisions-02-options-shown.md) ([DEC-037](../decisions/DEC-037-final-decision-and-integrity-checkpoint.md)). This record is kept as written.
 
 ## Identity
 

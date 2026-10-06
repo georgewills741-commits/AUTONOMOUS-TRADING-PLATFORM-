@@ -20,6 +20,8 @@
 - **TEC-012** Data retention · IMPLEMENTATION CHOICE · DEC-009 — The ledger, audit trail, event history, and policy and strategy versions are kept permanently and are append-only. Market data is kept 30 days in TimescaleDB, then permanently in compressed Parquet archives (OHLCV, trades, order-book snapshots). Operational logs are kept 90 days.
 - **TEC-013** Supervision and execution lease · IMPLEMENTATION CHOICE · DEC-019 — Containers run with automatic restart policies and health checks, and start automatically when the host boots. The execution lease (REC-013) is a PostgreSQL lease record with an expiry and a monotonically increasing fencing token; every order and transfer request carries the token and is rejected if it is not current (EXE-010).
 
+**Dependencies added by the Stage 1 plan ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)):** the build backend `uv_build`, pinned to one exact version in `pyproject.toml`, and, for the machine checks only, the GitHub actions `actions/checkout` and `astral-sh/setup-uv`, each pinned to a commit hash. The other libraries Stage 1 uses are those of TEC-004 and TEC-009.
+
 **Later decisions affecting TEC-011:**
 
 - High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host; production never depends on one machine, the owner's computer included (MIG-033, [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). The single-host Docker Compose deployment remains for development and the early stages.

@@ -3,7 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-10-02
 - **Decided by:** project owner ([owner decisions 4](../handoffs/owner-decisions-04-part-3-findings.md), eight multiple-choice answers); the wording of RSK-049 and GOV-024, taken from the options the owner chose, and the reading notes are the builder's
-- **Later changes:** TC-08's work is done: DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 ([TC-08 verification](../traceability/tc-08-alternatives-verification.md)). The complete documentation review is done and accepted, and Stage 1 planning is authorized ([DEC-036](DEC-036-owner-decisions-audit-findings.md), 2026-10-03). The text below is kept as written.
+- **Later changes:** TC-08's work is done: DEC-001 to DEC-030 all have an "Alternatives considered" section since 2026-10-02 ([TC-08 verification](../traceability/tc-08-alternatives-verification.md)). The complete documentation review is done and accepted, and Stage 1 planning is authorized ([DEC-036](DEC-036-owner-decisions-audit-findings.md), 2026-10-03). The two items the reading notes below leave to Stage 1 planning (where statuses are kept; GOV-009's relation to GOV-024) were decided by the owner with the Stage 1 plan (D5, D6, [DEC-038](DEC-038-stage-1-plan-approved.md), 2026-10-05), when the owner also approved the plan and authorized Stage 1 implementation ("Begin Stage 1"). The text below is kept as written.
 
 ## Context
 

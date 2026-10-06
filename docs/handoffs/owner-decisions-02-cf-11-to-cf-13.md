@@ -1,6 +1,6 @@
 # Owner Decisions 2 — CF-11, CF-12, CF-13
 
-> **Status:** HISTORICAL — source input: the owner's answers of 2026-09-30 to the three conflicts raised by owner correction 1. This is **not** an active source of truth. Each answer is applied through the decision record linked under it.
+> **Status:** HISTORICAL — source input: the owner's answers of 2026-09-30 to the three conflicts raised by owner correction 1. This is **not** an active source of truth. Each answer is applied through the decision record linked under it. The options shown with the questions are preserved in [owner decisions 2: options shown](owner-decisions-02-options-shown.md) ([DEC-037](../decisions/DEC-037-final-decision-and-integrity-checkpoint.md)).
 >
 > **Formatting note:** questions are quoted as asked. Each answer is reproduced inside a text block exactly as given; nothing was added, removed, or changed. The owner wrote each answer as free text rather than choosing a listed option.
 

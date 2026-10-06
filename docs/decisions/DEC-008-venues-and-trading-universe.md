@@ -1,6 +1,7 @@
 # DEC-008 — Venues, trading universe, and adapter requirements
 
 - **Status:** ACCEPTED
+- **Later changes:** The question as asked (three options, Binance, OKX, Coinbase, more than one allowed) and the owner's answer are preserved verbatim in [owner decisions 1](../handoffs/owner-decisions-01-part-1-open-items.md) ([DEC-037](DEC-037-final-decision-and-integrity-checkpoint.md)). The answer reads "all add more space for more exchange like bybit and many more like kucoin exchange"; the quotation below adds a comma, changes "exchange" to "exchanges" and "bybit" to "Bybit", and replaces "and many more like kucoin exchange" with "and KuCoin". Naming Bybit and KuCoin as initial venues, alongside the room for many more (decision 2), is the builder's reading of the answer, reported to the owner the same day ("Exchanges: Binance, OKX, Coinbase, Bybit and KuCoin"), without objection. The statement under "Alternatives considered" that the question is not recorded no longer holds. The text below is kept as written.
 - **Date:** 2026-09-30
 - **Decided by:** project owner (venue set: "all, add more space for more exchanges like Bybit and KuCoin"); builder under delegation (universe definition, adapter requirements from TC-05)
 - **Resolves:** OQ-03, TC-05

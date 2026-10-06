@@ -1,8 +1,8 @@
 # Stage 1 — FOUNDATION: Plan
 
-> **Status:** PROPOSED — written for the owner's approval. Planning was authorized by the owner on 2026-10-03 ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). **Implementation is not authorized:** nothing in this plan is built until the owner explicitly approves it, for example with "Begin Stage 1" (constitution Rules 134–135). Approving this plan does not approve later architecture changes (Rule 136).
+> **Status:** APPROVED by the owner on 2026-10-05, with D1 to D11 as recommended; **Stage 1 implementation is authorized** ("Begin Stage 1", [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md); [owner decisions 6](../handoffs/owner-decisions-06-stage-1-plan.md)). Planning was authorized on 2026-10-03 ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). The authorization covers Stage 1 only; it does not approve later architecture changes (constitution Rule 136). Progress is recorded in the stage record, created at the start of checkpoint A.
 >
-> The fields of constitution Rule 140 (objective, in scope, out of scope, dependencies, outputs, tests, verification, completion criteria) for the first stage of the [master roadmap](roadmap.md). Every choice this plan makes that is not already a requirement or decision is marked **RECOMMENDED — NOT YET APPROVED** (constitution Rule 180) and listed under "Decisions this plan asks for" (D1 to D11). The owner's approval of the plan, with any changes, is recorded in a decision record before any work starts; that record also lists every dependency Stage 1 adds, since adding a dependency not named in the [technology stack](../architecture/technology-stack.md) requires a decision record (constitution Rules 99–101).
+> The fields of constitution Rule 140 (objective, in scope, out of scope, dependencies, outputs, tests, verification, completion criteria) for the first stage of the [master roadmap](roadmap.md). Every choice this plan makes that is not already a requirement or decision was marked **RECOMMENDED — NOT YET APPROVED** (constitution Rule 180) and listed under "Decisions this plan asks for" (D1 to D11); the owner approved all eleven as recommended ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). That record also approves every dependency Stage 1 adds, since adding a dependency not named in the [technology stack](../architecture/technology-stack.md) requires a decision record (constitution Rules 99–101).
 
 ## 1. Objective
 
@@ -51,7 +51,7 @@ The roadmap places requirements in Stage 1 through its FOUNDATION rows (Handoff 
 | Requirement | Stage 1 | Completed in |
 |---|---|---|
 | ARCH-011 | Quantization to an increment with a named rounding direction | DATA FOUNDATION, which supplies each venue's increments |
-| OPS-010 | Applied as a design rule: no deployment definition is created anywhere; Stage 1 has nothing deployable, so none is written. The definition's single location is fixed with the first deployable service | The stage that builds the first deployable service; OPERATIONALIZATION (deployment package, OPS-007 to OPS-009 and OPS-011 to OPS-017) |
+| OPS-010 | Applied as a design rule: no deployment definition is created anywhere; Stage 1 has nothing deployable, so none is written. The definition's single location is fixed with the first deployable service | The stage that builds the first deployable service; OPERATIONALIZATION (deployment package: OPS-007, OPS-008, OPS-011 to OPS-017; OPS-009 was replaced by OPS-014 to OPS-017) |
 | OPS-004, MIG-027 (prepared, not delivered) | The six environment names of OPS-004 and the platform and environment identifiers of MIG-027 exist as validated configuration values | OPS-004's separate configuration, database, and credentials per environment: OPERATIONALIZATION; MIG-027: OPERATIONALIZATION |
 | MODE-006, SEC-004 (prepared, not delivered) | Defence in depth only: a configuration that declares trading-enabled credentials is refused unless its environment is production (constitution Rules 109, 111; §95's "Configuration" and "Security foundation"). The real barrier is that no trading credential exists outside production, which no Stage 1 artifact can provide | CORE TRADING FOUNDATION (MODE-006); the stages that first hold credentials (SEC-004) |
 
@@ -225,7 +225,7 @@ Stage 1 is complete only when all of these hold, each with its evidence in the s
 
 ## 10. Decisions this plan asks for
 
-Each is RECOMMENDED — NOT YET APPROVED. The owner's approval of this plan approves them; any the owner changes are changed before work starts. The approving decision record lists them, together with every dependency they add.
+Each was RECOMMENDED — NOT YET APPROVED until the owner approved all eleven, as recommended, on 2026-10-05 ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). The table is kept as approved.
 
 | # | Decision | Recommendation | Alternatives | Why |
 |---|---|---|---|---|
@@ -239,7 +239,7 @@ Each is RECOMMENDED — NOT YET APPROVED. The owner's approval of this plan appr
 | D8 | Contract conventions and versioning scheme | Section 4, U3: strict, immutable (tuples for collections), unknown fields refused, amounts as strings, errors rendered and logged only through one function that leaves input out; `MAJOR.MINOR` versions with breaking changes only in a new major version; committed schemas as snapshots; outcomes consumed only through an exhaustive `fold` | Lax validation; date-based or single-number versions | Sets the model every later interface follows (ARCH-026, GOV-006), so it is approved now rather than decided silently in code |
 | D9 | Configuration format and Stage 1 settings | TOML files read with the standard library (`tomllib`); the settings of U4 only; secrets only from the process environment | YAML or JSON; a settings library | No new dependency (constitution Rule 99); TOML is typed and allows comments; the settings are only those Stage 1 needs, so nothing speculative is configured |
 | D10 | How requirements are traced to code and tests | Requirement markers in module docstrings and pytest markers; a generated verification matrix with the columns of U7 | A hand-written matrix | A generated matrix cannot drift; the checker refuses unknown or replaced IDs |
-| D11 | Dependencies Stage 1 adds | Runtime: Pydantic v2. Development: pytest, Hypothesis, ruff, mypy. Build: `uv_build` (D3). Machine checks: the two actions of D4. All already named in TEC-004 and TEC-009 except the build backend and the actions; exact versions fixed at checkpoint A: the libraries and tools in the lockfile, the build backend's version range in `pyproject.toml`, the actions by commit hash in the workflow | Others only by a later decision record | The technology stack requires a decision record for any dependency it does not list (constitution Rules 99–101) |
+| D11 | Dependencies Stage 1 adds | Runtime: Pydantic v2. Development: pytest, Hypothesis, ruff, mypy. Build: `uv_build` (D3). Machine checks: the two actions of D4. All already named in TEC-004 and TEC-009 except the build backend and the actions; exact versions fixed at checkpoint A: the libraries and tools in the lockfile, the build backend pinned to one exact version in `pyproject.toml` (aligned with U1, DEC-038), the actions by commit hash in the workflow | Others only by a later decision record | The technology stack requires a decision record for any dependency it does not list (constitution Rules 99–101) |
 
 ## 11. Sequence and checkpoints
 

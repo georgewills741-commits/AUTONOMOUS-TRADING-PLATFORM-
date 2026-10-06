@@ -1,7 +1,7 @@
 # DEC-009 — Technology stack, storage, and deployment
 
 - **Status:** ACCEPTED
-- **Later changes:** Among the requirements, the retention values below are stated only in TEC-012; MKD-007 and MON-009 point to it instead of repeating them ([DEC-036](DEC-036-owner-decisions-audit-findings.md), DUP-40). The text below is kept as written.
+- **Later changes:** Among the requirements, the retention values below are stated only in TEC-012; MKD-007 and MON-009 point to it instead of repeating them ([DEC-036](DEC-036-owner-decisions-audit-findings.md), DUP-40). The owner's delegation is preserved verbatim in [owner decisions 1](../handoffs/owner-decisions-01-part-1-open-items.md) ([DEC-037](DEC-037-final-decision-and-integrity-checkpoint.md)): "choose the best combination that suit mt system well"; the quotation below changes "suit" to "suits" and "mt" to "my", and leaves out "well". The text below is kept as written.
 - **Date:** 2026-09-30
 - **Decided by:** builder, under the owner's explicit delegation ("choose the best combination that suits my system"). The owner may override.
 - **Resolves:** OQ-16, OQ-22

@@ -3,6 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-10-03
 - **Decided by:** project owner ([owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md), seven multiple-choice answers); the wording of MIG-033 and of the changed PLT-010, MKD-007, and MON-009, taken from the options the owner chose, and the reading notes are the builder's
+- **Later changes:** The CF-21 question quoted DEC-006's decision text ("no deposit or withdrawal handling for others") as the owner's original decision; the option the owner actually chose on 2026-09-30 read "No custody, deposits, withdrawals, or user accounts" (owner decisions 1). The CF-21 decision stands on the owner's own later instructions and the owner's explicit choice of PLT-010's wording; see [DEC-037](DEC-037-final-decision-and-integrity-checkpoint.md) and finding F-02 of the [final decision checkpoint](../traceability/final-decision-checkpoint-2026-10-05.md). On 2026-10-05 the owner approved the Stage 1 plan and authorized Stage 1 implementation ([DEC-038](DEC-038-stage-1-plan-approved.md)). The text below is kept as written.
 - **Resolves:** CF-20, CF-21, DUP-40, OQ-28 (raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)); the audit's acceptance (its finding A-19); the optional confirmation of the feature process; the authorization of Stage 1 planning
 
 ## Context
