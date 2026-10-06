@@ -27,7 +27,7 @@
 
 | Checkpoint | Units | Status | Verification record |
 |---|---|---|---|
-| A | U1 development environment; U6 testing foundation and machine checks | Built; three gates passed. The machine checks' first runs on GitHub, which need the checkpoint's push, are recorded in "Machine checks on GitHub" below | [Checkpoint A](stage-01-checkpoint-a-verification.md) |
+| A | U1 development environment; U6 testing foundation and machine checks | Done: built; three gates passed (commit `f2e4046`); the machine checks pass on GitHub and fail on a deliberately broken check ("Machine checks on GitHub" below) | [Checkpoint A](stage-01-checkpoint-a-verification.md) |
 | B | U2 exact amounts; U3 contract kernel | Not started | — |
 | C | U4 configuration; U5 security foundation | Not started | — |
 | D | U7 verification matrix; U8 stage record and closure | Not started (U8 started at A) | — |
@@ -109,13 +109,15 @@ U5 extends the repository test for secrets to the example configuration files. S
 
 ## Machine checks on GitHub (U6 acceptance)
 
-The workflow first runs when checkpoint A is pushed. Its first run, and a deliberate negative test (a commit that breaks one check, which must fail the run, then reverted), are recorded here when they have run. The negative test runs on this branch, the one this work is pushed to; a temporary branch would leave no failing commit in the branch's history, but the builder pushes only to its designated branch without the owner's permission.
+Checkpoint A's push was accepted, the workflow file included, so the plan's risk that a push of a workflow might need further permission did not occur. The first run, and a deliberate negative test (a commit that breaks one check, which must fail the run, then reverted), ran on 2026-10-06. The negative test runs on this branch, the one this work is pushed to; a temporary branch would leave no failing commit in the branch's history, but the builder pushes only to its designated branch without the owner's permission.
 
 | Run | Commit | Result |
 |---|---|---|
-| First run | Checkpoint A's commit | Pending: needs the push |
-| Negative test | A commit that breaks one check | Pending |
-| After the revert | The revert | Pending |
+| First run, [37460824856](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/37460824856) | `f2e4046`, checkpoint A | Success: every step passed (checkout, uv's installation, and the nine steps that run the guide's ten commands), in 20 seconds. The log shows uv 0.12.23 downloaded from the publisher's mirror and installed (the action stops if the checksum does not match), Python 3.12.3 (the runner's system interpreter), 19 packages installed at their locked versions (every locked package except colorama, which is for Windows only, plus the project itself), the self-test's 34 cases, and 52 tests passed |
+| Negative test, [37460975992](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/37460975992) | `74ce426`, an unused import added to `src/atp/__init__.py` | Failure, as required: the Lint step failed with ruff's "F401 `os` imported but unused" at `src/atp/__init__.py:5`; the later steps were skipped |
+| After the revert, [37461068724](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/37461068724) | `bc6eca5`, which reverts `74ce426`; its files are identical to `f2e4046`'s | Success: every step passed |
+
+U6's acceptance is met: the workflow passes on the branch, and a deliberately broken check makes it fail.
 
 ## Transition checklist and completion certificate
 

@@ -133,7 +133,7 @@ The commands are those of the [development guide](../development.md), run with u
 
 **PASS.** Verification 1 and 2 passed; Verification 3 passed on run 3, after runs 1 and 2 failed and every finding of the three runs was fixed; checks 1 to 13 pass on the final tree and on a clean clone. No requirement or decision changed; no platform behavior was written.
 
-**Pending, recorded in the [stage record](stage-01-foundation.md):** U6's acceptance on GitHub (the machine checks' first run on this checkpoint's commit, and the negative test), which needs this commit's push and is recorded by the next commit; U6's Hypothesis setting, deferred to checkpoint B; the items carried to checkpoints B and C.
+**After this record's commit (`f2e4046`):** U6's acceptance on GitHub was met on 2026-10-06 and is recorded in the [stage record](stage-01-foundation.md) ("Machine checks on GitHub"): the first run passed, a deliberately broken check failed the run, and the revert passed again. **Still open, recorded there:** U6's Hypothesis setting, deferred to checkpoint B; the items carried to checkpoints B and C.
 
 ## Environment
 
