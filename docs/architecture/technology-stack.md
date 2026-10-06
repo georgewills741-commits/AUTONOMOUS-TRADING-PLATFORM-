@@ -1,6 +1,6 @@
 # Technology Stack
 
-> **Status:** DECIDED — [DEC-009](../decisions/DEC-009-technology-stack.md) (builder choice under the owner's explicit delegation, 2026-09-30). Nothing is implemented, and choosing the stack does not authorize implementation.
+> **Status:** DECIDED — [DEC-009](../decisions/DEC-009-technology-stack.md) (builder choice under the owner's explicit delegation, 2026-09-30). Choosing the stack did not authorize implementation; only [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md) does, for Stage 1. Stage 1 applies TEC-001, TEC-003, TEC-004, TEC-008, and TEC-009 (the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), section 3.1; testcontainers excepted, which comes with storage).
 >
 > Canonical definition of the languages, libraries, storage, messaging, tooling, and deployment the platform will use. The reasons and alternatives are in DEC-009. Adding a dependency not listed here requires a decision record (constitution Rules 99–101). Classes follow [DEC-020](../decisions/DEC-020-value-classification.md): technology and mechanism choices are IMPLEMENTATION CHOICE; concrete values (versions, retention periods) are in the [values register](../requirements/values-register.md).
 
@@ -22,6 +22,8 @@
 
 **Dependencies added by the Stage 1 plan ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)):** the build backend `uv_build`, pinned to one exact version in `pyproject.toml`, and, for the machine checks only, the GitHub actions `actions/checkout` and `astral-sh/setup-uv`, each pinned to a commit hash. The other libraries Stage 1 uses are those of TEC-004 and TEC-009.
 
+**Where versions are fixed (since Stage 1's checkpoint A):** the libraries and tools in `uv.lock`; uv and the build backend in `pyproject.toml`; the actions in `.github/workflows/checks.yml`. How a version is changed: the [development guide](../development.md).
+
 **Later decisions affecting TEC-011:**
 
 - High availability is approved ([DEC-030](../decisions/DEC-030-high-availability-and-single-active-copy.md)), so production runs on at least an active host and a standby host; production never depends on one machine, the owner's computer included (MIG-033, [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). The single-host Docker Compose deployment remains for development and the early stages.
@@ -33,4 +35,4 @@
 
 ## Not yet decided
 
-Specific versions of each library (fixed in the lockfile when implementation starts), the AI providers and models (chosen in the AI INTELLIGENCE stage from Model Evaluation results, AIL-007), and hosting location. The hosting location should minimise network latency to the enabled venues, and is to be chosen with measurements.
+The AI providers and models (chosen in the AI INTELLIGENCE stage from Model Evaluation results, AIL-007), and hosting location. The hosting location should minimise network latency to the enabled venues, and is to be chosen with measurements.

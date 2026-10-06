@@ -1,0 +1,59 @@
+# Machine checks (Stage 1 plan, U6; GOV-023): the checks of docs/development.md, run on every push
+# and pull request, so they keep running whether or not Claude Code is present. The job has
+# read-only repository permissions, references no repository secret, and deploys nothing. Every
+# action is pinned to a commit hash and uv to one version with its checksum (constitution Rule 102).
+name: checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.23"
+          # SHA-256 of uv-x86_64-unknown-linux-gnu.tar.gz 0.12.23, from the publisher's manifest.
+          checksum: "9167d72b3319674b6303c4cbe071854bba13ebdf3d76b1a7cbdc175471fb66d6"
+          enable-cache: false
+
+      - name: Install the locked dependencies
+        run: uv sync --locked
+
+      - name: Show the versions in use
+        run: |
+          uv --version
+          uv run --locked python --version
+
+      - name: Documentation checker
+        run: uv run --locked python tools/docs/build_index.py --check-only
+
+      - name: Documentation tools self-test
+        run: uv run --locked python tools/docs/selftest.py
+
+      - name: Lint
+        run: uv run --locked ruff check
+
+      - name: Formatting
+        run: uv run --locked ruff format --check
+
+      - name: Types
+        run: uv run --locked mypy
+
+      - name: Types of the documentation tools
+        run: uv run --locked mypy --config-file tools/docs/mypy.ini
+
+      - name: Tests
+        run: uv run --locked pytest

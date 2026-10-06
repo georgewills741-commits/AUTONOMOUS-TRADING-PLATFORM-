@@ -11,7 +11,7 @@ python3 tools/docs/compare_requirements.py REV --strict --expect-changed=ID:cls,
 python3 tools/docs/selftest.py                 # negative tests: the checker and the comparison must fail on broken input
 ```
 
-At every checkpoint run the three checking commands (`--check-only`, the comparison with the previous checkpoint, and the self-test) and the code checks below. With the round trip of any newly preserved text, they are Verification 1 until code exists (DEC-033).
+At every checkpoint run the three checking commands (`--check-only`, the comparison with the previous checkpoint, and the self-test) and the code checks below. With the round trip of any newly preserved text, they are part of Verification 1 (DEC-033), together with the checks of the code in the [development guide](../../docs/development.md).
 
 ## What it generates
 
@@ -48,21 +48,21 @@ At every checkpoint run the three checking commands (`--check-only`, the compari
 
 When a decision record deliberately changes existing requirements, list them with `--expect-changed`: `ID` means changed in any field but not removed; `ID:cls` (or `ID:cls+text`, any of title, cls, src, text, doc) means changed in exactly those fields; `ID:removed` means removed. With `--strict`, the check passes only if exactly the listed requirements changed, exactly as listed; a duplicated or empty entry is refused. The decision record names the command it was checked with.
 
-Run `build_index.py` after every documentation change and commit the regenerated files with the change. It does not check code, schemas, interfaces, or tests, which do not exist yet. That is the rest of ARCH-032.
+Run `build_index.py` after every documentation change and commit the regenerated files with the change. It does not check code, schemas, interfaces, or tests: that is the rest of ARCH-032, of which Stage 1's verification matrix (the [Stage 1 plan](../../docs/roadmap/stage-01-foundation-plan.md), U7) is the next increment.
 
 ## Code checks for the tools
 
-The tools themselves are checked at every checkpoint with the project's linter, formatter, and type checker, ruff and mypy (TEC-009, [DEC-009](../../docs/decisions/DEC-009-technology-stack.md)). They are development checks, not dependencies: the scripts still run with Python 3 and its standard library alone.
+The tools themselves are checked at every checkpoint with the project's linter, formatter, and type checker, ruff and mypy (TEC-009, [DEC-009](../../docs/decisions/DEC-009-technology-stack.md)), and by the machine checks on every push. They are development checks, not dependencies: the scripts still run with Python 3 and its standard library alone.
 
 ```text
-ruff check tools/docs                    # lint
-ruff format --check tools/docs           # formatting (ruff's default style)
-mypy --check-untyped-defs tools/docs     # types, including inside functions without annotations
+uv run --locked ruff check tools/docs                     # lint
+uv run --locked ruff format --check tools/docs            # formatting
+uv run --locked mypy --config-file tools/docs/mypy.ini    # types, including inside functions without annotations
 ```
 
-The versions are not pinned yet: TEC-009's lockfile comes with the development environment at Stage 1. Versions last used: ruff 0.15.8, mypy 1.19.1, Python 3.11 ([integrity verification of 2026-10-01](../../docs/traceability/integrity-verification-2026-10-01.md)).
+The tools keep the rule set and type-check level they were written to: [`ruff.toml`](ruff.toml) selects ruff's former default rules (E4, E7, E9, F) and [`mypy.ini`](mypy.ini) checks the bodies of functions without annotations, both for Python 3.10, the oldest version the tools support. The rest of the repository uses the stricter project settings in `pyproject.toml` ([development guide](../../docs/development.md)). The tool versions are pinned in `uv.lock` since Stage 1's checkpoint A; until then they were not pinned, and ruff 0.15.8, mypy 1.19.1, and Python 3.11 were last used ([integrity verification of 2026-10-01](../../docs/traceability/integrity-verification-2026-10-01.md)).
 
 ## Generated files
 
 - The files in "What it generates" are committed: they are documentation that readers use. Their generated parts are always rebuilt by `build_index.py` and never edited by hand; the hand-written parts named in that table are kept. `--check-only` fails if a generated part is out of date.
-- Python bytecode (`__pycache__/`), written for example by `python3 -m py_compile`, is never committed; `.gitignore` excludes it. The ruff and mypy caches (`.ruff_cache/`, `.mypy_cache/`) exclude themselves.
+- Python bytecode (`__pycache__/`), written for example by `python3 -m py_compile`, is never committed; `.gitignore` excludes it. The ruff and mypy caches (`.ruff_cache/`, `.mypy_cache/`, here and at the repository root) exclude themselves.

@@ -2,11 +2,11 @@
 
 The single record of where this project currently stands (Constitution Rules 50, 172). Update it after every major piece of work. If it disagrees with the repository, the repository wins and this file gets corrected (Rule 52).
 
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-06
 
 ## Current stage
 
-**FOUNDATION — documentation initialization complete; Stage 1 implementation authorized, not yet started.**
+**FOUNDATION — Stage 1 implementation in progress: checkpoint A built and verified; its first machine-check runs on GitHub are recorded next, then checkpoint B.**
 
 - Handoff Parts 1, 2, and 3 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md), [DEC-031](decisions/DEC-031-part-3-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
@@ -16,7 +16,7 @@ The single record of where this project currently stands (Constitution Rules 50,
 - The owner's master execution constitution and directive on verification and platform independence (2026-10-01) are adopted ([DEC-033](decisions/DEC-033-adopt-master-execution-constitution.md), [DEC-034](decisions/DEC-034-verification-and-platform-independence.md)). The owner decided CF-19 from them (DEC-035).
 - The **complete documentation review** was done on 2026-10-02 and 2026-10-03 as the owner's master knowledge-base audit ([record](traceability/master-knowledge-base-audit-2026-10-02.md)): verdict **B — ready with non-blocking findings** for Stage 1 planning. On 2026-10-03 the owner **accepted the review**, decided its four findings (CF-20, CF-21, OQ-28, DUP-40), confirmed the feature process, and **authorized Stage 1 planning** ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)).
 - On 2026-10-05 the owner's final decision checkpoint ([final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md)) found two matters needing the owner. The owner **approved the [Stage 1 plan](roadmap/stage-01-foundation-plan.md)** with its decisions D1 to D11 as recommended and **authorized Stage 1 implementation** ("Begin Stage 1", [DEC-038](decisions/DEC-038-stage-1-plan-approved.md)). The owner's first-round answers of 2026-09-30 are now preserved verbatim ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)).
-- Implementation of Stage 1 is authorized and has not started: no platform code exists yet. No later stage is authorized.
+- Stage 1 is in progress. Checkpoint A built the development environment, the testing foundation, and the machine checks, and passed its three gates ([stage record](traceability/stage-01-foundation.md); [checkpoint A verification](traceability/stage-01-checkpoint-a-verification.md)). The platform has no trading capability. No later stage is authorized.
 
 | Gate | Status |
 |---|---|
@@ -40,7 +40,8 @@ The single record of where this project currently stands (Constitution Rules 50,
 | Stage 1 (FOUNDATION) planning | AUTHORIZED on 2026-10-03 ([DEC-036](decisions/DEC-036-owner-decisions-audit-findings.md)); the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) WRITTEN and verified ([verification](traceability/stage-01-plan-verification.md)); **APPROVED by the owner** on 2026-10-05, D1 to D11 as recommended — [DEC-038](decisions/DEC-038-stage-1-plan-approved.md) · [answers](handoffs/owner-decisions-06-stage-1-plan.md) |
 | Final human-decision, knowledge-base, consistency, and repository checkpoint (owner request, 2026-10-05) | DONE — [final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md); two owner decisions found and answered (DEC-038); first-round answers preserved ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)) |
 | Human approval to implement | **GIVEN for Stage 1 only** — "Begin Stage 1", 2026-10-05 ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md)). Every later stage needs its own approved plan and the owner's explicit approval (handoff §101; P2§330; P3§541; constitution Part XXIII, Rule 136) |
-| Product implementation | **Stage 1 AUTHORIZED, NOT STARTED.** No platform code exists; nothing is deployed; live trading is not active and is not part of Stage 1 (handoff §00 items 22–25; P2§330; Part 3 header) |
+| Stage 1 checkpoint A: development environment (U1), testing foundation and machine checks (U6) | BUILT; three gates PASSED — [checkpoint A verification](traceability/stage-01-checkpoint-a-verification.md). The machine checks' first runs on GitHub need the checkpoint's push; they are recorded in the [stage record](traceability/stage-01-foundation.md) |
+| Product implementation | **Stage 1 IN PROGRESS** (checkpoint A). No trading capability exists; nothing is deployed; live trading is not active and is not part of Stage 1 (handoff §00 items 22–25; P2§330; Part 3 header) |
 
 ## Current objective
 
@@ -52,22 +53,22 @@ What the next session needs before it does anything (master execution constituti
 
 | Field | Now |
 |---|---|
-| Current stage and substage | FOUNDATION — Stage 1 implementation authorized (DEC-038); the plan's checkpoint A not yet started |
-| Current task | None in progress at this checkpoint. Next: checkpoint A of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (create the stage record; U1 development environment; U6 testing foundation and machine checks) |
+| Current stage and substage | FOUNDATION — Stage 1 (DEC-038), checkpoint A committed; its machine-check runs on GitHub to be recorded, then checkpoint B |
+| Current task | Recording checkpoint A's machine checks on GitHub (U6's acceptance): the first run on the checkpoint's commit, and a negative test (a commit that breaks one check, which must fail, then its revert), entered in the [stage record](traceability/stage-01-foundation.md) by a follow-up commit. Then checkpoint B of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (U2, U3) |
 | Completed | See "Completed work" and the checkpoint log below |
-| In progress, possibly partial | Nothing |
-| Blocked | Nothing. A refused push of the workflow file (the plan's risk table) would be recorded as a blocker for the owner |
+| In progress, possibly partial | Checkpoint A's evidence from GitHub (above); if the stage record still shows those runs as pending, read the runs on GitHub before anything else |
+| Blocked | Nothing. A refused push of the workflow file, or GitHub Actions disabled for the repository, would be recorded as a blocker for the owner (the plan's risk table) |
 | Failed verification | None open |
-| Pending verification | None |
+| Pending verification | The machine checks' runs on GitHub (U6's acceptance) |
 | Verified | Every checkpoint in the checkpoint log, by its verification record |
-| Not verified | Platform behavior: nothing is implemented yet |
+| Not verified | Platform behavior: none exists yet; checkpoint A built the tooling, a repository test, and a package root that holds no code yet |
 | Latest verified commit | The last row of the checkpoint log (a commit cannot record its own hash; the next checkpoint fills it in) |
 | Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
 | Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
-| Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The tools' check versions are pinned at Stage 1's checkpoint A ([tools README](../tools/docs/README.md)) |
-| Next safe action | Start checkpoint A ("Next approved step", item 1): re-check the environment, create the stage record, then U1 and U6 through the three gates |
+| Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The plan's technical claims for U2 and U3 were tested on mypy 1.19.1; the locked mypy is 2.4.0, so checkpoint B re-tests them on the locked versions ([stage record](traceability/stage-01-foundation.md)) |
+| Next safe action | "Next approved step", item 1: record checkpoint A's machine-check runs, then checkpoint B |
 | Documentation state | Consistent and checked (`build_index.py --check-only`); the registry's Approval column reads "reviewed (DEC-036)" for the 512 handoff requirements, since the owner accepted the review |
-| Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand |
+| Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand; a dependency or a pinned version except as the [development guide](development.md) describes |
 | Do not implement yet | Anything outside the approved Stage 1 plan: no later stage, no trading, no credentials, no deployment, no system contracts (they wait for their stages' plans); FUTURE and PROPOSED items stay unbuilt (handoff §101; constitution Rules 134–136) |
 
 ## Owner decisions on the Stage 1 plan (2026-10-05)
@@ -77,7 +78,7 @@ Both answered ([owner decisions 6](handoffs/owner-decisions-06-stage-1-plan.md))
 | Item | Owner's decision | Applied |
 |---|---|---|
 | The Stage 1 plan's D1 to D11 | Approved, all as recommended | The [Stage 1 plan](roadmap/stage-01-foundation-plan.md) is APPROVED; D5 (feature-status table in the roadmap) and D6 (GOV-009's statuses next to GOV-024) in Architecture governance; D11's added dependencies in the technology stack |
-| Stage 1 implementation | "Begin Stage 1" | Authorized for Stage 1 only; checkpoint A is next |
+| Stage 1 implementation | "Begin Stage 1" | Authorized for Stage 1 only; implementation started with checkpoint A on 2026-10-06 |
 
 ## Owner decisions on the audit findings (2026-10-03)
 
@@ -210,10 +211,15 @@ Builder readings you may want to check, all stated in the decision records:
   - The open, deferred, conditional, recommended, and replaced items found by scripted sweeps of every active document classified; every decision the repository attributes to the owner checked against the owner's answers as given; conflict, duplicate, stale-statement, and canonical-source sweeps re-run. Record: [final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md).
   - Two matters needed the owner: the Stage 1 plan's D1 to D11 and the authorization to implement. Both answered: approved as recommended, and "Begin Stage 1" ([DEC-038](decisions/DEC-038-stage-1-plan-approved.md); [owner decisions 6](handoffs/owner-decisions-06-stage-1-plan.md)).
   - The owner's first-round instruction and answers (OQ-01, OQ-03, OQ-04, OQ-16) preserved verbatim as [owner decisions 1](handoffs/owner-decisions-01-part-1-open-items.md), and the options shown with CF-11 to CF-13 as [owner decisions 2: options shown](handoffs/owner-decisions-02-options-shown.md); the edited quotations in DEC-006 to DEC-009 annotated, not rewritten; the CF-21 question's wording point recorded (finding F-02) ([DEC-037](decisions/DEC-037-final-decision-and-integrity-checkpoint.md)). No requirement changed.
+- **Stage 1, checkpoint A (2026-10-06): development environment (U1), testing foundation and machine checks (U6):**
+  - `pyproject.toml`, `uv.lock`, `.python-version`, the package root `src/atp/`; uv 0.12.23 required exactly; ruff, mypy (strict), pytest, Hypothesis, and Pydantic locked; the documentation tools keep their own check settings.
+  - The repository test for secrets, the first real test (52 tests pass); `.gitignore` for local environment and secret files.
+  - `.github/workflows/checks.yml`: the same checks on every push and pull request, read-only, no secret, actions pinned by commit hash, uv by version and checksum.
+  - The dependency review (no published advisory) and the license check, the [development guide](development.md), the [stage record](traceability/stage-01-foundation.md), and the roadmap's feature-status table (D5). No requirement or decision changed. Record: [checkpoint A verification](traceability/stage-01-checkpoint-a-verification.md).
 
 ## In-progress work
 
-None at this checkpoint. Next: checkpoint A of the Stage 1 plan (see "Next approved step").
+Checkpoint A's machine-check runs on GitHub, recorded by the commit after the checkpoint's; then checkpoint B (see "Next approved step").
 
 ## Blockers
 
@@ -301,11 +307,12 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-10-03: applied owner decisions 5 (DEC-036): MIG-033 added; PLT-010, MKD-007, and MON-009 reworded; CF-20, CF-21, DUP-40, OQ-28 resolved; documentation review accepted (registry Approval column "reviewed"); Stage 1 planning authorized. No platform code, configuration, or infrastructure created.
 - 2026-10-03 to 2026-10-05: wrote the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) (PROPOSED), revised after two independent reviews: objective, entry gate, requirements, eight work units in four checkpoints, out of scope, outputs, tests, verification, completion criteria, and eleven decisions for the owner (D1 to D11). No requirement or decision changed; no code written.
 - 2026-10-05: final human-decision, knowledge-base, consistency, and repository checkpoint: two owner decisions found and answered (DEC-038: Stage 1 plan approved, Stage 1 implementation authorized); first-round instruction and answers, and the options shown with CF-11 to CF-13, preserved verbatim (DEC-037); TC-10's GOV-009/GOV-024 part decided (D6); feature statuses to be kept in one roadmap table (D5). No requirement changed; no platform code written.
+- 2026-10-06: Stage 1 checkpoint A: the development environment, the repository test for secrets, the machine checks, the development guide, the stage record, and the feature-status table. No requirement or decision changed; no trading capability.
 
 ## Next approved step
 
-1. **The builder: checkpoint A of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md).** Re-check the environment (Python 3.12, uv, access to the package index) and record it; create the stage record `docs/traceability/stage-01-foundation.md` (the [traceability README](traceability/README.md)) and the roadmap's feature-status table (D5, kept current at every checkpoint); then U1 (development environment, with the repository test for secrets as the first real test; the licenses of the dependencies D11 adds checked and recorded, DEC-009's rule; the build backend pinned to one exact version) and U6 (testing foundation and machine checks); three gates; commit; push.
-2. **Then checkpoints B, C, and D** in order (U2 and U3; U4 and U5; U7 and U8), each through the three gates, and the stage's completion certificate, whose "approved to proceed" is the owner's.
+1. **The builder: finish checkpoint A, then checkpoint B of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md).** Read the machine checks' run on GitHub for the checkpoint A commit; push a commit that breaks one check and confirm the run fails, then revert it and confirm the run passes; record the three runs in the [stage record](traceability/stage-01-foundation.md) and commit. Then checkpoint B: U2 (exact amounts) and U3 (contract kernel), re-testing the plan's technical claims on the locked versions first; three gates; commit; push.
+2. **Then checkpoints C and D** in order (U4 and U5; U7 and U8), each through the three gates, and the stage's completion certificate, whose "approved to proceed" is the owner's.
 3. **Authorization limits.** DEC-038 authorizes Stage 1 only (constitution Rules 134–136). Stage 2 needs its own plan and the owner's explicit approval.
 
 ## Memory check (constitution Rule 175)
@@ -314,6 +321,7 @@ A new session can reconstruct the project from the repository:
 
 - this file for the state, starting with its continuation contract;
 - [`docs/README.md`](README.md) for every document;
+- the [development guide](development.md) to install, check, and test the code;
 - the [registry](requirements/registry.md) for every requirement;
 - the registers for everything open;
 - [`tools/docs/`](../tools/docs/README.md) to rebuild and check the indexes and to compare requirements with any earlier commit.
@@ -341,4 +349,5 @@ Each checkpoint commit and its verification record. Hashes are those on branch `
 | 16df57f | Master knowledge-base audit (the complete documentation review), verdict B | [Master knowledge-base audit](traceability/master-knowledge-base-audit-2026-10-02.md) |
 | bb19a60 | Owner decisions on the audit findings; documentation review accepted; Stage 1 planning authorized (DEC-036) | [Owner decisions 5 verification](traceability/owner-decisions-05-verification.md) |
 | 47f5348 | Stage 1 plan written (PROPOSED), for the owner's approval | [Stage 1 plan verification](traceability/stage-01-plan-verification.md) |
-| The commit that adds this row | Final decision checkpoint; Stage 1 plan approved and Stage 1 implementation authorized (DEC-037, DEC-038) | [Final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md) |
+| 69d3b86 | Final decision checkpoint; Stage 1 plan approved and Stage 1 implementation authorized (DEC-037, DEC-038) | [Final decision checkpoint](traceability/final-decision-checkpoint-2026-10-05.md) |
+| The commit that adds this row | Stage 1 checkpoint A: development environment, testing foundation, and machine checks (U1, U6) | [Stage 1 checkpoint A verification](traceability/stage-01-checkpoint-a-verification.md) |

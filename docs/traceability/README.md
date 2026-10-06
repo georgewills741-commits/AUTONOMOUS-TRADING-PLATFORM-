@@ -23,6 +23,8 @@
 | [Owner decisions 5 verification](owner-decisions-05-verification.md) | Owner decisions on the audit findings applied; documentation review accepted; Stage 1 planning authorized (DEC-036) |
 | [Stage 1 plan verification](stage-01-plan-verification.md) | The [Stage 1 plan](../roadmap/stage-01-foundation-plan.md) written for the owner's approval; approved (DEC-038) |
 | [Final decision checkpoint 2026-10-05](final-decision-checkpoint-2026-10-05.md) | The owner's final human-decision, knowledge-base, consistency, and repository checkpoint: every open or deferred item classified, every owner decision verified against the owner's answers; DEC-037, DEC-038 |
+| [Stage 1 record](stage-01-foundation.md) | The stage record of Stage 1 (FOUNDATION), §142: status by field, checkpoints, entry-gate re-check, dependency review, machine-check runs; later the transition checklist and completion certificate |
+| [Stage 1 checkpoint A verification](stage-01-checkpoint-a-verification.md) | Checkpoint A of Stage 1: the development environment (U1) and the testing foundation and machine checks (U6) |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
@@ -50,4 +52,4 @@ Written at the end of the stage record, and only after every gate passed: stage;
 
 ## Verification matrix (§145)
 
-Requirement → system → implementation → test → verification → status → evidence → commit. The [requirements registry](../requirements/registry.md) already gives requirement → system → specification → stage, and the [System Rules Register](../requirements/system-rules-register.md) gives rule → enforcement → planned verification. The implementation, test, and evidence columns are added when Stage 1 produces the first code (ARCH-030, ARCH-031, ARCH-040); until then they would be empty, so they are not created.
+Requirement → system → implementation → test → verification → status → evidence → commit. The [requirements registry](../requirements/registry.md) already gives requirement → system → specification → stage, and the [System Rules Register](../requirements/system-rules-register.md) gives rule → enforcement → planned verification. The implementation, test, and evidence columns are added by Stage 1's U7 at checkpoint D, in the generated verification matrix (ARCH-030, ARCH-031, ARCH-040; the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), D10); until then what each checkpoint delivers is recorded in the [stage record](stage-01-foundation.md).

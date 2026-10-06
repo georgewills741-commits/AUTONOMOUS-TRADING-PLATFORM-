@@ -1,0 +1,66 @@
+# Project definition of the platform's Python package (Stage 1, U1 of the Stage 1 plan).
+# How to use it: docs/development.md. Adding or changing a dependency needs a decision record
+# (docs/architecture/technology-stack.md; constitution Rules 99-101).
+
+[project]
+name = "atp"
+version = "0.1.0"
+description = "Autonomous trading platform"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.13,<3",
+]
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.168",
+    "mypy>=2.4",
+    "pytest>=9.1",
+    "ruff>=0.16",
+]
+
+[build-system]
+# The lockfile does not record the build backend, so it is pinned here to one exact version
+# (constitution Rule 102); it moves together with the uv version below.
+requires = ["uv_build==0.12.23"]
+build-backend = "uv_build"
+
+[tool.uv]
+# The uv version the lockfile is made with; the machine checks install the same version.
+required-version = "==0.12.23"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "--strict-config", "--import-mode=importlib", "-ra"]
+xfail_strict = true
+filterwarnings = ["error"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+mypy_path = "src"
+explicit_package_bases = true
+strict = true
+warn_unreachable = true
+enable_error_code = [
+    "truthy-bool",
+    "truthy-iterable",
+    "ignore-without-code",
+    "possibly-undefined",
+    "redundant-expr",
+]
+
+[tool.ruff]
+target-version = "py312"
+# Python files only: documentation is not formatted or linted as code.
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
+
+[tool.ruff.lint]
+# ruff's default rules (fixed by the locked ruff version) plus the whole security family. The
+# documentation tools have their own settings in tools/docs/ruff.toml.
+extend-select = ["S"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use plain assert statements by design.
+"tests/**" = ["S101"]

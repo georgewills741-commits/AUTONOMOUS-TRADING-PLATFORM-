@@ -1,6 +1,6 @@
 # Source-of-Truth Map
 
-> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01 and 2026-10-02. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
+> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01, 2026-10-02, and 2026-10-06. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
 >
 > If two documents seem to disagree, the one listed here wins, and the disagreement is recorded in the [findings register](../conflicts/register.md).
 
@@ -35,6 +35,10 @@
 | Feature-extensibility governance | [docs/architecture/architecture-governance.md](architecture-governance.md) (GOV) |
 | Reliability and recovery model (index) | [docs/operations/reliability-and-recovery-model.md](../operations/reliability-and-recovery-model.md) |
 | Documentation generator and checker | [tools/docs/](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) |
+| How to install, check, and test the code | [docs/development.md](../development.md) |
+| Exact versions of dependencies and tools | `uv.lock` (libraries and tools); `pyproject.toml` (uv and the build backend); `.github/workflows/checks.yml` (the actions, by commit hash). How one is changed: the [development guide](../development.md) |
+| Each major feature's current lifecycle state | The [roadmap](../roadmap/roadmap.md)'s feature-status table (D5, [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)); the lifecycle itself is GOV-024 ("Feature lifecycle" below) |
+| A stage's progress and evidence | Its stage record ([Stage 1](../traceability/stage-01-foundation.md)) and each checkpoint's verification record ([traceability README](../traceability/README.md)) |
 
 ## Product domains
 

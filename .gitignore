@@ -1,3 +1,16 @@
 # Python bytecode, written for example by `python3 -m py_compile` when the tools in
 # tools/docs/ are checked. Generated, never committed (tools/docs/README.md, "Generated files").
 __pycache__/
+
+# Local environment and secret files. Secrets come only from the runtime environment and never
+# enter the repository (SEC-005); tests/repository/test_no_secrets.py also fails if such a file is
+# tracked or about to be added. The virtual environment (.venv/), build output (dist/), and the
+# test and tool caches ignore themselves.
+.env
+.env.*
+*.env
+.envrc
+*.key
+*.p12
+*.pem
+*.pfx
