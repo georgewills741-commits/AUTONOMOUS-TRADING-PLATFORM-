@@ -1,6 +1,8 @@
 # Quality Audit — 2026-10-06
 
 > **Status:** ACTIVE record of the audit the owner's master quality, consistency, verification and correction directive asks for, sent on 2026-10-06 and adopted by [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md). It records what was inspected, what was wrong and how it was corrected, what remains non-blocking, and what requires the owner. Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md), with each gate covering what DEC-039 states; format: [traceability README](README.md).
+>
+> **Later changes:** the owner answered Q-07 (OQ-29) on 2026-10-07: a stage's features are PROPOSED until the owner approves its plan ([DEC-040](../decisions/DEC-040-later-stage-features-proposed.md); [owner decisions 7](../handoffs/owner-decisions-07-later-stage-feature-state.md)). The audit's Gate 3 runs 3 and 4 and its commit (`a6cca83`) were on 2026-10-07. Nothing else in the record changed.
 
 ## Identity
 

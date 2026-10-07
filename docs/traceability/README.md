@@ -26,6 +26,7 @@
 | [Stage 1 record](stage-01-foundation.md) | The stage record of Stage 1 (FOUNDATION), §142: status by field, checkpoints, entry-gate re-check, dependency review, machine-check runs; later the transition checklist and completion certificate |
 | [Stage 1 checkpoint A verification](stage-01-checkpoint-a-verification.md) | Checkpoint A of Stage 1: the development environment (U1) and the testing foundation and machine checks (U6) |
 | [Quality audit 2026-10-06](quality-audit-2026-10-06.md) | The owner's quality, consistency, verification and correction directive adopted (DEC-039) and the audit it asks for: every area inspected, the corrections made, the non-blocking findings, and what required the owner |
+| [Owner decisions 7 verification](owner-decisions-07-verification.md) | The owner's answer to OQ-29 applied: a stage's features are PROPOSED until its plan is approved (DEC-040) |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
