@@ -12,12 +12,12 @@
 | Requirements | The plan's section 3: delivered (3.1), started (3.2), applied as design rules (3.3), applied in later stages (3.4), not built (3.5) |
 | Systems affected | The documentation set; SYS-31 Security Architecture (its foundation); the new cross-cutting modules, owned as the plan's D2 sets out |
 | Files | Checkpoint A: see its [verification record](stage-01-checkpoint-a-verification.md), "Scope" |
-| Implementation status | U1 and U6 built (checkpoint A); U8 started (this record, the feature-status table); U2 to U5 and U7 not started |
+| Implementation status | U1 built (checkpoint A); U6 built except its Hypothesis setting, which checkpoint B writes with the first property tests ("Carried to checkpoint B"); U8 started (this record, the feature-status table); U2 to U5 and U7 not started |
 | Test status | 52 tests, all passing: the repository test for secrets, the test of its file listing, and the scanner's own tests (checkpoint A) |
 | Verification 1, 2, 3 | Per checkpoint, in its verification record: checkpoint A passed all three. The whole stage passes them again at checkpoint D |
 | Security status | No secret in the repository; the repository test for secrets runs on every push; the machine checks run read-only, with no repository secret; the dependency review found no published advisory (below) |
 | Performance status | No hot path exists; no performance claim is made (the plan, section 5) |
-| Documentation status | The [development guide](../development.md) written (checkpoint A); the numerical policy, contract conventions, threat model, and architecture-to-repository map come at checkpoints B to D |
+| Documentation status | The [developer guide](../development.md) written (checkpoint A); the numerical policy, contract conventions, threat model, and architecture-to-repository map come at checkpoints B to D |
 | Traceability status | The verification matrix comes at checkpoint D (U7); until then the plan's section 3 and this record trace the requirements |
 | Git commit | Each checkpoint's commit is in the [project state](../project-state.md)'s checkpoint log |
 | Blockers | None |
@@ -27,7 +27,7 @@
 
 | Checkpoint | Units | Status | Verification record |
 |---|---|---|---|
-| A | U1 development environment; U6 testing foundation and machine checks | Done: built; three gates passed (commit `f2e4046`); the machine checks pass on GitHub and fail on a deliberately broken check ("Machine checks on GitHub" below) | [Checkpoint A](stage-01-checkpoint-a-verification.md) |
+| A | U1 development environment; U6 testing foundation and machine checks | Done: built, except U6's Hypothesis setting, carried to checkpoint B; three gates passed (commit `f2e4046`); the machine checks pass on GitHub and fail on a deliberately broken check ("Machine checks on GitHub" below) | [Checkpoint A](stage-01-checkpoint-a-verification.md) |
 | B | U2 exact amounts; U3 contract kernel | Not started | — |
 | C | U4 configuration; U5 security foundation | Not started | — |
 | D | U7 verification matrix; U8 stage record and closure | Not started (U8 started at A) | — |
@@ -44,7 +44,7 @@
 
 ## Checkpoint A: versions, dependency review, and licenses
 
-Versions are fixed in `uv.lock`, `pyproject.toml`, and the workflow ([development guide](../development.md)); this table is the evidence of the review at checkpoint A, not a second list to maintain.
+Versions are fixed in `uv.lock`, `pyproject.toml`, and the workflow ([developer guide](../development.md)); this table is the evidence of the review at checkpoint A, not a second list to maintain.
 
 **Review method (U1, master execution constitution §40; licenses, DEC-009's consequences and DEC-038):** for each locked package, and for uv and the build backend, PyPI's JSON record of that exact release, read on 2026-10-06 at 02:52 UTC: its published advisories and its declared license (where none is declared, the license file the package ships).
 
@@ -94,7 +94,7 @@ Choices the plan left to implementation (category 3 of the final decision checkp
 | Package version | `0.1.0` | A starting version for the package; no release process exists yet |
 | `uv build` in the machine checks | Not run by the workflow; run at every gate | The workflow runs the plan's list (U6); the build is in Gate 1 |
 | The feature-status table's later stages | One row per later stage, pointing to that stage's items in the roadmap's stage tables, instead of one row per item | Each stage's items get their own rows when the stage is planned, as Stage 1's did; a copied list would be a second list of the same items |
-| The feature-status table's state for later stages | APPROVED, from the owner's acceptance of the complete documentation review (DEC-036), which the registry's Approval column records as "reviewed (DEC-036)". Under D6, a feature from APPROVED onward is ACTIVE in GOV-009's terms | The requirements of those stages are accepted; APPROVED is a lifecycle state, not an authorization to implement (the table says so). The owner may decide otherwise |
+| The feature-status table's state for later stages | APPROVED, from the owner's acceptance of the complete documentation review (DEC-036), which the registry's Approval column records as "reviewed (DEC-036)". Under D6, a feature from APPROVED onward is ACTIVE in GOV-009's terms | The requirements of those stages are accepted; APPROVED is a lifecycle state, not an authorization to implement (the table says so). The owner may decide otherwise. On 2026-10-06 the quality audit put this reading to the owner as OQ-29, because no owner decision states the state and the texts can be read both ways; until the answer the table shows REQUIRES OWNER DECISION ([quality audit](quality-audit-2026-10-06.md), Q-07) |
 | The repository test for secrets, beyond the plan's minimum | 18 value patterns (issuers' token formats, credentials in a URL, quoted and unquoted credential-named settings, prefixed names such as `BINANCE_API_SECRET` included) and a list of secret-like file names; a test of the file listing itself. A setting's value, quoted or not, is reported only if it contains both a letter and a digit; templates, variable references, placeholders, and environment-variable names given as values are not reported; lines may end in LF or CRLF | The three Gate 3 runs found credential shapes missed and ordinary text wrongly reported, the third that the earlier fixes had covered samples rather than whole classes; U5 at checkpoint C extends the test to the example configuration files ("Carried to checkpoint C") |
 
 ## Carried to checkpoint B

@@ -12,7 +12,8 @@
 | Owner's checkpoint, version-control, and three-stage verification rule | [docs/builder/checkpoint-and-verification-rule.md](../builder/checkpoint-and-verification-rule.md) ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) |
 | Master execution, consistency, verification and continuity constitution (builder rules) | [docs/builder/master-execution-constitution.md](../builder/master-execution-constitution.md) ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)) |
 | Owner's directive on three-level verification and platform independence | [docs/builder/verification-and-platform-independence-directive.md](../builder/verification-and-platform-independence-directive.md) ([DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)) |
-| How the builder texts combine; the one three-gate procedure | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (DUP-39) |
+| Owner's master quality, consistency, verification and correction directive | [docs/builder/quality-consistency-and-correction-directive.md](../builder/quality-consistency-and-correction-directive.md) ([DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md)) |
+| How the builder texts combine; the one three-gate procedure | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (DUP-39); what each gate covers now that code exists: [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md) |
 | Current project state, next step, and continuation contract | [docs/project-state.md](../project-state.md) |
 | Verification records and their format | [docs/traceability/README.md](../traceability/README.md) |
 | Documentation index | [docs/README.md](../README.md) |
@@ -36,7 +37,7 @@
 | Reliability and recovery model (index) | [docs/operations/reliability-and-recovery-model.md](../operations/reliability-and-recovery-model.md) |
 | Documentation generator and checker | [tools/docs/](../../tools/docs/README.md) ([DEC-025](../decisions/DEC-025-documentation-tooling-in-repository.md)) |
 | How to install, check, and test the code | [docs/development.md](../development.md) |
-| Exact versions of dependencies and tools | `uv.lock` (libraries and tools); `pyproject.toml` (uv and the build backend); `.github/workflows/checks.yml` (the actions, by commit hash). How one is changed: the [development guide](../development.md) |
+| Exact versions of dependencies and tools | `uv.lock` (libraries and tools); `pyproject.toml` (uv and the build backend); `.github/workflows/checks.yml` (the actions, by commit hash). How one is changed: the [developer guide](../development.md) |
 | Each major feature's current lifecycle state | The [roadmap](../roadmap/roadmap.md)'s feature-status table (D5, [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)); the lifecycle itself is GOV-024 ("Feature lifecycle" below) |
 | A stage's progress and evidence | Its stage record ([Stage 1](../traceability/stage-01-foundation.md)) and each checkpoint's verification record ([traceability README](../traceability/README.md)) |
 

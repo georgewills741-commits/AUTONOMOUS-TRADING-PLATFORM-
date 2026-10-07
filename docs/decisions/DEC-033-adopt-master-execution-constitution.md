@@ -1,6 +1,7 @@
 # DEC-033 — Adopt the master execution, consistency, verification and continuity constitution
 
 - **Status:** ACCEPTED. CF-19, raised here, was decided by the owner on 2026-10-02 ([DEC-035](DEC-035-owner-decisions-part-3-findings.md)): GOV-024 replaced GOV-018.
+- **Later changes:** Since 2026-10-06 five builder texts apply: the owner's quality, consistency, verification and correction directive was added ([DEC-039](DEC-039-adopt-quality-and-correction-directive.md)). Code exists since Stage 1's checkpoint A, so the last column of decision 2's table ("What it means before code exists") is no longer the current statement of the gates: what each gate covers now, the code checks included, is DEC-039's decision 2. That column's Gate 2 and Gate 3 content stays in force through DEC-039's table ("As DEC-033 states"). The procedure itself, its scope, and the other columns are unchanged.
 - **Date:** 2026-10-01
 - **Decided by:** project owner (constitution sent on 2026-10-01, marked "non-negotiable development governance"); the builder's: how the four builder texts combine, the reading notes, the placement of the platform-facing sections, and the wording of ARCH-041, ARCH-042, and PERF-023 taken from §139, §47, and §43
 - **Text:** [`docs/builder/master-execution-constitution.md`](../builder/master-execution-constitution.md) (verbatim, ACTIVE)

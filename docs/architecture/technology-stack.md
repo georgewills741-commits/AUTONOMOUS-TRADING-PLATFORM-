@@ -22,7 +22,7 @@
 
 **Dependencies added by the Stage 1 plan ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)):** the build backend `uv_build`, pinned to one exact version in `pyproject.toml`, and, for the machine checks only, the GitHub actions `actions/checkout` and `astral-sh/setup-uv`, each pinned to a commit hash. The other libraries Stage 1 uses are those of TEC-004 and TEC-009.
 
-**Where versions are fixed (since Stage 1's checkpoint A):** the libraries and tools in `uv.lock`; uv and the build backend in `pyproject.toml`; the actions in `.github/workflows/checks.yml`. How a version is changed: the [development guide](../development.md).
+**Where versions are fixed (since Stage 1's checkpoint A):** the libraries and tools in `uv.lock`; uv and the build backend in `pyproject.toml`; the actions in `.github/workflows/checks.yml`. How a version is changed: the [developer guide](../development.md).
 
 **Later decisions affecting TEC-011:**
 

@@ -1,6 +1,6 @@
 # Traceability and Verification Records
 
-> **Status:** ACTIVE — 2026-10-01. Lists the traceability and verification records, and sets the format every verification record follows: the format the master execution constitution asks the verification documentation to establish (§21, §22, §142 to §145), under the owner's checkpoint rule ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) and [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md). The three gates themselves, and what each covers today, are defined in DEC-033.
+> **Status:** ACTIVE — 2026-10-01. Lists the traceability and verification records, and sets the format every verification record follows: the format the master execution constitution asks the verification documentation to establish (§21, §22, §142 to §145), under the owner's checkpoint rule ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)) and [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md). The three gates themselves are defined in DEC-033, and what each covers now that code exists in [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md).
 
 ## Records
 
@@ -25,6 +25,7 @@
 | [Final decision checkpoint 2026-10-05](final-decision-checkpoint-2026-10-05.md) | The owner's final human-decision, knowledge-base, consistency, and repository checkpoint: every open or deferred item classified, every owner decision verified against the owner's answers; DEC-037, DEC-038 |
 | [Stage 1 record](stage-01-foundation.md) | The stage record of Stage 1 (FOUNDATION), §142: status by field, checkpoints, entry-gate re-check, dependency review, machine-check runs; later the transition checklist and completion certificate |
 | [Stage 1 checkpoint A verification](stage-01-checkpoint-a-verification.md) | Checkpoint A of Stage 1: the development environment (U1) and the testing foundation and machine checks (U6) |
+| [Quality audit 2026-10-06](quality-audit-2026-10-06.md) | The owner's quality, consistency, verification and correction directive adopted (DEC-039) and the audit it asks for: every area inspected, the corrections made, the non-blocking findings, and what required the owner |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
@@ -37,7 +38,7 @@ One record per checkpoint commit, in this directory. It contains:
 - **Checks:** every test and check run, as a command another engineer or a fresh session can repeat (§22), with its result. A check that cannot be a command is written as WHAT was checked, HOW, the EXPECTED RESULT, and the ACTUAL RESULT.
 - **Gates:** the result of Verification 1, 2, and 3 (DEC-033), each with its evidence. Gate 3 names the independent reviewer (or why none was possible) and lists its findings, each with its fix, and the builder's own separate pass.
 - **Failures and fixes:** every failure found, its cause, the fix, and the re-run that passed (§19).
-- **Final status and remaining issues:** PASS only when all three gates pass; known limitations and open items named.
+- **Final status and remaining issues:** each gate PASS or FAIL; the record's status in precise words such as those of §10 of the owner's [quality directive](../builder/quality-consistency-and-correction-directive.md) ([DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md)), backed by the evidence above, and never better than the gates allow: a checkpoint is complete only when all three gates pass; known limitations, non-blocking findings, and open items named.
 - **Environment:** tool versions used for the checks.
 
 ## Stage record (§142), from Stage 1

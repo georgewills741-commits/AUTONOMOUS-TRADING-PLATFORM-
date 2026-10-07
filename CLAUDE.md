@@ -4,7 +4,7 @@ Instructions for Claude Code sessions working in this repository.
 
 ## Governing rules
 
-Four builder texts govern all work in this repository. Each is imported below so it loads in full at the start of every session, and each file is the single canonical copy of its text: do not restate or summarize their rules anywhere else. They apply together; where they differ, the stricter applies. Everything built, modified, or approved, documentation included, passes all three gates of the one verification procedure of [DEC-033](docs/decisions/DEC-033-adopt-master-execution-constitution.md) before its checkpoint commit (the owner's rule, DEC-032).
+Five builder texts govern all work in this repository. Each is imported below so it loads in full at the start of every session, and each file is the single canonical copy of its text: do not restate or summarize their rules anywhere else. They apply together; where they differ, the stricter applies. Everything built, modified, or approved, documentation included, passes all three gates of the one verification procedure of [DEC-033](docs/decisions/DEC-033-adopt-master-execution-constitution.md) before its checkpoint commit (the owner's rule, DEC-032); what each gate covers now that code exists is in [DEC-039](docs/decisions/DEC-039-adopt-quality-and-correction-directive.md).
 
 The Claude Code Builder Constitution ([DEC-001](docs/decisions/DEC-001-adopt-builder-constitution.md)):
 
@@ -22,9 +22,15 @@ The owner's directive on three-level verification and platform independence ([DE
 
 @docs/builder/verification-and-platform-independence-directive.md
 
+The owner's master quality, consistency, verification and correction directive ([DEC-039](docs/decisions/DEC-039-adopt-quality-and-correction-directive.md)):
+
+@docs/builder/quality-consistency-and-correction-directive.md
+
 ## Where to start
 
 The current stage, blockers, next approved step, and continuation contract are recorded in [`docs/project-state.md`](docs/project-state.md). Read it first (Constitution Rule 51), compare it with `git status` and `git log` before continuing, and update it after any major piece of work and before a session ends (Rule 174). Verification records follow [`docs/traceability/README.md`](docs/traceability/README.md).
+
+How to install, check, and test the code, and the checks every code change passes, are in the [developer guide](docs/development.md).
 
 Every document is listed in [`docs/README.md`](docs/README.md). Requirement text lives only in its owning specification; see [`docs/requirements/README.md`](docs/requirements/README.md) before adding or changing one.
 

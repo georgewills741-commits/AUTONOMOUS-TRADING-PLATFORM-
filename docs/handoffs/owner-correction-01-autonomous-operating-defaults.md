@@ -4,7 +4,7 @@
 >
 > Its content is applied through [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) (items 1–30, 32–33) and [DEC-020](../decisions/DEC-020-value-classification.md) (item 31). Each decision record maps every item to the requirements it produced.
 >
-> **Formatting note:** converted from plain text to Markdown (headings, lists, paragraph breaks). No wording was added, removed, or changed. Item numbers (1–33) are the directive's own and are used as source references ("OC-1 item N").
+> **Formatting note:** converted from plain text to Markdown (headings, lists, paragraph breaks). No wording was added, removed, or changed. Item numbers (1–33) are the directive's own and are used as source references ("OC-1 item N"). The owner sent it with the covering line "here is my Defaults you may want to check answers", which is not reproduced below (noted on 2026-10-06 by the [quality audit](../traceability/quality-audit-2026-10-06.md)).
 
 The previously recorded defaults under “Defaults you may want to check” must be revised.
 

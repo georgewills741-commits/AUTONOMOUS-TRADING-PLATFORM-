@@ -1,6 +1,8 @@
 # Final Decision Checkpoint — 2026-10-05
 
 > **Status:** ACTIVE record of the owner's "final human-decision, knowledge-base, consistency, and repository checkpoint" of 2026-10-05. It establishes what is decided, what is authoritative, what is verified, what is implemented, what remains open, and what required the owner. Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (the request's Pass 1, Pass 2, and Pass 3 are Gates 1, 2, and 3); format: [traceability README](README.md).
+>
+> **Later changes:** the request as received was added on 2026-10-06 as the appendix, by the [quality audit](quality-audit-2026-10-06.md). Until then this record described the request but did not quote it, unlike the records of the integrity check (2026-10-01) and the master knowledge-base audit (2026-10-02). Nothing else in the record changed.
 
 ## Identity
 
@@ -208,3 +210,291 @@ F-06 to F-09 were raised or completed by the Pass 3 review (section "Three passe
 ## Where the next session resumes
 
 The [project state](../project-state.md)'s continuation contract and "Next approved step": checkpoint A of the Stage 1 plan (re-check the environment; create the stage record and the roadmap's feature-status table; U1, with the license check and the exact build-backend pin, and U6; three gates; commit; push).
+
+## Appendix — the request as received
+
+The owner's message of 2026-10-05, reproduced exactly (extracted by script from the session record; nothing added, removed, or changed):
+
+```text
+FINAL HUMAN-DECISION, KNOWLEDGE-BASE, CONSISTENCY, AND REPOSITORY CHECKPOINT
+
+Before proceeding any further, perform a comprehensive final audit of everything that has been handed off and everything we have decided so far.
+
+This is a decision-resolution and repository-integrity checkpoint. Do NOT guess, silently choose, or invent anything on my behalf.
+
+OBJECTIVE
+
+Determine whether there are ANY remaining matters that genuinely require my decision, clarification, approval, authorization, confirmation, or explicit choice before the project can proceed safely to the next appropriate stage.
+
+AUDIT EVERYTHING
+
+Review the entire current project knowledge base and repository, including:
+
+- all handoff material and previously reconciled requirements
+- requirements registry
+- system rules and constitution
+- architecture
+- system ownership and boundaries
+- decisions and ADRs
+- open questions
+- unresolved conflicts
+- assumptions
+- proposals
+- future capabilities
+- feature lifecycle
+- roadmap
+- readiness model
+- capital/risk rules
+- trading rules
+- arbitrage rules
+- rebalancing
+- execution
+- exchange/instrument scope
+- security
+- hosting/deployment
+- recovery/failover
+- AI architecture
+- AI permissions
+- performance requirements
+- data requirements
+- monitoring
+- observability
+- testing/verification requirements
+- documentation
+- repository structure
+- implementation state
+- non-blocking audit findings
+- previous human decisions made during this reconciliation
+- any decisions that were deferred, conditional, superseded, replaced, or left ambiguous
+
+DO NOT ASSUME THAT A RECOMMENDED OPTION WAS AUTOMATICALLY MY DECISION.
+
+Verify the actual decisions that I explicitly made during this review.
+
+DECISION AUDIT
+
+For every unresolved item, classify it as one of:
+
+1. Explicitly decided by the owner
+2. Already determined by an authoritative existing requirement/rule/decision
+3. Builder implementation detail that does not require owner approval
+4. Recommended but not yet approved
+5. Requires owner decision
+6. Requires clarification
+7. Conflict requiring owner resolution
+8. Blocked by missing information
+9. Non-blocking finding that can be tracked without owner intervention
+
+Pay particular attention to cases where two documents appear to conflict but can actually be reconciled through canonical ownership, mapping, precedence, or lifecycle rules.
+
+Do not create duplicate decisions merely because the same requirement appears in multiple documents.
+
+CANONICAL AUTHORITY
+
+For every important requirement, decision, rule, configuration value, lifecycle, or system responsibility, verify that there is one canonical authoritative location.
+
+Where multiple documents contain the same information:
+
+- preserve necessary references and traceability;
+- identify the canonical source;
+- remove or reconcile duplicated authoritative statements;
+- prevent future contradictory copies;
+- do not destroy historical decision records unnecessarily.
+
+CONFLICT CHECK
+
+Search specifically for:
+
+- contradictory requirements
+- contradictory decisions
+- contradictory rule precedence
+- duplicate systems
+- duplicate components
+- duplicate agents
+- duplicate authorities
+- duplicate workflows
+- duplicate feature lifecycles
+- duplicate configuration ownership
+- conflicting capital authorities
+- conflicting risk authorities
+- conflicting execution authorities
+- conflicting security rules
+- conflicting hosting assumptions
+- conflicting instrument scope
+- conflicting rebalancing rules
+- conflicting AI permissions
+- conflicting readiness states
+- conflicting roadmap stages
+- conflicting terminology
+- obsolete or superseded requirements that are still presented as current
+
+For every conflict, determine whether it can be resolved from an already-authoritative decision.
+
+Only bring it to me if my decision is genuinely required.
+
+IMPORTANT HUMAN-DECISION RULE
+
+If there is even one material issue that genuinely requires my decision, STOP before committing the affected final state.
+
+Do not guess.
+
+Do not choose the option that merely seems preferable.
+
+Do not convert a recommendation into an approval.
+
+Instead, present each required decision clearly using this structure:
+
+DECISION REQUIRED #[N]
+
+- Issue:
+- Why it matters:
+- Existing conflicting/ambiguous material:
+- Options:
+- Consequences of each:
+- Existing project requirements that affect the decision:
+- Your recommended interpretation, if one can be responsibly made:
+- Exact decision I need to make:
+
+Keep the questions precise so I can answer them without needing to reconstruct the project history.
+
+If multiple decisions are required, consolidate them into one organized decision batch rather than interrupting me repeatedly with unrelated questions.
+
+NO-DECISION PATH
+
+If, after the complete audit, there are NO remaining decisions, clarifications, approvals, or authorizations that genuinely require me:
+
+1. Explicitly state:
+   "NO REMAINING OWNER DECISIONS IDENTIFIED."
+
+2. State exactly what was checked.
+
+3. Confirm that all previously provided decisions have been reconciled.
+
+4. Confirm that no unresolved material conflict remains that requires my judgment.
+
+5. Confirm any remaining findings are genuinely non-blocking and are recorded for tracking.
+
+6. Confirm the canonical sources of truth.
+
+7. Confirm the repository documentation has been updated to reflect the reconciled state.
+
+8. Confirm the requirements registry, decision records, architecture, roadmap, traceability, and open-question records are consistent.
+
+9. Confirm that no requirement was silently dropped, weakened, invented, or changed.
+
+10. Confirm the current project state and the exact next authorized stage.
+
+REPOSITORY INTEGRITY
+
+Before committing, verify:
+
+- no unintended files were changed;
+- no duplicate documentation was introduced;
+- no contradictory documentation remains;
+- no generated junk or secrets are committed;
+- repository structure remains coherent;
+- references and links resolve where applicable;
+- decision IDs and requirement IDs remain traceable;
+- documentation matches the actual repository state;
+- no implementation was performed merely because this audit was requested;
+- no production credentials or secrets are introduced;
+- changes are reviewable and attributable.
+
+COMMIT REQUIREMENT
+
+If and only if:
+
+- all required owner decisions are resolved,
+- the documentation/reconciliation state is internally consistent,
+- no material blocker remains,
+- the repository changes are intentional,
+- and the current stage permits a commit,
+
+then update the canonical documentation and commit the reconciled state to the repository.
+
+The commit must represent the verified reconciliation state, not an assumption about future implementation.
+
+Provide:
+
+- commit hash
+- commit message
+- files changed
+- summary of what was reconciled
+- verification performed
+- remaining non-blocking findings
+- current project/stage status
+- exact next authorized action
+
+IMPORTANT: A repository commit is NOT authorization to begin production implementation.
+
+Do not start the next implementation stage unless the project governance explicitly authorizes that stage and any required human approval has been obtained.
+
+THREE-PASS VERIFICATION
+
+Before declaring the checkpoint complete, perform the established verification passes:
+
+PASS 1 — CONTENT / CODE VERIFICATION
+Verify correctness of the affected files and changes.
+
+PASS 2 — REPOSITORY / ARCHITECTURE VERIFICATION
+Verify canonical ownership, dependencies, consistency, traceability, duplication, conflicts, and integration with the existing repository.
+
+PASS 3 — SYSTEM / GOVERNANCE VERIFICATION
+Verify requirements, rules, security, risk boundaries, readiness, testing expectations, documentation, roadmap, and stage authorization.
+
+If any pass finds a material problem:
+
+FIX → RECHECK → RERUN THE AFFECTED VERIFICATION PASS.
+
+Do not claim completion without evidence.
+
+SESSION-CONTINUITY REQUIREMENT
+
+Before ending this checkpoint, persist enough state in the repository for another Claude Code session to resume without relying on this conversation's memory.
+
+Record:
+
+- current project stage
+- completed work
+- decisions confirmed
+- decisions still pending, if any
+- unresolved non-blocking findings
+- blockers
+- verification status
+- repository state
+- documentation state
+- current next action
+- any important assumptions
+- exact point at which the next session should resume
+
+A future Claude Code session must be able to inspect the repository and recover the project state without reconstructing it from conversation history.
+
+FINAL RULE
+
+The purpose of this checkpoint is NOT to make the project appear complete.
+
+The purpose is to establish the truth:
+
+WHAT IS DECIDED
+WHAT IS AUTHORITATIVE
+WHAT IS VERIFIED
+WHAT IS IMPLEMENTED
+WHAT IS NOT IMPLEMENTED
+WHAT REMAINS OPEN
+WHAT REQUIRES MY DECISION
+WHAT DOES NOT REQUIRE MY DECISION
+AND EXACTLY WHERE THE PROJECT STANDS.
+
+If anything requires my decision, STOP and ask me.
+
+If nothing requires my decision, say so explicitly, complete the reconciliation, perform the required verification, and commit the verified repository state.
+
+Do not silently make owner-level decisions for me.
+Do not silently change requirements.
+Do not silently remove requirements.
+Do not silently create duplicate systems.
+Do not silently start implementation.
+
+
+make sure that everything is in order and every rules must be followed no mistakes but absolute professional company high quality grade and quality in the highest every we have talked about must meet this requirement and must follow all the rules we have established go through them well
+```

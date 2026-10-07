@@ -1,6 +1,7 @@
 # DEC-032 — Adopt the owner's checkpoint, version-control, and three-stage verification rule
 
 - **Status:** ACCEPTED
+- **Later changes:** Code exists since Stage 1's checkpoint A (2026-10-06), so the reading of "tests where applicable" below now includes the code's tests and checks; what each gate covers is stated in [DEC-039](DEC-039-adopt-quality-and-correction-directive.md), decision 2.
 - **Date:** 2026-09-30
 - **Decided by:** project owner (rule sent with Handoff Part 3); the reading notes below are the builder's
 - **Rule text:** [`docs/builder/checkpoint-and-verification-rule.md`](../builder/checkpoint-and-verification-rule.md) (verbatim, ACTIVE)

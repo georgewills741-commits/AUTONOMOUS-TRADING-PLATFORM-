@@ -11,7 +11,7 @@ python3 tools/docs/compare_requirements.py REV --strict --expect-changed=ID:cls,
 python3 tools/docs/selftest.py                 # negative tests: the checker and the comparison must fail on broken input
 ```
 
-At every checkpoint run the three checking commands (`--check-only`, the comparison with the previous checkpoint, and the self-test) and the code checks below. With the round trip of any newly preserved text, they are part of Verification 1 (DEC-033), together with the checks of the code in the [development guide](../../docs/development.md).
+At every checkpoint run the three checking commands (`--check-only`, the comparison with the previous checkpoint, and the self-test) and the code checks below. With the round trip of any newly preserved text, they are part of Verification 1 (DEC-033; what each gate covers now: [DEC-039](../../docs/decisions/DEC-039-adopt-quality-and-correction-directive.md)), together with the checks of the code in the [developer guide](../../docs/development.md).
 
 ## What it generates
 
@@ -60,7 +60,7 @@ uv run --locked ruff format --check tools/docs            # formatting
 uv run --locked mypy --config-file tools/docs/mypy.ini    # types, including inside functions without annotations
 ```
 
-The tools keep the rule set and type-check level they were written to: [`ruff.toml`](ruff.toml) selects ruff's former default rules (E4, E7, E9, F) and [`mypy.ini`](mypy.ini) checks the bodies of functions without annotations, both for Python 3.10, the oldest version the tools support. The rest of the repository uses the stricter project settings in `pyproject.toml` ([development guide](../../docs/development.md)). The tool versions are pinned in `uv.lock` since Stage 1's checkpoint A; until then they were not pinned, and ruff 0.15.8, mypy 1.19.1, and Python 3.11 were last used ([integrity verification of 2026-10-01](../../docs/traceability/integrity-verification-2026-10-01.md)).
+The tools keep the rule set and type-check level they were written to: [`ruff.toml`](ruff.toml) selects ruff's former default rules (E4, E7, E9, F) and [`mypy.ini`](mypy.ini) checks the bodies of functions without annotations, both for Python 3.10, the oldest version the tools support. The rest of the repository uses the stricter project settings in `pyproject.toml` ([developer guide](../../docs/development.md)). The tool versions are pinned in `uv.lock` since Stage 1's checkpoint A; until then they were not pinned, and ruff 0.15.8, mypy 1.19.1, and Python 3.11 were last used ([integrity verification of 2026-10-01](../../docs/traceability/integrity-verification-2026-10-01.md)).
 
 ## Generated files
 
