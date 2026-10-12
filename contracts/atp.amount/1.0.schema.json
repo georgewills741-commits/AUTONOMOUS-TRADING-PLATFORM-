@@ -1,0 +1,8 @@
+{
+  "$id": "atp.amount/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+  "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+  "title": "atp.amount",
+  "type": "string"
+}

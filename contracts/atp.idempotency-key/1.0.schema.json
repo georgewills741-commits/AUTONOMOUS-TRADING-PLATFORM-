@@ -1,0 +1,8 @@
+{
+  "$id": "atp.idempotency-key/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "An idempotency key: 32 lowercase hexadecimal characters.",
+  "pattern": "^[0-9a-f]{32}$",
+  "title": "atp.idempotency-key",
+  "type": "string"
+}

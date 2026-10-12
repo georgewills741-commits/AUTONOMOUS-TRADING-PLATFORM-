@@ -1,0 +1,140 @@
+{
+  "$id": "atp.outcome/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "discriminator": {
+    "mapping": {
+      "FAILURE": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "title": "Error"
+          },
+          "result": {
+            "const": "FAILURE",
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result",
+          "error"
+        ],
+        "type": "object"
+      },
+      "SUCCESS": {
+        "additionalProperties": false,
+        "properties": {
+          "result": {
+            "const": "SUCCESS",
+            "title": "Result",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value"
+          }
+        },
+        "required": [
+          "result",
+          "value"
+        ],
+        "type": "object"
+      },
+      "TIMEOUT": {
+        "additionalProperties": false,
+        "properties": {
+          "result": {
+            "const": "TIMEOUT",
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object"
+      },
+      "UNKNOWN": {
+        "additionalProperties": false,
+        "properties": {
+          "result": {
+            "const": "UNKNOWN",
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object"
+      }
+    },
+    "propertyName": "result"
+  },
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "result": {
+          "const": "SUCCESS",
+          "title": "Result",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value"
+        }
+      },
+      "required": [
+        "result",
+        "value"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "title": "Error"
+        },
+        "result": {
+          "const": "FAILURE",
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "error"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "result": {
+          "const": "TIMEOUT",
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "result"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "result": {
+          "const": "UNKNOWN",
+          "title": "Result",
+          "type": "string"
+        }
+      },
+      "required": [
+        "result"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "atp.outcome"
+}

@@ -32,7 +32,15 @@ required-version = "==0.12.23"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--strict-markers", "--strict-config", "--import-mode=importlib", "-ra"]
+# Hypothesis runs with its built-in "ci" profile everywhere, so local runs and the machine checks
+# use the same examples: derandomized, no time limit per example, no local example database.
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--import-mode=importlib",
+    "-ra",
+    "--hypothesis-profile=ci",
+]
 xfail_strict = true
 filterwarnings = ["error"]
 
@@ -57,9 +65,10 @@ target-version = "py312"
 include = ["*.py", "*.pyi", "**/pyproject.toml"]
 
 [tool.ruff.lint]
-# ruff's default rules (fixed by the locked ruff version) plus the whole security family. The
-# documentation tools have their own settings in tools/docs/ruff.toml.
-extend-select = ["S"]
+# ruff's default rules (fixed by the locked ruff version), the whole security family, and the
+# private-member rule (no access to another object's _members, which keeps an outcome readable
+# only through its fold). The documentation tools have their own settings in tools/docs/ruff.toml.
+extend-select = ["S", "SLF001"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests use plain assert statements by design.
