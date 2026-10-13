@@ -1,6 +1,6 @@
 # Source-of-Truth Map
 
-> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01, 2026-10-02, and 2026-10-06. Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
+> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01, 2026-10-02, 2026-10-06, and 2026-10-07 (the architecture-to-repository map, Stage 1 checkpoint B). Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
 >
 > If two documents seem to disagree, the one listed here wins, and the disagreement is recorded in the [findings register](../conflicts/register.md).
 
@@ -40,6 +40,10 @@
 | Exact versions of dependencies and tools | `uv.lock` (libraries and tools); `pyproject.toml` (uv and the build backend); `.github/workflows/checks.yml` (the actions, by commit hash). How one is changed: the [developer guide](../development.md) |
 | Each major feature's current lifecycle state | The [roadmap](../roadmap/roadmap.md)'s feature-status table (D5, [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)); the lifecycle itself is GOV-024 ("Feature lifecycle" below) |
 | A stage's progress and evidence | Its stage record ([Stage 1](../traceability/stage-01-foundation.md)) and each checkpoint's verification record ([traceability README](../traceability/README.md)) |
+| Where each code module lives, who owns it, and where its tests and documentation are | The [architecture-to-repository map](#architecture-to-repository) below (constitution Rule 15; the Stage 1 plan's D2) |
+| Rules for financial amounts in code (one constructor, the decimal context, rounding) | [docs/architecture/numerical-policy.md](numerical-policy.md); the precision is V-40 in the [values register](../requirements/values-register.md) |
+| Contract conventions (writing, validating, versioning, schemas; outcomes and idempotency keys) | [docs/architecture/contracts.md](contracts.md) |
+| A contract's schema | The contract's code under `src/atp/`. The committed file under `contracts/` is its snapshot, which the tests keep identical to the code ([contract conventions](contracts.md#committed-schemas-gov-006-gov-007)) |
 
 ## Product domains
 
@@ -154,3 +158,15 @@ Added by the [master knowledge-base audit](../traceability/master-knowledge-base
 | Risk-limit values (runtime) | SYS-12 Policy System, versioned runtime store (autonomy bounds: the "Autonomy boundaries" row above); how each value is classified is the [values register](../requirements/values-register.md) | POL-009 — [policy-system.md](../systems/policy/policy-system.md) |
 | Feature lifecycle | Architecture governance | GOV-024 — [architecture-governance.md](architecture-governance.md) |
 | Platform lifecycle; the platform is independent of Claude Code | Platform overview and deployment | PLT-029 — [platform-overview.md](../product/platform-overview.md); OPS-021 — [deployment-and-operational-readiness.md](../operations/deployment-and-operational-readiness.md); GOV-021 to GOV-023 — [architecture-governance.md](architecture-governance.md) |
+
+## Architecture to repository
+
+Each code module, its one owner, and where its code, tests, and documentation live (constitution Rule 15; the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md)'s D2, which takes the owners from the [registry](../requirements/registry.md)). A module gets its row when it is created. The import directions shown are enforced by `ALLOWED_IMPORTS` in `tests/repository/test_structure.py`, which fails if a module has no entry there. One import is made at run time instead: `atp.contracts`' schema functions import every module of the package when they are called, to find every contract ([contract conventions](contracts.md), "Committed schemas").
+
+| Module | Responsibility | Owner | Requirements | Code | Tests | Documentation | May import |
+|---|---|---|---|---|---|---|---|
+| `atp` (package root) | The package itself; holds no logic | Platform architecture (cross-cutting) | TEC-001 | `src/atp/__init__.py` | — | [Developer guide](../development.md) | No platform module |
+| `atp.numeric` | Building and rounding amounts; the decimal context | Platform architecture (cross-cutting) | ARCH-010, ARCH-011 (started; completed in DATA FOUNDATION), TEC-003; V-40 | `src/atp/numeric/` | `tests/numeric/`; the structure test | [Numerical policy](numerical-policy.md) | No other platform module |
+| `atp.contracts` | The base contract, its refusals and versions, the committed schemas, the outcome and idempotency-key types | Platform architecture (cross-cutting) | ARCH-025, ARCH-026, ARCH-041, ARCH-042, GOV-006, GOV-007, TEC-004 | `src/atp/contracts/`; schemas in `contracts/` | `tests/contracts/`; the structure test | [Contract conventions](contracts.md) | `atp.numeric` only |
+
+Tests of the repository as a whole (no secret-like file or value, SEC-005; the structure rules above) are in `tests/repository/` ([developer guide](../development.md)). The Stage 1 plan adds `atp.config` (owner: the hosting, backup, and migration set; MIG-010) and the command-line module at checkpoint C, each with its row here and its entry in `ALLOWED_IMPORTS`.

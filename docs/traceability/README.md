@@ -27,6 +27,7 @@
 | [Stage 1 checkpoint A verification](stage-01-checkpoint-a-verification.md) | Checkpoint A of Stage 1: the development environment (U1) and the testing foundation and machine checks (U6) |
 | [Quality audit 2026-10-06](quality-audit-2026-10-06.md) | The owner's quality, consistency, verification and correction directive adopted (DEC-039) and the audit it asks for: every area inspected, the corrections made, the non-blocking findings, and what required the owner |
 | [Owner decisions 7 verification](owner-decisions-07-verification.md) | The owner's answer to OQ-29 applied: a stage's features are PROPOSED until its plan is approved (DEC-040) |
+| [Stage 1 checkpoint B verification](stage-01-checkpoint-b-verification.md) | Checkpoint B of Stage 1: exact amounts (U2) and the contract kernel, outcomes, and idempotency keys (U3) |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
