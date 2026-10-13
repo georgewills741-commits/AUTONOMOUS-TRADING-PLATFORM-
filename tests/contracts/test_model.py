@@ -415,6 +415,22 @@ def test_a_value_that_does_not_have_the_declared_type_is_refused(
     assert refused.value.details[0].type == "contract_value_type"
 
 
+class Text(str):
+    pass
+
+
+class Exact(Decimal):
+    pass
+
+
+def test_a_subclass_of_text_or_decimal_is_refused_as_an_amount_type() -> None:
+    # Only the classes themselves: a subclass could change how the value reads.
+    for value in (Text("1.5"), Exact("1.5")):
+        with pytest.raises(ContractError) as refused:
+            Leg.from_python({"price": value, "venue": "a"})
+        assert refused.value.details[0].type == "amount_type"
+
+
 def test_an_after_field_validator_cannot_turn_an_amount_into_a_float() -> None:
     holder = _define_body(
         "    price: Amount\n"
@@ -919,6 +935,53 @@ def test_json_schema_extra_holds_only_extension_keys(extra: str) -> None:
         _define_body(f"    price: Amount = Field(json_schema_extra={extra})\n")
 
 
+class KindA(Contract):
+    contract_id = "test.kind-a"
+    contract_version = ContractVersion(1, 0)
+    kind: Literal["a"]
+
+
+class KindB(Contract):
+    contract_id = "test.kind-b"
+    contract_version = ContractVersion(1, 0)
+    kind: Literal["b"]
+
+
+@pytest.mark.parametrize(
+    ("annotation", "message"),
+    [
+        (
+            "tuple[Annotated[Amount, Field(json_schema_extra={'type': 'number'})], ...]",
+            "keys are extensions starting with x-",
+        ),
+        ("tuple[Annotated[str, Field(validation_alias='other')], ...]", "one name"),
+        (
+            "tuple[Annotated[KindA | KindB, Field(discriminator='kind')], ...]",
+            "does not set discriminator",
+        ),
+        ("tuple[Annotated[int, Field(exclude=True)], ...]", "writes every field"),
+    ],
+)
+# Pydantic warns that a second name or `exclude` has no effect there; the kernel refuses it.
+@pytest.mark.filterwarnings(
+    "ignore::pydantic.warnings.UnsupportedFieldAttributeWarning"
+)
+def test_a_field_inside_a_type_has_the_same_list_of_settings(
+    annotation: str, message: str
+) -> None:
+    with pytest.raises(TypeError, match=message):
+        _define_body(f"    items: {annotation}\n", {"KindA": KindA, "KindB": KindB})
+
+
+def test_the_listed_settings_are_accepted_on_a_field_inside_a_type() -> None:
+    holder = _define_body(
+        "    items: tuple[Annotated[int, Field(ge=0, title='Count', "
+        "description='How many', examples=[1], json_schema_extra={'x-unit': 'item'})], "
+        "...]\n"
+    )
+    assert holder.from_json('{"items": [2]}').to_json() == '{"items":[2]}'
+
+
 def test_the_listed_field_settings_are_accepted() -> None:
     holder = _define_body(
         "    items: int = Field(default=1, alias='count', title='Count', "
@@ -1283,6 +1346,16 @@ class Lenient(enum.StrEnum):
         return cls.FILLED
 
 
+class LenientBase(enum.Enum):
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return None
+
+
+class InheritsLenience(LenientBase):
+    PLAIN = "plain"
+
+
 class Permissions(enum.IntFlag):
     READ = 1
     WRITE = 2
@@ -1294,17 +1367,23 @@ class StrictPermissions(enum.IntFlag, boundary=enum.STRICT):
 
 
 @pytest.mark.parametrize(
-    "annotation", ["Lenient", "Permissions", "tuple[Lenient, ...]"]
+    "annotation",
+    ["Lenient", "Permissions", "tuple[Lenient, ...]", "InheritsLenience"],
 )
 def test_an_enum_that_reads_values_other_than_its_members_is_refused(
     annotation: str,
 ) -> None:
-    # A `_missing_` of its own (a fallback, a case-insensitive lookup), or a flag that keeps
-    # unknown bits (`IntFlag`'s default), would read a value that is no member as one.
+    # A `_missing_` of its own or from a base enum (a fallback, a case-insensitive lookup),
+    # or a flag that keeps unknown bits (`IntFlag`'s default), would read a value that is no
+    # member as one.
     with pytest.raises(TypeError, match="reads only its own members"):
         _define_body(
             f"    items: {annotation}\n",
-            {"Lenient": Lenient, "Permissions": Permissions},
+            {
+                "Lenient": Lenient,
+                "Permissions": Permissions,
+                "InheritsLenience": InheritsLenience,
+            },
         )
 
 
@@ -1465,6 +1544,38 @@ def test_a_contract_built_in_code_hides_the_value_in_its_error_text() -> None:
     with pytest.raises(ValidationError) as refused:
         Leg(price=SECRET, venue="a")  # type: ignore[arg-type]
     assert SECRET not in str(refused.value)
+
+
+def _quote_the_input(value: str) -> str:
+    msg = "not upper: " + value
+    raise ValueError(msg)
+
+
+class Tagged(Contract):
+    contract_id = "test.tagged-built"
+    contract_version = ContractVersion(1, 0)
+    outcome: Outcome[int, str]
+
+
+def test_a_contract_built_in_code_can_show_input_in_its_error_text() -> None:
+    # Why outside data never goes through the constructor, and why a validation error is
+    # rendered only through `validation_error_details`: the error's own text can show input,
+    # as an unknown keyword, a validator's own message, or an outcome's unknown tag.
+    quoting: Any = _define_body(
+        "    name: Annotated[str, AfterValidator(quote)]\n", {"quote": _quote_the_input}
+    )
+    unknown: dict[str, Any] = {"price": amount("1"), "venue": "a", SECRET: 1}
+    builds: list[Any] = [
+        lambda: Leg(**unknown),
+        lambda: quoting(name=SECRET),
+        lambda: Tagged(outcome={"result": SECRET}),  # type: ignore[arg-type]
+    ]
+    for build in builds:
+        with pytest.raises(ValidationError) as refused:
+            build()
+        assert SECRET in str(refused.value)
+        details = validation_error_details(refused.value)
+        assert SECRET not in json.dumps([detail.as_dict() for detail in details])
 
 
 def test_the_refusal_holds_no_reference_to_the_original_error() -> None:

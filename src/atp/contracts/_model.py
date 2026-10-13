@@ -253,6 +253,9 @@ def _loosens(item: object) -> bool:
 def _refuse_metadata(base: object, item: object, where: str) -> None:
     """Refuse field metadata that is not a listed constraint or `AfterValidator`."""
     if isinstance(item, FieldInfo):
+        # A `Field(...)` inside a type has the settings a field has (a discriminator, a schema
+        # extra, a second name), so the same list applies to it.
+        _refuse_field_settings(item, where)
         for inner in item.metadata:
             _refuse_metadata(base, inner, where)
         return
