@@ -848,6 +848,42 @@ def test_an_amount_may_stand_beside_a_literal_of_strings(annotation: str) -> Non
         holder.from_json('{"price": 1.5}')
 
 
+def _percent_to_fraction(value: Decimal) -> Decimal:
+    return value / amount("100")
+
+
+def test_a_validator_is_applied_again_whenever_a_contract_is_validated_again() -> None:
+    # Why a validator returns the value it was given, or one that validates to itself: an
+    # instance given as input, and a contract's own JSON read back, are validated again, so a
+    # conversion (a percentage to a fraction) would be applied again, silently.
+    fee: Any = _define_body(
+        "    rate: Annotated[Amount, AfterValidator(to_fraction)]\n",
+        {"to_fraction": _percent_to_fraction},
+    )
+    once = fee.from_json('{"rate": "10"}')
+    assert once.rate == amount("0.1")
+    assert fee.from_python(once).rate == amount("0.001")
+    assert fee.from_json(once.to_json()).rate == amount("0.001")
+    # A normalized value that validates to itself is unchanged by validating it again.
+    name: Any = _define_body("    name: Annotated[str, AfterValidator(str.strip)]\n")
+    stripped = name.from_json('{"name": " a "}')
+    assert name.from_python(stripped).name == "a"
+    assert name.from_json(stripped.to_json()).name == "a"
+
+
+def test_a_message_built_from_the_schema_is_kept() -> None:
+    # Allowed values and limits are facts of the schema, not of the input.
+    holder = _define_body(
+        "    kind: Literal['a', 'b']\n    code: Annotated[str, Field(max_length=3)]\n"
+    )
+    with pytest.raises(ContractError) as refused:
+        holder.from_json('{"kind": "c", "code": "abcd"}')
+    assert [detail.message for detail in refused.value.details] == [
+        "Input should be 'a' or 'b'",
+        "String should have at most 3 characters",
+    ]
+
+
 def test_a_validators_own_exception_becomes_a_refusal_without_input() -> None:
     holder = _define_body(
         "    venue: Annotated[str, AfterValidator(lambda value: {'a': 'A'}[value])]\n"
