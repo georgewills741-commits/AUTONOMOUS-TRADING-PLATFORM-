@@ -193,8 +193,11 @@ def test_strict_mode_still_makes_the_listed_conversions() -> None:
     # The contract conventions list these; a Pydantic upgrade that changed one fails here.
     holder: Any = _define_body(
         "    ratio: float\n    count: int\n    name: str\n"
+        "    day: datetime.date | None = None\n"
         "    at: datetime.datetime | None = None\n"
+        "    clock: datetime.time | None = None\n"
         "    period: datetime.timedelta | None = None\n"
+        "    ident: uuid.UUID | None = None\n"
     )
     converted = holder.from_python(
         {"ratio": amount("0.1"), "count": Size.SMALL, "name": Side.BUY}
@@ -208,11 +211,33 @@ def test_strict_mode_still_makes_the_listed_conversions() -> None:
         type(holder.from_python({"ratio": 1, "count": 1, "name": "a"}).ratio) is float
     )
     read = holder.from_json(
-        '{"ratio": 1, "count": 1, "name": "a", "at": "1", "period": "01:02:03"}'
+        json.dumps(
+            {
+                "ratio": 1,
+                "count": 1,
+                "name": "a",
+                "day": "86400",
+                "at": "1",
+                "clock": "01:02",
+                "period": "01:02",
+                "ident": "{" + str(uuid.UUID(int=5)) + "}",
+            }
+        )
     )
     assert type(read.ratio) is float
+    assert read.day == datetime.date(1970, 1, 2)
     assert read.at == datetime.datetime(1970, 1, 1, 0, 0, 1, tzinfo=datetime.UTC)
-    assert read.period == datetime.timedelta(hours=1, minutes=2, seconds=3)
+    assert read.clock == datetime.time(1, 2)
+    assert read.period == datetime.timedelta(hours=1, minutes=2)
+    assert read.ident == uuid.UUID(int=5)
+    naive = holder.from_json(
+        '{"ratio": 1, "count": 1, "name": "a", "at": "2026-01-01T00:00:00"}'
+    )
+    assert (naive.at.tzinfo, read.at.tzinfo is not None) == (None, True)
+    aware = holder.from_json(
+        '{"ratio": 1, "count": 1, "name": "a", "clock": "01:02:03Z"}'
+    )
+    assert (read.clock.tzinfo, aware.clock.tzinfo is not None) == (None, True)
 
 
 class Colour(enum.Enum):
