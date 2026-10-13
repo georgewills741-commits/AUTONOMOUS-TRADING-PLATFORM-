@@ -54,7 +54,7 @@ from atp.contracts import (
     PydanticCustomError,
     validation_error_details,
 )
-from atp.numeric import DecimalContextError, amount
+from atp.numeric import DecimalContextError, Rounding, amount, quantize
 
 # The constraint class `Field(gt=...)` produces, written directly in some tests.
 _GT: Any = type(Field(gt=0).metadata[0])
@@ -156,9 +156,63 @@ def test_a_default_is_validated_like_any_other_value() -> None:
         Defaulted.from_python({})
 
 
+class KeyHolder(Contract):
+    contract_id = "test.key-holder"
+    contract_version = ContractVersion(1, 0)
+    key: IdempotencyKey = Field(default_factory=IdempotencyKey.new)
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "    key: IdempotencyKey = IdempotencyKey.new()\n",
+        "    key: IdempotencyKey = Field(default=IdempotencyKey.new())\n",
+        "    keys: tuple[IdempotencyKey, ...] = (IdempotencyKey.new(),)\n",
+        "    keys: frozenset[IdempotencyKey] = frozenset({IdempotencyKey.new()})\n",
+        "    holder: KeyHolder = KeyHolder()\n",
+        "    result: Outcome[IdempotencyKey, str] = Outcome.success(IdempotencyKey.new())\n",
+    ],
+)
+def test_a_key_held_by_a_default_is_refused(body: str) -> None:
+    # Every instance built without the field would share it, so two operations would carry
+    # one key.
+    with pytest.raises(TypeError, match="default factory"):
+        _define_body(body, {"KeyHolder": KeyHolder})
+
+
+def test_a_key_default_comes_from_a_factory() -> None:
+    assert KeyHolder().key != KeyHolder().key
+
+
 def test_a_list_is_refused_where_a_tuple_is_declared_in_python() -> None:
     with pytest.raises(ContractError):
         Order.from_python({"legs": [{"price": "1", "venue": "a"}]})
+
+
+def test_strict_mode_still_makes_the_listed_conversions() -> None:
+    # The contract conventions list these; a Pydantic upgrade that changed one fails here.
+    holder: Any = _define_body(
+        "    ratio: float\n    count: int\n    name: str\n"
+        "    at: datetime.datetime | None = None\n"
+        "    period: datetime.timedelta | None = None\n"
+    )
+    converted = holder.from_python(
+        {"ratio": amount("0.1"), "count": Size.SMALL, "name": Side.BUY}
+    )
+    assert (converted.ratio, type(converted.count), type(converted.name)) == (
+        0.1,
+        int,
+        str,
+    )
+    assert (
+        type(holder.from_python({"ratio": 1, "count": 1, "name": "a"}).ratio) is float
+    )
+    read = holder.from_json(
+        '{"ratio": 1, "count": 1, "name": "a", "at": "1", "period": "01:02:03"}'
+    )
+    assert type(read.ratio) is float
+    assert read.at == datetime.datetime(1970, 1, 1, 0, 0, 1, tzinfo=datetime.UTC)
+    assert read.period == datetime.timedelta(hours=1, minutes=2, seconds=3)
 
 
 class Colour(enum.Enum):
@@ -369,8 +423,8 @@ def test_a_validator_cannot_store_a_mutable_value() -> None:
             "datetime.date(2026, 1, 1)",
         ),
         ("uuid.UUID", "uuid.UUID(int=1)", "'1'"),
-        ("IdempotencyKey", "IdempotencyKey.new()", "'k'"),
-        ("Literal[1]", "1", "True"),
+        ("IdempotencyKey", "Field(default_factory=IdempotencyKey.new)", "'k'"),
+        ("Literal['a']", "'a'", "type('Sub', (str,), {})('a')"),
         ("Colour", "Colour.RED", "'red'"),
         ("Leg", "Leg(price=amount('1'), venue='a')", "Order(legs=())"),
         (
@@ -848,14 +902,147 @@ def test_an_amount_may_stand_beside_a_literal_of_strings(annotation: str) -> Non
         holder.from_json('{"price": 1.5}')
 
 
+class Deposit(Contract):
+    contract_id = "test.deposit"
+    contract_version = ContractVersion(1, 0)
+    asset: str
+    quantity: Amount
+
+
+class Withdrawal(Contract):
+    contract_id = "test.withdrawal"
+    contract_version = ContractVersion(1, 0)
+    asset: str
+    quantity: Amount
+
+
+class Movement(BaseModel):  # not a contract: shows what the union rule prevents
+    model_config = ConfigDict(strict=True)
+    movement: Deposit | Withdrawal
+
+
+def test_strict_pydantic_reads_a_union_back_as_its_first_member_that_accepts_it() -> (
+    None
+):
+    withdrawal = Withdrawal(asset="BTC", quantity=amount("1"))
+    written = Movement(movement=withdrawal).model_dump_json()
+    assert type(Movement.model_validate_json(written).movement) is Deposit
+
+
+def _union_namespace() -> dict[str, object]:
+    return {"Deposit": Deposit, "Withdrawal": Withdrawal, "Side": Side, "Size": Size}
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        "Deposit | Withdrawal",
+        "tuple[Deposit | Withdrawal, ...]",
+        "Outcome[Deposit | Withdrawal, str]",
+        "Outcome[int, str] | Leg",
+        "Annotated[Deposit | None, Field(description='d')] | Withdrawal",
+        "str | datetime.date",
+        "str | datetime.datetime",
+        "str | datetime.time",
+        "str | datetime.timedelta",
+        "str | uuid.UUID",
+        "str | IdempotencyKey",
+        "str | Side",
+        "Side | Colour",
+        "datetime.date | datetime.datetime",
+        "int | float",
+        "int | Size",
+        "tuple[int, ...] | tuple[str, ...]",
+        "tuple[int, ...] | frozenset[int]",
+        "Annotated[Literal['a'] | int, Field(description='d')] | str",
+        "Annotated[Annotated[int, Field(ge=0)] | None, Field(description='d')] | int",
+    ],
+)
+def test_union_members_written_as_the_same_kind_of_json_value_are_refused(
+    annotation: str,
+) -> None:
+    # Reading the written form back picks the first member that accepts a value, so a
+    # withdrawal would come back as a deposit, and a date as text.
+    with pytest.raises(TypeError, match="same kind of JSON value"):
+        _define_body(f"    items: {annotation}\n", _union_namespace())
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        "Amount | Literal['1']",
+        "Amount | Literal['market', '1E+5']",
+        "Annotated[Amount, Field(gt=0)] | Literal['-1']",
+        "datetime.datetime | Literal['1']",
+        "datetime.date | Literal['today']",
+        "Side | Literal['BUY']",
+        "uuid.UUID | Literal['none']",
+    ],
+)
+def test_a_literal_beside_another_member_written_as_text_is_refused(
+    annotation: str,
+) -> None:
+    # The member could read the literal's text as one of its own values ("1" as an amount, or
+    # as a datetime one second after 1970 began); only `str`, and an amount refusing the text,
+    # are known to read it back as the literal.
+    with pytest.raises(TypeError, match="literal stands in a union"):
+        _define_body(f"    items: {annotation}\n", _union_namespace())
+
+
+@pytest.mark.parametrize(
+    ("annotation", "values"),
+    [
+        ("int | str", "1, '1'"),
+        ("bool | int", "True, 1, False, 0"),
+        ("int | bool", "1, True, 0, False"),
+        ("Leg | str", "Leg(price=amount('1'), venue='a'), 'a'"),
+        ("datetime.date | int", "datetime.date(2026, 1, 1), 1"),
+        ("str | Literal['a']", "'a', 'b'"),
+        ("Annotated[Literal['a'], Field(description='d')] | str", "'a', 'b'"),
+        ("Amount | Literal['market']", "amount('1'), 'market'"),
+        ("Literal['a'] | Literal['b'] | int", "'a', 'b', 1"),
+        ("Literal['a', None] | int", "'a', None, 1"),
+        ("tuple[int, ...] | str", "(1,), 'a'"),
+        ("Side | None", "Side.BUY, None"),
+        ("Size | str", "Size.SMALL, 'a'"),
+        ("Outcome[int, str] | None", "Outcome.success(1), None"),
+        (
+            "Annotated[Leg | None, Field(description='d')] | None",
+            "Leg(price=amount('1'), venue='a'), None",
+        ),
+    ],
+)
+def test_a_union_whose_members_are_written_differently_reads_its_own_json(
+    annotation: str, values: str
+) -> None:
+    holder: Any = _define_body(
+        f"    items: tuple[{annotation}, ...] = ({values},)\n", _union_namespace()
+    )
+    written = holder()
+    read = holder.from_json(written.to_json())
+    # Outcomes are not compared, so the values are compared through their written form.
+    assert read.to_json() == written.to_json()
+    assert [type(item) for item in read.items] == [type(item) for item in written.items]
+
+
 def _percent_to_fraction(value: Decimal) -> Decimal:
     return value / amount("100")
 
 
+def _not_blank(value: str) -> str:
+    if not value.strip():
+        raise PydanticCustomError("blank", "the text is blank")
+    return value
+
+
+def _to_cents(value: Decimal) -> Decimal:
+    return quantize(value, amount("0.01"), Rounding.TOWARD_ZERO)
+
+
 def test_a_validator_is_applied_again_whenever_a_contract_is_validated_again() -> None:
-    # Why a validator returns the value it was given, or one that validates to itself: an
-    # instance given as input, and a contract's own JSON read back, are validated again, so a
-    # conversion (a percentage to a fraction) would be applied again, silently.
+    # Why a validator returns the value it was given, unchanged: an instance given as input,
+    # and a contract's own JSON read back, are validated again, so a conversion (a percentage
+    # to a fraction) would be applied again, silently.
     fee: Any = _define_body(
         "    rate: Annotated[Amount, AfterValidator(to_fraction)]\n",
         {"to_fraction": _percent_to_fraction},
@@ -864,11 +1051,29 @@ def test_a_validator_is_applied_again_whenever_a_contract_is_validated_again() -
     assert once.rate == amount("0.1")
     assert fee.from_python(once).rate == amount("0.001")
     assert fee.from_json(once.to_json()).rate == amount("0.001")
-    # A normalized value that validates to itself is unchanged by validating it again.
-    name: Any = _define_body("    name: Annotated[str, AfterValidator(str.strip)]\n")
-    stripped = name.from_json('{"name": " a "}')
-    assert name.from_python(stripped).name == "a"
-    assert name.from_json(stripped.to_json()).name == "a"
+    # A validator that only checks returns the same value every time.
+    name: Any = _define_body(
+        "    name: Annotated[str, AfterValidator(not_blank)]\n",
+        {"not_blank": _not_blank},
+    )
+    checked = name.from_json('{"name": " a "}')
+    assert name.from_python(checked).name == " a "
+    assert name.from_json(checked.to_json()).name == " a "
+
+
+def test_a_constraint_is_not_checked_again_on_the_value_a_validator_returns() -> None:
+    # Why a validator does not normalize either: a constraint written before it is checked on
+    # the value the validator was given. Rounding 0.004 down to a step of 0.01 stores 0 in a
+    # field declared greater than 0, which the contract then refuses as input.
+    order: Any = _define_body(
+        "    qty: Annotated[Amount, Field(gt=0), AfterValidator(to_cents)]\n",
+        {"to_cents": _to_cents},
+    )
+    rounded = order.from_json('{"qty": "0.004"}')
+    assert rounded.qty == amount("0")
+    with pytest.raises(ContractError) as refused:
+        order.from_json(rounded.to_json())
+    assert refused.value.details[0].type == "greater_than"
 
 
 def test_a_message_built_from_the_schema_is_kept() -> None:
@@ -1349,6 +1554,11 @@ class Ratio(enum.Enum):
     HALF = 0.5
 
 
+class Switch(enum.Enum):
+    OFF = 0
+    ON = 1
+
+
 class Size(enum.IntEnum):
     SMALL = 1
 
@@ -1358,20 +1568,61 @@ class Side(enum.StrEnum):
 
 
 @pytest.mark.parametrize(
-    "annotation", ["Mutable", "Ratio", "tuple[Mutable, ...]", "Literal[Mutable.A]"]
+    "annotation", ["Mutable", "Ratio", "Switch", "tuple[Mutable, ...]"]
 )
-def test_an_enum_whose_values_are_not_strings_or_integers_is_refused(
-    annotation: str,
-) -> None:
-    with pytest.raises(TypeError, match="member values are strings or integers"):
-        _define_body(f"    items: {annotation}\n", {"Mutable": Mutable, "Ratio": Ratio})
+def test_an_enum_holds_strings_unless_it_is_an_int_enum(annotation: str) -> None:
+    # A member's value must be immutable, and Pydantic reads an enum of integers that is not
+    # an `IntEnum` by equality, so it would read JSON `true` as the member 1.
+    with pytest.raises(
+        TypeError, match="member values are strings, or it is an IntEnum"
+    ):
+        _define_body(
+            f"    items: {annotation}\n",
+            {"Mutable": Mutable, "Ratio": Ratio, "Switch": Switch},
+        )
+
+
+@pytest.mark.parametrize("annotation", ["Size", "Side", "Colour"])
+def test_an_enum_of_strings_or_an_int_enum_is_accepted(annotation: str) -> None:
+    _define_body(f"    items: {annotation}\n", {"Size": Size, "Side": Side})
+
+
+def test_an_int_enum_reads_only_its_integers() -> None:
+    holder = _define_body("    size: Size\n", {"Size": Size})
+    assert holder.from_json('{"size": 1}').to_json() == '{"size":1}'
+    for text in ('{"size": true}', '{"size": 1.0}', '{"size": "1"}'):
+        with pytest.raises(ContractError):
+            holder.from_json(text)
+    with pytest.raises(ContractError):
+        holder.from_python({"size": 1})
 
 
 @pytest.mark.parametrize(
-    "annotation", ["Size", "Side", "Colour", "Literal[Side.BUY, 'other']"]
+    "annotation",
+    [
+        "Literal[1]",
+        "Literal[True]",
+        "Literal[1.0]",
+        "Literal[b'x']",
+        "Literal['a', 0]",
+        "Literal[Side.BUY]",
+        "Literal[Size.SMALL]",
+        "Literal[Colour.RED]",
+        "tuple[Literal[0], ...]",
+        "Outcome[Literal[1], str]",
+    ],
 )
-def test_an_enum_of_strings_or_integers_is_accepted(annotation: str) -> None:
-    _define_body(f"    items: {annotation}\n", {"Size": Size, "Side": Side})
+def test_a_literal_holds_only_strings_or_none(annotation: str) -> None:
+    with pytest.raises(TypeError, match="literal's values are strings or None"):
+        _define_body(f"    items: {annotation}\n", {"Size": Size, "Side": Side})
+
+
+def test_a_literal_of_strings_or_none_reads_its_own_json() -> None:
+    holder = _define_body(
+        "    kind: Literal['a', None]\n    other: Literal['b'] | None = None\n"
+    )
+    for text in ('{"kind":"a","other":"b"}', '{"kind":null,"other":null}'):
+        assert holder.from_json(text).to_json() == text
 
 
 class Lenient(enum.StrEnum):
@@ -1402,34 +1653,61 @@ class StrictPermissions(enum.IntFlag, boundary=enum.STRICT):
     WRITE = 2
 
 
+class Bits(enum.Flag):
+    A = 1
+    B = 2
+
+
 @pytest.mark.parametrize(
     "annotation",
-    ["Lenient", "Permissions", "tuple[Lenient, ...]", "InheritsLenience"],
+    [
+        "Lenient",
+        "Permissions",
+        "StrictPermissions",
+        "Bits",
+        "tuple[Lenient, ...]",
+        "InheritsLenience",
+    ],
 )
 def test_an_enum_that_reads_values_other_than_its_members_is_refused(
     annotation: str,
 ) -> None:
-    # A `_missing_` of its own or from a base enum (a fallback, a case-insensitive lookup),
-    # or a flag that keeps unknown bits (`IntFlag`'s default), would read a value that is no
-    # member as one.
+    # A `_missing_` of its own or from a base enum (a fallback, a case-insensitive lookup)
+    # would read a value that is no member as one; every flag has one from `Flag`, which
+    # reads combinations of members, and from JSON `true` and `false`.
     with pytest.raises(TypeError, match="reads only its own members"):
         _define_body(
             f"    items: {annotation}\n",
             {
                 "Lenient": Lenient,
                 "Permissions": Permissions,
+                "StrictPermissions": StrictPermissions,
+                "Bits": Bits,
                 "InheritsLenience": InheritsLenience,
             },
         )
 
 
-def test_a_strict_flag_reads_only_its_own_bits() -> None:
-    holder = _define_body(
-        "    items: StrictPermissions\n", {"StrictPermissions": StrictPermissions}
+class ByEquality(
+    BaseModel
+):  # not a contract: shows what the literal and enum rules prevent
+    model_config = ConfigDict(strict=True)
+    one: Literal[1] = 1
+    yes: Literal[True] = True
+    switch: Switch = Switch.OFF
+    permissions: StrictPermissions = StrictPermissions.READ
+    side: Literal[Side.BUY] = Side.BUY
+
+
+def test_strict_pydantic_matches_literals_and_most_enums_by_equality() -> None:
+    read = ByEquality.model_validate_json(
+        '{"one": true, "yes": 1, "switch": true, "permissions": false}'
     )
-    assert holder.from_json('{"items": 1}').to_json() == '{"items":1}'
-    with pytest.raises(ContractError):
-        holder.from_json('{"items": 999}')
+    assert (type(read.one), type(read.yes)) == (int, bool)
+    assert read.switch is Switch.ON
+    assert read.permissions == StrictPermissions(0)
+    assert ByEquality.model_validate_json('{"one": 1.0}').one == 1
+    assert ByEquality.model_validate({"side": "BUY"}).side is Side.BUY
 
 
 def test_a_field_type_that_cannot_be_resolved_is_refused() -> None:

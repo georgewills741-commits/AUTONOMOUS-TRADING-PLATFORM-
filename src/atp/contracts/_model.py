@@ -1,13 +1,14 @@
 """The base every interface contract is built on (ARCH-025, ARCH-026, GOV-006, GOV-007, TEC-004).
 
-A contract is a Pydantic v2 model that is strict (no type coercion), immutable, and refuses
-unknown fields. Its fields hold only immutable types, checked when the class is defined, so
-nested values are immutable too. What a contract may add is listed, not what it may not: the
-base's settings, field constraints written with `Field`, `AfterValidator`, and field
-validators in "after" mode; anything else that could change how input is read or how values
-are written (before, plain, or wrap validators, model validators, serializers, computed
-fields, other metadata, unvalidated defaults, a redefined kernel method) is refused when the
-class is created, by the contract's metaclass, so no base class or mixin can skip the checks.
+A contract is a Pydantic v2 model that is strict (no type coercion, apart from the few cases
+the contract conventions list), immutable, and refuses unknown fields. Its fields hold only
+immutable types, checked when the class is defined, so nested values are immutable too. What
+a contract may add is listed, not what it may not: the base's settings, field constraints
+written with `Field`, `AfterValidator`, and field validators in "after" mode; anything else
+that could change how input is read or how values are written (before, plain, or wrap
+validators, model validators, serializers, computed fields, other metadata, unvalidated
+defaults, a redefined kernel method) is refused when the class is created, by the contract's
+metaclass, so no base class or mixin can skip the checks.
 After validation, every value is checked against its field's declared type.
 Each concrete contract declares its own identity and version. Input from outside the platform
 is validated with `from_python` or `from_json`, which raise `ContractError` with redacted
@@ -59,7 +60,7 @@ from atp.contracts._errors import (
 from atp.contracts._idempotency import IdempotencyKey
 from atp.contracts._outcome import Outcome
 from atp.contracts._version import ContractVersion
-from atp.numeric import DecimalContextError
+from atp.numeric import AMOUNT_PATTERN, DecimalContextError
 
 _VALUE_TYPE: Final = "a contract value must have its field's declared type"
 register_kernel_messages("contract_value_type", [_VALUE_TYPE])
@@ -309,6 +310,96 @@ def _holds_amount(annotation: object) -> bool:
     )
 
 
+def _written_kinds(annotation: object) -> frozenset[str]:
+    """How a value of an accepted field type is written in JSON: as null, a bool, a number (an
+    integer, a float, a member of an `IntEnum`), an object (a contract, an outcome), an array (a
+    tuple, a frozenset), or a string: text, amounts, dates, times, durations, UUIDs, keys, the
+    other enums' members, and literals, whose values are strings or None."""
+    while typing.get_origin(annotation) is Annotated:
+        annotation = typing.get_args(annotation)[0]
+    origin = typing.get_origin(annotation)
+    arguments = typing.get_args(annotation)
+    if origin is Literal:
+        return frozenset("null" if value is None else "string" for value in arguments)
+    if origin in (typing.Union, types.UnionType):
+        return frozenset().union(*(_written_kinds(argument) for argument in arguments))
+    if origin in (tuple, frozenset):
+        return frozenset({"array"})
+    if origin is Outcome or (
+        isinstance(annotation, type) and issubclass(annotation, Contract)
+    ):
+        return frozenset({"object"})
+    if annotation is bool:
+        return frozenset({"bool"})
+    if annotation in (int, float) or (
+        isinstance(annotation, type) and issubclass(annotation, enum.IntEnum)
+    ):
+        return frozenset({"number"})
+    if annotation is type(None):
+        return frozenset({"null"})
+    return frozenset({"string"})
+
+
+def _literal_beside(base: object, text: str) -> bool:
+    """Whether a literal's text, beside a member also written as text, is read back as itself:
+    beside `str`, or beside an amount when it is outside the amount's text form, which the
+    amount refuses."""
+    if base is Amount:
+        return re.fullmatch(AMOUNT_PATTERN, text) is None
+    return base is str
+
+
+def _refuse_ambiguous_union(members: Sequence[object], where: str) -> None:
+    """Refuse a union whose written form would not say which member a value came from.
+
+    Reading a contract's JSON picks the first member of a union that accepts a value: a
+    withdrawal written beside a deposit with the same fields would come back as a deposit, and
+    a date beside text as text. So a union holds at most one member of each kind of JSON value,
+    besides null (read back as `None` by whichever member accepts it) and literals, which stand
+    beside another member written as text only where they read back as themselves.
+    """
+    plain: dict[str, list[object]] = {}
+    texts: list[str] = []
+    for member in members:
+        base = member
+        while typing.get_origin(base) is Annotated:
+            base = typing.get_args(base)[0]
+        if typing.get_origin(base) is Literal:
+            texts.extend(value for value in typing.get_args(base) if value is not None)
+        else:
+            for kind in _written_kinds(base) - {"null"}:
+                plain.setdefault(kind, []).append(base)
+    if any(len(bases) > 1 for bases in plain.values()):
+        msg = (
+            f"{where}: two members of a union are written as the same kind of JSON value, "
+            "so one could be read back as the other"
+        )
+        raise TypeError(msg)
+    beside = plain.get("string", [])
+    if beside and not all(_literal_beside(beside[0], text) for text in texts):
+        msg = (
+            f"{where}: a literal stands in a union beside another member written as text "
+            "only beside str, or beside an amount as text outside the amount's text form"
+        )
+        raise TypeError(msg)
+
+
+def _holds_key(value: object) -> bool:
+    """Whether a default holds an idempotency key, which every instance built with it would
+    share, so two operations would carry one key."""
+    if isinstance(value, IdempotencyKey):
+        return True
+    if type(value) in (tuple, frozenset):
+        items = typing.cast("tuple[object, ...] | frozenset[object]", value)
+        return any(_holds_key(item) for item in items)
+    if isinstance(value, Contract):
+        return any(_holds_key(item) for item in value.__dict__.values())
+    if isinstance(value, Outcome):
+        # Read inside atp.contracts, where the outcome is defined.
+        return _holds_key(value._payload)  # noqa: SLF001
+    return False
+
+
 def _refuse_field_settings(field: FieldInfo, where: str) -> None:
     """Refuse `Field` settings that are not listed, and a second name for reading or writing."""
     if field.validate_default is False:
@@ -386,10 +477,13 @@ def _refuse_field_type(annotation: object, where: str) -> None:
     if annotation in _IMMUTABLE_TYPES or annotation is Amount:
         return
     if origin is Literal:
-        # A literal's values are immutable, except that an enum member carries its value.
-        for argument in arguments:
-            if isinstance(argument, enum.Enum):
-                _refuse_field_type(type(argument), where)
+        # Pydantic matches a literal by equality, even in strict mode, and `True == 1 == 1.0`:
+        # `Literal[1]` would read JSON `true` and `1.0` as 1, `Literal[True]` would read 1, and a
+        # literal of an enum member would read its bare value from Python. Text and None equal
+        # only text and None.
+        if any(type(argument) not in (str, type(None)) for argument in arguments):
+            msg = f"{where}: a literal's values are strings or None"
+            raise TypeError(msg)
         return
     if isinstance(annotation, typing.TypeAliasType) or isinstance(
         origin, typing.TypeAliasType
@@ -407,28 +501,27 @@ def _refuse_field_type(annotation: object, where: str) -> None:
         msg = f"{where}: a contract holds an amount as Amount, not as a plain Decimal"
         raise TypeError(msg)
     if isinstance(annotation, type) and issubclass(annotation, enum.Enum):
-        # A member's value is reachable through every contract that holds the member, so
-        # it must be immutable too (`class W(Enum): A = ["x"]` would share one list).
-        if any(
-            type(member.value) not in (str, int)
-            for member in annotation.__members__.values()
-        ):
-            msg = f"{where}: an enum's member values are strings or integers"
-            raise TypeError(msg)
-        # A `_missing_` of its own, or a flag that keeps, conforms, or ejects unknown bits, would
-        # read a value that is no member as one (a fallback, a case-insensitive lookup).
+        # A `_missing_` of its own or from a base enum would read a value that is no member as
+        # one (a fallback, a case-insensitive lookup). A flag has one from `Flag`, which reads
+        # combinations of its members and, from JSON, `true` and `false` as flags.
         if any(
             "_missing_" in vars(klass)
             for klass in annotation.__mro__
-            if klass not in (enum.Enum, enum.Flag)
-        ) or (
-            issubclass(annotation, enum.Flag)
-            and getattr(annotation, "_boundary_", None) is not enum.FlagBoundary.STRICT
+            if klass is not enum.Enum
         ):
             msg = (
-                f"{where}: an enum reads only its own members: no _missing_ of its own, "
-                "and a flag's boundary is STRICT"
+                f"{where}: an enum reads only its own members: no _missing_ of its own or "
+                "from a base enum, so no flag"
             )
+            raise TypeError(msg)
+        # A member's value is reachable through every contract that holds the member, so it
+        # must be immutable (`class W(Enum): A = ["x"]` would share one list). And Pydantic
+        # reads an enum by equality unless it is an `IntEnum`, so one whose values are
+        # integers would read JSON `true` and `1.0` as the member 1.
+        if not issubclass(annotation, enum.IntEnum) and any(
+            type(member.value) is not str for member in annotation.__members__.values()
+        ):
+            msg = f"{where}: an enum's member values are strings, or it is an IntEnum"
             raise TypeError(msg)
         return
     if isinstance(annotation, type) and issubclass(annotation, Contract):
@@ -453,6 +546,8 @@ def _refuse_field_type(annotation: object, where: str) -> None:
         for argument in arguments:
             if argument is not Ellipsis:
                 _refuse_field_type(argument, where)
+        if origin in (typing.Union, types.UnionType):
+            _refuse_ambiguous_union(arguments, where)
         return
     msg = (
         f"{where}: a contract holds only immutable types (tuples, not lists; "
@@ -608,6 +703,12 @@ def _check_contract_class(cls: type[Contract]) -> None:
     for name, field in cls.model_fields.items():
         where = f"{cls.__name__}.{name}"
         _refuse_field_settings(field, where)
+        if _holds_key(field.default):
+            msg = (
+                f"{where}: a key comes from a default factory (IdempotencyKey.new), never "
+                "from a default that every instance would share"
+            )
+            raise TypeError(msg)
         # Pydantic merges the metadata of a field's own `Annotated[...]` into `field.metadata`,
         # where a constraint written directly looks like one written with `Field`; it keeps
         # the annotation as written (internal to Pydantic, which is pinned to one version).
