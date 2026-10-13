@@ -1,6 +1,7 @@
 # DEC-042 — Preserve the owner's anti-drift rules and backup instructions; apply the backup's lifecycle
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-13 the reconciliation with checkpoint B's commit listed the labels each of the backup's commits carries ([checkpoint B verification](../traceability/stage-01-checkpoint-b-verification.md#reconciliation-of-the-temporary-backup)). Decision 4 gives the branch's status and says its commits "also" carry two more labels, as if every commit carried the status labels: nine of the eleven do. The first two, `ab78d52` and `540fe4a`, made on 2026-10-12, before the owner's lifecycle message, say UNVERIFIED, NOT APPROVED, NOT A VERIFIED CHECKPOINT, NOT PRODUCTION-READY, and NOT AUTHORIZED FOR MERGE. The text below is kept as written.
 - **Date:** 2026-10-13
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and the owner's checkpoint rule ([DEC-032](DEC-032-adopt-checkpoint-and-verification-rule.md): "EVERYTHING MUST BE PRESERVED IN THE REPOSITORY"); the rules and instructions themselves are the owner's
 

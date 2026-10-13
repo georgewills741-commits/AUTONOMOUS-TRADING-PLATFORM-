@@ -1,6 +1,7 @@
 # DEC-043 — Retire checkpoint B's temporary backup under an archive tag
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-13 the reconciliation with checkpoint B's commit found that the labels decision 2 names, "(TEMPORARY, UNVERIFIED, NOT FOR MERGE)", are in the messages of nine of the backup's eleven commits. The first two, `ab78d52` and `540fe4a`, made before the owner's lifecycle message, say UNVERIFIED, NOT APPROVED, NOT A VERIFIED CHECKPOINT, NOT PRODUCTION-READY, and NOT AUTHORIZED FOR MERGE. All eleven say UNVERIFIED, NOT APPROVED, NOT A VERIFIED CHECKPOINT, and NOT PRODUCTION-READY ([checkpoint B verification](../traceability/stage-01-checkpoint-b-verification.md#reconciliation-of-the-temporary-backup)). The text below is kept as written.
 - **Date:** 2026-10-13
 - **Decided by:** project owner ([owner decisions 11](../handoffs/owner-decisions-11-retiring-the-checkpoint-b-backup.md), answering OQ-30); the builder's: the wording that applies it to the records
 - **Resolves:** OQ-30 ([DEC-042](DEC-042-preserve-anti-drift-rules-and-backup-instructions.md), decision 6)

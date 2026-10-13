@@ -28,7 +28,7 @@
 | Checkpoint | Units | Status | Verification record |
 |---|---|---|---|
 | A | U1 development environment; U6 testing foundation and machine checks | Done: built, except U6's Hypothesis setting, carried to checkpoint B; three gates passed (commit `f2e4046`); the machine checks pass on GitHub and fail on a deliberately broken check ("Machine checks on GitHub" below) | [Checkpoint A](stage-01-checkpoint-a-verification.md) |
-| B | U2 exact amounts; U3 contract kernel | Done: built, with U6's Hypothesis setting; three gates passed (Gate 3 on its eleventh run; the commit's hash is entered in the project state's checkpoint log by the next change) | [Checkpoint B](stage-01-checkpoint-b-verification.md) |
+| B | U2 exact amounts; U3 contract kernel | Done: built, with U6's Hypothesis setting; three gates passed (Gate 3 on its eleventh run; commit `4816059`); the machine checks pass on GitHub on it; its temporary backup reconciled with it ("Reconciliation of the temporary backup" in its verification record) | [Checkpoint B](stage-01-checkpoint-b-verification.md) |
 | C | U4 configuration; U5 security foundation | Not started | — |
 | D | U7 verification matrix; U8 stage record and closure | Not started (U8 started at A) | — |
 
