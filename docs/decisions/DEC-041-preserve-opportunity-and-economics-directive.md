@@ -13,7 +13,7 @@ The builder planned the audit as its own change after checkpoint B's commit, so 
 ## Decision
 
 1. **The owner's message is preserved word for word now**, in checkpoint B's commit, as owner decisions 8, a HISTORICAL source listed in the preserved-text manifest.
-2. **It changes nothing yet.** No requirement, rule, or document is changed by this record. The audit the owner asked for comes next, as the [project state](../project-state.md) records, with its own decision record and verification record; that record applies the directive.
+2. **It changes nothing yet.** No requirement, rule, or document is changed by this record. The audit the owner asked for follows checkpoint B, in the order the [project state](../project-state.md) records, with its own decision record and verification record; that record applies the directive.
 3. **The status report** the owner asked for is answered from the project state and the stage record, which are the canonical status.
 
 ## Alternatives considered

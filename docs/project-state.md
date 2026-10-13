@@ -2,11 +2,11 @@
 
 The single record of where this project currently stands (Constitution Rules 50, 172). Update it after every major piece of work. If it disagrees with the repository, the repository wins and this file gets corrected (Rule 52).
 
-**Last updated:** 2026-10-12
+**Last updated:** 2026-10-13
 
 ## Current stage
 
-**FOUNDATION — Stage 1 implementation in progress: checkpoint A done; checkpoint B built, its third gate (the independent review) pending; checkpoint C is next, after the audit the owner asked for on 2026-10-07 (opportunity universe and economics).**
+**FOUNDATION — Stage 1 implementation in progress: checkpoint A done; checkpoint B built, its third gate (the independent review) pending; checkpoint C is next, after the reconciliation of checkpoint B's temporary backup, the adoption of the owner's anti-drift rules, and the audit the owner asked for on 2026-10-07 (opportunity universe and economics).**
 
 - Handoff Parts 1, 2, and 3 are documented and reconciled into one knowledge base ([DEC-024](decisions/DEC-024-part-2-reconciliation.md), [DEC-031](decisions/DEC-031-part-3-reconciliation.md)).
 - The owner's company-grade autonomous operating model and the owner's decisions on CF-11 to CF-13 are applied.
@@ -20,7 +20,8 @@ The single record of where this project currently stands (Constitution Rules 50,
 - On 2026-10-06 the owner sent a master quality, consistency, verification and correction directive. It is adopted as the fifth builder text ([DEC-039](decisions/DEC-039-adopt-quality-and-correction-directive.md)), and the audit it asks for was made ([quality audit](traceability/quality-audit-2026-10-06.md)): status **READY WITH NON-BLOCKING FINDINGS** for checkpoint B. Its corrections are made; one item needed the owner (OQ-29, the audit's Q-07: the GOV-024 state of the later stages' features); no requirement changed.
 - On 2026-10-07 the owner answered OQ-29: a stage's features are PROPOSED until the owner approves that stage's plan, then APPROVED and designed ([DEC-040](decisions/DEC-040-later-stage-features-proposed.md); [owner decisions 7](handoffs/owner-decisions-07-later-stage-feature-state.md)). The features of stages 2 to 7 are PROPOSED; no requirement changed.
 - On 2026-10-07 checkpoint B built exact amounts (U2) and the contract kernel, outcomes, and idempotency keys (U3), wrote U6's Hypothesis setting; its third gate (the independent review) is still running ([checkpoint B verification](traceability/stage-01-checkpoint-b-verification.md)). The code has no trading capability: it builds and rounds amounts and validates contracts.
-- On 2026-10-07 the owner also asked for a repository-backed status report and an audit of the opportunity-universe and trading-economics principles against the canonical requirements ([owner decisions 8](handoffs/owner-decisions-08-opportunity-universe-and-economics.md), preserved word for word by [DEC-041](decisions/DEC-041-preserve-opportunity-and-economics-directive.md)). The audit is the next piece of work ("Next approved step").
+- On 2026-10-07 the owner also asked for a repository-backed status report and an audit of the opportunity-universe and trading-economics principles against the canonical requirements ([owner decisions 8](handoffs/owner-decisions-08-opportunity-universe-and-economics.md), preserved word for word by [DEC-041](decisions/DEC-041-preserve-opportunity-and-economics-directive.md)). The audit follows the reconciliation of checkpoint B's backup and the adoption of owner decisions 9 ("Next approved step").
+- The owner's later messages are preserved word for word by [DEC-042](decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md): the rules for drafting canonical requirements and against drift of 2026-10-07 ([owner decisions 9](handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md)), whose adoption as a builder text is the next step after checkpoint B, and the instructions of 2026-10-12 and 2026-10-13 ([owner decisions 10](handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md)) under which checkpoint B's unverified work was preserved on a temporary backup branch, to be reconciled with checkpoint B's commit and then deleted or kept as the owner answers [OQ-30](open-questions/register.md) ("Other branches" below).
 
 | Gate | Status |
 |---|---|
@@ -62,14 +63,14 @@ What the next session needs before it does anything (master execution constituti
 | Field | Now |
 |---|---|
 | Current stage and substage | FOUNDATION — Stage 1 (DEC-038); checkpoint A done; checkpoint B built, its third gate pending; checkpoint C (U4 configuration, U5 security foundation) not yet started |
-| Current task | Checkpoint B's third gate (the independent review). Then: the owner's audit request of 2026-10-07 ("Next approved step", item 1), then checkpoint C |
+| Current task | Checkpoint B's third gate (the independent review). Then: the reconciliation of checkpoint B's backup, the adoption of owner decisions 9, the owner's audit request of 2026-10-07, then checkpoint C ("Next approved step", items 1 to 4) |
 | Completed | See "Completed work" and the checkpoint log below |
 | In progress, possibly partial | Checkpoint B: built and checked, not yet committed; its third gate is pending |
 | Blocked | Nothing. The plan's risk that pushing the workflow might need further permission did not occur: the push was accepted and the workflow runs |
 | Failed verification | None open |
 | Pending verification | Checkpoint B's third gate, which must pass before checkpoint B is committed |
-| Decisions in effect | DEC-001 to DEC-041, all ACCEPTED; who decided each (the owner, the builder under the owner's delegation, or the builder) is in the [decision log](decisions/README.md); the owner's own words are preserved under `docs/handoffs/` and `docs/builder/` |
-| Decisions pending | None. The last, OQ-29, was answered by the owner on 2026-10-07 ([DEC-040](decisions/DEC-040-later-stage-features-proposed.md)) |
+| Decisions in effect | DEC-001 to DEC-042, all ACCEPTED; who decided each (the owner, the builder under the owner's delegation, or the builder) is in the [decision log](decisions/README.md); the owner's own words are preserved under `docs/handoffs/` and `docs/builder/` |
+| Decisions pending | OQ-30, asked on 2026-10-13: whether checkpoint B's backup branch is deleted or kept once reconciled ([open-question register](open-questions/register.md)). Nothing else; OQ-29 was answered by the owner on 2026-10-07 ([DEC-040](decisions/DEC-040-later-stage-features-proposed.md)) |
 | Non-blocking findings and technical debt | Each item stays in the record that found it: the [stage record](traceability/stage-01-foundation.md)'s "Checkpoint B: non-blocking findings" (equality between an amount and a float is caught only in review) and "Carried to checkpoint C" (TOML integers for amount settings; how a parsed TOML document reaches a contract; the secret scanner's unreported shapes), and its "builder details" (`uv build` outside the machine checks; the documentation tools' own check settings); TC-09 and TC-10 ([open-question register](open-questions/register.md)); the unset operating values ([values register](requirements/values-register.md)); audit finding A-05 (interfaces, schemas, tests, and failure procedures are specified with each stage's plan); the [quality audit](traceability/quality-audit-2026-10-06.md)'s list. No other technical debt is recorded |
 | Files changed and tests performed | In the last checkpoint's verification record (its scope or changes, and its checks): the last row of the checkpoint log |
 | Migration and release state | Nothing is released or deployed; no database, schema, or migration exists; the package `atp` is at version 0.1.0 and has never been published; no release process exists yet |
@@ -77,10 +78,10 @@ What the next session needs before it does anything (master execution constituti
 | Not verified | Platform behavior beyond the Stage 1 modules: no service, configuration, command, or trading behavior exists yet. The modules `atp.numeric` and `atp.contracts` are verified once checkpoint B's third gate passes (pending); the stage's own gates run at checkpoint D |
 | Latest verified commit | The last row of the checkpoint log (a commit cannot record its own hash; the next checkpoint fills it in) |
 | Uncommitted changes | None at a checkpoint. Changes found at the start of a session are unexplained until inspected (§07) |
-| Other branches | `claude/unverified-backup-checkpoint-b`: an unverified backup of checkpoint B's work in progress (`ab78d52`, 2026-10-12, the owner's request), labelled not a checkpoint and not for merge; superseded by checkpoint B's commit, never merged or built on; deleting it is the owner's decision ([checkpoint B verification](traceability/stage-01-checkpoint-b-verification.md), "Identity") |
+| Other branches | `claude/unverified-backup-checkpoint-b`: checkpoint B's work while it was under verification (first `ab78d52`, 2026-10-12; each update a new commit whose tree is the work then under review), kept at the owner's request ([owner decisions 10](handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md), [DEC-042](decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md)). Status: TEMPORARY, UNVERIFIED, PENDING VERIFICATION, NOT FOR MERGE, NOT PRODUCTION-READY; never merged or built on, and not evidence for any gate. Once checkpoint B's commit is pushed, it is compared with that commit by owner decisions 10's eight checks and the result recorded; it is then deleted or kept as the owner answers OQ-30, and kept until then. A session that finds checkpoint B's commit missing from this branch recovers the work from the backup, never redoing it |
 | Repository integrity | Clean at the last checkpoint ([integrity verification](traceability/integrity-verification-2026-10-01.md); the record of each later checkpoint) |
 | Known risks | TC-09 and TC-10 stay open until their stages are planned. Interfaces, schemas, tests, and failure procedures are specified only when each stage is planned (audit finding A-05). The plan's technical claims for U2 and U3 hold on the locked versions (re-tested at checkpoint B, [stage record](traceability/stage-01-foundation.md)) |
-| Next safe action | "Next approved step", item 1: the owner's audit request; then checkpoint C |
+| Next safe action | "Next approved step", item 1: reconcile checkpoint B's backup; then items 2 to 4 |
 | Documentation state | Consistent and checked (`build_index.py --check-only`); the registry's Approval column reads "reviewed (DEC-036)" for the 512 handoff requirements, since the owner accepted the review |
 | Do not change | The verbatim texts under `docs/handoffs/` and `docs/builder/` (only a status banner may change, by decision); any requirement's text or class without a decision record; the generated parts of generated files by hand; a dependency or a pinned version except as the [developer guide](development.md) describes |
 | Do not implement yet | Anything outside the approved Stage 1 plan: no later stage, no trading, no credentials, no deployment, no system contracts (they wait for their stages' plans); FUTURE and PROPOSED items stay unbuilt (handoff §101; constitution Rules 134–136) |
@@ -243,7 +244,7 @@ Builder readings you may want to check, all stated in the decision records:
 
 ## In-progress work
 
-None at this checkpoint. Next: the owner's audit request, then checkpoint C (see "Next approved step").
+None at this checkpoint. Next: the reconciliation of checkpoint B's backup, the adoption of owner decisions 9, the owner's audit request, then checkpoint C (see "Next approved step").
 
 ## Blockers
 
@@ -315,6 +316,7 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - DEC-039 (the owner's quality, consistency, verification and correction directive; five builder texts; gate coverage now that code exists) added on 2026-10-06.
 - DEC-040 (the owner's answer to OQ-29: a stage's features are PROPOSED until its plan is approved) added on 2026-10-07.
 - DEC-041 (the owner's status request and opportunity-universe and economics principles preserved word for word as soon as received; the audit they ask for follows) added on 2026-10-07.
+- DEC-042 (the owner's anti-drift rules and backup instructions preserved word for word; the rules' adoption follows; the backup of checkpoint B labelled, traced, and reconciled after checkpoint B; OQ-30 asked) added on 2026-10-13.
 
 ## Recent changes
 
@@ -338,13 +340,15 @@ What stays unapproved by design (proposals, future items) is shown in the [regis
 - 2026-10-06: the machine checks ran on GitHub: they passed on checkpoint A's commit, failed on a deliberately broken check (`74ce426`), and passed on its revert (`bc6eca5`); recorded in the stage record.
 - 2026-10-06: the owner's quality directive adopted (DEC-039) and its audit made: corrections to U6's state, terminology, stale gate statements, status labels, the glossary, and the continuation contract; the 2026-10-05 request quoted in its record; OQ-29 raised for the owner. No requirement changed; no platform code changed.
 - 2026-10-07: the quality audit committed (`a6cca83`), and the machine checks passed on GitHub on it ([run 37579124359](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/37579124359)); OQ-29 put to the owner and answered (DEC-040): the features of stages 2 to 7 are PROPOSED until their plans are approved. No requirement changed; no platform code changed.
-- 2026-10-07 to 2026-10-12: Stage 1 checkpoint B: `atp.numeric` (exact amounts) and `atp.contracts` (contract kernel, outcomes, idempotency keys), committed schemas, the structure test, the numerical policy, the contract conventions, the architecture-to-repository map, V-40, U6's Hypothesis setting; the owner's message of 2026-10-07 preserved (owner decisions 8, DEC-041). No requirement changed; no trading capability.
+- 2026-10-07 to 2026-10-13: Stage 1 checkpoint B: `atp.numeric` (exact amounts) and `atp.contracts` (contract kernel, outcomes, idempotency keys), committed schemas, the structure test, the numerical policy, the contract conventions, the architecture-to-repository map, V-40, U6's Hypothesis setting; the owner's messages of 2026-10-07 to 2026-10-13 preserved (owner decisions 8, 9, and 10; DEC-041, DEC-042); OQ-30 asked; the work in progress kept on a temporary backup branch at the owner's request. No requirement changed; no trading capability.
 
 ## Next approved step
 
-1. **The builder: the owner's request of 2026-10-07** ([owner decisions 8](handoffs/owner-decisions-08-opportunity-universe-and-economics.md), the owner's words). A repository-backed status report of Stage 1, and an audit of the opportunity-universe and trading-economics principles the owner restated (whole-universe discovery, breadth, depth, speed, continuous scanning, opportunity competition, no percentage floor or ceiling, small opportunities, true net economics, dynamic capital, no forced trading, active-trade protection, missed-opportunity analysis) against the canonical requirements: map each principle to its canonical requirement, correct what is already determined, and put anything that needs the owner to the owner. It writes documentation only; it does not start any later stage's work.
-2. **Then checkpoints C and D** of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) in order (U4 and U5; U7 and U8), each through the three gates, and the stage's completion certificate, whose "approved to proceed" is the owner's. Checkpoint C starts with the items the [stage record](traceability/stage-01-foundation.md) carries to it.
-3. **Authorization limits.** DEC-038 authorizes Stage 1 only (constitution Rules 134–136). Stage 2 needs its own plan and the owner's explicit approval; with that approval its features move from PROPOSED to APPROVED (DEC-040).
+1. **The builder: reconcile checkpoint B's temporary backup** once checkpoint B's commit is pushed ([owner decisions 10](handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md), [DEC-042](decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md)): compare the branch `claude/unverified-backup-checkpoint-b` with that commit by the eight checks of owner decisions 10, record the result, and then delete or keep the branch as the owner answers OQ-30.
+2. **The builder: adopt the owner's rules of 2026-10-07** ([owner decisions 9](handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md)) as a builder text that `CLAUDE.md` loads, with its own decision record and three gates, before the audit of item 3, which drafts and reconciles requirements under them; whether owner decisions 10's lifecycle joins it is decided then.
+3. **The builder: the owner's request of 2026-10-07** ([owner decisions 8](handoffs/owner-decisions-08-opportunity-universe-and-economics.md), the owner's words). A repository-backed status report of Stage 1, and an audit of the opportunity-universe and trading-economics principles the owner restated (whole-universe discovery, breadth, depth, speed, continuous scanning, opportunity competition, no percentage floor or ceiling, small opportunities, true net economics, dynamic capital, no forced trading, active-trade protection, missed-opportunity analysis) against the canonical requirements: map each principle to its canonical requirement, correct what is already determined, and put anything that needs the owner to the owner. It writes documentation only; it does not start any later stage's work.
+4. **Then checkpoints C and D** of the [Stage 1 plan](roadmap/stage-01-foundation-plan.md) in order (U4 and U5; U7 and U8), each through the three gates, and the stage's completion certificate, whose "approved to proceed" is the owner's. Checkpoint C starts with the items the [stage record](traceability/stage-01-foundation.md) carries to it.
+5. **Authorization limits.** DEC-038 authorizes Stage 1 only (constitution Rules 134–136). Stage 2 needs its own plan and the owner's explicit approval; with that approval its features move from PROPOSED to APPROVED (DEC-040).
 
 ## Memory check (constitution Rule 175)
 
