@@ -195,4 +195,4 @@ U6's acceptance is met: the workflow passes on the branch, and a deliberately br
 
 ## Transition checklist and completion certificate
 
-Written at checkpoint D (§152, §143).
+Written at checkpoint D (§152, §143). It lists the state of the retirement of checkpoint B's temporary backup ([DEC-044](../decisions/DEC-044-preserve-archive-tag-answers-and-convergence-audit.md), decision 2).
