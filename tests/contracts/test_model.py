@@ -6,6 +6,7 @@ import copy
 import datetime
 import decimal
 import enum
+import fractions
 import json
 import logging
 import pickle
@@ -171,17 +172,47 @@ class KeyHolder(Contract):
         "    keys: frozenset[IdempotencyKey] = frozenset({IdempotencyKey.new()})\n",
         "    holder: KeyHolder = KeyHolder()\n",
         "    result: Outcome[IdempotencyKey, str] = Outcome.success(IdempotencyKey.new())\n",
+        # A key's text becomes a key when the default is validated.
+        "    key: IdempotencyKey = '0123456789abcdef' * 2\n",
+        "    key: IdempotencyKey = Field(default='0123456789abcdef' * 2)\n",
+        "    key: IdempotencyKey | None = '0123456789abcdef' * 2\n",
+        "    keys: tuple[IdempotencyKey, ...] = ('0123456789abcdef' * 2,)\n",
+        (
+            "    keys: tuple[Annotated[IdempotencyKey, Field(description='k')], ...] = "
+            "('0123456789abcdef' * 2,)\n"
+        ),
+        "    holder: KeyHolder = {'key': '0123456789abcdef' * 2}\n",
+        "    result: Outcome[IdempotencyKey, str] = Outcome.success('0123456789abcdef' * 2)\n",
     ],
 )
 def test_a_key_held_by_a_default_is_refused(body: str) -> None:
     # Every instance built without the field would share it, so two operations would carry
     # one key.
-    with pytest.raises(TypeError, match="default factory"):
+    with pytest.raises(TypeError, match="can hold an idempotency key"):
         _define_body(body, {"KeyHolder": KeyHolder})
 
 
 def test_a_key_default_comes_from_a_factory() -> None:
-    assert KeyHolder().key != KeyHolder().key
+    holder: Any = _define_body(
+        "    key: IdempotencyKey = Field(default_factory=IdempotencyKey.new)\n"
+        "    maybe: IdempotencyKey | None = None\n"
+        "    keys: tuple[IdempotencyKey, ...] = ()\n"
+        "    pool: frozenset[IdempotencyKey] = frozenset()\n"
+        "    nested: KeyHolder = Field(default_factory=KeyHolder)\n"
+        "    other: KeyHolder | None = None\n",
+        {"KeyHolder": KeyHolder},
+    )
+    first, second = holder(), holder()
+    assert (first.key != second.key, first.nested.key != second.nested.key) == (
+        True,
+        True,
+    )
+    assert (first.maybe, first.keys, first.pool, first.other) == (
+        None,
+        (),
+        frozenset(),
+        None,
+    )
 
 
 def test_a_list_is_refused_where_a_tuple_is_declared_in_python() -> None:
@@ -238,6 +269,52 @@ def test_strict_mode_still_makes_the_listed_conversions() -> None:
         '{"ratio": 1, "count": 1, "name": "a", "clock": "01:02:03Z"}'
     )
     assert (read.clock.tzinfo, aware.clock.tzinfo is not None) == (None, True)
+
+
+class _Day(datetime.date):
+    pass
+
+
+class _Pair(tuple[int, ...]):
+    pass
+
+
+class _Pool(frozenset[int]):
+    pass
+
+
+class _Half:
+    def __float__(self) -> float:
+        return 0.5
+
+
+def test_strict_mode_reads_these_python_values_as_listed() -> None:
+    # Also listed in the contract conventions: a float field takes any value Python turns into a
+    # float except a bool; a subclass of tuple or frozenset becomes the plain type; a subclass of
+    # a date is kept as given.
+    holder: Any = _define_body(
+        "    ratio: float\n    items: tuple[int, ...]\n    pool: frozenset[int]\n"
+        "    day: datetime.date\n"
+    )
+    for ratio, expected in ((fractions.Fraction(1, 4), 0.25), (_Half(), 0.5)):
+        read = holder.from_python(
+            {
+                "ratio": ratio,
+                "items": _Pair((1, 2)),
+                "pool": _Pool({1}),
+                "day": _Day(2026, 1, 1),
+            }
+        )
+        assert (read.ratio, type(read.items), type(read.pool), type(read.day)) == (
+            expected,
+            tuple,
+            frozenset,
+            _Day,
+        )
+    with pytest.raises(ContractError):
+        holder.from_python(
+            {"ratio": True, "items": (), "pool": frozenset(), "day": _Day(2026, 1, 1)}
+        )
 
 
 class Colour(enum.Enum):
@@ -883,6 +960,7 @@ def test_a_multiple_of_check_that_cannot_be_exact_refuses_the_value() -> None:
         "    q: Amount = Field(gt='0')\n",
         "    q: Amount = Field(ge=True)\n",
         "    q: Amount = Field(lt=Decimal('NaN'))\n",
+        "    q: Annotated[Annotated[Amount | None, Field(description='d')] | None, Field(gt=1.5)]\n",
     ],
 )
 def test_a_float_bound_on_an_amount_is_refused(body: str) -> None:
@@ -903,6 +981,10 @@ def test_a_float_bound_on_an_amount_is_refused(body: str) -> None:
         "Annotated[Amount, Field(strict=True)] | str",
         "tuple[Annotated[Amount, Field(gt=0)] | float, ...]",
         "Outcome[Annotated[Amount, Field(gt=0)] | float, str]",
+        # A union written inside metadata stands in the same union.
+        "Annotated[Amount | None, Field(gt=0)] | float",
+        "Annotated[Amount | Literal['m'], Field(gt=0)] | bool",
+        "tuple[Annotated[Amount | None, Field(description='d')] | int, ...]",
     ],
 )
 def test_an_amount_is_combined_in_a_union_only_with_none(annotation: str) -> None:
@@ -971,7 +1053,6 @@ def _union_namespace() -> dict[str, object]:
         "str | datetime.time",
         "str | datetime.timedelta",
         "str | uuid.UUID",
-        "str | IdempotencyKey",
         "str | Side",
         "Side | Colour",
         "datetime.date | datetime.datetime",
@@ -990,6 +1071,34 @@ def test_union_members_written_as_the_same_kind_of_json_value_are_refused(
     # withdrawal would come back as a deposit, and a date as text.
     with pytest.raises(TypeError, match="same kind of JSON value"):
         _define_body(f"    items: {annotation}\n", _union_namespace())
+
+
+@pytest.mark.parametrize(
+    "annotation",
+    [
+        "IdempotencyKey | int",
+        "int | IdempotencyKey",
+        "str | IdempotencyKey",
+        "IdempotencyKey | Leg",
+        "tuple[IdempotencyKey | bool, ...]",
+        "Outcome[IdempotencyKey | int, str]",
+        "Annotated[IdempotencyKey | None, Field(description='d')] | float",
+    ],
+)
+def test_an_idempotency_key_is_combined_in_a_union_only_with_none(
+    annotation: str,
+) -> None:
+    # A key's writer writes any value it is given as text, and a union can give it another
+    # member's value: `IdempotencyKey | int` would write 7 as "7".
+    with pytest.raises(TypeError, match="idempotency key is combined in a union only"):
+        _define_body(f"    items: {annotation}\n", _union_namespace())
+
+
+def test_an_optional_key_reads_its_own_json() -> None:
+    holder = _define_body("    key: IdempotencyKey | None\n")
+    for value in (IdempotencyKey.new(), None):
+        written = holder.from_python({"key": value}).to_json()
+        assert holder.from_json(written).to_json() == written
 
 
 @pytest.mark.parametrize(

@@ -47,7 +47,7 @@ from pydantic import (
 )
 from pydantic._internal._model_construction import ModelMetaclass
 from pydantic.fields import FieldInfo
-from pydantic_core import PydanticCustomError
+from pydantic_core import PydanticCustomError, PydanticUndefined
 
 from atp.contracts._amount import Amount, AmountSchema
 from atp.contracts._errors import (
@@ -280,11 +280,19 @@ def _refuse_metadata(base: object, item: object, where: str) -> None:
     raise TypeError(msg)
 
 
-def _is_amount(annotation: object) -> bool:
-    """Whether a type is an amount: `Amount`, with or without metadata (`Annotated[Amount, ...]`)."""
+def _union_members(annotation: object) -> list[object]:
+    """A union's members, with metadata taken off and a union written inside metadata taken
+    apart: `Annotated[Amount | None, Field(gt=0)] | float` has the members `Amount`, `None`,
+    and `float`. Any other type is its own one member."""
     while typing.get_origin(annotation) is Annotated:
         annotation = typing.get_args(annotation)[0]
-    return annotation is Amount
+    if typing.get_origin(annotation) in (typing.Union, types.UnionType):
+        return [
+            member
+            for argument in typing.get_args(annotation)
+            for member in _union_members(argument)
+        ]
+    return [annotation]
 
 
 def _beside_an_amount(annotation: object) -> bool:
@@ -302,12 +310,9 @@ def _is_amount_bound(value: object) -> bool:
 
 
 def _holds_amount(annotation: object) -> bool:
-    """Whether a constraint's base is an amount, or a union with one (`Amount | None`)."""
-    if _is_amount(annotation):
-        return True
-    return typing.get_origin(annotation) in (typing.Union, types.UnionType) and any(
-        _holds_amount(argument) for argument in typing.get_args(annotation)
-    )
+    """Whether a constraint's base is an amount, or a union with one (`Amount | None`), with or
+    without metadata, also in a union written inside metadata."""
+    return any(member is Amount for member in _union_members(annotation))
 
 
 def _written_kinds(annotation: object) -> frozenset[str]:
@@ -384,20 +389,53 @@ def _refuse_ambiguous_union(members: Sequence[object], where: str) -> None:
         raise TypeError(msg)
 
 
-def _holds_key(value: object) -> bool:
-    """Whether a default holds an idempotency key, which every instance built with it would
-    share, so two operations would carry one key."""
-    if isinstance(value, IdempotencyKey):
+def _can_hold_key(annotation: object) -> bool:
+    """Whether a value of a field type can hold an idempotency key: the key, or a type built
+    from it (a union, a tuple, a frozenset, an outcome, or a contract with such a field). A
+    type's arguments are read at any depth: `Annotated[...]`'s first argument is its base."""
+    if annotation is IdempotencyKey:
         return True
-    if type(value) in (tuple, frozenset):
-        items = typing.cast("tuple[object, ...] | frozenset[object]", value)
-        return any(_holds_key(item) for item in items)
-    if isinstance(value, Contract):
-        return any(_holds_key(item) for item in value.__dict__.values())
-    if isinstance(value, Outcome):
-        # Read inside atp.contracts, where the outcome is defined.
-        return _holds_key(value._payload)  # noqa: SLF001
-    return False
+    if isinstance(annotation, type) and issubclass(annotation, Contract):
+        return any(
+            _can_hold_key(field.annotation)
+            for field in annotation.model_fields.values()
+        )
+    return any(_can_hold_key(argument) for argument in typing.get_args(annotation))
+
+
+def _shares_nothing(default: object) -> bool:
+    """Whether a default gives every instance nothing to share: no default (a required field, or
+    one with a factory), None, or an empty tuple or frozenset."""
+    return (
+        default is PydanticUndefined
+        or default is None
+        or (type(default) in (tuple, frozenset) and not default)
+    )
+
+
+def _refuse_written_as_text_beside_others(
+    members: Sequence[object], where: str
+) -> None:
+    """Refuse an amount or an idempotency key beside a union member that could take its place.
+
+    Members are the union's members taken apart (`_union_members`).
+    """
+    if any(member is Amount for member in members) and not all(
+        member is Amount or _beside_an_amount(member) for member in members
+    ):
+        # Another branch would accept what the amount refuses (a JSON number as a float).
+        msg = (
+            f"{where}: an amount is combined in a union only with None or a literal of "
+            "strings"
+        )
+        raise TypeError(msg)
+    if any(member is IdempotencyKey for member in members) and not all(
+        member is IdempotencyKey or member is type(None) for member in members
+    ):
+        # A key's writer, like the amount's, writes any value it is given as text, and a union
+        # can give it another member's value (`IdempotencyKey | int` would write 7 as "7").
+        msg = f"{where}: an idempotency key is combined in a union only with None"
+        raise TypeError(msg)
 
 
 def _refuse_field_settings(field: FieldInfo, where: str) -> None:
@@ -526,20 +564,8 @@ def _refuse_field_type(annotation: object, where: str) -> None:
         return
     if isinstance(annotation, type) and issubclass(annotation, Contract):
         return
-    if (
-        origin in (typing.Union, types.UnionType)
-        and any(_is_amount(argument) for argument in arguments)
-        and not all(
-            _is_amount(argument) or _beside_an_amount(argument)
-            for argument in arguments
-        )
-    ):
-        # Another branch would accept what the amount refuses (a JSON number as a float).
-        msg = (
-            f"{where}: an amount is combined in a union only with None or a literal of "
-            "strings"
-        )
-        raise TypeError(msg)
+    if origin in (typing.Union, types.UnionType):
+        _refuse_written_as_text_beside_others(_union_members(annotation), where)
     if origin in (typing.Union, types.UnionType, frozenset, Outcome) or (
         origin is tuple and arguments
     ):
@@ -703,10 +729,12 @@ def _check_contract_class(cls: type[Contract]) -> None:
     for name, field in cls.model_fields.items():
         where = f"{cls.__name__}.{name}"
         _refuse_field_settings(field, where)
-        if _holds_key(field.default):
+        if _can_hold_key(field.annotation) and not _shares_nothing(field.default):
+            # Validating a default turns a key's text into a key too, so every instance built
+            # with it would carry one key.
             msg = (
-                f"{where}: a key comes from a default factory (IdempotencyKey.new), never "
-                "from a default that every instance would share"
+                f"{where}: a field that can hold an idempotency key takes its default from a "
+                "factory (IdempotencyKey.new), or None or an empty tuple or frozenset"
             )
             raise TypeError(msg)
         # Pydantic merges the metadata of a field's own `Annotated[...]` into `field.metadata`,
