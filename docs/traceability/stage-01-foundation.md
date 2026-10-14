@@ -1,6 +1,6 @@
 # Stage 1 — FOUNDATION: Stage Record
 
-> **Status:** ACTIVE stage record (master execution constitution §142; format: [traceability README](README.md)). Created at the start of checkpoint A on 2026-10-06 and updated at each checkpoint (checkpoint B: 2026-10-07). The plan is the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), approved by the owner with the authorization to implement Stage 1 only ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). Each feature's lifecycle state is in the roadmap's [feature-status table](../roadmap/roadmap.md#feature-status); each checkpoint's gate evidence is in its own verification record.
+> **Status:** ACTIVE stage record (master execution constitution §142; format: [traceability README](README.md)). Created at the start of checkpoint A on 2026-10-06 and updated at each checkpoint (checkpoint B: 2026-10-07; the exit checklist below since the [convergence audit](foundation-convergence-audit-2026-10-13.md) of 2026-10-13). The plan is the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), approved by the owner with the authorization to implement Stage 1 only ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). Each feature's lifecycle state is in the roadmap's [feature-status table](../roadmap/roadmap.md#feature-status); each checkpoint's gate evidence is in its own verification record.
 
 ## Stage
 
@@ -20,7 +20,7 @@
 | Documentation status | The [developer guide](../development.md) (checkpoint A, updated at B); the [numerical policy](../architecture/numerical-policy.md), the [contract conventions](../architecture/contracts.md), and the [architecture-to-repository map](../architecture/source-of-truth-map.md#architecture-to-repository) (checkpoint B); V-40 in the [values register](../requirements/values-register.md) (checkpoint B); the threat model comes at checkpoint C |
 | Traceability status | The verification matrix comes at checkpoint D (U7); until then the plan's section 3 and this record trace the requirements. Each module's and each test module's docstring names the requirements it serves, and the architecture-to-repository map links each module to its requirements, tests, and documentation |
 | Git commit | Each checkpoint's commit is in the [project state](../project-state.md)'s checkpoint log |
-| Blockers | None |
+| Blockers | None for the stage's work. The archive tag of checkpoint B's temporary backup cannot be created from this environment (the [project state](../project-state.md)'s "Blockers"); it does not block checkpoint C, and its state is listed on the certificate below |
 | Next stage | DATA FOUNDATION, only after this stage's completion certificate and the owner's approval to proceed (the plan's completion criterion 8; §143, §156) |
 
 ## Checkpoints
@@ -179,6 +179,8 @@ U4 also decides how a parsed TOML document reaches a contract. `from_python` val
 
 U4 also decides questions about contracts that Gate 3 runs 9 and 10 raised, since U4's settings are the first platform contracts and may use validators, defaults, nesting, and dates: whether the kernel refuses a validator's result that differs from the value it was given (run 9, finding 1; run 10, finding B2; checking it at the input boundary means validating twice, and comparing written forms has to allow for frozensets, whose order can differ); whether a field alias stays allowed, since an aliased contract given as an instance is refused, or the kernel reads such an instance under its aliases (run 9, finding 2); whether a field of an outcome type may have a default, which JSON input and schema generation do not handle (run 9, finding 3); whether subclassing a contract that has fields is refused, since an instance of a subclass is read as the declared contract (run 10, finding N1); and, found while fixing run 10's findings, whether dates, times, datetimes, durations, and UUIDs read only their written form (a date reads `"86400"` as a Unix timestamp, a UUID reads its digits in braces), whether a time or a datetime must be time-zone-aware (both hold naive and aware values alike), and whether a float field refuses a `Decimal`, which it reads as the nearest float. Each is recorded in the contract conventions until then. Gate 3 run 11 added four, recorded in checkpoint B's [verification record](stage-01-checkpoint-b-verification.md) ("Gate 3, run 11"): whether a frozenset's item type may hold a bool beside a number, which loses a value read from JSON (`[1, true]` is read as `frozenset({1})`); whether a frozenset read from JSON may drop duplicates, and equal values written differently, without saying so; whether the literal rule takes apart a union written inside metadata (it refuses `Annotated[Amount \| None, Field(gt=0)] \| Literal["market"]`, which is safe but stricter than the same union written flat); and listing, under the conventions' "Strict", that an outcome field reads its envelope given as a mapping from Python.
 
+Check 7's list of mutations and the script that applies them are committed with checkpoint C's work, so check 7 can be repeated from the repository ([DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 6; the [convergence audit](foundation-convergence-audit-2026-10-13.md), section 6). Checkpoint C's gates follow DEC-045.
+
 U5 extends the repository test for secrets to the example configuration files. Shapes the scanner does not report at checkpoint A, found by the Gate 3 review and accepted until then: lowercase unquoted `name = value` lines (INI files, lowercase dotenv); YAML values shorter than 12 characters or followed by a comment; a YAML list item's first key (`- token: …`); quoted settings whose name carries a suffix after the credential word (`DB_PASSWORD_PROD = "…"`) or is a generic key name (`HMAC_KEY = "…"`); camel-case names with a prefix (`binanceApiSecret = "…"`); values set through a call or a subscript (`monkeypatch.setenv("ATP_DB_PASSWORD", "…")`, `os.environ["API_SECRET"] = "…"`), `f"…"` values, and `:=`; secret values without both a letter and a digit (a letters-only passphrase), the price of not reporting type names, paths, numbers, and enum values; `Authorization: Basic …` and bearer tokens; raw 64-character hexadecimal private keys; Slack `xoxe-` tokens. U5 decides which of these to detect, against the false positives each would bring.
 
 ## Machine checks on GitHub (U6 acceptance)
@@ -195,4 +197,44 @@ U6's acceptance is met: the workflow passes on the branch, and a deliberately br
 
 ## Transition checklist and completion certificate
 
-Written at checkpoint D (§152, §143). It lists the state of the retirement of checkpoint B's temporary backup ([DEC-044](../decisions/DEC-044-preserve-archive-tag-answers-and-convergence-audit.md), decision 2).
+The stage exits when the eight completion criteria of the plan (section 9) hold, each with its evidence (owner decisions 13, §19 and §20; [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 8). This checklist restates them and adds none. It is kept at each checkpoint from the [convergence audit](foundation-convergence-audit-2026-10-13.md) on, and completed at checkpoint D, where the completion certificate (§143) is written. Statuses as of 2026-10-13, after checkpoint B.
+
+| ID | Criterion (plan §9) | Owner | Required evidence | Verification method | Pass condition | Status | Blocking | Depends on |
+|---|---|---|---|---|---|---|---|---|
+| X1 | U1 to U8 meet their acceptance criteria (plan section 4) | Builder; Gate 3 reviewer | Each unit's acceptance evidence, in its checkpoint's verification record | The record's checks; Gate 3 | Every acceptance criterion of U1 to U8 met | IN PROGRESS: U1 and U6 PASS (checkpoint A; U6's Hypothesis setting at B); U2 and U3 PASS (checkpoint B); U4 and U5 NOT STARTED (checkpoint C); U7 NOT STARTED and U8 IN PROGRESS (checkpoint D) | Blocking | Checkpoints C and D |
+| X2 | The three gates pass for the whole stage, after every fix (DEC-032) | Builder; an independent reviewer | The stage's own verification, at checkpoint D | Gates 1 to 3 on the final tree (plan section 8; [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md)) | All three PASS on the final tree, with no blocking finding open | NOT STARTED | Blocking | X1 |
+| X3 | Every requirement of plan section 3.1 traced to its implementation and test in the matrix; those of sections 3.2 to 3.5 keep their disposition | Builder; Gate 3 checks each marked test | The generated verification matrix (U7) | The matrix's generator and checker; Gate 3's check of the marked tests | No section 3.1 requirement without an implementation and a test, in the forms U7 accepts; no gap left unexplained | NOT STARTED | Blocking | U7 |
+| X4 | No secret, local path, or model identifier in the repository; the repository test for secrets passes; U1's dependency review recorded | Builder | The test's result; the hygiene scan; "Checkpoint A: versions, dependency review, and licenses" above | The repository test; a scan of every tracked file | The test passes, the scan finds nothing, and the review is recorded | IN PROGRESS: PASS at checkpoints A and B; the final check at D | Blocking | Checkpoint D |
+| X5 | The documentation is updated: developer guide, numerical policy, contract conventions, threat model and the security architecture's line that lists it, architecture-to-repository map, feature-status table, roadmap status, project state | Builder; Gate 2 | Each document | Gate 2 reads each against the code | Each exists and agrees with what was built | IN PROGRESS: all current except the threat model (U5, checkpoint C) | Blocking | Checkpoint C |
+| X6 | The §152 transition checklist complete with evidence; the completion certificate written | Builder | The items below, each linked to its evidence | Each item's evidence read (§144: a tick without evidence does not count) | Every item done with its evidence, or not applicable with its reason | NOT STARTED | Blocking | X1 to X5, X7 |
+| X7 | Every checkpoint committed, verified, and pushed | Builder | The project state's checkpoint log; GitHub | `git ls-remote`; the machine-check runs | Each checkpoint's commit on the remote, with its verification record and passing machine checks (U6; plan section 8, Gate 1) | IN PROGRESS: A (`f2e4046`) and B (`4816059`) PASS; C and D NOT STARTED | Blocking | Checkpoints C and D |
+| X8 | The owner approves proceeding to Stage 2 planning (§143, §156) | Owner | The owner's answer, preserved word for word | The owner's words under `docs/handoffs/` | The owner's explicit approval recorded | NOT STARTED | Blocking | X1 to X7 |
+
+Also listed on the certificate, though not a criterion of the plan: the retirement of checkpoint B's temporary backup (DEC-043), BLOCKED while this environment cannot create its archive tag. If it is still open when the certificate is written, carrying it past Stage 1 needs the owner's explicit, recorded approval ([DEC-044](../decisions/DEC-044-preserve-archive-tag-answers-and-convergence-audit.md), decision 2; master execution constitution §20).
+
+**The §152 items** (X6), checked at checkpoint D; "not applicable" is this record's present reading, confirmed then:
+
+| Item (§152) | Evidence for Stage 1 | Status |
+|---|---|---|
+| Current stage implementation complete | X1 | NOT STARTED |
+| Unit tests passed | `pytest` on the final tree | NOT STARTED (A and B: PASS) |
+| Integration tests passed | The plan defines no separate integration level: the contract tests and the end-to-end commands of plan section 7 check how the modules work together | NOT STARTED (A and B: PASS) |
+| Relevant system tests passed | The plan's end-to-end commands from a clean clone, recorded in this record (plan section 7) | NOT STARTED |
+| Verification 1, 2, and 3 passed | X2 | NOT STARTED |
+| Security reviewed | U5's threat model, reviewed in Gate 3; X4 | NOT STARTED |
+| Performance reviewed | No hot path exists (plan section 5) | NOT APPLICABLE |
+| Failure paths reviewed | The negative-path tests of plan section 7, in each checkpoint's record | IN PROGRESS (A and B: PASS) |
+| Recovery reviewed | Nothing in Stage 1 runs or holds state to recover (plan section 5) | NOT APPLICABLE |
+| Documentation updated | X5 | IN PROGRESS |
+| Requirements traceability updated | X3 | NOT STARTED |
+| Roadmap updated | The roadmap's stage status and feature-status table | IN PROGRESS |
+| ADRs updated where required | The decision log | IN PROGRESS |
+| System Rules Register updated | The register, read against what Stage 1 enforces | NOT STARTED |
+| Capability/readiness model updated where required | Stage 1 adds no platform capability | NOT APPLICABLE |
+| No duplicate systems; no conflicting ownership | Gate 2 at each checkpoint; the architecture-to-repository map | IN PROGRESS (A and B: PASS) |
+| No unexplained files; no secrets committed | The hygiene check and X4 at each checkpoint | IN PROGRESS (A and B: PASS) |
+| Git diff reviewed; Git status understood; commit created and verified | Each checkpoint's commit; X7 | IN PROGRESS (A and B: done) |
+| Project state updated | The [project state](../project-state.md) | IN PROGRESS |
+| Next stage dependencies verified | DATA FOUNDATION's entry gate, when that stage is planned | NOT STARTED |
+
+**Completion certificate (§143):** written at checkpoint D, only after every gate passes.

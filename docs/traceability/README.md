@@ -28,6 +28,7 @@
 | [Quality audit 2026-10-06](quality-audit-2026-10-06.md) | The owner's quality, consistency, verification and correction directive adopted (DEC-039) and the audit it asks for: every area inspected, the corrections made, the non-blocking findings, and what required the owner |
 | [Owner decisions 7 verification](owner-decisions-07-verification.md) | The owner's answer to OQ-29 applied: a stage's features are PROPOSED until its plan is approved (DEC-040) |
 | [Stage 1 checkpoint B verification](stage-01-checkpoint-b-verification.md) | Checkpoint B of Stage 1: exact amounts (U2) and the contract kernel, outcomes, and idempotency keys (U3) |
+| [Foundation convergence audit 2026-10-13](foundation-convergence-audit-2026-10-13.md) | The owner's audit of whether Stage 1's verification converges (owner decisions 13): the baseline, the history of every gate, each blocking finding classified with its provenance, check 7, convergence, and the corrections of DEC-045 |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
@@ -38,7 +39,7 @@ One record per checkpoint commit, in this directory. It contains:
 - **Identity:** date; stage, or the documentation round before Stage 1; the commit the work starts from. A commit cannot contain its own hash, so the record's own commit is entered in the checkpoint log by the next checkpoint.
 - **Scope:** what changed (files, requirements added, removed, or changed), and what was out of scope.
 - **Checks:** every test and check run, as a command another engineer or a fresh session can repeat (§22), with its result. A check that cannot be a command is written as WHAT was checked, HOW, the EXPECTED RESULT, and the ACTUAL RESULT.
-- **Gates:** the result of Verification 1, 2, and 3 (DEC-033), each with its evidence. Gate 3 names the independent reviewer (or why none was possible) and lists its findings, each with its fix, and the builder's own separate pass.
+- **Gates:** the result of Verification 1, 2, and 3 (DEC-033), each with its evidence. Gate 3 names the independent reviewer (or why none was possible) and lists its findings, each with its fix, and the builder's own separate pass. From Stage 1's checkpoint C on ([DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md)), each Gate 3 run also records the baseline and the severity its brief gave the reviewer; findings are numbered once per checkpoint, across runs, each saying how it stands to earlier ones, and each blocking finding names its provenance; and each run counts its blocking findings and how many were reopened or caused by fixes.
 - **Failures and fixes:** every failure found, its cause, the fix, and the re-run that passed (§19).
 - **Final status and remaining issues:** each gate PASS or FAIL; the record's status in precise words such as those of §10 of the owner's [quality directive](../builder/quality-consistency-and-correction-directive.md) ([DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md)), backed by the evidence above, and never better than the gates allow: a checkpoint is complete only when all three gates pass; known limitations, non-blocking findings, and open items named.
 - **Environment:** tool versions used for the checks.
