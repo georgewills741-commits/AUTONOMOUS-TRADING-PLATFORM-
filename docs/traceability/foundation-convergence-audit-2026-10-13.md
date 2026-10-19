@@ -1,6 +1,8 @@
 # Foundation Verification Convergence Audit — 2026-10-13
 
 > **Status:** record of the audit the owner ordered on 2026-10-13 ([owner decisions 13](../handoffs/owner-decisions-13-foundation-verification-convergence-audit.md)), made before any further gate cycle ([DEC-044](../decisions/DEC-044-preserve-archive-tag-answers-and-convergence-audit.md), decision 3). It reconstructs Stage 1's verification from the repository, classifies every blocking finding, and measures convergence. Its process corrections are applied by [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md); its exit checklist is kept in the [stage record](stage-01-foundation.md). It changes no code, requirement, decision, or approved completion criterion.
+>
+> **Later changes:** on 2026-10-14 the owner added two exit items, the company-grade order report of [owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md) (its §40) and the stage-transition audit and report of [owner decisions 15](../handoffs/owner-decisions-15-stage-transition-persistence-and-commit-integrity.md), kept in the stage record's exit checklist as X9 and X10 ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 4; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 5); and check 7's list of mutations and its script, with checkpoint A's check 11 mutations, are committed as evidence ahead of checkpoint C (DEC-046, decision 5; DEC-047, decision 3). Sections 6, 9, and 10 are kept as written on 2026-10-13.
 
 ## Identity
 

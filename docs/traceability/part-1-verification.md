@@ -4,7 +4,7 @@
 >
 > **Result: VERIFIED for Part 1 documentation.** Initialization as a whole is not complete, because Handoff Part 2 has not been received.
 >
-> **Later changes:** Handoff Parts 2 and 3 have since been received and reconciled (DEC-024, DEC-031). This record is kept as written; the current state is in the [project state](../project-state.md).
+> **Later changes:** Handoff Parts 2 and 3 have since been received and reconciled (DEC-024, DEC-031). On 2026-10-14 the copy's last line was found to read "the trading system", where the owner wrote "the trading systems", a difference the line-for-line check of Pass 1 below did not catch; the copy is restored to the owner's words ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 8). This record is kept as written; the current state is in the [project state](../project-state.md).
 >
 > **HISTORICAL in part:** the "Remaining issues" below were all resolved on 2026-09-30. See the [resolution verification record](resolution-verification.md).
 

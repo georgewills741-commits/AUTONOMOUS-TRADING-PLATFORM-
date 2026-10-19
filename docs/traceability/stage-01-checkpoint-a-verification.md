@@ -1,6 +1,8 @@
 # Stage 1, Checkpoint A — Verification Record
 
 > **Status:** ACTIVE record of Stage 1's checkpoint A: the development environment and repository layout (U1) and the testing foundation and machine checks (U6) of the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md); format: [traceability README](README.md). The stage as a whole is tracked in the [stage record](stage-01-foundation.md).
+>
+> **Later changes:** on 2026-10-14 the script of check 11, with its twenty mutations, was committed as evidence, exactly as it ran, in [Stage 1 mutation checks as run](stage-01-mutation-checks.md) ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3). The record below is kept as written.
 
 ## Identity
 

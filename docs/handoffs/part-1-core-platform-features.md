@@ -5,6 +5,8 @@
 > The content below has been analysed, classified, and redistributed into the canonical project documents. Where to find each section: [`docs/traceability/handoff-coverage.md`](../traceability/handoff-coverage.md).
 >
 > **Formatting note:** converted from plain text to Markdown (headings, lists, paragraph breaks). No wording was added, removed, or changed. Section numbers (§00–§103) are the handoff's own and are used as source references throughout the documentation.
+>
+> **Later changes:** On 2026-10-14 the last line was restored to the owner's words: since this copy's first commit (`b850eaa`) it had read "the trading system", where the owner wrote "the trading systems". The slip was found when every message of the owner was compared word for word with the repository; nothing else in the copy differs from the text as received ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 8).
 
 PART 1 OF 2 — CORE PLATFORM FEATURES, SYSTEMS & CANONICAL FEATURE SPECIFICATION
 
@@ -2787,4 +2789,4 @@ PART 1 = CORE PLATFORM FEATURES, SYSTEMS, CAPITAL/RISK/EXECUTION FOUNDATIONS, OP
 
 Part 2 will cover the remaining detailed project requirements, deeper subsystem specifications, interfaces/contracts, complete dependency mapping, implementation-stage mapping, verification architecture, and remaining production requirements.
 
-Do not interpret Part 1 as authorization to begin building the trading system.
+Do not interpret Part 1 as authorization to begin building the trading systems.

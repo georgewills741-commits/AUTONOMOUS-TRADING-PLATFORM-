@@ -483,7 +483,8 @@ def split_preserved(path: str) -> tuple[list[str], list[str]]:
     """(banner, body) of a preserved Markdown text, read without newline translation.
     The banner is the first block of '>' lines after the title (only blank lines may come
     between). The body is the title line plus everything after that block, blank lines and
-    any later '>' line included. A banner may change by decision; the body never changes."""
+    any later '>' line included. A banner may change by decision; the body changes only by a
+    recorded restoration of the words as received (DEC-047, decision 8)."""
     lines = open(path, encoding="utf-8", newline="").read().split("\n")
     i = 1
     while i < len(lines) and not lines[i].strip():
@@ -528,7 +529,8 @@ for path in preserved_paths():
         )
     elif expected[rel] != digest:
         errors.append(
-            f"{rel}: preserved text changed (hash now {digest}); verbatim texts never change"
+            f"{rel}: preserved text changed (hash now {digest}); a verbatim text changes only "
+            "by a recorded restoration, with its manifest line"
         )
 for rel in sorted(expected):
     if not os.path.exists(os.path.join(ROOT, rel)):

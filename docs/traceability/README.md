@@ -29,6 +29,8 @@
 | [Owner decisions 7 verification](owner-decisions-07-verification.md) | The owner's answer to OQ-29 applied: a stage's features are PROPOSED until its plan is approved (DEC-040) |
 | [Stage 1 checkpoint B verification](stage-01-checkpoint-b-verification.md) | Checkpoint B of Stage 1: exact amounts (U2) and the contract kernel, outcomes, and idempotency keys (U3) |
 | [Foundation convergence audit 2026-10-13](foundation-convergence-audit-2026-10-13.md) | The owner's audit of whether Stage 1's verification converges (owner decisions 13): the baseline, the history of every gate, each blocking finding classified with its provenance, check 7, convergence, and the corrections of DEC-045 |
+| [Owner decisions 14 and 15 verification](owner-decisions-14-15-verification.md) | The preservation of the owner's two rule sets of 2026-10-14 (DEC-046, DEC-047): the inventory of the repository and the builder's workspace, the checks, and each Gate 3 run's findings with their fixes |
+| [Stage 1 mutation checks as run](stage-01-mutation-checks.md) | Evidence: the scripts of checkpoint A's check 11 and checkpoint B's check 7, exactly as they ran, so that both checks can be repeated from the repository |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 

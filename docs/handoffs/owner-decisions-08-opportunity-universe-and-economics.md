@@ -3,9 +3,10 @@
 > **Status:** HISTORICAL — source input: the owner's message of 2026-10-07, sent during Stage 1, after checkpoint B was built and before it was committed. It asks for a repository-backed status report of Stage 1, and restates the platform's opportunity-universe and trading-economics principles so that they are preserved in the canonical requirements and checked against them. This is **not** an active source of truth. It is preserved by [DEC-041](../decisions/DEC-041-preserve-opportunity-and-economics-directive.md); the audit it asks for applies it to the canonical requirements, as the [project state](../project-state.md) records.
 >
 > **Formatting note:** the message is reproduced inside one text block exactly as received, so that its lines, separator lines, lists, and arrows stay as they were sent. Nothing was added, removed, or changed in it. The title and this banner are the builder's.
+>
+> **Later changes:** On 2026-10-19 the text block's first line, "Continue from where you left off.", was removed. The comparison of every message of the owner with the repository showed it to be the client's automatic resume prompt of 07:50 UTC, not the owner's words: sent when the session resumed after a usage limit, it reached the builder in the same turn as this message (14:25 UTC) and was copied with it. The block now holds the owner's message alone, exactly as received ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 8).
 
 ```text
-Continue from where you left off.
 MASTER STATUS + OPPORTUNITY UNIVERSE + ECONOMICS REINFORCEMENT
 
 Before we proceed further, I want you to clarify the current implementation status of the platform.
