@@ -1,6 +1,7 @@
 # DEC-048 — Preserve the owner's Rule 0 (reuse, reinforce, and enhance existing canonical controls) and instruction to continue until the work is done; apply them through the existing mechanisms
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-20 [DEC-051](DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md) decided what decision 2 left to owner decisions 9's adoption: owner decisions 17 is not loaded as a builder text and stays in force through this record; the [owner rule sets reconciliation](../traceability/owner-rule-sets-reconciliation.md) shows where each of its rules is stated or applied. The text below is kept as written.
 - **Date:** 2026-10-19
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and the owner's checkpoint rule ([DEC-032](DEC-032-adopt-checkpoint-and-verification-rule.md)); the rule and the instruction are the owner's; how they apply until their adoption is decided (decisions 2 to 5) is the builder's, within what the rule itself lets the builder do without asking (its "NO UNNECESSARY OWNER INTERRUPTION"): an improvement that preserves approved intent, stays within existing authority, changes no material scope, system ownership, or risk or security policy, does not alter approved architecture materially, and is clearly authorized by existing engineering rules
 

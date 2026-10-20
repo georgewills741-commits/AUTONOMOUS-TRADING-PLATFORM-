@@ -1,6 +1,7 @@
 # DEC-047 — Preserve the owner's stage-transition persistence and commit-integrity rules; how they apply until their adoption is decided
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-20 [DEC-051](DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md) decided what decision 2 left to owner decisions 9's adoption: owner decisions 15 is not loaded as a builder text and stays in force through this record; the [owner rule sets reconciliation](../traceability/owner-rule-sets-reconciliation.md) shows where each of its rules is stated or applied. On 2026-10-20 the owner answered OQ-31, which decision 6 raised ([DEC-052](DEC-052-apply-owner-answers-on-order-of-work-and-backups.md), decisions 3 and 4). The text below is kept as written.
 - **Date:** 2026-10-14
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and the owner's checkpoint rule ([DEC-032](DEC-032-adopt-checkpoint-and-verification-rule.md)); the rules, and the report they ask for before the next stage, are the owner's; how they apply until their adoption is decided (decisions 2 to 6), and what the comparison of the owner's messages with the repository found and how it is corrected (decisions 7 and 8), are the builder's
 
