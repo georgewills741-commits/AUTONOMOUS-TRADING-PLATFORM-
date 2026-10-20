@@ -2,7 +2,7 @@
 
 > **Status:** ACTIVE record of the checkpoint that adds the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), written for the owner's approval after the owner authorized Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md). This is not the stage record: that is created when the stage starts, after the owner's approval.
 >
-> **Later changes:** on 2026-10-05 the owner approved the plan with D1 to D11 as recommended and authorized Stage 1 implementation ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). This record is kept as written.
+> **Later changes:** on 2026-10-05 the owner approved the plan with D1 to D11 as recommended and authorized Stage 1 implementation ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)). This record is kept as written. On 2026-10-20 the reports of this record's independent Gate 3 reviews were committed as evidence in [Stage 1 plan verification — Gate 3 Reports](stage-01-plan-verification-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3).
 
 ## Identity
 

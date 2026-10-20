@@ -1,6 +1,8 @@
 # Owner Decisions 7 — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that applies the owner's answer of 2026-10-07 to OQ-29, the question the [quality audit](quality-audit-2026-10-06.md) raised (its Q-07): a stage's features are PROPOSED until the owner approves that stage's plan ([DEC-040](../decisions/DEC-040-later-stage-features-proposed.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md), with each gate covering what [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md) states.
+>
+> **Later changes:** On 2026-10-20 the report of this record's independent Gate 3 review was committed as evidence in [Owner decisions 7 verification — Gate 3 Report](owner-decisions-07-verification-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3). This record is kept as written.
 
 ## Identity
 

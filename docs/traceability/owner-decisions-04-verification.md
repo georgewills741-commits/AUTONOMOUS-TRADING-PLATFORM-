@@ -2,7 +2,7 @@
 
 > **Status:** ACTIVE record of the checkpoint that applies the owner's answers of 2026-10-02 on the Part 3 findings and the Part 3 review ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md).
 >
-> **Later changes:** TC-08's work, which this record lists as the next checkpoint, was done on 2026-10-02 ([TC-08 verification](tc-08-alternatives-verification.md)). This record is kept as written.
+> **Later changes:** TC-08's work, which this record lists as the next checkpoint, was done on 2026-10-02 ([TC-08 verification](tc-08-alternatives-verification.md)). This record is kept as written. On 2026-10-20 the reports of this record's independent Gate 3 reviews were committed as evidence in [Owner decisions 4 verification — Gate 3 Reports](owner-decisions-04-verification-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3). A first launch of the first re-run, which stopped at a usage limit before it reported and which this record does not mention, is listed there.
 
 ## Identity
 

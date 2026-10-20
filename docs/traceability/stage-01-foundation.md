@@ -199,6 +199,8 @@ Checkpoint A's push was accepted, the workflow file included, so the plan's risk
 
 U6's acceptance is met: the workflow passes on the branch, and a deliberately broken check makes it fail.
 
+The report of the independent Gate 3 review of `5ac6799`, the change that recorded these runs, is kept as evidence in [Stage 1 record — Gate 3 Report](stage-01-foundation-gate-3-reports.md); the review is summarized in that commit's message and in the [convergence audit](foundation-convergence-audit-2026-10-13.md)'s section 3 ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3).
+
 ## Transition checklist and completion certificate
 
 The stage exits when the eight completion criteria of the plan (section 9) hold, each with its evidence (owner decisions 13, §19 and §20; [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 8), and the two reports the owner added on 2026-10-14 are made (X9: [owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), §40; [DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 4. X10: [owner decisions 15](../handoffs/owner-decisions-15-stage-transition-persistence-and-commit-integrity.md), §23, §24, §27, §28, §30; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 5). This checklist restates them and adds none of its own. It is kept at each checkpoint from the [convergence audit](foundation-convergence-audit-2026-10-13.md) on, and completed at checkpoint D, where the completion certificate (§143) is written. Statuses as of 2026-10-14, after checkpoint B.

@@ -2,7 +2,7 @@
 
 > **Status:** ACTIVE record of the repository integrity and save/commit check the owner asked for on 2026-10-01, made under the owner's [checkpoint and three-stage verification rule](../builder/checkpoint-and-verification-rule.md) ([DEC-032](../decisions/DEC-032-adopt-checkpoint-and-verification-rule.md)). State checked: commit `a2c8e92` on branch `claude/code-builder-constitution-rrewgf`, pushed (local and remote were the same commit). The fixes it led to are in the checkpoint commit that adds this record.
 >
-> **Later changes:** On 2026-10-14, when every message of the owner was compared with the repository, the request quoted below was found word for word, but with its item 9's list set on one line and the blank lines between its items left out; both are restored as received ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 8). The rest of the record is kept as written.
+> **Later changes:** On 2026-10-14, when every message of the owner was compared with the repository, the request quoted below was found word for word, but with its item 9's list set on one line and the blank lines between its items left out; both are restored as received ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 8). The rest of the record is kept as written. On 2026-10-20 the report of this record's independent Gate 3 review was committed as evidence in [Integrity verification 2026-10-01 — Gate 3 Report](integrity-verification-2026-10-01-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3).
 
 ## The request
 

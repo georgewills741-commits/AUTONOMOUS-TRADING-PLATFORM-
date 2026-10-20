@@ -21,6 +21,8 @@ import re
 import sys
 from typing import Any
 
+from code_blocks import code_lines  # the rule both tools use for code blocks
+
 ROOT = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 )
@@ -238,7 +240,9 @@ def parse_src(src):
 
 
 def strip_code(text):
-    return re.sub(r"(?ms)^```.*?^```", "", text)
+    lines = text.split("\n")
+    flags, _ = code_lines(lines)
+    return "\n".join(line for line, code in zip(lines, flags) if not code)
 
 
 # ---------- collect requirements ----------
@@ -247,14 +251,11 @@ for path in md_files():
     if path in GENERATED:
         continue
     rel = os.path.relpath(path, DOCS)
-    in_code = False
     last = None  # requirement whose indented continuation lines (e.g. RSK-015's levels) belong to its text
-    for n, line in enumerate(open(path, encoding="utf-8").read().splitlines(), 1):
-        if line.startswith("```"):
-            in_code = not in_code
-            last = None
-            continue
+    lines = open(path, encoding="utf-8").read().splitlines()
+    for n, (line, in_code) in enumerate(zip(lines, code_lines(lines)[0]), 1):
         if in_code:
+            last = None
             continue
         if last and line.startswith("  ") and line.strip():
             reqs[last]["text"] += " " + line.strip()
@@ -436,7 +437,10 @@ if defined_rules != [f"SR-{n:02d}" for n in range(1, len(defined_rules) + 1)]:
 refs: "collections.Counter[str]" = collections.Counter()
 for path in md_files():
     rel = os.path.relpath(path, DOCS)
-    txt = strip_code(open(path, encoding="utf-8").read())
+    raw = open(path, encoding="utf-8").read()
+    if code_lines(raw.split("\n"))[1]:
+        errors.append(f"{rel}: code fence opened and never closed")
+    txt = strip_code(raw)
     for tok in re.findall(r"\b((?:CF|DUP|OQ|TC)-\d{2})\b", txt):
         refs[tok] += 1
         if tok not in defined_findings:

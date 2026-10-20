@@ -1,6 +1,8 @@
 # Owner Decisions 5 — Verification Record
 
 > **Status:** ACTIVE record of the checkpoint that applies the owner's answers of 2026-10-03 on the master knowledge-base audit: its four findings, the feature process, the acceptance of the review, and the authorization of Stage 1 planning ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)). Format: [traceability README](README.md). Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md).
+>
+> **Later changes:** On 2026-10-20 the report of this record's independent Gate 3 review was committed as evidence in [Owner decisions 5 verification — Gate 3 Report](owner-decisions-05-verification-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3). This record is kept as written.
 
 ## Identity
 

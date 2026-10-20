@@ -20,6 +20,8 @@ import re
 import subprocess
 import sys
 
+from code_blocks import code_lines  # the rule build_index.py uses for code blocks
+
 ROOT = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 )
@@ -49,14 +51,11 @@ def parse(files):
     """files: {relative path: content}. Returns {id: dict}."""
     out = {}
     for path, content in files.items():
-        in_code = False
         last = None  # indented continuation lines (e.g. RSK-015's levels) are part of the requirement's text
-        for line in content.splitlines():
-            if line.startswith("```"):
-                in_code = not in_code
-                last = None
-                continue
+        lines = content.splitlines()
+        for line, in_code in zip(lines, code_lines(lines)[0]):
             if in_code:
+                last = None
                 continue
             if last and line.startswith("  ") and line.strip():
                 out[last]["text"] += " " + line.strip()

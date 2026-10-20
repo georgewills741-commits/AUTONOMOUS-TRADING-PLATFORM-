@@ -2,7 +2,7 @@
 
 > **Status:** ACTIVE record of the owner's "final human-decision, knowledge-base, consistency, and repository checkpoint" of 2026-10-05. It establishes what is decided, what is authoritative, what is verified, what is implemented, what remains open, and what required the owner. Made under the three-gate procedure of [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (the request's Pass 1, Pass 2, and Pass 3 are Gates 1, 2, and 3); format: [traceability README](README.md).
 >
-> **Later changes:** the request as received was added on 2026-10-06 as the appendix, by the [quality audit](quality-audit-2026-10-06.md). Until then this record described the request but did not quote it, unlike the records of the integrity check (2026-10-01) and the master knowledge-base audit (2026-10-02). Nothing else in the record changed.
+> **Later changes:** the request as received was added on 2026-10-06 as the appendix, by the [quality audit](quality-audit-2026-10-06.md). Until then this record described the request but did not quote it, unlike the records of the integrity check (2026-10-01) and the master knowledge-base audit (2026-10-02). Nothing else in the record changed. On 2026-10-20 the reports of this record's independent Gate 3 reviews were committed as evidence in [Final decision checkpoint 2026-10-05 — Gate 3 Reports](final-decision-checkpoint-2026-10-05-gate-3-reports.md) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3).
 
 ## Identity
 

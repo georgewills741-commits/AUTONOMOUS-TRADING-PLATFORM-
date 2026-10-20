@@ -165,6 +165,18 @@ CHECKER_CASES: list[tuple[str, str, Callable[[str], str], str]] = [
         lambda s: s + "# Orphan\n",
         r"orphan\.md: not reachable by links",
     ),
+    (
+        "a code fence never closed",
+        GLOSSARY,
+        lambda s: s + "\n```text\nnever closed\n",
+        r"glossary\.md: code fence opened and never closed",
+    ),
+    (
+        "a reference after a longer fence that holds a shorter one",
+        GLOSSARY,
+        lambda s: s + "\n````text\n```\nquoted\n```\n````\n\nSee DEC-999.\n",
+        r"undefined decision DEC-999",
+    ),
 ]
 
 MEC = "docs/builder/master-execution-constitution.md"
@@ -216,6 +228,19 @@ MULTI_CASES: list[tuple[str, list[tuple[str, Callable[[str], str]]], str | None]
             (GLOSSARY, lambda s: s + "\nSee `[coded](coded.md)`.\n"),
         ],
         r"coded\.md: not reachable by links",
+    ),
+    (
+        "a longer fence that holds a shorter one, with IDs quoted inside (must pass)",
+        [
+            (
+                GLOSSARY,
+                lambda s: (
+                    s
+                    + "\n````text\n```\nSee DEC-999, RSK-999, and [x](no-such-file.md).\n```\n````\n"
+                ),
+            )
+        ],
+        None,
     ),
     (
         "a status-banner-only change to a preserved text (must pass)",
@@ -323,6 +348,21 @@ def comparison_cases() -> bool:
             f"{'PASS' if passed else 'FAIL'}  comparison control: no change passes (exit {code})"
         )
         original = open(os.path.join(tmp, RISK), encoding="utf-8").read()
+        # A requirement line quoted inside a longer fence's inner block is not a requirement:
+        # an altered copy of RSK-048 there must not count as a change of RSK-048.
+        quoted = next(x for x in original.split("\n") if x.startswith("- **RSK-048** "))
+        quoted = quoted.replace(" · ", " (quoted) · ", 1)
+        edit(tmp, RISK, lambda s: s + f"\n````text\n```\n{quoted}\n```\n````\n")
+        code, out = run(tmp, "tools/docs/compare_requirements.py", "HEAD", "--strict")
+        passed = code == 0
+        ok &= passed
+        print(
+            f"{'PASS' if passed else 'FAIL'}  comparison accepts: a requirement line quoted"
+            f" inside a longer fence (exit {code})"
+        )
+        if not passed:
+            print(out[-2000:])
+        open(os.path.join(tmp, RISK), "w", encoding="utf-8").write(original)
         for name, fn, pattern in cases:
             edit(tmp, RISK, fn)
             code, out = run(
