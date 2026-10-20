@@ -1,6 +1,7 @@
 # DEC-046 — Preserve the owner's company-grade order and traceability rules; how they apply until their adoption is decided
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-20 [DEC-051](DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md) decided what decision 2 left to owner decisions 9's adoption: owner decisions 14 is not loaded as a builder text and stays in force through this record; the [owner rule sets reconciliation](../traceability/owner-rule-sets-reconciliation.md) shows where each of its rules is stated or applied. On 2026-10-20 the owner changed decision 6's order ([DEC-052](DEC-052-apply-owner-answers-on-order-of-work-and-backups.md), decision 2): checkpoints C and D come before steps 4 and 5, which follow checkpoint D and come before Stage 1's exit reports. The text below is kept as written.
 - **Date:** 2026-10-14
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and the owner's checkpoint rule ([DEC-032](DEC-032-adopt-checkpoint-and-verification-rule.md): "EVERYTHING MUST BE PRESERVED IN THE REPOSITORY"); the rules, and the report they ask for before Foundation exits, are the owner's; how they apply until their adoption is decided (decisions 2 to 6) is the builder's
 

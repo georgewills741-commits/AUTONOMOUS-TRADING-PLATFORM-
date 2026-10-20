@@ -1,6 +1,7 @@
 # DEC-039 — Adopt the owner's master quality, consistency, verification and correction directive
 
 - **Status:** ACCEPTED
+- **Later changes:** Since 2026-10-20 six builder texts apply: the owner's requirement drafting and anti-drift rules (owner decisions 9) were added ([DEC-051](DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md)). Nothing in this decision changes.
 - **Date:** 2026-10-06
 - **Decided by:** project owner (directive sent on 2026-10-06, after Stage 1's checkpoint A); the builder's: how it combines with the four other builder texts, the reading notes, what each gate covers now that code exists, and the mapping of its platform-facing sentences to existing requirements
 - **Text:** [`docs/builder/quality-consistency-and-correction-directive.md`](../builder/quality-consistency-and-correction-directive.md) (verbatim, ACTIVE)

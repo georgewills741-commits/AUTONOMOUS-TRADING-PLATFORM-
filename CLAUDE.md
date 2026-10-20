@@ -4,7 +4,7 @@ Instructions for Claude Code sessions working in this repository.
 
 ## Governing rules
 
-Five builder texts govern all work in this repository. Each is imported below so it loads in full at the start of every session, and each file is the single canonical copy of its text: do not restate or summarize their rules anywhere else. They apply together; where they differ, the stricter applies. Everything built, modified, or approved, documentation included, passes all three gates of the one verification procedure of [DEC-033](docs/decisions/DEC-033-adopt-master-execution-constitution.md) before its checkpoint commit (the owner's rule, DEC-032); what each gate covers now that code exists is in [DEC-039](docs/decisions/DEC-039-adopt-quality-and-correction-directive.md).
+Six builder texts govern all work in this repository. Each is imported below so it loads in full at the start of every session, and each file is the single canonical copy of its text: do not restate or summarize their rules anywhere else. They apply together; where they differ, the stricter applies. Everything built, modified, or approved, documentation included, passes all three gates of the one verification procedure of [DEC-033](docs/decisions/DEC-033-adopt-master-execution-constitution.md) before its checkpoint commit (the owner's rule, DEC-032); what each gate covers now that code exists is in [DEC-039](docs/decisions/DEC-039-adopt-quality-and-correction-directive.md).
 
 The Claude Code Builder Constitution ([DEC-001](docs/decisions/DEC-001-adopt-builder-constitution.md)):
 
@@ -25,6 +25,12 @@ The owner's directive on three-level verification and platform independence ([DE
 The owner's master quality, consistency, verification and correction directive ([DEC-039](docs/decisions/DEC-039-adopt-quality-and-correction-directive.md)):
 
 @docs/builder/quality-consistency-and-correction-directive.md
+
+The owner's canonical requirement drafting and anti-drift rules, loaded from the copy preserved under `docs/handoffs/` ([DEC-051](docs/decisions/DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md)):
+
+@docs/handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md
+
+The owner's later rule sets are not loaded here; each stays in force through its decision record: owner decisions 10's lifecycle for temporary backups ([DEC-042](docs/decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md)), the lasting rules of owner decisions 13 ([DEC-045](docs/decisions/DEC-045-apply-foundation-convergence-audit.md)), owner decisions 14 ([DEC-046](docs/decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md)), owner decisions 15 ([DEC-047](docs/decisions/DEC-047-preserve-stage-transition-persistence-rules.md)), and owner decisions 17, Rule 0 ([DEC-048](docs/decisions/DEC-048-preserve-and-apply-rule-0.md)). The [owner rule sets reconciliation](docs/traceability/owner-rule-sets-reconciliation.md) shows where each of their rules is stated or applied.
 
 ## Where to start
 

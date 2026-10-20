@@ -1,6 +1,7 @@
 # DEC-044 — Preserve the owner's answers on the archive tag and the Foundation convergence audit; the audit comes first
 
 - **Status:** ACCEPTED
+- **Later changes:** On 2026-10-20 [DEC-051](DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md) decided what decision 4 left open: owner decisions 13's lasting rules are not loaded as a builder text and stay in force through [DEC-045](DEC-045-apply-foundation-convergence-audit.md). On 2026-10-20 [DEC-052](DEC-052-apply-owner-answers-on-order-of-work-and-backups.md) replaced decision 2's tag by an archive branch, at the owner's choice; this environment refuses the branch's deletion, as it refused the tag. The text below is kept as written.
 - **Date:** 2026-10-13
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and the owner's checkpoint rule ([DEC-032](DEC-032-adopt-checkpoint-and-verification-rule.md): "EVERYTHING MUST BE PRESERVED IN THE REPOSITORY"); the answers, the choice to continue, and the directive are the owner's
 

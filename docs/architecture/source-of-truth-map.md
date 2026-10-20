@@ -1,6 +1,6 @@
 # Source-of-Truth Map
 
-> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01, 2026-10-02, 2026-10-06, and 2026-10-07 (the architecture-to-repository map, Stage 1 checkpoint B). Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
+> **Status:** ACTIVE — 2026-09-30, updated 2026-10-01, 2026-10-02, 2026-10-06, 2026-10-07 (the architecture-to-repository map, Stage 1 checkpoint B), 2026-10-14 (DEC-045), and 2026-10-20 (DEC-051). Answers "where is the source of truth?" for every major concept (constitution Rule 43, handoff §98, ARCH-017).
 >
 > If two documents seem to disagree, the one listed here wins, and the disagreement is recorded in the [findings register](../conflicts/register.md).
 
@@ -13,7 +13,8 @@
 | Master execution, consistency, verification and continuity constitution (builder rules) | [docs/builder/master-execution-constitution.md](../builder/master-execution-constitution.md) ([DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md)) |
 | Owner's directive on three-level verification and platform independence | [docs/builder/verification-and-platform-independence-directive.md](../builder/verification-and-platform-independence-directive.md) ([DEC-034](../decisions/DEC-034-verification-and-platform-independence.md)) |
 | Owner's master quality, consistency, verification and correction directive | [docs/builder/quality-consistency-and-correction-directive.md](../builder/quality-consistency-and-correction-directive.md) ([DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md)) |
-| How the builder texts combine; the one three-gate procedure | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (DUP-39); what each gate covers now that code exists: [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md); how the remaining gates are briefed, classified, and re-run: [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md) |
+| Owner's canonical requirement drafting and anti-drift rules (builder rules) | [docs/handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md](../handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md) ([DEC-051](../decisions/DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md)) |
+| How the builder texts combine; the one three-gate procedure | [DEC-033](../decisions/DEC-033-adopt-master-execution-constitution.md) (DUP-39); what each gate covers now that code exists: [DEC-039](../decisions/DEC-039-adopt-quality-and-correction-directive.md); how the remaining gates are briefed, classified, and re-run: [DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md); how owner decisions 9 reads, and the owner's later rule sets in force through their decision records: [DEC-051](../decisions/DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md), [owner rule sets reconciliation](../traceability/owner-rule-sets-reconciliation.md) |
 | Current project state, next step, and continuation contract | [docs/project-state.md](../project-state.md) |
 | Verification records and their format | [docs/traceability/README.md](../traceability/README.md) |
 | Documentation index | [docs/README.md](../README.md) |
