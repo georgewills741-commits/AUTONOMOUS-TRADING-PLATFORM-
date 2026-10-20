@@ -65,7 +65,7 @@
 - **[Owner decisions 13](../handoffs/owner-decisions-13-foundation-verification-convergence-audit.md)** (in force through DEC-045). The [convergence audit](foundation-convergence-audit-2026-10-13.md) mapped its lasting rules to the builder texts in section 9, "Which of the directive's rules the builder texts already state". DEC-045 (decisions 1 to 8) applies the rules no builder text stated. No gap is left. Its rule on temporary backups and checkpoints (§25) rests on owner decisions 10, below, as section 9 records.
 - **[Owner decisions 10](../handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md)** (in force through DEC-042).
   - Already stated: §52 ("committed or explicitly documented as intentionally uncommitted"), §132 (the emergency checkpoint), and §133 (unverified work labelled).
-  - Applied: DEC-042 to DEC-044, for checkpoint B's backup: its labels, the eight checks of its reconciliation, and its retention under an archive tag. Its lifecycle applies to any later backup (DEC-042, decision 7).
+  - Applied: DEC-042 to DEC-044, for checkpoint B's backup: its labels, the eight checks of its reconciliation, and its retention: under an archive tag (DEC-043) until 2026-10-20, when the owner chose an archive branch instead (DEC-052, decision 4). Its lifecycle applies to any later backup (DEC-042, decision 7).
   - Gap: whether a later backup may be made, and how it is retained or retired, was OQ-31, which the owner answered on 2026-10-20 (DEC-052, decisions 3 and 4).
 
 ## Gaps and their handling

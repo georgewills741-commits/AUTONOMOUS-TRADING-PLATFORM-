@@ -2,7 +2,7 @@
 
 - **Status:** ACCEPTED
 - **Date:** 2026-10-20
-- **Decided by:** project owner ([owner decisions 20](../handoffs/owner-decisions-20-question-on-the-rules-order-of-work-and-backups.md)); the builder's: the wording that applies the answers to the records, and when a gate cycle counts as long (decision 3)
+- **Decided by:** project owner ([owner decisions 20](../handoffs/owner-decisions-20-question-on-the-rules-order-of-work-and-backups.md)); the builder's: the wording that applies the answers to the records, when a gate cycle counts as long (decision 3), and the reading of "final exit report" as the exit reports X9 and X10 (decision 2)
 - **Resolves:** OQ-31 ([DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md), decision 6)
 
 ## Context
@@ -20,7 +20,7 @@ The builder put two questions to the owner: whether checkpoints C and D should c
 3. **Work under a long gate cycle is backed up** (OQ-31: option (b), with the builder doing every step). A gate cycle counts as long once its first Gate 3 run has failed, or when a session would end with the work uncommitted.
    - The builder then pushes the work to a temporary backup branch, `claude/unverified-backup-<change>`, under [owner decisions 10](../handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md)'s lifecycle and the labels of [DEC-042](DEC-042-preserve-anti-drift-rules-and-backup-instructions.md) (decision 4), and pushes it again as the work changes. Nothing on it is merged, built on, or used as evidence for a gate.
    - After the verified commit, the builder reconciles the branch with it by owner decisions 10's eight checks and records the result.
-   - It then keeps the branch's last commit under an archive branch, `claude/archive/` followed by the backup's name without `claude/`, and deletes the backup branch while it is still at that commit.
+   - It then keeps the branch's last commit under an archive branch, `claude/archive/` followed by the backup's name without `claude/`, checks the archive branch on GitHub at that commit, and deletes the backup branch while it is still at that commit.
    - Where the environment refuses the deletion, the backup branch stays at the archived commit, and the [project state](../project-state.md) names it.
 4. **Archive branches replace archive tags**, for checkpoint B's backup too ([DEC-043](DEC-043-retire-checkpoint-b-backup-under-an-archive-tag.md); DEC-044, decision 2).
    - On 2026-10-20 the builder pushed `claude/archive/unverified-backup-checkpoint-b` at `ee84f26`, and checked it on GitHub.
@@ -39,5 +39,5 @@ The builder put two questions to the owner: whether checkpoints C and D should c
 
 - OQ-31 is RESOLVED in the [open-question register](../open-questions/register.md).
 - The project state gives the new order of "Next approved step", item 1's state, the branches, and the blockers.
-- "Later changes" lines are added to DEC-042, DEC-043, DEC-044, DEC-046, and DEC-047.
+- "Later changes" lines are added to DEC-042, DEC-043, DEC-044, DEC-046, DEC-047, and DEC-048.
 - The stage record's "Blockers" row, and its note on the certificate, give the backup's state.
