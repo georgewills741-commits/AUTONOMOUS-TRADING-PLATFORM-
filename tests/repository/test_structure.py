@@ -54,6 +54,8 @@ TESTS_ROOT = REPOSITORY_ROOT / "tests"
 ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "numeric": frozenset(),
     "contracts": frozenset({"numeric"}),
+    "config": frozenset({"contracts", "numeric"}),
+    "cli": frozenset({"config"}),
 }
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})

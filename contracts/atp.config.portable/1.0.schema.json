@@ -1,0 +1,18 @@
+{
+  "$id": "atp.config.portable/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The part that moves with the platform between environments (MIG-010).",
+  "properties": {
+    "platform_id": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Platform Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "platform_id"
+  ],
+  "title": "PortableConfiguration",
+  "type": "object"
+}

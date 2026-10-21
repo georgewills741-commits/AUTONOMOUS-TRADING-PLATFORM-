@@ -1,0 +1,34 @@
+{
+  "$defs": {
+    "SecretKind": {
+      "description": "What a declared secret is, from a closed set.",
+      "enum": [
+        "trading",
+        "ai",
+        "server"
+      ],
+      "title": "SecretKind",
+      "type": "string"
+    }
+  },
+  "$id": "atp.config.secret-declaration/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A secret the environment needs: its name and kind, never its value.",
+  "properties": {
+    "kind": {
+      "$ref": "#/$defs/SecretKind"
+    },
+    "name": {
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "kind"
+  ],
+  "title": "SecretDeclaration",
+  "type": "object"
+}

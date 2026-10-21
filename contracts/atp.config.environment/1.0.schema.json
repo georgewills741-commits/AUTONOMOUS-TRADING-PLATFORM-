@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "Environment": {
+      "description": "The six environments of OPS-004.",
+      "enum": [
+        "development",
+        "testing",
+        "research",
+        "paper",
+        "staging",
+        "production"
+      ],
+      "title": "Environment",
+      "type": "string"
+    },
+    "SecretDeclaration": {
+      "additionalProperties": false,
+      "description": "A secret the environment needs: its name and kind, never its value.",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/SecretKind"
+        },
+        "name": {
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "title": "SecretDeclaration",
+      "type": "object"
+    },
+    "SecretKind": {
+      "description": "What a declared secret is, from a closed set.",
+      "enum": [
+        "trading",
+        "ai",
+        "server"
+      ],
+      "title": "SecretKind",
+      "type": "string"
+    }
+  },
+  "$id": "atp.config.environment/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The part that belongs to one environment (MIG-010): its identity and its secrets.",
+  "properties": {
+    "environment": {
+      "$ref": "#/$defs/Environment"
+    },
+    "environment_id": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Environment Id",
+      "type": "string"
+    },
+    "secrets": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/SecretDeclaration"
+      },
+      "title": "Secrets",
+      "type": "array"
+    }
+  },
+  "required": [
+    "environment",
+    "environment_id"
+  ],
+  "title": "EnvironmentConfiguration",
+  "type": "object"
+}

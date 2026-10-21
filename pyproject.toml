@@ -12,6 +12,10 @@ dependencies = [
     "pydantic>=2.13,<3",
 ]
 
+[project.scripts]
+# The `atp` command (D1 of the Stage 1 plan): `atp config check` (docs/development.md).
+atp = "atp.cli:run"
+
 [dependency-groups]
 dev = [
     "hypothesis>=6.168",

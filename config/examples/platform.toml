@@ -1,0 +1,6 @@
+# Example of the portable configuration (MIG-010): the part that moves with the platform from
+# one environment to another. Placeholder values only (GOV-017). Checked with `atp config check`
+# (docs/development.md, "Configuration").
+
+# The platform's identifier (MIG-027): lowercase letters and digits, in parts joined by hyphens.
+platform_id = "example-platform"

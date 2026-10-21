@@ -1,0 +1,19 @@
+# Example of the environment-specific configuration of the research environment (MIG-010,
+# OPS-004). Placeholder values only (GOV-017). Checked with
+# `atp config check --env research --config-dir config/examples` (docs/development.md,
+# "Configuration").
+
+# The environment this file belongs to, one of OPS-004's six. The --env the command is run with
+# must name the same one.
+environment = "research"
+
+# This environment's identifier (MIG-027).
+environment_id = "example-research"
+
+# Each secret this environment needs, by name and kind, never by value: the value is read from
+# the process environment variable of that name (SEC-005). The kinds are "server", "ai", and
+# "trading"; only production may declare a trading-enabled credential (MODE-006, SEC-004), and
+# in Stage 1 no environment has one.
+[[secrets]]
+name = "ATP_EXAMPLE_SERVER_CREDENTIAL"
+kind = "server"
