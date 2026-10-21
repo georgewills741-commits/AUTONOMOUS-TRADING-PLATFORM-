@@ -1,6 +1,6 @@
 # Security Architecture
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
 
 Canonical definition of what the platform must protect. The builder's own rules on secrets (constitution Rules 110 and 153) also apply to this repository.
 
@@ -47,4 +47,4 @@ The owner ranked security controls above the user's hard policy, below the safet
 
 ## Not yet specified
 
-Threat model, authentication for the operator interface, and tests. Key management for custody is FUTURE (CUS-002).
+Authentication for the operator interface, and the security tests of the stages after Stage 1; Stage 1's controls and their tests are traced in the [threat model](threat-model.md). Key management for custody is FUTURE (CUS-002).

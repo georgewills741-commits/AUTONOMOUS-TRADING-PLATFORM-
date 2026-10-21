@@ -2,7 +2,7 @@
 
 A configuration directory holds the portable part, `platform.toml`, and one environment-specific
 file per environment, `environments/<environment>.toml`. Each file is read with the standard
-library's TOML reader, its numbers through the amount constructor (`parse_float`), and is then
+library's TOML reader, its floats through the amount constructor (`parse_float`), and is then
 validated in its JSON form by its contract's `from_json`: tables become objects, arrays become
 arrays, and a TOML file is read exactly as the same settings written in JSON would be. So an
 amount is written as a string; a TOML date, time, or number with a fraction or an exponent is
@@ -45,8 +45,8 @@ _TOML_POSITION: Final = re.compile(
 
 
 class ConfigurationError(ValueError):
-    """A configuration was refused. Its lines name files, settings, and secrets, never a value
-    from a file or a secret's value."""
+    """A configuration was refused. Its lines name files, settings, and secrets, and never hold
+    a secret's value or a refused value."""
 
     def __init__(self, lines: Sequence[str]) -> None:
         self.lines = tuple(lines)
@@ -64,7 +64,7 @@ class Configuration:
 
 def configure_process() -> None:
     """What a platform process sets up at start, before it reads its configuration: the
-    decimal context (`atp.numeric`), so that TOML numbers are read as amounts."""
+    decimal context (`atp.numeric`), so that TOML floats are read as amounts."""
     configure_decimal_context()
 
 

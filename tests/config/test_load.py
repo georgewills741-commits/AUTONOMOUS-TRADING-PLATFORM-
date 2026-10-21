@@ -137,6 +137,31 @@ def test_a_toml_date_or_time_is_refused(value: str) -> None:
     assert error.value.lines == ("limit.toml: a date or a time is not a setting value",)
 
 
+@pytest.mark.parametrize(
+    ("text", "refusal"),
+    [
+        (
+            "sides = [1.5]\n",
+            "a number with a fraction or an exponent is not a setting value",
+        ),
+        ("sides = [2026-10-21]\n", "a date or a time is not a setting value"),
+        (
+            'sides = ["buy"]\n[[limits]]\nsize = "1"\ncount = 1e3\n',
+            "a number with a fraction",
+        ),
+        (
+            'sides = ["buy"]\n[[limits]]\nsize = "1"\nat = 04:00:00\n',
+            "a date or a time",
+        ),
+    ],
+)
+def test_a_value_inside_an_array_is_checked_too(text: str, refusal: str) -> None:
+    with pytest.raises(ConfigurationError) as error:
+        read_toml(Book, text, "book.toml")
+    (line,) = error.value.lines
+    assert line.startswith(f"book.toml: {refusal}")
+
+
 def test_an_integer_stays_an_integer_and_text_stays_text() -> None:
     assert read_toml(Limit, 'size = "7"\ncount = 7\n', "x").count == 7
     with pytest.raises(ConfigurationError):

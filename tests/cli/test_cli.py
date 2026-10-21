@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import importlib.metadata
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -146,3 +148,33 @@ def test_the_installed_command_runs_this_module() -> None:
         if entry.name == "atp"
     ]
     assert entry.value == "atp.cli:run"
+
+
+def test_the_command_sets_up_its_process_before_reading_numbers(tmp_path: Path) -> None:
+    # A new interpreter has Python's default decimal context: without `configure_process`,
+    # reading a TOML number would raise instead of refusing the setting.
+    directory = _broken(tmp_path, "platform_id = 1.5\n", PAPER)
+    result = subprocess.run(  # noqa: S603 - this interpreter, fixed arguments
+        [
+            sys.executable,
+            "-c",
+            "from atp.cli import run; run()",
+            "config",
+            "check",
+            "--env",
+            "paper",
+            "--config-dir",
+            str(directory),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        env={EXAMPLE_VARIABLE: SECRET},
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
+    assert result.stderr == (
+        "configuration refused:\n"
+        "  platform.toml: a number with a fraction or an exponent is not a setting value; "
+        "an amount is written as a string\n"
+    )

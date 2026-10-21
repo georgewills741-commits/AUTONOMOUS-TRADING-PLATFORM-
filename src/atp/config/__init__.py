@@ -8,7 +8,7 @@ defence in depth), GOV-014 (no second configuration source). The rules, the sett
 command that checks a configuration are in docs/development.md, "Configuration".
 
 A process calls `configure_process()` at start, then `load_configuration(...)`. Every refusal
-raises `ConfigurationError`, whose lines never hold a value from a file or a secret's value.
+raises `ConfigurationError`, whose lines never hold a secret's value or a refused value.
 """
 
 from atp.config._load import (

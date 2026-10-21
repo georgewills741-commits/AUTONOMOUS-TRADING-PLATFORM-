@@ -50,8 +50,9 @@ filterwarnings = ["error"]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["src", "tests"]
-mypy_path = "src"
+files = ["src", "tests", "tools/mutation"]
+# The mutation runner imports its list from its own directory, as a script does.
+mypy_path = ["src", "tools/mutation"]
 explicit_package_bases = true
 strict = true
 warn_unreachable = true
