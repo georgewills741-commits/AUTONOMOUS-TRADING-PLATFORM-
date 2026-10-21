@@ -109,7 +109,7 @@ Each major feature's state in the canonical feature lifecycle (GOV-024), kept cu
 | Contract kernel, outcomes, idempotency (plan U3) | 1 FOUNDATION | VERIFYING | As above |
 | Configuration (plan U4) | 1 FOUNDATION | VERIFYING | Built at checkpoint C, in its three gates ([checkpoint C verification](../traceability/stage-01-checkpoint-c-verification.md)); the stage's own gates run at checkpoint D |
 | Security foundation (plan U5) | 1 FOUNDATION | VERIFYING | As above: the [threat model](../security/threat-model.md) and the repository test for secrets, started at checkpoint A (U1) and extended at checkpoint C |
-| Verification matrix (plan U7) | 1 FOUNDATION | DESIGNED | As above; checkpoint D |
+| Verification matrix (plan U7) | 1 FOUNDATION | DESIGNED | Specified by the approved plan (DEC-038); built at checkpoint D |
 | Stage record, feature status, closure (plan U8) | 1 FOUNDATION | IMPLEMENTING | The stage record and this table, created at checkpoint A; closure at checkpoint D |
 | Each item of stage 2 in the stage tables above | 2 DATA FOUNDATION | PROPOSED | Requirements reviewed and accepted with the complete documentation review ([DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md)); APPROVED, and designed, when the owner approves the stage's plan ([DEC-040](../decisions/DEC-040-later-stage-features-proposed.md)). From checkpoint A to 2026-10-07 this table showed APPROVED for stages 2 to 7, the builder's reading of DEC-036, and then REQUIRES OWNER DECISION until the owner answered OQ-29 |
 | Each item of stage 3 in the stage tables above | 3 CORE TRADING FOUNDATION | PROPOSED | As above |

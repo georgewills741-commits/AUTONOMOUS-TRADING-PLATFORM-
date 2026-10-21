@@ -1,6 +1,6 @@
 # Security Architecture
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); the roadmap places SEC-006 and SEC-007 in ARBITRAGE, SEC-008 in AI INTELLIGENCE, and SEC-009 in OPERATIONALIZATION · **Sources:** §89 (also §52)
 
 Canonical definition of what the platform must protect. The builder's own rules on secrets (constitution Rules 110 and 153) also apply to this repository.
 
