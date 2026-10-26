@@ -2753,6 +2753,28 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "U4 a file's status looked at outside the boundary",
+        "src/atp/config/_load.py",
+        "    try:\n"
+        "        if not path.is_file():\n"
+        "            raise ConfigurationError(\n"
+        '                [f"{relative}: no such file in the configuration directory"]\n'
+        "            )\n",
+        "    if not path.is_file():\n"
+        "        raise ConfigurationError(\n"
+        '            [f"{relative}: no such file in the configuration directory"]\n'
+        "        )\n"
+        "    try:\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 the reading's own refusals reported as invalid TOML",
+        "src/atp/config/_load.py",
+        "    except ConfigurationError:\n        raise\n",
+        "",
+        TESTS,
+    ),
+    Mutation(
         "U4 environment names read without case",
         "src/atp/config/_load.py",
         "        if environment.value == name:",
@@ -2890,6 +2912,27 @@ MUTATIONS: list[Mutation] = [
         _SCANNER_TEST_PATH,
         "    except (ValueError, RecursionError):\n",
         "    except (UnicodeDecodeError, tomllib.TOMLDecodeError):\n",
+        SCANNER,
+    ),
+    Mutation(
+        "U5 a declaration that is not JSON raises",
+        _SCANNER_TEST_PATH,
+        "    except (ContractError, TypeError, ValueError, RecursionError):\n",
+        "    except (ContractError, ValueError, RecursionError):\n",
+        SCANNER,
+    ),
+    Mutation(
+        "U5 a declaration with an integer too long raises",
+        _SCANNER_TEST_PATH,
+        "    except (ContractError, TypeError, ValueError, RecursionError):\n",
+        "    except (ContractError, TypeError, RecursionError):\n",
+        SCANNER,
+    ),
+    Mutation(
+        "U5 a declaration nested too deeply raises",
+        _SCANNER_TEST_PATH,
+        "    except (ContractError, TypeError, ValueError, RecursionError):\n",
+        "    except (ContractError, TypeError, ValueError):\n",
         SCANNER,
     ),
     Mutation(

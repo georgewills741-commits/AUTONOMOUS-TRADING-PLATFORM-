@@ -105,15 +105,26 @@ def read_toml[C: Contract](contract: type[C], text: str, where: str) -> C:
 def _read_toml[C: Contract](
     contract: type[C], text: str, where: str
 ) -> tuple[C, object]:
-    """`read_toml`, with the document's JSON form, which the loader searches for secrets."""
+    """`read_toml`, with the document's JSON form, which the loader searches for secrets.
+
+    Every step of the reading (parsing, the JSON form, validation) is inside one boundary: a
+    failure of any of them, of a class the document can cause, becomes `ConfigurationError`.
+    """
     try:
         form = _json_form(_parse_toml(text, where), where)
         return contract.from_json(json.dumps(form)), form
+    except ConfigurationError:
+        raise
     except ContractError as error:
         first, *details = str(error).splitlines()
         raise ConfigurationError([f"{where}: {first}", *details]) from None
     except RecursionError:
         raise ConfigurationError([f"{where}: {_TOO_DEEP}"]) from None
+    except ValueError:
+        # Any other refusal of a step: an integer too long to convert, in the reader (decimal)
+        # or in the JSON form (hexadecimal, octal, or binary), which TOML's 64-bit integers
+        # exclude anyway. Its text can quote the document, so none of it is kept.
+        raise ConfigurationError([f"{where}: not valid TOML"]) from None
 
 
 def _parse_toml(text: str, where: str) -> dict[str, object]:
@@ -126,19 +137,17 @@ def _parse_toml(text: str, where: str) -> dict[str, object]:
     except AmountError as error:
         # Its message is fixed text, never the number (`atp.numeric.AMOUNT_REFUSALS`).
         raise ConfigurationError([f"{where}: a number is refused: {error}"]) from None
-    except ValueError:
-        # The reader's other refusals, such as an integer too long to convert. Their text can
-        # quote the document, so none of it is kept.
-        raise ConfigurationError([f"{where}: not valid TOML"]) from None
 
 
 def _read_file(directory: Path, relative: str) -> str:
+    """A file's text. Looking at the file and reading it are inside one boundary: an
+    operating-system error of either becomes `ConfigurationError`."""
     path = directory / relative
-    if not path.is_file():
-        raise ConfigurationError(
-            [f"{relative}: no such file in the configuration directory"]
-        )
     try:
+        if not path.is_file():
+            raise ConfigurationError(
+                [f"{relative}: no such file in the configuration directory"]
+            )
         return path.read_bytes().decode("utf-8")
     except UnicodeDecodeError:
         raise ConfigurationError([f"{relative}: not UTF-8 text"]) from None

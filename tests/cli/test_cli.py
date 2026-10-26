@@ -83,6 +83,11 @@ PAPER = (
         ('platform_id = "example-platform"\n', "environment = ", "not valid TOML"),
         ("platform_id = 1" + "0" * 5000 + "\n", PAPER, "platform.toml: not valid TOML"),
         (
+            "platform_id = 0x" + "f" * 4000 + "\n",
+            PAPER,
+            "platform.toml: not valid TOML",
+        ),
+        (
             "x = " + "[" * 2000 + "]" * 2000 + "\n",
             PAPER,
             "platform.toml: nested too deeply to read",

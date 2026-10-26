@@ -5,11 +5,14 @@ from __future__ import annotations
 
 import decimal
 import enum
+import os
 import threading
 from decimal import Decimal
 from pathlib import Path
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from atp.config import (
     REDACTED,
@@ -210,13 +213,95 @@ def test_a_refused_toml_value_is_not_in_the_error() -> None:
             "x = " + "{a = " * 600 + "1" + "}" * 600 + "\n",
             "limit.toml: nested too deeply to read",
         ),
+        # The reader converts these bases without the limit; the JSON form then cannot.
+        ("count = 0x" + "f" * 4000 + "\n", "limit.toml: not valid TOML"),
+        ("count = 0o" + "7" * 5000 + "\n", "limit.toml: not valid TOML"),
+        ("count = 0b" + "1" * 15000 + "\n", "limit.toml: not valid TOML"),
+        ("sides = [0x" + "f" * 4000 + "]\n", "limit.toml: not valid TOML"),
+        # Tables nested by their headers, which the reader takes without recursion.
+        (
+            "[" + ".".join(["a"] * 10000) + "]\n",
+            "limit.toml: nested too deeply to read",
+        ),
     ],
-    ids=["integer too long", "arrays too deep", "inline tables too deep"],
+    ids=[
+        "integer too long",
+        "arrays too deep",
+        "inline tables too deep",
+        "hexadecimal integer too long",
+        "octal integer too long",
+        "binary integer too long",
+        "integer too long in an array",
+        "tables too deep",
+    ],
 )
 def test_a_document_the_reader_cannot_take_is_refused(text: str, refusal: str) -> None:
     with pytest.raises(ConfigurationError) as error:
         read_toml(Limit, text, "limit.toml")
     assert error.value.lines == (refusal,)
+
+
+# Pieces of TOML, valid and not, from which any document the property below tries is built.
+_PIECES = [
+    "\n",
+    " ",
+    "=",
+    "[",
+    "]",
+    "{",
+    "}",
+    ",",
+    ".",
+    '"',
+    "#",
+    "x",
+    "a.b",
+    "sides",
+    "count",
+    "enabled",
+    "limits",
+    "secrets",
+    "[limits]",
+    "[[limits]]",
+    "x = ",
+    "a = ",
+    '"buy"',
+    '"1"',
+    "1",
+    "-0",
+    "0x1f",
+    "0o7",
+    "0b1",
+    "0x" + "f" * 4000,
+    "1" + "0" * 5000,
+    "1.5",
+    "1e3",
+    "inf",
+    "nan",
+    "true",
+    "1979-05-27",
+    "07:32:00",
+    "[" * 500,
+    "]" * 500,
+    "{a = " * 300,
+    "}" * 300,
+    '"\\u00e9"',
+    "'lit'",
+    '"""',
+    "\\",
+]
+
+
+@given(
+    st.lists(st.sampled_from(_PIECES), max_size=12).map("".join) | st.text(max_size=60)
+)
+def test_any_text_is_read_or_refused(text: str) -> None:
+    # The reader's boundary: whatever the document, a contract or `ConfigurationError`.
+    try:
+        read_toml(Book, text, "book.toml")
+    except ConfigurationError as error:
+        # A refusal names its file on its first line; a contract's details follow.
+        assert error.lines[0].startswith("book.toml: ")
 
 
 # Loading a configuration directory.
@@ -287,6 +372,34 @@ def test_a_file_that_is_not_utf_8_is_refused(tmp_path: Path) -> None:
     directory = _directory(tmp_path, "", {"paper": _specific("paper")})
     (directory / "platform.toml").write_bytes(b'platform_id = "\xff"\n')
     assert _refusal(directory, "paper", {}) == ["platform.toml: not UTF-8 text"]
+
+
+def test_a_file_whose_status_cannot_be_read_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    directory = _directory(
+        tmp_path, 'platform_id = "atp"\n', {"paper": _specific("paper")}
+    )
+    portable = directory / "platform.toml"
+    stat = Path.stat
+
+    def refuse(path: Path, *, follow_symlinks: bool = True) -> os.stat_result:
+        if path == portable:
+            raise PermissionError(13, "Permission denied", str(path))
+        return stat(path, follow_symlinks=follow_symlinks)
+
+    monkeypatch.setattr(Path, "stat", refuse)
+    assert _refusal(directory, "paper", {}) == [
+        "platform.toml: cannot be read (Permission denied)"
+    ]
+
+
+def test_a_configuration_directory_whose_name_is_too_long_is_refused(
+    tmp_path: Path,
+) -> None:
+    assert _refusal(tmp_path / ("d" * 300), "paper", {}) == [
+        "platform.toml: cannot be read (File name too long)"
+    ]
 
 
 def test_a_file_that_cannot_be_read_is_refused(

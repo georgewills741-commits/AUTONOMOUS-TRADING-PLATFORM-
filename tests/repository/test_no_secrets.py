@@ -21,6 +21,8 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from atp.config import SecretDeclaration
 from atp.contracts import ContractError
@@ -136,10 +138,11 @@ def is_secret_file_name(path: Path) -> bool:
 
 def is_declaration(item: object) -> bool:
     """Whether an item of a `secrets` array is a secret declaration as the configuration reads
-    one (`atp.config.SecretDeclaration`): a valid name and kind, and nothing else."""
+    one (`atp.config.SecretDeclaration`): a valid name and kind, and nothing else. An item that
+    cannot even be written as JSON (a date, an integer too long, nesting too deep) is not one."""
     try:
         SecretDeclaration.from_json(json.dumps(item))
-    except (ContractError, TypeError, ValueError):
+    except (ContractError, TypeError, ValueError, RecursionError):
         return False
     return True
 
@@ -244,6 +247,41 @@ def test_committable_files_lists_what_git_would_commit(tmp_path: Path) -> None:
 
 def _assembled(*parts: str) -> str:
     return "".join(parts)
+
+
+# Pieces of TOML, valid and not, from which the property test of the declaration check
+# builds documents.
+_TOML_PIECES = [
+    "\n",
+    " ",
+    "=",
+    "[",
+    "]",
+    "{",
+    "}",
+    ",",
+    ".",
+    '"',
+    "#",
+    "secrets",
+    "[[secrets]]",
+    "[secrets]",
+    "secrets = ",
+    'name = "ATP_X"',
+    'kind = "ai"',
+    "name = ",
+    "kind = ",
+    "x = ",
+    '"a"',
+    "1",
+    "0x" + "f" * 4000,
+    "1" + "0" * 5000,
+    "1979-05-27",
+    "inf",
+    "[" * 500,
+    "]" * 500,
+    "[secrets." + ".".join(["a"] * 2000) + "]",
+]
 
 
 # (label, sample) pairs: each sample must be reported under its label.
@@ -564,6 +602,36 @@ def test_secrets_declared_otherwise_than_by_name_and_kind_are_found(
     assert secret_findings(tmp_path, [Path("settings.toml")]) == [
         "settings.toml: secrets are declared only by name and kind"
     ]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        '[[secrets]]\nname = 1979-05-27\nkind = "ai"\n',
+        '[[secrets]]\nname = "ATP_X"\nkind = "ai"\nz = 0x' + "f" * 4000 + "\n",
+        '[[secrets]]\nname = "ATP_X"\nkind = "ai"\n[secrets.'
+        + ".".join(["a"] * 10000)
+        + "]\n",
+    ],
+    ids=["a date", "an integer too long", "a table nested too deeply"],
+)
+def test_a_declaration_that_cannot_be_written_as_json_is_found(
+    tmp_path: Path, text: str
+) -> None:
+    (tmp_path / "settings.toml").write_text(text, encoding="utf-8")
+    assert secret_findings(tmp_path, [Path("settings.toml")]) == [
+        "settings.toml: secrets are declared only by name and kind"
+    ]
+
+
+@given(
+    st.lists(st.sampled_from(_TOML_PIECES), max_size=12).map("".join)
+    | st.text(max_size=60)
+)
+def test_any_toml_text_is_checked_or_reported(text: str) -> None:
+    # The check's boundary: whatever a TOML file holds, findings are returned, never raised.
+    findings = declaration_findings(Path("settings.toml"), text.encode("utf-8"))
+    assert all(finding.startswith("settings.toml: ") for finding in findings)
 
 
 def test_declarations_by_name_and_kind_are_not_findings(tmp_path: Path) -> None:
