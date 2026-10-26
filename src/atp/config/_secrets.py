@@ -20,7 +20,8 @@ REDACTED: Final = "<redacted>"
 class Secret:
     """A secret's value, never shown: `str`, `repr`, and `format` give `<redacted>`.
 
-    It cannot be pickled or copied, which would write the value out, and cannot be subclassed.
+    It cannot be pickled or copied, which would write the value out, does not give out its
+    state, and cannot be subclassed.
     """
 
     __slots__ = ("_value",)
@@ -59,6 +60,11 @@ class Secret:
 
     def __reduce__(self) -> NoReturn:
         msg = "a secret is not pickled or copied"
+        raise TypeError(msg)
+
+    def __getstate__(self) -> NoReturn:
+        # Serializers that ask for an object's state call this directly.
+        msg = "a secret does not give out its state"
         raise TypeError(msg)
 
 

@@ -42,6 +42,12 @@ def test_a_secret_is_not_pickled_or_copied() -> None:
             write(secret)
 
 
+def test_a_secret_does_not_give_out_its_state() -> None:
+    with pytest.raises(TypeError, match="does not give out its state") as error:
+        Secret(SECRET).__getstate__()
+    assert SECRET not in str(error.value)
+
+
 def test_a_secret_is_immutable_and_final() -> None:
     secret = Secret(SECRET)
     with pytest.raises(AttributeError):

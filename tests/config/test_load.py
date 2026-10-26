@@ -197,6 +197,28 @@ def test_a_refused_toml_value_is_not_in_the_error() -> None:
     assert SECRET not in str(error.value)
 
 
+@pytest.mark.parametrize(
+    ("text", "refusal"),
+    [
+        # The reader refuses an integer too long to convert with an error of another class.
+        ("count = 1" + "0" * 5000 + "\n", "limit.toml: not valid TOML"),
+        (
+            "x = " + "[" * 2000 + "]" * 2000 + "\n",
+            "limit.toml: nested too deeply to read",
+        ),
+        (
+            "x = " + "{a = " * 600 + "1" + "}" * 600 + "\n",
+            "limit.toml: nested too deeply to read",
+        ),
+    ],
+    ids=["integer too long", "arrays too deep", "inline tables too deep"],
+)
+def test_a_document_the_reader_cannot_take_is_refused(text: str, refusal: str) -> None:
+    with pytest.raises(ConfigurationError) as error:
+        read_toml(Limit, text, "limit.toml")
+    assert error.value.lines == (refusal,)
+
+
 # Loading a configuration directory.
 
 
@@ -267,6 +289,22 @@ def test_a_file_that_is_not_utf_8_is_refused(tmp_path: Path) -> None:
     assert _refusal(directory, "paper", {}) == ["platform.toml: not UTF-8 text"]
 
 
+def test_a_file_that_cannot_be_read_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    directory = _directory(
+        tmp_path, 'platform_id = "atp"\n', {"paper": _specific("paper")}
+    )
+
+    def refuse(path: Path) -> bytes:
+        raise PermissionError(13, "Permission denied", str(path))
+
+    monkeypatch.setattr(Path, "read_bytes", refuse)
+    assert _refusal(directory, "paper", {}) == [
+        "platform.toml: cannot be read (Permission denied)"
+    ]
+
+
 @pytest.mark.parametrize(
     ("portable", "first_line"),
     [
@@ -335,6 +373,20 @@ def test_a_secret_that_is_not_set_or_empty_stops_the_load(
             SERVER_DECLARATION,
             "atp-shared",
             "platform.toml",
+        ),
+        # The same, written with a TOML escape: found as read.
+        (
+            'platform_id = "atp\\u002dshared"\n',
+            SERVER_DECLARATION,
+            "atp-shared",
+            "platform.toml",
+        ),
+        # As read, in a nested setting: another declaration's name, written with an escape.
+        (
+            'platform_id = "atp"\n',
+            SERVER_DECLARATION + '[[secrets]]\nname = "ATP\\u005fOTHER"\nkind = "ai"\n',
+            "ATP_OTHER",
+            "environments/paper.toml",
         ),
     ],
 )

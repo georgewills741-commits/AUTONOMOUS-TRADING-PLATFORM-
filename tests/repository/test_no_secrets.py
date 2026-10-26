@@ -2,14 +2,16 @@
 
 Scans every file git tracks or would add (tracked files, plus untracked files that are not
 ignored) for file names that hold secrets and for values that look like credentials, and every
-TOML file among them for a secret declaration that holds more than a name and a kind (the
-configuration, U4: a declaration never holds a value). It reads the files as they are in the
-working tree; the machine checks run it on exactly the pushed commit. The scanner is itself
-tested on planted samples, assembled at run time so that this file never contains one.
+TOML file among them for a secret declaration that is not a name and a kind as the
+configuration reads them (U4: a declaration never holds a value). It reads the files as they
+are in the working tree; the machine checks run it on exactly the pushed commit. The scanner
+is itself tested on planted samples, assembled at run time so that this file never contains
+one.
 """
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -19,6 +21,9 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 
 import pytest
+
+from atp.config import SecretDeclaration
+from atp.contracts import ContractError
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 
@@ -129,18 +134,25 @@ def is_secret_file_name(path: Path) -> bool:
     )
 
 
-# What a secret declaration in a configuration file holds (atp.config.SecretDeclaration).
-DECLARATION_KEYS = frozenset({"name", "kind"})
+def is_declaration(item: object) -> bool:
+    """Whether an item of a `secrets` array is a secret declaration as the configuration reads
+    one (`atp.config.SecretDeclaration`): a valid name and kind, and nothing else."""
+    try:
+        SecretDeclaration.from_json(json.dumps(item))
+    except (ContractError, TypeError, ValueError):
+        return False
+    return True
 
 
 def declaration_findings(relative: Path, content: bytes) -> list[str]:
-    """In a TOML file, every `secrets` key must hold an array of tables with only the keys of a
-    secret declaration: a value written beside a name, or secrets written as a table or as
+    """In a TOML file, every `secrets` key must hold an array of secret declarations: a value
+    written beside a name or in place of a name or a kind, or secrets written as a table or as
     plain values, is reported. A file that cannot be read as TOML is reported too, since its
     declarations cannot be checked."""
     try:
         document = tomllib.loads(content.decode("utf-8"))
-    except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+    except (ValueError, RecursionError):
+        # Not UTF-8, not valid TOML, an integer too long to read, or nested too deeply.
         return [
             f"{relative}: not readable as TOML, so its secret declarations are unchecked"
         ]
@@ -154,11 +166,7 @@ def declaration_findings(relative: Path, content: bytes) -> list[str]:
             for key, item in value.items():
                 if key == "secrets" and not (
                     isinstance(item, list)
-                    and all(
-                        isinstance(declaration, dict)
-                        and declaration.keys() <= DECLARATION_KEYS
-                        for declaration in item
-                    )
+                    and all(is_declaration(declaration) for declaration in item)
                 ):
                     findings.append(
                         f"{relative}: secrets are declared only by name and kind"
@@ -538,6 +546,15 @@ def test_a_secret_planted_in_a_copy_of_an_example_is_found(
         'secrets = "plain"\n',
         "[secrets]\n",
         '[[groups]]\n[[groups.secrets]]\nname = "ATP_X"\nvalue = "plain"\n',
+        # A value in place of a name or a kind, an unknown kind, or a declaration without one.
+        '[[secrets]]\nname = "ATP_X"\nkind = "'
+        + _assembled("sk", "_live_", "Q7x9Z2")
+        + '"\n',
+        '[[secrets]]\nname = "' + _assembled("a1b2", "c3d4e5") + '"\nkind = "server"\n',
+        '[[secrets]]\nname = "atp_x"\nkind = "server"\n',
+        '[[secrets]]\nname = "ATP_X"\nkind = "transfer"\n',
+        '[[secrets]]\nname = "ATP_X"\n',
+        '[[secrets]]\nname = "ATP_X"\nkind = 3\n',
     ],
 )
 def test_secrets_declared_otherwise_than_by_name_and_kind_are_found(
@@ -552,14 +569,23 @@ def test_secrets_declared_otherwise_than_by_name_and_kind_are_found(
 def test_declarations_by_name_and_kind_are_not_findings(tmp_path: Path) -> None:
     text = (
         'environment = "paper"\n[[secrets]]\nname = "ATP_X"\nkind = "server"\n'
-        '[[secrets]]\nname = "ATP_Y"\n'
+        '[[secrets]]\nname = "ATP_Y"\nkind = "ai"\n'
     )
     (tmp_path / "settings.toml").write_text(text, encoding="utf-8")
     (tmp_path / "empty.toml").write_text("secrets = []\n", encoding="utf-8")
     assert secret_findings(tmp_path, [Path("settings.toml"), Path("empty.toml")]) == []
 
 
-@pytest.mark.parametrize("content", [b"secrets = = 1\n", b'name = "\xff"\n'])
+@pytest.mark.parametrize(
+    "content",
+    [
+        b"secrets = = 1\n",
+        b'name = "\xff"\n',
+        b"count = 1" + b"0" * 5000 + b"\n",
+        b"x = " + b"[" * 2000 + b"]" * 2000 + b"\n",
+    ],
+    ids=["not TOML", "not UTF-8", "integer too long", "nested too deeply"],
+)
 def test_a_toml_file_that_cannot_be_read_is_found(
     tmp_path: Path, content: bytes
 ) -> None:

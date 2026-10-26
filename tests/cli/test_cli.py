@@ -81,6 +81,12 @@ PAPER = (
             f"platform.toml: holds the value of the secret {EXAMPLE_VARIABLE}",
         ),
         ('platform_id = "example-platform"\n', "environment = ", "not valid TOML"),
+        ("platform_id = 1" + "0" * 5000 + "\n", PAPER, "platform.toml: not valid TOML"),
+        (
+            "x = " + "[" * 2000 + "]" * 2000 + "\n",
+            PAPER,
+            "platform.toml: nested too deeply to read",
+        ),
     ],
 )
 def test_a_broken_configuration_is_refused(

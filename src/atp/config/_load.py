@@ -43,6 +43,8 @@ _TOML_POSITION: Final = re.compile(
     r"\((at line [0-9]+, column [0-9]+|at end of document)\)$"
 )
 
+_TOO_DEEP: Final = "nested too deeply to read"
+
 
 class ConfigurationError(ValueError):
     """A configuration was refused. Its lines name files, settings, and secrets, and never hold
@@ -93,11 +95,30 @@ def _json_form(value: object, where: str) -> object:
 def read_toml[C: Contract](contract: type[C], text: str, where: str) -> C:
     """Read a TOML document as the given contract, in its JSON form (see the module docstring).
 
-    `where` names the document in errors. Raises `ConfigurationError`, whose lines hold no
-    value from the document.
+    `where` names the document in errors. Every refusal raises `ConfigurationError`, whose
+    lines hold no value from the document; a document nested too deeply to read is refused
+    too.
     """
+    return _read_toml(contract, text, where)[0]
+
+
+def _read_toml[C: Contract](
+    contract: type[C], text: str, where: str
+) -> tuple[C, object]:
+    """`read_toml`, with the document's JSON form, which the loader searches for secrets."""
     try:
-        document = tomllib.loads(text, parse_float=amount_from_toml)
+        form = _json_form(_parse_toml(text, where), where)
+        return contract.from_json(json.dumps(form)), form
+    except ContractError as error:
+        first, *details = str(error).splitlines()
+        raise ConfigurationError([f"{where}: {first}", *details]) from None
+    except RecursionError:
+        raise ConfigurationError([f"{where}: {_TOO_DEEP}"]) from None
+
+
+def _parse_toml(text: str, where: str) -> dict[str, object]:
+    try:
+        return tomllib.loads(text, parse_float=amount_from_toml)
     except tomllib.TOMLDecodeError as error:
         position = _TOML_POSITION.search(str(error))
         suffix = f" ({position.group(1)})" if position else ""
@@ -105,11 +126,10 @@ def read_toml[C: Contract](contract: type[C], text: str, where: str) -> C:
     except AmountError as error:
         # Its message is fixed text, never the number (`atp.numeric.AMOUNT_REFUSALS`).
         raise ConfigurationError([f"{where}: a number is refused: {error}"]) from None
-    try:
-        return contract.from_json(json.dumps(_json_form(document, where)))
-    except ContractError as error:
-        first, *details = str(error).splitlines()
-        raise ConfigurationError([f"{where}: {first}", *details]) from None
+    except ValueError:
+        # The reader's other refusals, such as an integer too long to convert. Their text can
+        # quote the document, so none of it is kept.
+        raise ConfigurationError([f"{where}: not valid TOML"]) from None
 
 
 def _read_file(directory: Path, relative: str) -> str:
@@ -122,6 +142,24 @@ def _read_file(directory: Path, relative: str) -> str:
         return path.read_bytes().decode("utf-8")
     except UnicodeDecodeError:
         raise ConfigurationError([f"{relative}: not UTF-8 text"]) from None
+    except OSError as error:
+        reason = f" ({error.strerror})" if error.strerror else ""
+        raise ConfigurationError([f"{relative}: cannot be read{reason}"]) from None
+
+
+def _setting_texts(form: object) -> list[str]:
+    """Every text value of a document in its JSON form, nested ones included."""
+    texts: list[str] = []
+    pending: list[object] = [form]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, str):
+            texts.append(value)
+        elif isinstance(value, list):
+            pending.extend(value)
+        elif isinstance(value, dict):
+            pending.extend(value.values())
+    return texts
 
 
 def environment_named(name: str) -> Environment:
@@ -140,21 +178,29 @@ def load_configuration(
 
     The environment-specific file is `environments/<environment_name>.toml`, and the
     environment it declares must be that one. Each declared secret is read from `source`; a
-    secret that is not set or is empty, or whose value appears in either file, stops the load.
-    Every refusal raises `ConfigurationError`.
+    secret that is not set or is empty, or whose value appears in either file or in a setting's
+    value as read, stops the load. Every refusal raises `ConfigurationError`.
     """
     environment = environment_named(environment_name)
     environment_file = f"{ENVIRONMENTS_DIRECTORY}/{environment.value}.toml"
     portable_text = _read_file(directory, PORTABLE_FILE)
     environment_text = _read_file(directory, environment_file)
-    portable = read_toml(PortableConfiguration, portable_text, PORTABLE_FILE)
-    specific = read_toml(EnvironmentConfiguration, environment_text, environment_file)
+    portable, portable_form = _read_toml(
+        PortableConfiguration, portable_text, PORTABLE_FILE
+    )
+    specific, specific_form = _read_toml(
+        EnvironmentConfiguration, environment_text, environment_file
+    )
     if specific.environment is not environment:
         msg = (
             f"{environment_file}: declares the environment {specific.environment.value}, "
             f"not {environment.value}"
         )
         raise ConfigurationError([msg])
+    searched = (
+        (PORTABLE_FILE, portable_text, _setting_texts(portable_form)),
+        (environment_file, environment_text, _setting_texts(specific_form)),
+    )
     secrets: list[tuple[SecretDeclaration, Secret]] = []
     for declaration in specific.secrets:
         value = source.secret_value(declaration.name)
@@ -164,11 +210,9 @@ def load_configuration(
                 "environment"
             )
             raise ConfigurationError([msg])
-        for relative, text in (
-            (PORTABLE_FILE, portable_text),
-            (environment_file, environment_text),
-        ):
-            if value in text:
+        for relative, text, settings in searched:
+            # As written, comments included, and as read, where a TOML escape is undone.
+            if value in text or any(value in setting for setting in settings):
                 msg = f"{relative}: holds the value of the secret {declaration.name}"
                 raise ConfigurationError([msg])
         secrets.append((declaration, Secret(value)))
