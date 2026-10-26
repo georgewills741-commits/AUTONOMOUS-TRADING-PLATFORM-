@@ -1,8 +1,8 @@
-# Owner Decisions 21 — A status, stage-integrity, and continuation check
+# Owner Decisions 21 — A status, stage-integrity, and continuation check, and a question on progress
 
-> **Status:** HISTORICAL — source input: the owner's message of 2026-10-21, 05:39 UTC, sent while Stage 1's checkpoint C was in its Gate 3, just after the builder had stopped the first launch of its run 1 before it reported. It asks the builder to confirm from repository evidence, not by assumption, that the project still follows the approved plan, architecture, roadmap, requirements, governance rules, and stage boundaries, and lists what to check; to inspect the repository and commit state and classify each material item before committing, committing drafts as drafts where appropriate and never secrets, noise, or local-only artifacts; to confirm each stage reached, and the current stage in seven points; to confirm that the permanent rules stored in the repository are still followed, reusing, reinforcing, and enhancing them where evidence shows a real gap, without duplicate rules or competing governance; to continue the authorized work while answering, stopping only for an owner-level decision, a critical blocker, contradictory canonical authority, or a security, integrity, or financial-safety rule; and to report in twenty points, A to T, with no claim the checks do not support. This is **not** an active source of truth. It is preserved by [DEC-053](../decisions/DEC-053-preserve-owner-status-check-of-2026-10-21.md).
+> **Status:** HISTORICAL — source input: two messages of the owner, sent while Stage 1's checkpoint C was in its Gate 3. The first, of 2026-10-21, 05:39 UTC, was sent just after the builder had stopped the first launch of the checkpoint's Gate 3 run 1 before it reported. It asks the builder to confirm from repository evidence, not by assumption, that the project still follows the approved plan, architecture, roadmap, requirements, governance rules, and stage boundaries, and lists what to check; to inspect the repository and commit state and classify each material item before committing, committing drafts as drafts where appropriate and never secrets, noise, or local-only artifacts; to confirm each stage reached, and the current stage in seven points; to confirm that the permanent rules stored in the repository are still followed, reusing, reinforcing, and enhancing them where evidence shows a real gap, without duplicate rules or competing governance; to continue the authorized work while answering, stopping only for an owner-level decision, a critical blocker, contradictory canonical authority, or a security, integrity, or financial-safety rule; and to report in twenty points, A to T, with no claim the checks do not support. The second, of 2026-10-26, 17:57 UTC, was sent after run 1 had reported and while its findings were being fixed, the session having been paused since 2026-10-21. It asks where the work stands and whether it is actually progressing, and asks the builder to continue while answering, since the owner wants to be sure that everything is in order. This is **not** an active source of truth. It is preserved by [DEC-053](../decisions/DEC-053-preserve-owner-status-check-of-2026-10-21.md).
 >
-> **Formatting note:** the message is reproduced inside one text block exactly as received, including the space that ends its first line. Nothing was added, removed, or changed in it. The title, this banner, and the heading are the builder's.
+> **Formatting note:** each message is reproduced inside one text block exactly as received, including the space that ends the first message's first line. Nothing was added, removed, or changed in them. The title, this banner, and the headings are the builder's.
 
 ## 2026-10-21, 05:39 UTC
 
@@ -316,4 +316,12 @@ COMPANY-GRADE.
 Continue doing the currently authorized work while giving me this
 confirmation.
 ======================================================================
+```
+
+## 2026-10-26, 17:57 UTC
+
+```text
+where are we now and tell if we are actually progressing
+
+continue doing what you are doing while answering the question i want to be sure sure that everything is in order
 ```
