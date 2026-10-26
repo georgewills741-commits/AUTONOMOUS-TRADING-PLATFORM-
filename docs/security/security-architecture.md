@@ -47,4 +47,4 @@ The owner ranked security controls above the user's hard policy, below the safet
 
 ## Not yet specified
 
-Authentication for the operator interface, and the security tests of the stages after Stage 1; Stage 1's controls and their tests are traced in the [threat model](threat-model.md). Key management for custody is FUTURE (CUS-002).
+Authentication for the operator interface, and the security tests of the stages after Stage 1; the controls U4 and U5 build in Stage 1 are traced to their tests in the [threat model](threat-model.md), which names checkpoint A's controls with where their evidence is. Key management for custody is FUTURE (CUS-002).
