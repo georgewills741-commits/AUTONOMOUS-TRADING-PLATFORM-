@@ -108,7 +108,9 @@ def _read_toml[C: Contract](
     """`read_toml`, with the document's JSON form, which the loader searches for secrets.
 
     Every step of the reading (parsing, the JSON form, validation) is inside one boundary: a
-    failure of any of them, of a class the document can cause, becomes `ConfigurationError`.
+    failure of any of them, of a class the document can cause, becomes `ConfigurationError`,
+    except the exhaustion of the process's memory by a document too large (the developer guide,
+    "What the rules do not catch").
     """
     try:
         form = _json_form(_parse_toml(text, where), where)

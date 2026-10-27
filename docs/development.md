@@ -114,7 +114,7 @@ The platform's settings have one source, `atp.config` (GOV-014): a configuration
 ATP_EXAMPLE_SERVER_CREDENTIAL=<any value> uv run --locked atp config check --env paper --config-dir config/examples
 ```
 
-**What the rules do not catch.** The configuration reads what is declared: whether a credential really carries trading permission at its venue is outside it, and the real barrier is that no trading credential exists outside production (the [Stage 1 plan](roadmap/stage-01-foundation-plan.md), section 3.2). A secret's value is searched for in the two files as text and in each setting's value as read, so a value written there in another form (encoded otherwise than by a TOML escape, or split) is not found; the repository test for secrets is a second layer for committed files ("Secrets" below).
+**What the rules do not catch.** The configuration reads what is declared: whether a credential really carries trading permission at its venue is outside it, and the real barrier is that no trading credential exists outside production (the [Stage 1 plan](roadmap/stage-01-foundation-plan.md), section 3.2). A secret's value is searched for in the two files as text and in each setting's value as read, so a value written there in another form (encoded otherwise than by a TOML escape, or split) is not found; the repository test for secrets is a second layer for committed files ("Secrets" below). A file too large for the memory the process may use, to read or to parse, ends the load with Python's `MemoryError` and its traceback, not a refusal: the load still stops, and nothing is loaded or shown.
 
 ## Dependencies and versions
 

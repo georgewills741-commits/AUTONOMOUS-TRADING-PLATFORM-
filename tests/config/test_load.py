@@ -11,7 +11,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pytest
-from hypothesis import given
+from hypothesis import event, given
 from hypothesis import strategies as st
 
 from atp.config import (
@@ -241,60 +241,86 @@ def test_a_document_the_reader_cannot_take_is_refused(text: str, refusal: str) -
     assert error.value.lines == (refusal,)
 
 
-# Pieces of TOML, valid and not, from which any document the property below tries is built.
-_PIECES = [
-    "\n",
-    " ",
-    "=",
-    "[",
-    "]",
-    "{",
-    "}",
-    ",",
-    ".",
-    '"',
-    "#",
-    "x",
-    "a.b",
-    "sides",
-    "count",
-    "enabled",
-    "limits",
-    "secrets",
-    "[limits]",
-    "[[limits]]",
-    "x = ",
-    "a = ",
-    '"buy"',
-    '"1"',
-    "1",
-    "-0",
-    "0x1f",
-    "0o7",
-    "0b1",
-    "0x" + "f" * 4000,
-    "1" + "0" * 5000,
+# Documents the property below tries: the settings of `Book` and `Limit`, each with values of
+# its own, and in any of them a setting `x` or `y` whose value fails one step of the reading
+# (the reader, the amount constructor, the JSON form, or the conversion to JSON), or none; the
+# last line may be another table, a header nested too deeply, or not TOML.
+_SIDES = ['["buy"]', '["buy", "sell"]', '["hold"]', "[]", '"buy"']
+_ENABLED = ["true", "false", '"yes"']
+_SIZES = ['"1.5"', '"-0"', '"x"', "1", "{}"]
+_COUNTS = ["0", "-0", "0x1f", "0o7", "0b1", '"1"']
+_OTHER = [
+    "",
     "1.5",
     "1e3",
     "inf",
     "nan",
-    "true",
     "1979-05-27",
     "07:32:00",
-    "[" * 500,
-    "]" * 500,
-    "{a = " * 300,
-    "}" * 300,
+    "1979-05-27T07:32:00Z",
+    "0x" + "f" * 4000,
+    "0o" + "7" * 5000,
+    "0b" + "1" * 15000,
+    "1" + "0" * 5000,
+    "[" * 1500 + "]" * 1500,
+    "{a = " * 600 + "1" + "}" * 600,
     '"\\u00e9"',
     "'lit'",
-    '"""',
-    "\\",
+    "[]",
 ]
+_LAST_LINES = ["", "[t]", "[" + ".".join(["a"] * 2000) + "]", "=", 'x = "']
 
 
-@given(
-    st.lists(st.sampled_from(_PIECES), max_size=12).map("".join) | st.text(max_size=60)
+def _toml_document(top: dict[str, str], limits: list[dict[str, str]], last: str) -> str:
+    lines = [f"{key} = {value}" for key, value in top.items() if value]
+    for table in limits:
+        lines.append("[[limits]]")
+        lines.extend(f"{key} = {value}" for key, value in table.items() if value)
+    lines.append(last)
+    return "\n".join(lines) + "\n"
+
+
+_TOML_DOCUMENTS = st.builds(
+    _toml_document,
+    st.fixed_dictionaries(
+        {},
+        optional={
+            "sides": st.sampled_from(_SIDES),
+            "enabled": st.sampled_from(_ENABLED),
+            "x": st.sampled_from(_OTHER),
+        },
+    ),
+    st.lists(
+        st.fixed_dictionaries(
+            {},
+            optional={
+                "size": st.sampled_from(_SIZES),
+                "count": st.sampled_from(_COUNTS),
+                "y": st.sampled_from(_OTHER),
+            },
+        ),
+        max_size=2,
+    ),
+    st.sampled_from(_LAST_LINES),
 )
+
+
+def _step(refusal: str) -> str:
+    """The step a refusal's first line names, for the property's statistics."""
+    for text, step in (
+        ("not valid TOML (", "the reader: not valid TOML"),
+        ("a number is refused", "the amount constructor"),
+        ("is not a setting value", "the JSON form"),
+        ("nested too deeply to read", "any step: nested too deeply"),
+        ("not valid TOML", "the reader or the conversion: an integer too long"),
+        ("input refused by contract", "validation"),
+    ):
+        if text in refusal:
+            return step
+    return "other"
+
+
+@given(_TOML_DOCUMENTS | st.text(max_size=60))
 def test_any_text_is_read_or_refused(text: str) -> None:
     # The reader's boundary: whatever the document, a contract or `ConfigurationError`.
     try:
@@ -302,6 +328,9 @@ def test_any_text_is_read_or_refused(text: str) -> None:
     except ConfigurationError as error:
         # A refusal names its file on its first line; a contract's details follow.
         assert error.lines[0].startswith("book.toml: ")
+        event(_step(error.lines[0]))
+    else:
+        event("read")
 
 
 # Loading a configuration directory.

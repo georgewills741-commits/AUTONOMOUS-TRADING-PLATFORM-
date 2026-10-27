@@ -21,7 +21,7 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 
 import pytest
-from hypothesis import given
+from hypothesis import event, given
 from hypothesis import strategies as st
 
 from atp.config import SecretDeclaration
@@ -149,9 +149,9 @@ def is_declaration(item: object) -> bool:
 
 def declaration_findings(relative: Path, content: bytes) -> list[str]:
     """In a TOML file, every `secrets` key must hold an array of secret declarations: a value
-    written beside a name or in place of a name or a kind, or secrets written as a table or as
-    plain values, is reported. A file that cannot be read as TOML is reported too, since its
-    declarations cannot be checked."""
+    written beside a name, in place of a kind, or in place of a name unless it has a name's
+    shape, or secrets written as a table or as plain values, is reported. A file that
+    cannot be read as TOML is reported too, since its declarations cannot be checked."""
     try:
         document = tomllib.loads(content.decode("utf-8"))
     except (ValueError, RecursionError):
@@ -249,39 +249,63 @@ def _assembled(*parts: str) -> str:
     return "".join(parts)
 
 
-# Pieces of TOML, valid and not, from which the property test of the declaration check
-# builds documents.
-_TOML_PIECES = [
-    "\n",
-    " ",
-    "=",
-    "[",
-    "]",
-    "{",
-    "}",
-    ",",
-    ".",
-    '"',
-    "#",
-    "secrets",
-    "[[secrets]]",
-    "[secrets]",
-    "secrets = ",
-    'name = "ATP_X"',
-    'kind = "ai"',
-    "name = ",
-    "kind = ",
-    "x = ",
-    '"a"',
+# Documents the property test of the declaration check tries: secret declarations, each with a
+# name, a kind, another key `z`, and a key nested too deeply, any of them missing, valid or not;
+# `z`'s value may fail the reading (an integer too long, nesting too deep) or the declaration's
+# conversion to JSON (a date, an integer too long in another base); first and last lines of
+# other kinds, the first with a `secrets` key of its own, in another table.
+_NAMES = ['"ATP_X"', '"ATP_Y"', '"lower"', "1", '["ATP_X"]']
+_KINDS = ['"ai"', '"server"', '"trading"', '"transfer"', "{a = 1}"]
+_OTHER = [
+    "",
     "1",
-    "0x" + "f" * 4000,
-    "1" + "0" * 5000,
-    "1979-05-27",
     "inf",
-    "[" * 500,
-    "]" * 500,
-    "[secrets." + ".".join(["a"] * 2000) + "]",
+    "true",
+    "1979-05-27",
+    "07:32:00",
+    "0x" + "f" * 4000,
+    "0o" + "7" * 5000,
+    "1" + "0" * 5000,
+    "[" * 1500 + "]" * 1500,
 ]
+# A dotted key 2,000 deep: a declaration that holds it is nested too deeply to write as JSON.
+_DEEP_KEY = ".".join(["d"] * 2000)
+_FIRST_LINES = [
+    "",
+    "x = 1",
+    "[other]\nsecrets = []",
+    "[other]\nsecrets = 1",
+    '[other]\nsecrets = [{name = "ATP_X"}]',
+]
+_LAST_LINES = ["", "[t]", "[secrets." + ".".join(["a"] * 2000) + "]", "[secrets]", "="]
+
+
+def _secrets_document(first: str, declarations: list[dict[str, str]], last: str) -> str:
+    lines = [first]
+    for declaration in declarations:
+        lines.append("[[secrets]]")
+        lines.extend(f"{key} = {value}" for key, value in declaration.items() if value)
+    lines.append(last)
+    return "\n".join(lines) + "\n"
+
+
+_SECRETS_DOCUMENTS = st.builds(
+    _secrets_document,
+    st.sampled_from(_FIRST_LINES),
+    st.lists(
+        st.fixed_dictionaries(
+            {},
+            optional={
+                "name": st.sampled_from(_NAMES),
+                "kind": st.sampled_from(_KINDS),
+                "z": st.sampled_from(_OTHER),
+                _DEEP_KEY: st.just("1"),
+            },
+        ),
+        max_size=2,
+    ),
+    st.sampled_from(_LAST_LINES),
+)
 
 
 # (label, sample) pairs: each sample must be reported under its label.
@@ -584,7 +608,8 @@ def test_a_secret_planted_in_a_copy_of_an_example_is_found(
         'secrets = "plain"\n',
         "[secrets]\n",
         '[[groups]]\n[[groups.secrets]]\nname = "ATP_X"\nvalue = "plain"\n',
-        # A value in place of a name or a kind, an unknown kind, or a declaration without one.
+        # A value in place of a kind, or in place of a name without a name's shape, an unknown
+        # kind, or a declaration without one.
         '[[secrets]]\nname = "ATP_X"\nkind = "'
         + _assembled("sk", "_live_", "Q7x9Z2")
         + '"\n',
@@ -624,14 +649,13 @@ def test_a_declaration_that_cannot_be_written_as_json_is_found(
     ]
 
 
-@given(
-    st.lists(st.sampled_from(_TOML_PIECES), max_size=12).map("".join)
-    | st.text(max_size=60)
-)
-def test_any_toml_text_is_checked_or_reported(text: str) -> None:
+@given(_SECRETS_DOCUMENTS.map(str.encode) | st.binary(max_size=60))
+def test_any_content_is_checked_or_reported(content: bytes) -> None:
     # The check's boundary: whatever a TOML file holds, findings are returned, never raised.
-    findings = declaration_findings(Path("settings.toml"), text.encode("utf-8"))
+    findings = declaration_findings(Path("settings.toml"), content)
     assert all(finding.startswith("settings.toml: ") for finding in findings)
+    for finding in findings or ["no finding"]:
+        event(finding.removeprefix("settings.toml: "))
 
 
 def test_declarations_by_name_and_kind_are_not_findings(tmp_path: Path) -> None:
