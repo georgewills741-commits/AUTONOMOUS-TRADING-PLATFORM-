@@ -1,6 +1,6 @@
 # Architecture Overview
 
-> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — conceptual architecture; Stage 1 builds what its plan delivers ([stage record](../traceability/stage-01-foundation.md)): at checkpoint B ARCH-010, ARCH-025, ARCH-026, the types of ARCH-041 and ARCH-042, and ARCH-011's rounding to an increment; ARCH-018 at checkpoints B and C; the traceability requirements (ARCH-013, ARCH-030 to ARCH-032, ARCH-040) at checkpoint D · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98; Part 3: P3§444, P3§467–P3§470, P3§540
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — conceptual architecture; Stage 1 builds what its plan delivers ([stage record](../traceability/stage-01-foundation.md)): at checkpoint B ARCH-010, ARCH-025, ARCH-026, the types of ARCH-041 and ARCH-042, and ARCH-011's rounding to an increment; ARCH-018 at checkpoints B and C, and after C by [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md) (V-41); the traceability requirements (ARCH-013, ARCH-030 to ARCH-032, ARCH-040) at checkpoint D · **Owner:** platform architecture (cross-cutting) · **Sources:** §03, §04, §08, §69, §70, §79, §92–§94, §96–§98; Part 3: P3§444, P3§467–P3§470, P3§540
 >
 > Canonical home for the structural principles that apply to every system. System-specific rules live in each system's own specification; this document links to them rather than restating them.
 

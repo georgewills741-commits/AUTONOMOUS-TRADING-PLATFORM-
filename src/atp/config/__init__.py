@@ -13,6 +13,7 @@ raises `ConfigurationError`, whose lines never hold a secret's value or a refuse
 
 from atp.config._load import (
     ENVIRONMENTS_DIRECTORY,
+    MAXIMUM_DOCUMENT_SIZE,
     PORTABLE_FILE,
     Configuration,
     ConfigurationError,
@@ -33,6 +34,7 @@ from atp.config._settings import (
 
 __all__ = [
     "ENVIRONMENTS_DIRECTORY",
+    "MAXIMUM_DOCUMENT_SIZE",
     "PORTABLE_FILE",
     "REDACTED",
     "Configuration",

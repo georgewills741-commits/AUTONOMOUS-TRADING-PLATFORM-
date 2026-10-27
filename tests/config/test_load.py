@@ -7,14 +7,17 @@ import decimal
 import enum
 import os
 import threading
+import tracemalloc
 from decimal import Decimal
 from pathlib import Path
+from typing import Self
 
 import pytest
 from hypothesis import event, given
 from hypothesis import strategies as st
 
 from atp.config import (
+    MAXIMUM_DOCUMENT_SIZE,
     REDACTED,
     Configuration,
     ConfigurationError,
@@ -200,6 +203,51 @@ def test_a_refused_toml_value_is_not_in_the_error() -> None:
     assert SECRET not in str(error.value)
 
 
+TOO_LONG = (
+    f"limit.toml: longer than {MAXIMUM_DOCUMENT_SIZE} characters, the most a configuration "
+    "document may hold"
+)
+
+
+def test_the_limit_on_a_document_is_v_41() -> None:
+    # V-41 in the values register records this value and its reason; a change changes both.
+    assert MAXIMUM_DOCUMENT_SIZE == 8192
+
+
+def test_a_document_at_the_limit_is_read() -> None:
+    document = 'size = "7"\n#'
+    text = document + "x" * (MAXIMUM_DOCUMENT_SIZE - len(document))
+    assert len(text) == MAXIMUM_DOCUMENT_SIZE
+    assert read_toml(Limit, text, "limit.toml").size == Decimal(7)
+
+
+@pytest.mark.parametrize("last", ["#", "="], ids=["valid", "not TOML"])
+def test_a_document_longer_than_the_limit_is_refused_unread(last: str) -> None:
+    # One character more, valid TOML or not: refused for its length, before it is parsed.
+    document = 'size = "7"\n#'
+    text = document + "x" * (MAXIMUM_DOCUMENT_SIZE - len(document) - 1) + "\n" + last
+    assert len(text) == MAXIMUM_DOCUMENT_SIZE + 1
+    with pytest.raises(ConfigurationError) as error:
+        read_toml(Limit, text, "limit.toml")
+    assert error.value.lines == (TOO_LONG,)
+
+
+def test_the_reading_of_the_worst_document_within_the_limit_is_bounded() -> None:
+    # The reader's memory grows with the square of a dotted key's parts; the longest key a
+    # document within the limit can hold is the worst case found (V-41): about 65 MiB.
+    text = ".".join(["a"] * ((MAXIMUM_DOCUMENT_SIZE - 2) // 2)) + "=1"
+    assert len(text) <= MAXIMUM_DOCUMENT_SIZE
+    tracemalloc.start()
+    try:
+        with pytest.raises(ConfigurationError) as error:
+            read_toml(Limit, text, "limit.toml")
+        peak = tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+    assert error.value.lines == ("limit.toml: nested too deeply to read",)
+    assert peak < 80 * 2**20
+
+
 @pytest.mark.parametrize(
     ("text", "refusal"),
     [
@@ -216,11 +264,12 @@ def test_a_refused_toml_value_is_not_in_the_error() -> None:
         # The reader converts these bases without the limit; the JSON form then cannot.
         ("count = 0x" + "f" * 4000 + "\n", "limit.toml: not valid TOML"),
         ("count = 0o" + "7" * 5000 + "\n", "limit.toml: not valid TOML"),
-        ("count = 0b" + "1" * 15000 + "\n", "limit.toml: not valid TOML"),
+        # A binary integer the JSON form cannot convert is longer than any document read.
+        ("count = 0b" + "1" * 15000 + "\n", TOO_LONG),
         ("sides = [0x" + "f" * 4000 + "]\n", "limit.toml: not valid TOML"),
         # Tables nested by their headers, which the reader takes without recursion.
         (
-            "[" + ".".join(["a"] * 10000) + "]\n",
+            "[" + ".".join(["a"] * 4000) + "]\n",
             "limit.toml: nested too deeply to read",
         ),
     ],
@@ -243,8 +292,9 @@ def test_a_document_the_reader_cannot_take_is_refused(text: str, refusal: str) -
 
 # Documents the property below tries: the settings of `Book` and `Limit`, each with values of
 # its own, a setting `x`, and perhaps `y` in a limit, whose value fails one step of the reading
-# (the reader, the amount constructor, the JSON form, the conversion to JSON, or validation), or
-# none; the last line may be another table, a header nested too deeply, or not TOML.
+# (the length, the reader, the amount constructor, the JSON form, the conversion to JSON, or
+# validation), or none; the last line may be another table, a header nested too deeply, or not
+# TOML.
 _SIDES = ['["buy"]', '["buy", "sell"]', '["hold"]', "[]", '"buy"']
 _ENABLED = ["true", "false", '"yes"']
 _SIZES = ['"1.5"', '"-0"', '"x"', "1", "{}"]
@@ -260,17 +310,18 @@ _OTHER = [
     "1979-05-27T07:32:00Z",
     "0x" + "f" * 4000,
     "0o" + "7" * 5000,
+    # Longer than any document read, as a binary integer the conversion cannot take must be.
     "0b" + "1" * 15000,
     "1" + "0" * 5000,
     "[" * 3000 + "]" * 3000,
-    "{a = " * 3000 + "1" + "}" * 3000,
+    "{a = " * 1000 + "1" + "}" * 1000,
     '"\\u00e9"',
     "'lit'",
     "[]",
 ]
-# A header 10,000 deep: deeper than the JSON form's recursion and the JSON encoder go, also while
-# Hypothesis raises the recursion limit for a test.
-_LAST_LINES = ["", "[t]", "[" + ".".join(["a"] * 10000) + "]", "=", 'x = "']
+# A header 3,000 deep, within the length of a document: deeper than the JSON form's recursion
+# goes, also while Hypothesis raises the recursion limit for a test (to about 2,000).
+_LAST_LINES = ["", "[t]", "[" + ".".join(["a"] * 3000) + "]", "=", 'x = "']
 
 
 def _toml_document(top: dict[str, str], limits: list[dict[str, str]], last: str) -> str:
@@ -309,6 +360,7 @@ _TOML_DOCUMENTS = st.builds(
 def _step(refusal: str) -> str:
     """The step a refusal's first line names, for the property's statistics."""
     for text, step in (
+        ("longer than", "the length"),
         ("not valid TOML (", "the reader: not valid TOML"),
         ("a number is refused", "the amount constructor"),
         ("is not a setting value", "the JSON form"),
@@ -323,8 +375,7 @@ def _step(refusal: str) -> str:
 
 @given(_TOML_DOCUMENTS | st.text(max_size=60))
 def test_any_text_is_read_or_refused(text: str) -> None:
-    # The reader's boundary: whatever the document (short of exhausting the process's memory),
-    # a contract or `ConfigurationError`.
+    # The reader's boundary: whatever the document, a contract or `ConfigurationError`.
     try:
         read_toml(Book, text, "book.toml")
     except ConfigurationError as error:
@@ -433,20 +484,121 @@ def test_a_configuration_directory_whose_name_is_too_long_is_refused(
     ]
 
 
+class _FailingFile:
+    """An open file whose reading fails."""
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(self, *details: object) -> None:
+        return None
+
+    def read(self, size: int = -1) -> bytes:
+        raise OSError(5, "Input/output error")
+
+
+@pytest.mark.parametrize(
+    ("failing", "reason"),
+    [("opening", "Permission denied"), ("reading", "Input/output error")],
+)
 def test_a_file_that_cannot_be_read_is_refused(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failing: str, reason: str
 ) -> None:
     directory = _directory(
         tmp_path, 'platform_id = "atp"\n', {"paper": _specific("paper")}
     )
+    portable = directory / "platform.toml"
 
-    def refuse(path: Path) -> bytes:
-        raise PermissionError(13, "Permission denied", str(path))
+    def opened(path: Path, mode: str = "r") -> _FailingFile:
+        assert (path, mode) == (portable, "rb")
+        if failing == "opening":
+            raise PermissionError(13, "Permission denied", str(path))
+        return _FailingFile()
 
-    monkeypatch.setattr(Path, "read_bytes", refuse)
+    monkeypatch.setattr(Path, "open", opened)
     assert _refusal(directory, "paper", {}) == [
-        "platform.toml: cannot be read (Permission denied)"
+        f"platform.toml: cannot be read ({reason})"
     ]
+
+
+def _too_large(relative: str) -> list[str]:
+    return [
+        (
+            f"{relative}: larger than {MAXIMUM_DOCUMENT_SIZE} bytes, the most a "
+            "configuration file may hold"
+        )
+    ]
+
+
+@pytest.mark.parametrize("relative", ["platform.toml", "environments/paper.toml"])
+def test_a_file_at_the_limit_loads_and_a_larger_one_is_refused(
+    tmp_path: Path, relative: str
+) -> None:
+    directory = _directory(
+        tmp_path, 'platform_id = "atp"\n', {"paper": _specific("paper")}
+    )
+    path = directory / relative
+    content = path.read_bytes() + b"#"
+    end = "\u00e9".encode()  # one character of two bytes
+    at_limit = content + b"x" * (MAXIMUM_DOCUMENT_SIZE - len(content) - len(end)) + end
+    assert len(at_limit) == MAXIMUM_DOCUMENT_SIZE
+    path.write_bytes(at_limit)
+    configuration = load_configuration(directory, "paper", ProcessEnvironment({}))
+    assert configuration.portable.platform_id == "atp"
+    # Larger by one character of two bytes, which a read of one byte more than the limit cuts:
+    # refused for its size, before it is decoded, and not as text that is not UTF-8.
+    path.write_bytes(at_limit[: -len(end)] + b"xx" + end)
+    assert _refusal(directory, "paper", {}) == _too_large(relative)
+
+
+def test_a_file_larger_than_the_limit_is_refused_before_anything_else(
+    tmp_path: Path,
+) -> None:
+    # Not TOML, and holding a declared secret's value: neither is looked at, and the refusal
+    # holds nothing from the file.
+    directory = _directory(
+        tmp_path,
+        f"platform_id = \n# {SECRET}\n" + "x" * MAXIMUM_DOCUMENT_SIZE,
+        {"paper": _specific("paper", SERVER_DECLARATION)},
+    )
+    lines = _refusal(directory, "paper", {"ATP_DB": SECRET})
+    assert lines == _too_large("platform.toml")
+    assert SECRET not in "\n".join(lines)
+
+
+def test_a_file_larger_than_the_limit_is_not_read_in_full(tmp_path: Path) -> None:
+    # A sparse file of 64 MiB, which takes no space on disk: read in full, it would take 64 MiB
+    # of memory.
+    directory = _directory(tmp_path, "", {"paper": _specific("paper")})
+    with (directory / "platform.toml").open("wb") as file:
+        file.truncate(64 * 2**20)
+    tracemalloc.start()
+    try:
+        lines = _refusal(directory, "paper", {})
+        peak = tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+    assert lines == _too_large("platform.toml")
+    assert peak < 2**20
+
+
+def test_a_refused_load_leaves_nothing_behind(tmp_path: Path) -> None:
+    # Loading keeps no state: after refusals, a valid directory loads as it does the first time.
+    directory = _directory(
+        tmp_path,
+        'platform_id = "atp"\n',
+        {"paper": _specific("paper", SERVER_DECLARATION)},
+    )
+    variables = {"ATP_DB": SECRET}
+    source = ProcessEnvironment(variables)
+    expected = summary(load_configuration(directory, "paper", source))
+    portable = directory / "platform.toml"
+    valid = portable.read_bytes()
+    for broken in (valid + b"#" * MAXIMUM_DOCUMENT_SIZE, b"platform_id = ", b"\xff"):
+        portable.write_bytes(broken)
+        _refusal(directory, "paper", variables)
+    portable.write_bytes(valid)
+    assert summary(load_configuration(directory, "paper", source)) == expected
 
 
 @pytest.mark.parametrize(
