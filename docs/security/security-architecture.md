@@ -1,6 +1,6 @@
 # Security Architecture
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); later stages are not mapped · **Sources:** §89 (also §52)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); the roadmap places SEC-006 and SEC-007 in ARBITRAGE, SEC-008 in AI INTELLIGENCE, and SEC-009 in OPERATIONALIZATION, and the Stage 1 plan, section 3.4, places SEC-002 in AI INTELLIGENCE · **Sources:** §89 (also §52)
 
 Canonical definition of what the platform must protect. The builder's own rules on secrets (constitution Rules 110 and 153) also apply to this repository.
 
@@ -47,4 +47,4 @@ The owner ranked security controls above the user's hard policy, below the safet
 
 ## Not yet specified
 
-Threat model, authentication for the operator interface, and tests. Key management for custody is FUTURE (CUS-002).
+Authentication for the operator interface, and the security tests of the stages after Stage 1; the controls U4 and U5 build in Stage 1 are traced to their tests in the [threat model](threat-model.md), which names checkpoint A's controls with where their evidence is. Key management for custody is FUTURE (CUS-002).

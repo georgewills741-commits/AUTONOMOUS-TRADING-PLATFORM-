@@ -12,6 +12,10 @@ dependencies = [
     "pydantic>=2.13,<3",
 ]
 
+[project.scripts]
+# The `atp` command (D1 of the Stage 1 plan): `atp config check` (docs/development.md).
+atp = "atp.cli:run"
+
 [dependency-groups]
 dev = [
     "hypothesis>=6.168",
@@ -46,8 +50,9 @@ filterwarnings = ["error"]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["src", "tests"]
-mypy_path = "src"
+files = ["src", "tests", "tools/mutation"]
+# The mutation runner imports its list from its own directory, as a script does.
+mypy_path = ["src", "tools/mutation"]
 explicit_package_bases = true
 strict = true
 warn_unreachable = true

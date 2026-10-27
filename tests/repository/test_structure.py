@@ -54,6 +54,8 @@ TESTS_ROOT = REPOSITORY_ROOT / "tests"
 ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "numeric": frozenset(),
     "contracts": frozenset({"numeric"}),
+    "config": frozenset({"contracts", "numeric"}),
+    "cli": frozenset({"config"}),
 }
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
@@ -1356,6 +1358,13 @@ def test_a_float_conversion_is_found_inside_atp_numeric_too(
         ("numeric", "import atp as platform\nx = platform.contracts.Outcome\n"),
         ("contracts", "import atp\nx = atp.numeric._context.PRECISION\n"),
         ("contracts", "from atp import config\n"),
+        # The command-line module imports only atp.config, and no module imports it.
+        ("cli", "from atp.contracts import Contract\n"),
+        ("cli", "from atp.numeric import amount\n"),
+        ("config", "from atp.cli import main\n"),
+        ("config", "from atp import cli\n"),
+        ("contracts", "import atp.cli\n"),
+        ("numeric", "from atp.config import load_configuration\n"),
         ("numeric", "import importlib\nm = importlib.import_module('atp.contracts')\n"),
         (
             "numeric",

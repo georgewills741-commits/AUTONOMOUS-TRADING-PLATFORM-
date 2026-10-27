@@ -36,6 +36,7 @@
 | [Earlier Gate 3 reports verification](gate-3-reports-verification.md) | The commit of those reports as evidence ("Next approved step", item 2): what they cover and what they do not, the checker's rule for code blocks that holds them, and the corrections found while matching them with the records |
 | [Owner rule sets reconciliation](owner-rule-sets-reconciliation.md) | Each rule of owner decisions 14, 15, and 17 → the builder text that states it or the mechanism that applies it, and each gap with its handling; owner decisions 13 and 10 by reference ([DEC-051](../decisions/DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md), decision 3) |
 | [Owner decisions 9 adoption verification](owner-decisions-09-adoption-verification.md) | Owner decisions 9 adopted as the sixth builder text, how it reads, and the owner's other rule sets kept in force through their decision records ([DEC-051](../decisions/DEC-051-adopt-requirement-drafting-and-anti-drift-rules.md)); the owner's answers of 2026-10-20 on the order of work and backups preserved and applied ([DEC-052](../decisions/DEC-052-apply-owner-answers-on-order-of-work-and-backups.md)) |
+| [Stage 1 checkpoint C verification](stage-01-checkpoint-c-verification.md) | Checkpoint C of Stage 1: the configuration and the `atp` command (U4), the security foundation (U5), check 7 as maintained tooling, and the items carried to checkpoint C |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 

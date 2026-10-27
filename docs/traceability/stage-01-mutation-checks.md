@@ -1,6 +1,8 @@
 # Stage 1 — Mutation Checks as Run
 
 > **Status:** REFERENCE (evidence) — the scripts of Stage 1's two mutation checks, exactly as they ran in the builder's session workspace, committed so that both checks can be repeated from the repository (master execution constitution §22) and do not exist only in the workspace ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), §27; [owner decisions 15](../handoffs/owner-decisions-15-stage-transition-persistence-and-commit-integrity.md); [DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 5; [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 3). They are not maintained tooling: kept in text blocks, they are neither linted nor run by the machine checks. Check 7 becomes maintained tooling with checkpoint C's work ([DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 6), which also adds mutations for the secret scanner that U5 extends. The checks' results are in the verification records named below.
+>
+> **Later changes:** at checkpoint C (2026-10-21) check 7 became maintained tooling, the [mutation tooling](../../tools/mutation/README.md): its list holds these mutations, both checks' as they ran here (check 11's twentieth, M21, as an ordinary entry, and one entry's text following the pattern as checkpoint C changed it), and checkpoint C's. This file stays the record of the checks as they ran; the text below is kept as written.
 
 ## Check 11 (checkpoint A): the secret scanner's twenty mutations
 
