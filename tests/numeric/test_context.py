@@ -23,6 +23,7 @@ from atp.numeric import (
 )
 
 
+@pytest.mark.req("ARCH-010", "TEC-003", "ARCH-018")
 def test_the_session_context_is_configured() -> None:
     context = decimal.getcontext()
     assert decimal_context_is_configured()
@@ -138,6 +139,7 @@ def test_an_unconfigured_context_is_refused() -> None:
     assert issubclass(DecimalContextError, RuntimeError)
 
 
+@pytest.mark.req("TEC-003")
 def test_a_float_cannot_become_a_decimal() -> None:
     with pytest.raises(decimal.FloatOperation):
         Decimal(0.1)  # noqa: RUF032 -- the float is the point: the trap must refuse it
@@ -148,6 +150,7 @@ def test_an_ordering_comparison_with_a_float_raises() -> None:
         _ = amount("1") < 1.5
 
 
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_an_inexact_result_raises() -> None:
     with pytest.raises(decimal.Inexact):
         _ = amount("1") / amount("3")

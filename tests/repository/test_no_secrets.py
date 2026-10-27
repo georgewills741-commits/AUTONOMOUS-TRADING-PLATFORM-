@@ -222,6 +222,7 @@ def committable_files(root: Path) -> list[Path]:
     return [Path(name.decode()) for name in listing.split(b"\0") if name]
 
 
+@pytest.mark.req("SEC-005")
 def test_repository_has_no_secret_like_file_or_value() -> None:
     files = committable_files(REPOSITORY_ROOT)
     assert Path("pyproject.toml") in files, (
@@ -550,6 +551,7 @@ def _example_files() -> list[Path]:
     )
 
 
+@pytest.mark.req("SEC-005")
 def test_the_example_configuration_is_scanned_and_holds_no_secret() -> None:
     examples = _example_files()
     assert EXAMPLES / "platform.toml" in examples

@@ -38,6 +38,7 @@ def _expected_side(
 
 
 @given(VALUES, INCREMENTS, ROUNDINGS)
+@pytest.mark.req("ARCH-010", "ARCH-011")
 def test_quantize_moves_only_in_the_named_direction(
     value: Decimal, increment: Decimal, rounding: Rounding
 ) -> None:
@@ -136,6 +137,7 @@ def test_a_rounding_that_is_not_a_named_direction_is_refused(value: str) -> None
         quantize(amount(value), amount("1"), "toward zero")  # type: ignore[arg-type]
 
 
+@pytest.mark.req("ARCH-010")
 def test_a_result_beyond_the_precision_raises_instead_of_rounding() -> None:
     with pytest.raises(decimal.InvalidOperation):
         quantize(amount("1e30"), amount("1e-7"), Rounding.TOWARD_ZERO)

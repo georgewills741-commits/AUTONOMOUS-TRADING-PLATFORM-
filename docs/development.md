@@ -2,6 +2,8 @@
 
 > **Status:** ACTIVE — how to install, check, and test the platform from a clean clone (TEC-001, TEC-009, GOV-023; the [Stage 1 plan](roadmap/stage-01-foundation-plan.md), U1 and U6, location set by its decision D2), and how its configuration is written and checked (U4). It describes the repository as it is; the rules for working in it are in `CLAUDE.md` and the texts it loads, and where the project stands is in the [project state](project-state.md).
 
+<!-- Requirements: GOV-023 (every check, and how to run it, without Claude Code), GOV-012 (the test conventions); the verification matrix reads this marker -->
+
 ## Prerequisites
 
 - **git.**

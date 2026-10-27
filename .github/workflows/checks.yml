@@ -2,6 +2,9 @@
 # and pull request, so they keep running whether or not Claude Code is present. The job has
 # read-only repository permissions, references no repository secret, and deploys nothing. Every
 # action is pinned to a commit hash and uv to one version with its checksum (constitution Rule 102).
+#
+# Requirements: GOV-023 (the checks keep running without Claude Code), GOV-012 (every test, on
+# every push), TEC-009 (the locked tools, installed from the lockfile).
 name: checks
 
 on:

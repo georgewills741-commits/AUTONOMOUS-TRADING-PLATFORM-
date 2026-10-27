@@ -17,11 +17,13 @@ class Request(Contract):
     key: IdempotencyKey
 
 
+@pytest.mark.req("ARCH-041")
 def test_a_new_key_is_32_lowercase_hex_characters() -> None:
     key = IdempotencyKey.new()
     assert re.fullmatch(IdempotencyKey.PATTERN, str(key))
 
 
+@pytest.mark.req("ARCH-041")
 def test_new_keys_differ() -> None:
     assert len({str(IdempotencyKey.new()) for _ in range(1000)}) == 1000
 
@@ -30,6 +32,7 @@ def test_new_keys_differ() -> None:
     "text",
     ["", "0" * 31, "0" * 33, "G" * 32, "A" * 32, " " + "0" * 32, "0" * 32 + "\n"],
 )
+@pytest.mark.req("ARCH-041")
 def test_malformed_keys_are_refused(text: str) -> None:
     with pytest.raises(ValueError, match="idempotency key"):
         IdempotencyKey(text)

@@ -4,8 +4,9 @@ Requirements: MIG-010 (a portable and an environment-specific part), MIG-027 (th
 environment identifiers), OPS-004 (the six environments), SEC-005 (secrets only from the runtime
 environment, never shown), MIG-004 (no code assumes a host: the configuration directory is
 given), MODE-006 and SEC-004 (a trading-enabled credential is refused outside production, as
-defence in depth), GOV-014 (no second configuration source). The rules, the settings, and the
-command that checks a configuration are in docs/development.md, "Configuration".
+defence in depth), GOV-014 (no second configuration source), ARCH-018 (the limit on a document's
+size is V-41 of the values register). The rules, the settings, and the command that checks a
+configuration are in docs/development.md, "Configuration".
 
 A process calls `configure_process()` at start, then `load_configuration(...)`. Every refusal
 raises `ConfigurationError`, whose lines never hold a secret's value or a refused value.

@@ -871,18 +871,22 @@ def raw_validation_findings(source_root: Path) -> list[str]:
     return findings
 
 
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_amounts_are_built_only_in_atp_numeric() -> None:
     assert decimal_findings(SOURCE_ROOT) == []
 
 
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_nothing_rounds_outside_the_named_directions() -> None:
     assert rounding_findings(SOURCE_ROOT) == []
 
 
+@pytest.mark.req("TEC-004")
 def test_no_pydantic_validation_outside_the_contract_kernel() -> None:
     assert pydantic_findings(SOURCE_ROOT) == []
 
 
+@pytest.mark.req("TEC-008")
 def test_imports_between_modules_point_one_way() -> None:
     assert import_findings(SOURCE_ROOT) == []
 
@@ -891,6 +895,7 @@ def test_input_is_validated_only_through_the_redacting_methods() -> None:
     assert raw_validation_findings(SOURCE_ROOT) == []
 
 
+@pytest.mark.req("TEC-008")
 def test_every_platform_module_has_an_import_rule() -> None:
     modules = {path.name for path in (SOURCE_ROOT / "atp").iterdir() if path.is_dir()}
     modules.discard("__pycache__")

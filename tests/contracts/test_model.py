@@ -97,6 +97,7 @@ def test_an_amount_is_a_decimal_in_python() -> None:
     assert type(_order().legs[0].price) is Decimal
 
 
+@pytest.mark.req("ARCH-025", "TEC-004")
 def test_an_unknown_field_is_refused() -> None:
     with pytest.raises(ContractError):
         Leg.from_python({"price": "1", "venue": "a", "extra": 1})
@@ -113,6 +114,7 @@ def test_an_unknown_field_is_refused() -> None:
         {"price": "1"},
     ],
 )
+@pytest.mark.req("TEC-004")
 def test_wrong_types_floats_and_missing_fields_are_refused(
     data: dict[str, object],
 ) -> None:
@@ -123,11 +125,13 @@ def test_wrong_types_floats_and_missing_fields_are_refused(
 @pytest.mark.parametrize(
     "text", ['{"price": 1.5, "venue": "a"}', '{"price": 2, "venue": "a"}']
 )
+@pytest.mark.req("TEC-003", "TEC-004")
 def test_a_json_number_for_an_amount_is_refused(text: str) -> None:
     with pytest.raises(ContractError):
         Leg.from_json(text)
 
 
+@pytest.mark.req("ARCH-025")
 def test_a_contract_is_immutable_including_nested_values() -> None:
     order = _order()
     with pytest.raises(AttributeError, match="immutable"):
@@ -1891,6 +1895,7 @@ def test_a_field_of_immutable_types_is_accepted(annotation: str) -> None:
     _define(annotation)
 
 
+@pytest.mark.req("ARCH-026", "GOV-006")
 def test_a_contract_without_identity_or_version_is_refused() -> None:
     with pytest.raises(TypeError, match="contract_id"):
 
@@ -1928,6 +1933,7 @@ def _texts_of(error: ContractError) -> list[str]:
     ]
 
 
+@pytest.mark.req("SEC-005", "TEC-004")
 def test_a_secret_given_as_a_field_value_never_appears_in_the_error() -> None:
     with pytest.raises(ContractError) as refused:
         Leg.from_python({"price": SECRET, "venue": "a"})

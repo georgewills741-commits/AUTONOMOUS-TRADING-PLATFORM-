@@ -7,7 +7,8 @@ the repository. Checkpoints A and B's entries come from the checks as they ran
 (docs/traceability/stage-01-mutation-checks.md), check 11's twentieth (M21) as an ordinary entry,
 and one entry's text, "no string prefixes", follows the pattern as checkpoint C changed it;
 checkpoint C's entries follow them. A rule added or
-changed later gets its entries here in the same change.
+changed later gets its entries here in the same change; checkpoint D's, for the verification
+matrix's rules (U7) and the project definition's test, come last.
 """
 
 from __future__ import annotations
@@ -29,6 +30,9 @@ TYPES = "types"
 """The strict type check of src/ and tests/."""
 SCANNER = "scanner"
 """The repository test for secrets, tests/repository/test_no_secrets.py."""
+SELFTEST = "selftest"
+"""The documentation tools' self-test, tools/docs/selftest.py, whose cases each expect the
+checker to refuse one broken input."""
 
 _SCANNER_TEST_PATH = "tests/repository/test_no_secrets.py"
 
@@ -3115,6 +3119,99 @@ MUTATIONS: list[Mutation] = [
         "tests/repository/test_structure.py",
         '    "config": frozenset({"contracts", "numeric"}),',
         '    "config": frozenset({"contracts", "numeric", "cli"}),',
+        TESTS,
+    ),
+    # Checkpoint D: the verification matrix's rules (U7; tools/docs/), killed by the self-test's
+    # cases, and the project definition's strict type checks (U1), killed by its test.
+    Mutation(
+        "U7 a marker's unknown requirement accepted",
+        "tools/docs/build_index.py",
+        '            errors.append(f"{where}: marker names unknown requirement {i}")\n',
+        "            ok.append(i)\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a marker's unapproved requirement accepted",
+        "tools/docs/build_index.py",
+        '        elif reqs[i]["cls"] in NOT_APPROVED:\n            errors.append(\n',
+        "        elif False:\n            errors.append(\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a marker naming no requirement accepted",
+        "tools/docs/build_index.py",
+        '        errors.append(f"{where}: a {keyword} marker names no requirement")\n',
+        "        pass\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a delivered requirement without an implementation accepted",
+        "tools/docs/build_index.py",
+        'has no implementation marker"\n        )\n',
+        'has no implementation marker"\n        ) if False else None\n',
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a delivered requirement without a test accepted",
+        "tools/docs/build_index.py",
+        'has no test or check marker"\n        )\n',
+        'has no test or check marker"\n        ) if False else None\n',
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a unit in no checkpoint accepted",
+        "tools/docs/build_index.py",
+        'is in no checkpoint of the stage record"\n            )\n',
+        'is in no checkpoint of the stage record"\n            ) if False else None\n',
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 the matrix neither written nor checked",
+        "tools/docs/build_index.py",
+        'OUT[MATRIX] = "\\n".join(M) + "\\n"\n',
+        "pass\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a req marker on something other than a test function accepted",
+        "tools/docs/markers.py",
+        '            problems.append((n + 1, "a req marker must decorate a test function"))\n',
+        "            pass\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a req marker's other arguments accepted",
+        "tools/docs/markers.py",
+        "        if not ids or rest:\n",
+        "        if not ids:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a req marker outside a decorator ignored",
+        "tools/docs/markers.py",
+        '            "mark.req" in line\n',
+        "            False\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a parenthesis read as part of the marker",
+        "tools/docs/markers.py",
+        "        elif depth == 0:\n            kept.append(ch)\n",
+        "        else:\n            kept.append(ch)\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a decorator written on several lines not skipped",
+        "tools/docs/markers.py",
+        "                continue  # a line of a decorator written on several lines\n",
+        "                break\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U1 strict type checks off",
+        "pyproject.toml",
+        "\nstrict = true\n",
+        "\nstrict = false\n",
         TESTS,
     ),
 ]

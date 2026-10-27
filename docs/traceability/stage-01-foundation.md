@@ -202,6 +202,8 @@ U5 extends the repository test for secrets to the example configuration files. S
 
 ## Machine checks on GitHub (U6 acceptance)
 
+<!-- Verifies: GOV-023, GOV-012 (the first run and the deliberate negative test below show that every check runs by machine on every push, without Claude Code); the verification matrix reads this marker -->
+
 Checkpoint A's push was accepted, the workflow file included, so the plan's risk that a push of a workflow might need further permission did not occur. The first run, and a deliberate negative test (a commit that breaks one check, which must fail the run, then reverted), ran on 2026-10-06. The negative test runs on this branch, the one this work is pushed to; a temporary branch would leave no failing commit in the branch's history, but the builder pushes only to its designated branch without the owner's permission.
 
 | Run | Commit | Result |

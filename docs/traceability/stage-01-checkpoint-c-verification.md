@@ -146,6 +146,9 @@ Remaining, each in its canonical place: checkpoint D, then items 4 and 5 of "Nex
 
 **Later changes.** On 2026-10-27 the change that applies [owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md) ([DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md)) removed C-18's limit: a configuration file larger than V-41 of the [values register](../requirements/values-register.md) is refused without being read in full, and a longer TOML document before it is parsed. Measured then, the limit was wider than C-18 and checks 6 and 7 state it: a file of tens of kilobytes could exhaust the process's memory; and without an address-space limit, Linux may stop the process instead of Python raising `MemoryError` (inferred from its documented behaviour, not reproduced). The same change reconciles this checkpoint's temporary backup with `b11abe7` and records its archive branch and the refused deletion ([owner decisions 22 verification](owner-decisions-22-verification.md)).
 
+**Later changes.** At checkpoint D, the [verification matrix](verification-matrix.md) (U7) names this record's Gate 3 as the check of SEC-001: its four runs reviewed the threat model U5 wrote (findings C-02, C-03, and C-23).
+<!-- Verifies: SEC-001 (Gate 3's review of the threat model, runs 1 to 4); the verification matrix reads this marker -->
+
 ## Environment
 
 Python 3.12 in the project's environment (uv 0.12.23, the versions in `uv.lock`); the system Python 3.11 for the documentation tools; git.

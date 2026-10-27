@@ -29,6 +29,7 @@ def _types(error: pytest.ExceptionInfo[ContractError]) -> list[str]:
     return [detail.type for detail in error.value.details]
 
 
+@pytest.mark.req("OPS-004")
 def test_the_six_environments_are_those_of_ops_004() -> None:
     assert [environment.value for environment in Environment] == [
         "development",
@@ -48,6 +49,7 @@ def test_the_secret_kinds_are_a_closed_set() -> None:
 
 
 @pytest.mark.parametrize("platform_id", ["example-platform", "atp", "a1-b2-c3", "x9"])
+@pytest.mark.req("MIG-027")
 def test_a_platform_identifier_is_lowercase_parts_joined_by_hyphens(
     platform_id: str,
 ) -> None:
@@ -87,6 +89,7 @@ def test_a_malformed_secret_name_is_refused(name: str) -> None:
         ('{"platform_id":"atp","extra":1}', ["extra_forbidden"]),
     ],
 )
+@pytest.mark.req("MIG-010")
 def test_a_missing_unknown_or_mistyped_portable_setting_is_refused(
     text: str, types: list[str]
 ) -> None:
@@ -109,6 +112,7 @@ def test_a_missing_unknown_or_mistyped_portable_setting_is_refused(
         ),
     ],
 )
+@pytest.mark.req("MIG-010")
 def test_a_missing_unknown_or_mistyped_environment_setting_is_refused(
     text: str, types: list[str]
 ) -> None:
@@ -117,6 +121,7 @@ def test_a_missing_unknown_or_mistyped_environment_setting_is_refused(
     assert _types(error) == types
 
 
+@pytest.mark.req("SEC-005")
 def test_a_secret_declaration_holds_no_value() -> None:
     text = f'{{"name":"ATP_X","kind":"server","value":"{SECRET}"}}'
     with pytest.raises(ContractError) as error:
@@ -143,6 +148,7 @@ def test_secrets_are_optional_and_held_as_a_tuple() -> None:
 @pytest.mark.parametrize(
     "environment", [e.value for e in Environment if e is not Environment.PRODUCTION]
 )
+@pytest.mark.req("MODE-006", "SEC-004")
 def test_a_trading_credential_is_refused_outside_production(environment: str) -> None:
     with pytest.raises(ContractError) as error:
         EnvironmentConfiguration.from_json(
