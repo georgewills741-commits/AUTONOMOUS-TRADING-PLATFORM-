@@ -2775,6 +2775,74 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "U4 the limit on a document changed",
+        "src/atp/config/_load.py",
+        "MAXIMUM_DOCUMENT_SIZE: Final = 8192\n",
+        "MAXIMUM_DOCUMENT_SIZE: Final = 16384\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a file read in full",
+        "src/atp/config/_load.py",
+        "            content = file.read(MAXIMUM_DOCUMENT_SIZE + 1)\n",
+        "            content = file.read()\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a file read only to the limit",
+        "src/atp/config/_load.py",
+        "            content = file.read(MAXIMUM_DOCUMENT_SIZE + 1)\n",
+        "            content = file.read(MAXIMUM_DOCUMENT_SIZE)\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a file larger than the limit accepted",
+        "src/atp/config/_load.py",
+        "        if len(content) > MAXIMUM_DOCUMENT_SIZE:\n",
+        "        if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a file at the limit refused",
+        "src/atp/config/_load.py",
+        "        if len(content) > MAXIMUM_DOCUMENT_SIZE:\n",
+        "        if len(content) >= MAXIMUM_DOCUMENT_SIZE:\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a file opened and read outside the boundary",
+        "src/atp/config/_load.py",
+        "    try:\n"
+        "        if not path.is_file():\n"
+        "            raise ConfigurationError(\n"
+        '                [f"{relative}: no such file in the configuration directory"]\n'
+        "            )\n"
+        '        with path.open("rb") as file:\n'
+        "            content = file.read(MAXIMUM_DOCUMENT_SIZE + 1)\n",
+        "    if not path.is_file():\n"
+        "        raise ConfigurationError(\n"
+        '            [f"{relative}: no such file in the configuration directory"]\n'
+        "        )\n"
+        '    with path.open("rb") as file:\n'
+        "        content = file.read(MAXIMUM_DOCUMENT_SIZE + 1)\n"
+        "    try:\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a document longer than the limit parsed",
+        "src/atp/config/_load.py",
+        "    if len(text) > MAXIMUM_DOCUMENT_SIZE:\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "U4 a document at the limit refused",
+        "src/atp/config/_load.py",
+        "    if len(text) > MAXIMUM_DOCUMENT_SIZE:\n",
+        "    if len(text) >= MAXIMUM_DOCUMENT_SIZE:\n",
+        TESTS,
+    ),
+    Mutation(
         "U4 environment names read without case",
         "src/atp/config/_load.py",
         "        if environment.value == name:",

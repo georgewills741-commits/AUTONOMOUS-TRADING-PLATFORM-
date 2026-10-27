@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from atp.cli import main
-from atp.config import REDACTED, Environment
+from atp.config import MAXIMUM_DOCUMENT_SIZE, REDACTED, Environment
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES = REPOSITORY_ROOT / "config" / "examples"
@@ -91,6 +91,15 @@ PAPER = (
             "x = " + "[" * 2000 + "]" * 2000 + "\n",
             PAPER,
             "platform.toml: nested too deeply to read",
+        ),
+        (
+            f'platform_id = "example-platform"\n# {SECRET}\n'
+            + "#" * MAXIMUM_DOCUMENT_SIZE,
+            PAPER,
+            (
+                f"platform.toml: larger than {MAXIMUM_DOCUMENT_SIZE} bytes, the most a "
+                "configuration file may hold"
+            ),
         ),
     ],
 )

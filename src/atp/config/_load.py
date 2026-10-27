@@ -6,7 +6,8 @@ library's TOML reader, its floats through the amount constructor (`parse_float`)
 validated in its JSON form by its contract's `from_json`: tables become objects, arrays become
 arrays, and a TOML file is read exactly as the same settings written in JSON would be. So an
 amount is written as a string; a TOML date, time, or number with a fraction or an exponent is
-refused, since no setting takes one.
+refused, since no setting takes one. A file of more than `MAXIMUM_DOCUMENT_SIZE` bytes is refused
+without being read in full.
 """
 
 from __future__ import annotations
@@ -36,6 +37,11 @@ PORTABLE_FILE: Final = "platform.toml"
 
 ENVIRONMENTS_DIRECTORY: Final = "environments"
 """The directory, inside the configuration directory, of the environment-specific files."""
+
+MAXIMUM_DOCUMENT_SIZE: Final = 8192
+"""The largest configuration document read (V-41 in the values register): a file of more bytes,
+or a text of more characters, is refused before it is decoded or parsed. The reader's memory and
+time grow with the square of a dotted key's length, so this bounds both."""
 
 # Where a TOML error is: the reader's messages can quote a key from the file, so only this
 # suffix of them is kept.
@@ -96,8 +102,8 @@ def read_toml[C: Contract](contract: type[C], text: str, where: str) -> C:
     """Read a TOML document as the given contract, in its JSON form (see the module docstring).
 
     `where` names the document in errors. Every refusal raises `ConfigurationError`, whose
-    lines hold no value from the document; a document nested too deeply to read is refused
-    too.
+    lines hold no value from the document; a document nested too deeply to read, or longer than
+    `MAXIMUM_DOCUMENT_SIZE` characters, is refused too.
     """
     return _read_toml(contract, text, where)[0]
 
@@ -107,11 +113,16 @@ def _read_toml[C: Contract](
 ) -> tuple[C, object]:
     """`read_toml`, with the document's JSON form, which the loader searches for secrets.
 
+    A document longer than `MAXIMUM_DOCUMENT_SIZE` characters is refused before it is parsed.
     Every step of the reading (parsing, the JSON form, validation) is inside one boundary: a
-    failure of any of them, of a class the document can cause, becomes `ConfigurationError`,
-    except the exhaustion of the process's memory by a document too large (the developer guide,
-    "What the rules do not catch").
+    failure of any of them, of a class the document can cause, becomes `ConfigurationError`.
     """
+    if len(text) > MAXIMUM_DOCUMENT_SIZE:
+        msg = (
+            f"{where}: longer than {MAXIMUM_DOCUMENT_SIZE} characters, the most a "
+            "configuration document may hold"
+        )
+        raise ConfigurationError([msg])
     try:
         form = _json_form(_parse_toml(text, where), where)
         return contract.from_json(json.dumps(form)), form
@@ -143,14 +154,23 @@ def _parse_toml(text: str, where: str) -> dict[str, object]:
 
 def _read_file(directory: Path, relative: str) -> str:
     """A file's text. Looking at the file and reading it are inside one boundary: an
-    operating-system error of either becomes `ConfigurationError`."""
+    operating-system error of either becomes `ConfigurationError`. At most one byte more than
+    `MAXIMUM_DOCUMENT_SIZE` is read, so a larger file is refused without being read in full."""
     path = directory / relative
     try:
         if not path.is_file():
             raise ConfigurationError(
                 [f"{relative}: no such file in the configuration directory"]
             )
-        return path.read_bytes().decode("utf-8")
+        with path.open("rb") as file:
+            content = file.read(MAXIMUM_DOCUMENT_SIZE + 1)
+        if len(content) > MAXIMUM_DOCUMENT_SIZE:
+            msg = (
+                f"{relative}: larger than {MAXIMUM_DOCUMENT_SIZE} bytes, the most a "
+                "configuration file may hold"
+            )
+            raise ConfigurationError([msg])
+        return content.decode("utf-8")
     except UnicodeDecodeError:
         raise ConfigurationError([f"{relative}: not UTF-8 text"]) from None
     except OSError as error:
