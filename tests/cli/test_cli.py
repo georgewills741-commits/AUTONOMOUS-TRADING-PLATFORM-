@@ -154,6 +154,7 @@ def test_an_unknown_environment_is_refused(
         ["config", "lint", "--env", "paper", "--config-dir", "x"],
     ],
 )
+@pytest.mark.req("MIG-004")
 def test_wrong_use_exits_with_status_2(
     capsys: pytest.CaptureFixture[str], arguments: list[str]
 ) -> None:

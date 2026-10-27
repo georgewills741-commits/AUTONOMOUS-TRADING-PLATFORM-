@@ -8,7 +8,7 @@ the repository. Checkpoints A and B's entries come from the checks as they ran
 and one entry's text, "no string prefixes", follows the pattern as checkpoint C changed it;
 checkpoint C's entries follow them. A rule added or
 changed later gets its entries here in the same change; checkpoint D's, for the verification
-matrix's rules (U7) and the project definition's test, come last.
+matrix's rules (U7), the project definition's test, and the values register's test, come last.
 """
 
 from __future__ import annotations
@@ -3212,6 +3212,13 @@ MUTATIONS: list[Mutation] = [
         "pyproject.toml",
         "\nstrict = true\n",
         "\nstrict = false\n",
+        TESTS,
+    ),
+    Mutation(
+        "U7 the precision not the values register's",
+        "src/atp/numeric/_context.py",
+        "PRECISION: Final = 34\n",
+        "PRECISION: Final = 35\n",
         TESTS,
     ),
 ]

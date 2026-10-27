@@ -24,7 +24,7 @@ from atp.contracts import (
 CONTRACTS_ROOT = Path(__file__).resolve().parents[2] / "contracts"
 
 
-@pytest.mark.req("ARCH-026", "GOV-006", "GOV-007")
+@pytest.mark.req("ARCH-025", "ARCH-026", "GOV-006", "GOV-007")
 def test_every_contract_schema_is_committed_and_unchanged() -> None:
     for document in schema_documents():
         committed = CONTRACTS_ROOT / document.relative_path

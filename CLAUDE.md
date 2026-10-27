@@ -40,4 +40,4 @@ How to install, check, and test the code, and the checks every code change passe
 
 Every document is listed in [`docs/README.md`](docs/README.md). Requirement text lives only in its owning specification; see [`docs/requirements/README.md`](docs/requirements/README.md) before adding or changing one.
 
-After changing any document under `docs/`, run `python3 tools/docs/build_index.py`. It regenerates the requirements registry and the coverage tables and checks every reference and link ([`tools/docs/README.md`](tools/docs/README.md)). Commit the regenerated files with the change.
+After changing any document under `docs/`, or a requirement marker or test function in the code or tests, run `python3 tools/docs/build_index.py`. It regenerates the requirements registry, the coverage tables, and the verification matrix, and checks every reference, link, and requirement marker ([`tools/docs/README.md`](tools/docs/README.md)). Commit the regenerated files with the change.

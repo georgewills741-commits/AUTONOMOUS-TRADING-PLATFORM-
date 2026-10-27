@@ -7,6 +7,10 @@ declared secrets from the process environment, and prints a summary in which eve
 value is `<redacted>`. Exit status: 0 when the configuration is valid; 1 when it is refused,
 with the reasons on standard error; 2 when the command is used wrongly. This module imports only
 `atp.config`, and no module imports it.
+
+Requirements: MIG-004 (the configuration directory is always given: the command has no default
+for it), SEC-005 (the secrets come from the process environment, and are printed only as
+`<redacted>`).
 """
 
 from __future__ import annotations

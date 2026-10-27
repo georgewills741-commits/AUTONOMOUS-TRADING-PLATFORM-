@@ -209,7 +209,6 @@ TOO_LONG = (
 )
 
 
-@pytest.mark.req("ARCH-018")
 def test_the_limit_on_a_document_is_v_41() -> None:
     # V-41 in the values register records this value and its reason; a change changes both.
     assert MAXIMUM_DOCUMENT_SIZE == 8192

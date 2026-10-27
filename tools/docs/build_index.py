@@ -628,9 +628,12 @@ plan_text = open(PLAN1, encoding="utf-8").read() if os.path.exists(PLAN1) else "
 if not plan_text:
     errors.append("roadmap/stage-01-foundation-plan.md is missing")
 scope: "collections.OrderedDict[str, tuple[str, Any]]" = collections.OrderedDict()
+delivers: "dict[str, str]" = {}  # what Stage 1 delivers of each, with its row's note if any
 for cells in table_rows(section_text(plan_text, r"^### 3\.1 ")):
     for i in top_level_ids(cells[0]):
         scope[i] = ("3.1", re.findall(r"\bU\d\b", cells[-1]))
+        note = " — the plan's row: " + cells[0] if "(" in cells[0] else ""
+        delivers[i] = cells[1] + note
 for cells in table_rows(section_text(plan_text, r"^### 3\.2 ")):
     for i in top_level_ids(cells[0]):
         scope.setdefault(i, ("3.2", "started in Stage 1; completed in " + cells[-1]))
@@ -985,15 +988,19 @@ M = [
     "*Implementation*: the artifacts whose `Requirements:` marker names it. *Tests and checks*: the test functions whose "
     "`pytest.mark.req` marker names it, and the checks that are not pytest tests whose `Verifies:` marker names it. "
     "*Verification*: the checkpoint that built each unit the plan assigns to the requirement, and its verification record. "
-    "*Status*: VERIFIED when it is implemented and tested and each of those checkpoints passed its three gates; otherwise "
+    "*Status*: that of what Stage 1 delivers of the requirement, the second column, not of the whole requirement, which "
+    "is implemented in full only when each part of it is built, in the stages that build them (the "
+    '[requirements README](../requirements/README.md), "Status"): VERIFIED when it is implemented and tested and each of '
+    "those checkpoints passed its three gates; otherwise "
     "IMPLEMENTED AND TESTED, with the checkpoint whose gates are pending. A marker added after a checkpoint is checked by the "
     "gates of the change that adds it, recorded in its verification record, and the whole stage again by its own gates at "
     "its exit (the stage record's X2).",
     "",
     "## Requirements delivered by Stage 1 (the plan's section 3.1)",
     "",
-    "| Requirement | Owner (system) | Default stage | System rule | Interface | Implementation | Tests and checks | Verification | Status |",
-    "|---|---|---|---|---|---|---|---|---|",
+    "| Requirement | What Stage 1 delivers (the plan's section 3.1) | Owner (system) | Default stage | System rule | Interface "
+    "| Implementation | Tests and checks | Verification | Status |",
+    "|---|---|---|---|---|---|---|---|---|---|",
 ]
 for i in delivered:
     owner, stage = OWNERS[i.split("-")[0]]
@@ -1022,7 +1029,8 @@ for i in delivered:
     else:
         status = "VERIFIED"
     M.append(
-        f"| {requirement_cell(i)} | {owner} | {stage} | {', '.join(rules_of.get(i, [])) or '—'} | {interfaces_cell(i)} | "
+        f"| {requirement_cell(i)} | {delivers[i]} | {owner} | {stage} | {', '.join(rules_of.get(i, [])) or '—'} | "
+        f"{interfaces_cell(i)} | "
         + "; ".join(file_link(f) for f in implemented.get(i, []))
         + f" | {tests_cell(i)} | {verification} | {status} |"
     )

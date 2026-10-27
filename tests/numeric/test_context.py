@@ -23,7 +23,7 @@ from atp.numeric import (
 )
 
 
-@pytest.mark.req("ARCH-010", "TEC-003", "ARCH-018")
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_the_session_context_is_configured() -> None:
     context = decimal.getcontext()
     assert decimal_context_is_configured()
