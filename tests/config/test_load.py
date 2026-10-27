@@ -242,9 +242,9 @@ def test_a_document_the_reader_cannot_take_is_refused(text: str, refusal: str) -
 
 
 # Documents the property below tries: the settings of `Book` and `Limit`, each with values of
-# its own, and in any of them a setting `x` or `y` whose value fails one step of the reading
-# (the reader, the amount constructor, the JSON form, or the conversion to JSON), or none; the
-# last line may be another table, a header nested too deeply, or not TOML.
+# its own, a setting `x`, and perhaps `y` in a limit, whose value fails one step of the reading
+# (the reader, the amount constructor, the JSON form, the conversion to JSON, or validation), or
+# none; the last line may be another table, a header nested too deeply, or not TOML.
 _SIDES = ['["buy"]', '["buy", "sell"]', '["hold"]', "[]", '"buy"']
 _ENABLED = ["true", "false", '"yes"']
 _SIZES = ['"1.5"', '"-0"', '"x"', "1", "{}"]
@@ -262,13 +262,15 @@ _OTHER = [
     "0o" + "7" * 5000,
     "0b" + "1" * 15000,
     "1" + "0" * 5000,
-    "[" * 1500 + "]" * 1500,
-    "{a = " * 600 + "1" + "}" * 600,
+    "[" * 3000 + "]" * 3000,
+    "{a = " * 3000 + "1" + "}" * 3000,
     '"\\u00e9"',
     "'lit'",
     "[]",
 ]
-_LAST_LINES = ["", "[t]", "[" + ".".join(["a"] * 2000) + "]", "=", 'x = "']
+# A header 10,000 deep: deeper than the JSON form's recursion and the JSON encoder go, also while
+# Hypothesis raises the recursion limit for a test.
+_LAST_LINES = ["", "[t]", "[" + ".".join(["a"] * 10000) + "]", "=", 'x = "']
 
 
 def _toml_document(top: dict[str, str], limits: list[dict[str, str]], last: str) -> str:
@@ -283,11 +285,10 @@ def _toml_document(top: dict[str, str], limits: list[dict[str, str]], last: str)
 _TOML_DOCUMENTS = st.builds(
     _toml_document,
     st.fixed_dictionaries(
-        {},
+        {"x": st.sampled_from(_OTHER)},
         optional={
             "sides": st.sampled_from(_SIDES),
             "enabled": st.sampled_from(_ENABLED),
-            "x": st.sampled_from(_OTHER),
         },
     ),
     st.lists(
@@ -322,7 +323,8 @@ def _step(refusal: str) -> str:
 
 @given(_TOML_DOCUMENTS | st.text(max_size=60))
 def test_any_text_is_read_or_refused(text: str) -> None:
-    # The reader's boundary: whatever the document, a contract or `ConfigurationError`.
+    # The reader's boundary: whatever the document (short of exhausting the process's memory),
+    # a contract or `ConfigurationError`.
     try:
         read_toml(Book, text, "book.toml")
     except ConfigurationError as error:

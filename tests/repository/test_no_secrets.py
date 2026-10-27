@@ -249,27 +249,28 @@ def _assembled(*parts: str) -> str:
     return "".join(parts)
 
 
-# Documents the property test of the declaration check tries: secret declarations, each with a
-# name, a kind, another key `z`, and a key nested too deeply, any of them missing, valid or not;
-# `z`'s value may fail the reading (an integer too long, nesting too deep) or the declaration's
-# conversion to JSON (a date, an integer too long in another base); first and last lines of
-# other kinds, the first with a `secrets` key of its own, in another table.
+# Documents the property test of the declaration check tries: one or two secret declarations,
+# each with a name and a kind, either missing, valid or not; after the first, one more line, or
+# none: a table too deep to convert to JSON, or a key `z` that the declaration's contract refuses,
+# whose value the conversion to JSON refuses (a date, a time, an integer too long in another
+# base), the reading refuses (an integer too long, nesting too deep), or neither (`inf`); first
+# and last lines of other kinds, the first with a `secrets` key of its own, in another table.
 _NAMES = ['"ATP_X"', '"ATP_Y"', '"lower"', "1", '["ATP_X"]']
 _KINDS = ['"ai"', '"server"', '"trading"', '"transfer"', "{a = 1}"]
-_OTHER = [
+# A table 10,000 deep in the declaration before it: too deep to write as JSON (the encoder takes
+# 5,000 levels), also while Hypothesis raises the recursion limit for a test.
+_DEEP_TABLE = "[secrets." + ".".join(["a"] * 10000) + "]"
+_FAILING_LINES = [
     "",
-    "1",
-    "inf",
-    "true",
-    "1979-05-27",
-    "07:32:00",
-    "0x" + "f" * 4000,
-    "0o" + "7" * 5000,
-    "1" + "0" * 5000,
-    "[" * 1500 + "]" * 1500,
+    "z = 1979-05-27",
+    "z = 07:32:00",
+    "z = 0x" + "f" * 4000,
+    "z = 0o" + "7" * 5000,
+    _DEEP_TABLE,
+    "z = 1" + "0" * 5000,
+    "z = " + "[" * 3000 + "]" * 3000,
+    "z = inf",
 ]
-# A dotted key 2,000 deep: a declaration that holds it is nested too deeply to write as JSON.
-_DEEP_KEY = ".".join(["d"] * 2000)
 _FIRST_LINES = [
     "",
     "x = 1",
@@ -277,14 +278,18 @@ _FIRST_LINES = [
     "[other]\nsecrets = 1",
     '[other]\nsecrets = [{name = "ATP_X"}]',
 ]
-_LAST_LINES = ["", "[t]", "[secrets." + ".".join(["a"] * 2000) + "]", "[secrets]", "="]
+_LAST_LINES = ["", "[t]", "x = 2"]
 
 
-def _secrets_document(first: str, declarations: list[dict[str, str]], last: str) -> str:
+def _secrets_document(
+    first: str, declarations: list[dict[str, str]], failing: str, last: str
+) -> str:
     lines = [first]
-    for declaration in declarations:
+    for number, declaration in enumerate(declarations):
         lines.append("[[secrets]]")
-        lines.extend(f"{key} = {value}" for key, value in declaration.items() if value)
+        lines.extend(f"{key} = {value}" for key, value in declaration.items())
+        if number == 0:
+            lines.append(failing)
     lines.append(last)
     return "\n".join(lines) + "\n"
 
@@ -295,15 +300,12 @@ _SECRETS_DOCUMENTS = st.builds(
     st.lists(
         st.fixed_dictionaries(
             {},
-            optional={
-                "name": st.sampled_from(_NAMES),
-                "kind": st.sampled_from(_KINDS),
-                "z": st.sampled_from(_OTHER),
-                _DEEP_KEY: st.just("1"),
-            },
+            optional={"name": st.sampled_from(_NAMES), "kind": st.sampled_from(_KINDS)},
         ),
+        min_size=1,
         max_size=2,
     ),
+    st.sampled_from(_FAILING_LINES),
     st.sampled_from(_LAST_LINES),
 )
 
@@ -651,7 +653,8 @@ def test_a_declaration_that_cannot_be_written_as_json_is_found(
 
 @given(_SECRETS_DOCUMENTS.map(str.encode) | st.binary(max_size=60))
 def test_any_content_is_checked_or_reported(content: bytes) -> None:
-    # The check's boundary: whatever a TOML file holds, findings are returned, never raised.
+    # The check's boundary: whatever a TOML file holds (short of exhausting the process's
+    # memory), findings are returned, never raised.
     findings = declaration_findings(Path("settings.toml"), content)
     assert all(finding.startswith("settings.toml: ") for finding in findings)
     for finding in findings or ["no finding"]:
