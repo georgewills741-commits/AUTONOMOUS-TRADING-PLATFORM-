@@ -194,12 +194,12 @@ The commands are those of the [developer guide](../development.md), run with uv 
 |---|---|---|---|
 | 1 | The lockfile installs exactly | `uv sync --locked`; `uv lock --check` | PASS; `uv.lock` and `pyproject.toml` are unchanged from `b11abe7` |
 | 2 | Lint, formatting, types | `uv run --locked ruff check`; `uv run --locked ruff format --check`; `uv run --locked mypy`; `uv run --locked mypy --config-file tools/docs/mypy.ini` | PASS: 41 files formatted; 37 source files under strict mypy (`src/`, `tests/`, `tools/mutation/`); the documentation tools' 4. Each command run on its own and its exit status read |
-| 3 | Tests | `uv run --locked pytest` | CHECK3_RESULT |
+| 3 | Tests | `uv run --locked pytest` | PASS: 1,104 tests (25 in `tests/cli/`, 136 in `tests/config/`, 482 in `tests/contracts/`, 124 in `tests/numeric/`, 337 in `tests/repository/`), 12 more than checkpoint C's 1,092: one in `tests/cli/` and eleven in `tests/config/`. Run on the final tree, 11:54 to 11:56 UTC |
 | 4 | Documentation and requirements | `python3 tools/docs/build_index.py --check-only`; `python3 tools/docs/selftest.py`; `python3 tools/docs/compare_requirements.py b11abe7 --strict` | PASS: the generated files current; the self-test passes; 734 requirements before and after, 0 added, removed, or changed |
 | 5 | The package builds | `uv build`, the wheel listed | PASS: the wheel holds `atp/config/_load.py` with `MAXIMUM_DOCUMENT_SIZE` and no tests, documentation, tools, examples, or schemas |
 | 6 | The limit's acceptance | The tests of "The limit on a configuration document's size" above; the installed command, before and after this change, on the oversized files of the table above, with the process's address space capped at 1 GiB; the measurements at the limit | PASS: each file larger than the limit is refused with the size refusal and no traceback; files at the limit load; the worst document found at the limit is refused within the measured bounds |
 | 7 | The property tests' reach | `--hypothesis-show-statistics` on the property test of the reading; and C-16's acceptance: each of the seven mutations that remove a class of failure from the two reading boundaries, run against the two property tests alone, on a clone of the working tree | PASS: the 100 examples reach every step: the reader's refusal 26.7%, the JSON form 21.9%, the length 16.2%, validation 10.5%, nested too deeply 6.7%, the amount constructor 6.7%, an integer too long 5.7%, read 1.0% (the rest invalid examples); all seven mutations killed by the property tests alone, which pass unmutated |
-| 8 | Check 7: each rule's test fails when the rule is removed | The [mutation tooling](../../tools/mutation/README.md): the whole list, 437 mutations (checkpoints A and B's 349, checkpoint C's 80, and this change's 8), in four slices on four clones of the working tree (`--slice K/4`) | CHECK8_RESULT |
+| 8 | Check 7: each rule's test fails when the rule is removed | The [mutation tooling](../../tools/mutation/README.md): the whole list, 437 mutations (checkpoints A and B's 349, checkpoint C's 80, and this change's 8), in four slices on four clones of the working tree (`--slice K/4`) | PASS. The whole list on the final code: 437 mutations, in four slices on four clones of the working tree (`--slice K/4`), from 11:16 to 11:54 UTC: all 437 killed, none skipped, invalid, or timed out, and each unmutated clone passes every check used. The clones' code (`src/`, `tests/`, `tools/`, `config/`, `contracts/`, `pyproject.toml`, `uv.lock`) has the fingerprint `2df73b85142546c5`, as the final tree's code does. After the documentation's last changes before Gate 3, the 41 mutations checked by the repository test for secrets, the only check that reads the documentation, were run again on a clone of that tree, from 11:57 to 12:05 UTC: all 41 killed, and the unmutated clone passes |
 | 9 | The preserved text | The round trip of owner decisions 22 against the session record: each text block equal to the owner's message of its minute, found as a plain user turn that is not the client's own (isMeta); the manifest's hash computed independently | PASS: both blocks equal, byte for byte (282 and 23,337 characters); the manifest line's hash, `6b287f32dcdb…`, equals the one computed from the title line and everything after the banner |
 | 10 | Hygiene | `git diff --check` with the new files included; `git status --short --ignored`; a scan of the added lines for secrets, local and system paths, and model or session identifiers; no float literal in `src/` (by `ast`, with Python 3.12); no TODO, FIXME, XXX, or HACK marker in `src/`, `tests/`, `tools/`, `contracts/`, `config/`, `pyproject.toml`, or `.github/` | PASS: whitespace clean, except three lines of the owner's messages in owner decisions 22, which end with the owner's own spaces and are kept as received (DEC-054, decision 1); only intended files and ignored caches; nothing found |
 | 11 | Dependencies | `uv.lock` compared with `b11abe7` | PASS: unchanged; the bounded read uses the standard library |
@@ -207,7 +207,7 @@ The commands are those of the [developer guide](../development.md), run with uv 
 
 ## Gates
 
-**Gate 1 (Verification 1, technical): GATE1_RESULT**
+**Gate 1 (Verification 1, technical): PASS**: checks 1 to 12 above.
 
 **Gate 2 (Verification 2, architecture and consistency), the builder's pass: PASS**, after the corrections in "Failures and fixes".
 
@@ -218,7 +218,7 @@ The commands are those of the [developer guide](../development.md), run with uv 
 - **The branches:** no branch, register, or rename added; no document calls a branch deleted; the project state's "Other branches" points to its new "Branches" section, where every earlier reference to "Other branches" still leads.
 - **The owner's messages:** both kept byte for byte (check 9); the record names every owner message since checkpoint C's record's last.
 
-**Gate 3 (Verification 3, independent review): GATE3_RESULT**
+**Gate 3 (Verification 3, independent review): pending.** Run 1 is made by a fresh reviewer (DEC-049, decision 2) on the copy made after every result above was entered.
 
 ## Failures and fixes
 
@@ -233,7 +233,7 @@ The commands are those of the [developer guide](../development.md), run with uv 
 
 ## Final status and remaining issues
 
-FINAL_STATUS
+Pending Gate 3.
 
 ## Environment
 
