@@ -9,9 +9,10 @@ syntax. tools/docs/README.md describes each form.
     Python module's docstring, in a "#" comment of a TOML or YAML file, or in an HTML comment
     ("<!-- Requirements: ... -->") of a Markdown document.
   - A paragraph that begins "Verifies:" names the requirements a check verifies that is not a
-    pytest test: in a Python module's docstring, or in an HTML comment of a Markdown record.
-  - `@pytest.mark.req("ID", ...)`, written on one line as a decorator of a test function, names
-    the requirements that test verifies.
+    pytest test: in the docstring of a module under tools/, or in an HTML comment of a document
+    under docs/traceability/ (the tools, and the verification records).
+  - `@pytest.mark.req("ID", ...)`, written on one line as a decorator of a module-level test
+    function in a test module, names the requirements that test verifies.
 
 A marker names the IDs written outside parentheses: a parenthesis explains, it does not mark.
 """
@@ -102,11 +103,13 @@ def pytest_markers(
     """The req markers of a test module, the misuses found, and the test functions it defines.
 
     Returns (markers, problems, tests): each marker as (line, test name, IDs); each problem as
-    (line, description); and the names of the module's test functions."""
+    (line, description); and the names of the module's test functions at module level, the
+    ones pytest collects from a module (a function nested in another, or a method of a class
+    whose name does not begin with "Test", is not collected)."""
     lines = text.split("\n")
     markers: list[tuple[int, str, list[str]]] = []
     problems: list[tuple[int, str]] = []
-    tests = [m.group(2) for m in map(_TEST_DEF.match, lines) if m]
+    tests = [m.group(2) for m in map(_TEST_DEF.match, lines) if m and not m.group(1)]
     decorator_lines = set()
     for n, line in enumerate(lines):
         m = _REQ_DECORATOR.match(line)
@@ -119,6 +122,11 @@ def pytest_markers(
         if not ids or rest:
             problems.append(
                 (n + 1, "a req marker takes only requirement IDs, written as strings")
+            )
+            continue
+        if indent:
+            problems.append(
+                (n + 1, "a req marker must decorate a test function at module level")
             )
             continue
         target = None

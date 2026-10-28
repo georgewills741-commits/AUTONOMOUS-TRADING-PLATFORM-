@@ -97,7 +97,7 @@ def test_an_amount_is_a_decimal_in_python() -> None:
     assert type(_order().legs[0].price) is Decimal
 
 
-@pytest.mark.req("ARCH-025", "TEC-004")
+@pytest.mark.req("TEC-004")
 def test_an_unknown_field_is_refused() -> None:
     with pytest.raises(ContractError):
         Leg.from_python({"price": "1", "venue": "a", "extra": 1})
@@ -131,7 +131,6 @@ def test_a_json_number_for_an_amount_is_refused(text: str) -> None:
         Leg.from_json(text)
 
 
-@pytest.mark.req("ARCH-025")
 def test_a_contract_is_immutable_including_nested_values() -> None:
     order = _order()
     with pytest.raises(AttributeError, match="immutable"):

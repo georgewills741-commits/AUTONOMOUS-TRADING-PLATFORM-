@@ -8,7 +8,8 @@ the repository. Checkpoints A and B's entries come from the checks as they ran
 and one entry's text, "no string prefixes", follows the pattern as checkpoint C changed it;
 checkpoint C's entries follow them. A rule added or
 changed later gets its entries here in the same change; checkpoint D's, for the verification
-matrix's rules (U7), the project definition's test, and the values register's test, come last.
+matrix's rules (U7), the project definition's test, and the values register's test, come last;
+the last eight were added for Gate 3 run 1's findings.
 """
 
 from __future__ import annotations
@@ -3220,5 +3221,61 @@ MUTATIONS: list[Mutation] = [
         "PRECISION: Final = 34\n",
         "PRECISION: Final = 35\n",
         TESTS,
+    ),
+    Mutation(
+        "U7 the values register's precision changed",
+        "docs/requirements/values-register.md",
+        "| IMPLEMENTATION CHOICE | 34 |",
+        "| IMPLEMENTATION CHOICE | 35 |",
+        TESTS,
+    ),
+    Mutation(
+        "U7 a req marker inside a class or a function accepted",
+        "tools/docs/markers.py",
+        "        if indent:\n",
+        "        if False:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a req marker outside a test module accepted",
+        "tools/docs/build_index.py",
+        '    if not (name.startswith("test_") or name.endswith("_test.py")):\n',
+        "    if False:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a marker read past its first sentence",
+        "tools/docs/markers.py",
+        '        elif depth == 0 and ch == "." and (i + 1 == len(text) or text[i + 1].isspace()):\n',
+        "        elif False:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a marker read inside a code block",
+        "tools/docs/build_index.py",
+        '            html_comments(strip_code(open(path, encoding="utf-8").read())),\n',
+        '            html_comments(open(path, encoding="utf-8").read()),\n',
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a decision read as a requirement",
+        "tools/docs/markers.py",
+        '        if not found.startswith("DEC-") and found not in out:\n',
+        "        if found not in out:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 an empty section 3.1 accepted",
+        "tools/docs/build_index.py",
+        "if plan_text and not delivered:\n",
+        "if False:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a Verifies marker outside a check accepted",
+        "tools/docs/build_index.py",
+        '            if keyword == "Verifies" and not rel.startswith(VERIFIES_PLACES):\n',
+        "            if False:\n",
+        SELFTEST,
     ),
 ]

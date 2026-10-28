@@ -10,8 +10,8 @@ mutate (the repository test for secrets lists files with git):
 every N-th mutation from the K-th (counting from 0), so that N runs on N clones cover the list.
 For each mutation the runner checks that its text occurs exactly once (else SKIPPED), writes
 it, checks that a Python file still compiles and a TOML file still parses (else INVALID: such a
-file would fail every check and look caught), runs the mutation's check in the clone, and
-restores the file.
+file would fail every check and look caught; another file, such as a document, is not checked),
+runs the mutation's check in the clone, and restores the file.
 KILLED means the check failed, SURVIVED that it passed, TIMEOUT that it ran past the time
 limit. Last, the unmutated clone must pass every check the mutations used. The exit status is
 0 only when every mutation is KILLED and that run passes.
@@ -72,7 +72,7 @@ def _apply(clone: Path, mutation: Mutation) -> str:
     try:
         if path.suffix == ".toml":
             tomllib.loads(mutated)
-        else:
+        elif path.suffix == ".py":
             compile(mutated, str(path), "exec")
     except tomllib.TOMLDecodeError:
         return "INVALID (does not parse)"

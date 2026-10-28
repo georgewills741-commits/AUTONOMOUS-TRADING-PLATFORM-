@@ -548,9 +548,20 @@ def marked_ids(where, keyword, found):
     return ok
 
 
+# A "Verifies:" marker names a check that is not a pytest test, so it is read only in a module
+# under tools/ or a document under docs/traceability/: the tools, and the verification records.
+VERIFIES_PLACES = ("tools/", "docs/traceability/")
+
+
 def collect(rel, text):
     for keyword, into in (("Requirements", implemented), ("Verifies", checked_by)):
         for _line, found in keyword_markers(text, keyword):
+            if keyword == "Verifies" and not rel.startswith(VERIFIES_PLACES):
+                errors.append(
+                    f"{rel}: a Verifies marker belongs to a check: a module under tools/ "
+                    "or a document under docs/traceability/"
+                )
+                continue
             for i in marked_ids(rel, keyword, found):
                 if rel not in into[i]:
                     into[i].append(rel)
@@ -577,6 +588,14 @@ for path in files_under("tests"):
         continue
     rel = repo_rel(path)
     found, problems, test_names = pytest_markers(open(path, encoding="utf-8").read())
+    name = os.path.basename(path)
+    if not (name.startswith("test_") or name.endswith("_test.py")):
+        # pytest collects tests only from modules with these names (its default python_files)
+        if found or problems:
+            errors.append(
+                f"{rel}: a req marker must be in a test module, named test_*.py or *_test.py"
+            )
+        continue
     for problem_line, problem in problems:
         errors.append(f"{rel}:{problem_line}: {problem}")
     marked = set()

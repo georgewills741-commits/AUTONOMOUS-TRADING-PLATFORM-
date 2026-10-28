@@ -279,6 +279,57 @@ CHECKER_CASES += [
         lambda s: s + "\nEdited by hand.\n",
         r"verification-matrix\.md is out of date",
     ),
+    (
+        "a req marker on a test nested inside another test, which pytest does not collect",
+        PROJECT_TEST,
+        lambda s: (
+            s
+            + "\n\ndef test_outer() -> None:\n"
+            + '    @pytest.mark.req("SEC-001")\n'
+            + "    def test_inner() -> None:\n"
+            + "        pass\n"
+        ),
+        r"a req marker must decorate a test function at module level",
+    ),
+    (
+        "a req marker on a method of a class pytest does not collect",
+        PROJECT_TEST,
+        lambda s: (
+            s
+            + "\n\nclass Helper:\n"
+            + '    @pytest.mark.req("SEC-001")\n'
+            + "    def test_m(self) -> None:\n"
+            + "        pass\n"
+        ),
+        r"a req marker must decorate a test function at module level",
+    ),
+    (
+        "a req marker in a module pytest collects no tests from",
+        "tests/conftest.py",
+        lambda s: (
+            s
+            + '\n\n@pytest.mark.req("SEC-001")\ndef test_not_collected() -> None:\n    pass\n'
+        ),
+        r"a req marker must be in a test module",
+    ),
+    (
+        "a Verifies marker outside tools/ and docs/traceability/",
+        "src/atp/__init__.py",
+        lambda s: s.replace(
+            "How to install, check, and test it:",
+            "Verifies: TEC-001.\n\nHow to install, check, and test it:",
+            1,
+        ),
+        r"a Verifies marker belongs to a check",
+    ),
+    (
+        "the plan's section 3.1 not found under its heading",
+        "docs/roadmap/stage-01-foundation-plan.md",
+        lambda s: s.replace(
+            "### 3.1 Delivered by Stage 1 code", "### 3.1. Delivered by Stage 1 code", 1
+        ),
+        r"section 3\.1 lists no requirement",
+    ),
 ]
 
 MEC = "docs/builder/master-execution-constitution.md"
@@ -353,6 +404,42 @@ MULTI_CASES: list[tuple[str, list[tuple[str, Callable[[str], str]]], str | None]
                     "TEC-001 (Python 3.12 or later, fully type-checked)",
                     "TEC-001 (Python 3.12 or later, fully type-checked; not ARCH-034)",
                     1,
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a requirement named after a marker's first sentence, which is not marked (must pass)",
+        [
+            (
+                "src/atp/__init__.py",
+                lambda s: s.replace(
+                    "its imports pointing one way).",
+                    "its imports pointing one way). Not ARCH-034.",
+                    1,
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a marker inside a code block, which is not read (must pass)",
+        [
+            (
+                "docs/development.md",
+                lambda s: s + "\n```text\n<!-- Requirements: ARCH-034 -->\n```\n",
+            )
+        ],
+        None,
+    ),
+    (
+        "a decision named in a marker, which is not marked (must pass)",
+        [
+            (
+                "src/atp/__init__.py",
+                lambda s: s.replace(
+                    "Requirements: TEC-001 (", "Requirements: DEC-009, TEC-001 (", 1
                 ),
             )
         ],
