@@ -218,7 +218,7 @@ The report of the independent Gate 3 review of `5ac6799`, the change that record
 
 ## End to end from a clean clone (plan section 7)
 
-The plan's end-to-end test: from a clean clone, the developer guide's commands, and the `atp` command on the example configuration of every environment, good and broken. Each run is recorded, with its results, in its checkpoint's verification record: checkpoint C's in its check 6, [checkpoint D](stage-01-checkpoint-d-verification.md)'s in its checks. It runs again on the stage's final tree with X2.
+The plan's end-to-end test: from a clean clone, the developer guide's commands, and the `atp` command on the example configuration of every environment, good and broken. Each run is recorded, with its results, in its checkpoint's verification record: checkpoint C's in its check 6, [checkpoint D](stage-01-checkpoint-d-verification.md)'s in its check 7. It runs again on the stage's final tree with X2.
 
 ```text
 uv sync --locked
