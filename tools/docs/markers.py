@@ -103,9 +103,9 @@ def pytest_markers(
     """The req markers of a test module, the misuses found, and the test functions it defines.
 
     Returns (markers, problems, tests): each marker as (line, test name, IDs); each problem as
-    (line, description); and the names of the module's test functions at module level, the
-    ones pytest collects from a module (a function nested in another, or a method of a class
-    whose name does not begin with "Test", is not collected)."""
+    (line, description); and the names of the module's functions named test_... at module
+    level, the only ones a marker can name. The module is read as text: pytest is not run
+    (tools/docs/README.md lists what this does not catch)."""
     lines = text.split("\n")
     markers: list[tuple[int, str, list[str]]] = []
     problems: list[tuple[int, str]] = []
@@ -137,8 +137,6 @@ def pytest_markers(
             cur = len(nxt) - len(nxt.lstrip())
             if cur > len(indent):
                 continue  # a line of a decorator written on several lines
-            if cur < len(indent):
-                break
             if nxt.lstrip().startswith("@") or nxt.lstrip()[:1] in ")]":
                 continue
             d = _TEST_DEF.match(nxt)

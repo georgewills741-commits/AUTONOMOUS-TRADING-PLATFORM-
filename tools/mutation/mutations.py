@@ -9,7 +9,7 @@ and one entry's text, "no string prefixes", follows the pattern as checkpoint C 
 checkpoint C's entries follow them. A rule added or
 changed later gets its entries here in the same change; checkpoint D's, for the verification
 matrix's rules (U7), the project definition's test, and the values register's test, come last;
-the last eight were added for Gate 3 run 1's findings.
+eight of them were added for Gate 3 run 1's findings, and the last two for run 2's.
 """
 
 from __future__ import annotations
@@ -3276,6 +3276,20 @@ MUTATIONS: list[Mutation] = [
         "tools/docs/build_index.py",
         '            if keyword == "Verifies" and not rel.startswith(VERIFIES_PLACES):\n',
         "            if False:\n",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a nested test function counted",
+        "tools/docs/markers.py",
+        "if m and not m.group(1)]",
+        "if m]",
+        SELFTEST,
+    ),
+    Mutation(
+        "U7 a req marker in a comment read",
+        "tools/docs/markers.py",
+        '            and not line.lstrip().startswith("#")\n',
+        "",
         SELFTEST,
     ),
 ]

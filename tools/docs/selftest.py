@@ -460,6 +460,29 @@ MULTI_CASES: list[tuple[str, list[tuple[str, Callable[[str], str]]], str | None]
         None,
     ),
     (
+        "a test function nested in a helper, which is not counted (must pass)",
+        [
+            (
+                PROJECT_TEST,
+                lambda s: (
+                    s
+                    + "\n\ndef _helper() -> None:\n    def test_inner() -> None:\n        pass\n"
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a req marker in a comment, which is not read (must pass)",
+        [
+            (
+                PROJECT_TEST,
+                lambda s: s + '\n# For example: @pytest.mark.req("ARCH-018")\n',
+            )
+        ],
+        None,
+    ),
+    (
         "a status-banner-only change to a preserved text (must pass)",
         [
             (
