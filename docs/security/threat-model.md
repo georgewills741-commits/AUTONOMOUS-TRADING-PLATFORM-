@@ -4,6 +4,8 @@
 >
 > For each asset of SEC-001 and each trust boundary, what could go wrong, the controls the requirements already require, what Stage 1 builds, and the gap: each requirement it names that Stage 1 does not deliver (the Stage 1 plan's section 3.1), with its stage, which is the [registry](../requirements/registry.md)'s default stage unless the [roadmap](../roadmap/roadmap.md) or the Stage 1 plan's section 3.2 or 3.4 places it later. It is design-level only and adds no requirement: a new requirement it suggests goes through the [findings register](../conflicts/register.md) first, and it suggests none now.
 
+<!-- Requirements: SEC-001 (the design-level threat model over the assets SEC-001 names; the verification matrix reads this marker) -->
+
 ## Assets (SEC-001)
 
 With a single operator ([DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)), "user accounts" means the operator's own access to the platform.

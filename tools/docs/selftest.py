@@ -1,9 +1,14 @@
 """Negative tests for the documentation tools: they must fail on broken input.
 
-Each case copies the repository's docs/, tools/, README.md, and CLAUDE.md into a temporary
-directory, breaks one thing there, and expects build_index.py --check-only (or
+Each case copies the repository's docs/, tools/, README.md, and CLAUDE.md, and the code, tests,
+contracts, workflows, and project definition whose markers the verification matrix reads, into a
+temporary directory, breaks one thing there, and expects build_index.py --check-only (or
 compare_requirements.py --strict) in the copy to fail with a matching message. An unmodified
 copy must pass. The real repository is never modified.
+
+Verifies: ARCH-032 (each check of the checker, case by case), ARCH-030, ARCH-031, ARCH-040, and
+ARCH-013 (the generated registry and verification matrix, and their refusals), ARCH-029 and
+GOV-017 (a marker naming a requirement that is not approved is refused).
 
 Usage: python3 tools/docs/selftest.py
 Standard library and git only. See tools/docs/README.md and DEC-033 (Verification 1).
@@ -26,12 +31,18 @@ GLOSSARY = "docs/glossary.md"
 
 def copy_repo(dest: str) -> None:
     shutil.copytree(os.path.join(ROOT, "docs"), os.path.join(dest, "docs"))
-    shutil.copytree(
-        os.path.join(ROOT, "tools"),
-        os.path.join(dest, "tools"),
-        ignore=shutil.ignore_patterns("__pycache__"),
+    caches = shutil.ignore_patterns(
+        "__pycache__", ".hypothesis", ".mypy_cache", ".pytest_cache", ".ruff_cache"
     )
-    for f in ("README.md", "CLAUDE.md"):
+    for d in (
+        "tools",
+        "src",
+        "tests",
+        "contracts",
+        os.path.join(".github", "workflows"),
+    ):
+        shutil.copytree(os.path.join(ROOT, d), os.path.join(dest, d), ignore=caches)
+    for f in ("README.md", "CLAUDE.md", "pyproject.toml"):
         shutil.copy(os.path.join(ROOT, f), os.path.join(dest, f))
 
 
@@ -179,6 +190,148 @@ CHECKER_CASES: list[tuple[str, str, Callable[[str], str], str]] = [
     ),
 ]
 
+# The verification matrix's markers (U7): each refusal of the checker, and its acceptance check.
+PROJECT_TEST = "tests/repository/test_project.py"
+CHECKER_CASES += [
+    (
+        "a marker naming an unknown requirement",
+        "src/atp/numeric/__init__.py",
+        lambda s: s.replace(
+            "Requirements: ARCH-010", "Requirements: ARCH-999, ARCH-010", 1
+        ),
+        r"marker names unknown requirement ARCH-999",
+    ),
+    (
+        "a marker naming a DEPRECATED / REPLACED requirement",
+        PROJECT_TEST,
+        lambda s: s.replace(
+            '@pytest.mark.req("TEC-001")', '@pytest.mark.req("TEC-001", "RSK-048")', 1
+        ),
+        r"marker names RSK-048, which is not approved \(DEPRECATED / REPLACED",
+    ),
+    (
+        "a marker naming a PROPOSED requirement",
+        "src/atp/__init__.py",
+        lambda s: s.replace(
+            "Requirements: TEC-001", "Requirements: ARCH-034, TEC-001", 1
+        ),
+        r"marker names ARCH-034, which is not approved \(PROPOSED",
+    ),
+    (
+        "a marker naming a FUTURE requirement",
+        "docs/security/threat-model.md",
+        lambda s: s.replace(
+            "<!-- Requirements: SEC-001", "<!-- Requirements: CUS-001, SEC-001", 1
+        ),
+        r"marker names CUS-001, which is not approved \(FUTURE",
+    ),
+    (
+        "a requirement of the plan's section 3.1 left without a test",
+        "tests/contracts/test_idempotency.py",
+        lambda s: s.replace('@pytest.mark.req("ARCH-041")\n', ""),
+        r"ARCH-041 \(Stage 1 plan, section 3\.1\) has no test or check marker",
+    ),
+    (
+        "a requirement of the plan's section 3.1 left without an implementation",
+        "src/atp/contracts/__init__.py",
+        lambda s: s.replace("ARCH-041 (the idempotency key),", "", 1),
+        r"ARCH-041 \(Stage 1 plan, section 3\.1\) has no implementation marker",
+    ),
+    (
+        "a req marker that does not decorate a test function",
+        PROJECT_TEST,
+        lambda s: (
+            s + '\n\n@pytest.mark.req("TEC-001")\ndef helper() -> None:\n    pass\n'
+        ),
+        r"a req marker must decorate a test function",
+    ),
+    (
+        "a req marker that takes something other than requirement IDs",
+        PROJECT_TEST,
+        lambda s: s.replace(
+            '@pytest.mark.req("GOV-012")', '@pytest.mark.req("GOV-012", ROOT)', 1
+        ),
+        r"a req marker takes only requirement IDs",
+    ),
+    (
+        "a req marker written otherwise than as a decorator",
+        PROJECT_TEST,
+        lambda s: s + '\n\nMARK = pytest.mark.req("TEC-001")\n',
+        r"a req marker must be written on one line, as a decorator of a test function",
+    ),
+    (
+        "a unit of the plan's section 3.1 in no checkpoint of the stage record",
+        "docs/traceability/stage-01-foundation.md",
+        lambda s: s.replace(
+            "| D | U7 verification matrix;", "| D | The verification matrix;", 1
+        ),
+        r"unit U7 of ARCH-013 is in no checkpoint of the stage record",
+    ),
+    (
+        "a marker that names no requirement",
+        GLOSSARY,
+        lambda s: s + "\n<!-- Requirements: none of them -->\n",
+        r"a Requirements marker names no requirement",
+    ),
+    (
+        "a verification matrix edited by hand",
+        "docs/traceability/verification-matrix.md",
+        lambda s: s + "\nEdited by hand.\n",
+        r"verification-matrix\.md is out of date",
+    ),
+    (
+        "a req marker on a test nested inside another test, which pytest does not collect",
+        PROJECT_TEST,
+        lambda s: (
+            s
+            + "\n\ndef test_outer() -> None:\n"
+            + '    @pytest.mark.req("SEC-001")\n'
+            + "    def test_inner() -> None:\n"
+            + "        pass\n"
+        ),
+        r"a req marker must decorate a test function at module level",
+    ),
+    (
+        "a req marker on a method of a class pytest does not collect",
+        PROJECT_TEST,
+        lambda s: (
+            s
+            + "\n\nclass Helper:\n"
+            + '    @pytest.mark.req("SEC-001")\n'
+            + "    def test_m(self) -> None:\n"
+            + "        pass\n"
+        ),
+        r"a req marker must decorate a test function at module level",
+    ),
+    (
+        "a req marker in a module pytest collects no tests from",
+        "tests/conftest.py",
+        lambda s: (
+            s
+            + '\n\n@pytest.mark.req("SEC-001")\ndef test_not_collected() -> None:\n    pass\n'
+        ),
+        r"a req marker must be in a test module",
+    ),
+    (
+        "a Verifies marker outside tools/ and docs/traceability/",
+        "src/atp/__init__.py",
+        lambda s: s.replace(
+            "How to install, check, and test it:",
+            "Verifies: TEC-001.\n\nHow to install, check, and test it:",
+            1,
+        ),
+        r"a Verifies marker belongs to a check",
+    ),
+    (
+        "the plan's section 3.1 not found under its heading",
+        "docs/roadmap/stage-01-foundation-plan.md",
+        lambda s: s.replace(
+            "### 3.1 Delivered by Stage 1 code", "### 3.1. Delivered by Stage 1 code", 1
+        ),
+        r"section 3\.1 lists no requirement",
+    ),
+]
+
 MEC = "docs/builder/master-execution-constitution.md"
 DIRECTIVE = "docs/builder/verification-and-platform-independence-directive.md"
 
@@ -238,6 +391,93 @@ MULTI_CASES: list[tuple[str, list[tuple[str, Callable[[str], str]]], str | None]
                     s
                     + "\n````text\n```\nSee DEC-999, RSK-999, and [x](no-such-file.md).\n```\n````\n"
                 ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a requirement named inside a marker's parenthesis, which is not marked (must pass)",
+        [
+            (
+                "src/atp/__init__.py",
+                lambda s: s.replace(
+                    "TEC-001 (Python 3.12 or later, fully type-checked)",
+                    "TEC-001 (Python 3.12 or later, fully type-checked; not ARCH-034)",
+                    1,
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a requirement named after a marker's first sentence, which is not marked (must pass)",
+        [
+            (
+                "src/atp/__init__.py",
+                lambda s: s.replace(
+                    "its imports pointing one way).",
+                    "its imports pointing one way). Not ARCH-034.",
+                    1,
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a marker inside a code block, which is not read (must pass)",
+        [
+            (
+                "docs/development.md",
+                lambda s: s + "\n```text\n<!-- Requirements: ARCH-034 -->\n```\n",
+            )
+        ],
+        None,
+    ),
+    (
+        "a decision named in a marker, which is not marked (must pass)",
+        [
+            (
+                "src/atp/__init__.py",
+                lambda s: s.replace(
+                    "Requirements: TEC-001 (", "Requirements: DEC-009, TEC-001 (", 1
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a req marker above another decorator written on several lines (must pass)",
+        [
+            (
+                PROJECT_TEST,
+                lambda s: s.replace(
+                    '@pytest.mark.req("TEC-001")\ndef ',
+                    '@pytest.mark.req("TEC-001")\n@pytest.mark.parametrize(\n    "unused",\n    [1],\n)\ndef ',
+                    1,
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a test function nested in a helper, which is not counted (must pass)",
+        [
+            (
+                PROJECT_TEST,
+                lambda s: (
+                    s
+                    + "\n\ndef _helper() -> None:\n    def test_inner() -> None:\n        pass\n"
+                ),
+            )
+        ],
+        None,
+    ),
+    (
+        "a req marker in a comment, which is not read (must pass)",
+        [
+            (
+                PROJECT_TEST,
+                lambda s: s + '\n# For example: @pytest.mark.req("ARCH-018")\n',
             )
         ],
         None,

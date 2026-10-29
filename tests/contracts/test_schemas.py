@@ -24,6 +24,7 @@ from atp.contracts import (
 CONTRACTS_ROOT = Path(__file__).resolve().parents[2] / "contracts"
 
 
+@pytest.mark.req("ARCH-025", "ARCH-026", "GOV-006", "GOV-007")
 def test_every_contract_schema_is_committed_and_unchanged() -> None:
     for document in schema_documents():
         committed = CONTRACTS_ROOT / document.relative_path
@@ -36,6 +37,7 @@ def test_every_contract_schema_is_committed_and_unchanged() -> None:
         )
 
 
+@pytest.mark.req("GOV-007")
 def test_every_committed_schema_belongs_to_a_known_contract() -> None:
     known = {document.contract_id for document in schema_documents()}
     for path in CONTRACTS_ROOT.rglob("*"):
@@ -128,6 +130,7 @@ def test_two_contracts_with_one_identity_are_refused(
         schema_documents()
 
 
+@pytest.mark.req("GOV-006")
 def test_writing_never_overwrites_a_changed_version(tmp_path: Path) -> None:
     written = write_schema_files(tmp_path)
     assert written

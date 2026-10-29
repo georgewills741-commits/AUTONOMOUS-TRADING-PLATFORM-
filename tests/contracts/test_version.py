@@ -30,11 +30,13 @@ def test_invalid_parts_are_refused(major: int, minor: int) -> None:
         ContractVersion(major, minor)
 
 
+@pytest.mark.req("ARCH-026", "GOV-006")
 def test_different_major_versions_are_never_compatible() -> None:
     assert not is_compatible(ContractVersion(1, 0), ContractVersion(2, 0))
     assert not is_compatible(ContractVersion(2, 0), ContractVersion(1, 9))
 
 
+@pytest.mark.req("ARCH-026", "GOV-006")
 def test_a_reader_understands_its_own_and_earlier_minor_versions() -> None:
     assert is_compatible(ContractVersion(1, 2), ContractVersion(1, 2))
     assert is_compatible(ContractVersion(1, 1), ContractVersion(1, 2))

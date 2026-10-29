@@ -13,6 +13,7 @@ from atp.config import REDACTED, ProcessEnvironment, Secret, SecretSource
 SECRET = "sk" + "_live_" + "Q7x9Z2" + "secretvalue"
 
 
+@pytest.mark.req("SEC-005")
 def test_a_secret_is_never_shown() -> None:
     secret = Secret(SECRET)
     assert str(secret) == REDACTED
@@ -59,6 +60,7 @@ def test_a_secret_is_immutable_and_final() -> None:
         type("Sub", (Secret,), {})
 
 
+@pytest.mark.req("SEC-005")
 def test_the_process_environment_is_a_secret_source(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

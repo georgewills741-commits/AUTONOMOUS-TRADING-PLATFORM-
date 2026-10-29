@@ -29,6 +29,7 @@ FINITE = st.decimals(
 
 
 @given(st.floats(allow_nan=True, allow_infinity=True))
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_a_float_is_refused(value: float) -> None:
     with pytest.raises(TypeError):
         amount(value)  # type: ignore[arg-type]
@@ -117,6 +118,7 @@ def test_the_published_pattern_refuses_what_the_constructor_refuses(text: str) -
 
 
 @given(FINITE)
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_the_string_round_trip_is_exact(value: Decimal) -> None:
     built = amount(str(value))
     assert built == value
@@ -128,6 +130,7 @@ def test_integers_within_the_precision_are_accepted_exactly(value: int) -> None:
     assert amount(value) == value
 
 
+@pytest.mark.req("ARCH-010", "TEC-003")
 def test_an_amount_with_more_digits_than_the_precision_is_refused() -> None:
     longest = "1" * PRECISION
     assert amount(longest) == Decimal(longest)

@@ -1,7 +1,8 @@
 """Exact amounts: the one way to build and round financial amounts.
 
 Requirements: ARCH-010 (numerical precision), TEC-003 (exact decimal arithmetic), ARCH-011
-(rounding to an exchange's increments; the increments themselves come in DATA FOUNDATION).
+(rounding to an exchange's increments; the increments themselves come in DATA FOUNDATION),
+ARCH-018 (the precision is V-40 of the values register).
 The rules are in docs/architecture/numerical-policy.md.
 
 Call `configure_decimal_context()` once at process start. Build every amount with `amount()`,

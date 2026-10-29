@@ -27,6 +27,7 @@ def _check(capsys: pytest.CaptureFixture[str], *arguments: str) -> tuple[int, st
 
 
 @pytest.mark.parametrize("environment", [e.value for e in Environment])
+@pytest.mark.req("MIG-004", "MIG-010")
 def test_every_example_environment_checks(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
@@ -121,6 +122,7 @@ def test_a_broken_configuration_is_refused(
     assert SECRET not in err
 
 
+@pytest.mark.req("SEC-005")
 def test_a_missing_secret_is_refused(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -152,6 +154,7 @@ def test_an_unknown_environment_is_refused(
         ["config", "lint", "--env", "paper", "--config-dir", "x"],
     ],
 )
+@pytest.mark.req("MIG-004")
 def test_wrong_use_exits_with_status_2(
     capsys: pytest.CaptureFixture[str], arguments: list[str]
 ) -> None:

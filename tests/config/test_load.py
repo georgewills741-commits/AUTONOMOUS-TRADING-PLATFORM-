@@ -389,6 +389,7 @@ def test_any_text_is_read_or_refused(text: str) -> None:
 # Loading a configuration directory.
 
 
+@pytest.mark.req("MIG-010", "MIG-004", "SEC-005")
 def test_a_configuration_loads_with_its_secrets(tmp_path: Path) -> None:
     directory = _directory(
         tmp_path,
@@ -616,6 +617,7 @@ def test_a_refused_load_leaves_nothing_behind(tmp_path: Path) -> None:
         ("platform_id = ", "platform.toml: not valid TOML (at end of document)"),
     ],
 )
+@pytest.mark.req("MIG-010")
 def test_a_missing_unknown_or_malformed_setting_stops_the_load(
     tmp_path: Path, portable: str, first_line: str
 ) -> None:
@@ -623,6 +625,7 @@ def test_a_missing_unknown_or_malformed_setting_stops_the_load(
     assert _refusal(directory, "paper", {})[0] == first_line
 
 
+@pytest.mark.req("MODE-006", "SEC-004")
 def test_a_trading_credential_outside_production_stops_the_load(tmp_path: Path) -> None:
     trading = '[[secrets]]\nname = "ATP_T"\nkind = "trading"\n'
     directory = _directory(
@@ -686,6 +689,7 @@ def test_a_secret_that_is_not_set_or_empty_stops_the_load(
         ),
     ],
 )
+@pytest.mark.req("SEC-005")
 def test_a_secret_value_in_a_configuration_file_stops_the_load(
     tmp_path: Path, portable: str, secrets: str, value: str, file: str
 ) -> None:
@@ -694,6 +698,7 @@ def test_a_secret_value_in_a_configuration_file_stops_the_load(
     assert lines == [f"{file}: holds the value of the secret ATP_DB"]
 
 
+@pytest.mark.req("SEC-005")
 def test_the_summary_shows_no_secret_value(tmp_path: Path) -> None:
     directory = _directory(
         tmp_path,
@@ -764,6 +769,7 @@ def test_every_example_environment_loads(environment: str) -> None:
     )
 
 
+@pytest.mark.req("MIG-010", "OPS-004")
 def test_the_examples_are_the_six_environments_and_the_portable_part() -> None:
     files = sorted(
         path.relative_to(EXAMPLES).as_posix()

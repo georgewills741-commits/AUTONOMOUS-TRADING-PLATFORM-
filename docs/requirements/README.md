@@ -51,7 +51,7 @@ Two rules always apply:
 
 ## Status
 
-All requirements are **DOCUMENTED**: recorded, not implemented, not verified. Stage 1 implementation is approved ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)) and under way, but no requirement is yet implemented in full (constitution Rule 211: the necessary implementation within its scope exists); what each Stage 1 checkpoint delivers in part is recorded in the [stage record](../traceability/stage-01-foundation.md). The implementation, test, and verification links go into a separate generated verification matrix, `docs/traceability/verification-matrix.md`, from checkpoint D, not into the registry (the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), D10 and U7; constitution Rule 184).
+All requirements are **DOCUMENTED**: recorded, not implemented, not verified. Stage 1 implementation is approved ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)) and under way, but no requirement is yet implemented in full (constitution Rule 211: the necessary implementation within its scope exists); what each Stage 1 checkpoint delivers in part is recorded in the [stage record](../traceability/stage-01-foundation.md). The implementation, test, and verification links are in a separate generated [verification matrix](../traceability/verification-matrix.md), since checkpoint D, not in the registry (the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), D10 and U7; constitution Rule 184); its status is that of what Stage 1 delivers of each requirement, not of the whole requirement.
 
 ## Adding or changing a requirement
 

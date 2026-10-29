@@ -1,6 +1,10 @@
 # Project definition of the platform's Python package (Stage 1, U1 of the Stage 1 plan).
 # How to use it: docs/development.md. Adding or changing a dependency needs a decision record
 # (docs/architecture/technology-stack.md; constitution Rules 99-101).
+#
+# Requirements: TEC-001 (Python 3.12 or later; strict type checks), TEC-009 (uv and its lockfile,
+# ruff, mypy, pytest, and Hypothesis; testcontainers come with storage, in DATA FOUNDATION),
+# GOV-012 (the test settings).
 
 [project]
 name = "atp"
@@ -36,6 +40,11 @@ required-version = "==0.12.23"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# A test names the requirements it verifies with this marker; the verification matrix
+# (docs/traceability/verification-matrix.md) is generated from the markers (tools/docs/README.md).
+markers = [
+    "req(*ids): the requirements this test verifies (docs/traceability/verification-matrix.md)",
+]
 # Hypothesis runs with its built-in "ci" profile everywhere, so local runs and the machine checks
 # use the same examples: derandomized, no time limit per example, no local example database.
 addopts = [

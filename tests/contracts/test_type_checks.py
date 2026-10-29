@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 TYPE_CHECKS = Path(__file__).with_name("type_checks.py")
 
 
+@pytest.mark.req("ARCH-042")
 def test_the_lines_that_must_not_type_check_are_present() -> None:
     text = TYPE_CHECKS.read_text(encoding="utf-8")
     assert text.count("fold(  # type: ignore[call-arg]") == 1

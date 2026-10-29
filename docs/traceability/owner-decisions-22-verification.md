@@ -268,6 +268,8 @@ The commands are those of the [developer guide](../development.md), run with uv 
 
 Remaining, each in its canonical place: checkpoint D, then items 4 and 5 of "Next approved step" (DEC-052); this change's temporary backup, `claude/unverified-backup-owner-decisions-22`, to be reconciled with this record's commit by owner decisions 10's eight checks, kept under an archive branch, and recorded by the next change (DEC-052, decision 3; the project state's "Branches"); the deletion of the three retired backup branches, which this environment refuses (the project state's "Blockers" and "Branches"); and the limits that V-41's notes and item N state: the bound is measured, not proven, and no last known good configuration is kept until a stage reloads one.
 
+**Later changes.** On 2026-10-27 this change's temporary backup was reconciled with its commit, `4983ac1`, by owner decisions 10's eight checks (PASS); its last commit, `427a83d`, is kept under `claude/archive/unverified-backup-owner-decisions-22`, and its branch, whose deletion this environment refused (HTTP 403), is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED ([Stage 1 checkpoint D verification](stage-01-checkpoint-d-verification.md)).
+
 ## Environment
 
 Python 3.12 in the project's environment (uv 0.12.23, the versions in `uv.lock`); the system Python 3.11 for the documentation tools; git.

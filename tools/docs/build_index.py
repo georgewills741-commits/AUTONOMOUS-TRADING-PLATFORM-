@@ -1,14 +1,22 @@
 """Generate and check the documentation indexes.
 
-Reads the specifications under docs/ and (re)writes:
+Reads the specifications under docs/ and the requirement markers of the code, the tests, and
+the documents (markers.py), and (re)writes:
   - docs/requirements/registry.md                 (fully generated)
   - docs/traceability/handoff-coverage.md         (generated; the hand-written tail from "## §100 questions" is kept)
   - docs/traceability/part-2-reconciliation.md    (the "New requirements" column is generated; every
   - docs/traceability/part-3-reconciliation.md     other column and section is hand-written and kept)
-and checks cross-references, links, handoff coverage, the System Rules Register, that the
-preserved verbatim texts are unchanged, and that no document is orphaned.
+  - docs/traceability/verification-matrix.md      (fully generated)
+and checks cross-references, links, handoff coverage, the System Rules Register, the markers,
+that every requirement of the Stage 1 plan's section 3.1 has an implementation and a test or
+check, that the preserved verbatim texts are unchanged, and that no document is orphaned.
 With --check-only it writes nothing and also fails if any generated file is out of date.
 See tools/docs/README.md, DEC-025, DEC-031, and DEC-033.
+
+Requirements: ARCH-032 (the consistency checker), ARCH-030 (the registry's fields), ARCH-031
+and ARCH-040 (the verification matrix: requirement, rule, system, interface, implementation,
+test, verification), ARCH-013 (each feature's chain from its owner to the test that verifies
+it), ARCH-029 and GOV-017 (a marker naming a requirement that is not approved is refused).
 
 Usage: python3 tools/docs/build_index.py [--check-only]
 Standard library only.
@@ -22,6 +30,15 @@ import sys
 from typing import Any
 
 from code_blocks import code_lines  # the rule both tools use for code blocks
+from markers import (  # the requirement markers of the verification matrix
+    ID,
+    comment_text,
+    html_comments,
+    keyword_markers,
+    module_docstring,
+    pytest_markers,
+    top_level_ids,
+)
 
 ROOT = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
@@ -35,7 +52,10 @@ RECON2 = os.path.join(DOCS, "traceability", "part-2-reconciliation.md")
 RECON3 = os.path.join(DOCS, "traceability", "part-3-reconciliation.md")
 RULES = os.path.join(DOCS, "requirements", "system-rules-register.md")
 PRESERVED = os.path.join(ROOT, "tools", "docs", "preserved-texts.sha256")
-GENERATED = {REGISTRY, COVERAGE1}
+MATRIX = os.path.join(DOCS, "traceability", "verification-matrix.md")
+PLAN1 = os.path.join(DOCS, "roadmap", "stage-01-foundation-plan.md")
+STAGE1 = os.path.join(DOCS, "traceability", "stage-01-foundation.md")
+GENERATED = {REGISTRY, COVERAGE1, MATRIX}
 STATIC1_HEADING = "## §100 questions"
 
 CLASSES = [
@@ -406,6 +426,7 @@ RULE_RE = re.compile(
     r"([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$"
 )
 defined_rules = []
+rules_of: "collections.defaultdict[str, list[str]]" = collections.defaultdict(list)
 rules_text = open(RULES, encoding="utf-8").read() if os.path.exists(RULES) else ""
 if not rules_text:
     errors.append("system-rules-register.md is missing")
@@ -418,6 +439,8 @@ for line in rules_text.splitlines():
         rid, canon, cls = m.group(1), m.group(3), m.group(4).strip()
         defined_rules.append(rid)
         canon_ids = re.findall(r"\b[A-Z]{2,4}-\d{3}\b", canon)
+        for i in canon_ids:
+            rules_of[i].append(rid)
         if not canon_ids:
             errors.append(f"{rid}: no canonical requirement")
         elif canon_ids[0] in reqs and reqs[canon_ids[0]]["cls"] != cls:
@@ -470,6 +493,216 @@ for link in re.findall(r"\]\(\.\./([^)]+)\)", sysreg):
 for i in ids:
     if reqs[i]["src"].startswith("DEC-") and reqs[i]["src"] not in decs:
         errors.append(f"{i}: source {reqs[i]['src']} is not a decision record")
+
+
+# ---------- requirement markers (U7: the verification matrix; tools/docs/README.md) ----------
+SKIP_DIRS = {
+    "__pycache__",
+    ".hypothesis",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+}
+
+
+def files_under(rel):
+    """The files under a directory of the repository, or the file itself, in a stable order."""
+    base = os.path.join(ROOT, rel)
+    if os.path.isfile(base):
+        yield base
+        return
+    for dp, dn, fn in os.walk(base):
+        dn[:] = sorted(d for d in dn if d not in SKIP_DIRS)
+        for f in sorted(fn):
+            yield os.path.join(dp, f)
+
+
+def repo_rel(path):
+    return os.path.relpath(path, ROOT).replace(os.sep, "/")
+
+
+# requirement -> the artifacts that implement it, the checks that are not pytest tests, and
+# the tests (test file -> test functions) that verify it
+implemented: "collections.defaultdict[str, list[str]]" = collections.defaultdict(list)
+checked_by: "collections.defaultdict[str, list[str]]" = collections.defaultdict(list)
+tested: "collections.defaultdict[str, dict[str, list[str]]]" = collections.defaultdict(
+    dict
+)
+test_counts: "collections.OrderedDict[str, tuple[int, int]]" = collections.OrderedDict()
+
+
+def marked_ids(where, keyword, found):
+    """The marker's IDs that name an approved requirement; the others are errors."""
+    if not found:
+        errors.append(f"{where}: a {keyword} marker names no requirement")
+    ok = []
+    for i in found:
+        if i not in reqs:
+            errors.append(f"{where}: marker names unknown requirement {i}")
+        elif reqs[i]["cls"] in NOT_APPROVED:
+            errors.append(
+                f"{where}: marker names {i}, which is not approved ({reqs[i]['cls']}; ARCH-029, GOV-017)"
+            )
+        else:
+            ok.append(i)
+    return ok
+
+
+# A "Verifies:" marker names a check that is not a pytest test, so it is read only in a module
+# under tools/ or a document under docs/traceability/: the tools, and the verification records.
+VERIFIES_PLACES = ("tools/", "docs/traceability/")
+
+
+def collect(rel, text):
+    for keyword, into in (("Requirements", implemented), ("Verifies", checked_by)):
+        for _line, found in keyword_markers(text, keyword):
+            if keyword == "Verifies" and not rel.startswith(VERIFIES_PLACES):
+                errors.append(
+                    f"{rel}: a Verifies marker belongs to a check: a module under tools/ "
+                    "or a document under docs/traceability/"
+                )
+                continue
+            for i in marked_ids(rel, keyword, found):
+                if rel not in into[i]:
+                    into[i].append(rel)
+
+
+for root in ("src", "tools"):
+    for path in files_under(root):
+        if path.endswith(".py"):
+            doc = module_docstring(open(path, encoding="utf-8").read())
+            if doc:
+                collect(repo_rel(path), doc)
+for root in ("pyproject.toml", os.path.join(".github", "workflows")):
+    for path in files_under(root):
+        if path.endswith((".toml", ".yml", ".yaml")):
+            collect(repo_rel(path), comment_text(open(path, encoding="utf-8").read()))
+for path in md_files():
+    if path not in GENERATED:
+        collect(
+            repo_rel(path),
+            html_comments(strip_code(open(path, encoding="utf-8").read())),
+        )
+for path in files_under("tests"):
+    if not path.endswith(".py"):
+        continue
+    rel = repo_rel(path)
+    found, problems, test_names = pytest_markers(open(path, encoding="utf-8").read())
+    name = os.path.basename(path)
+    if not (name.startswith("test_") or name.endswith("_test.py")):
+        # pytest collects tests only from modules with these names (its default python_files)
+        if found or problems:
+            errors.append(
+                f"{rel}: a req marker must be in a test module, named test_*.py or *_test.py"
+            )
+        continue
+    for problem_line, problem in problems:
+        errors.append(f"{rel}:{problem_line}: {problem}")
+    marked = set()
+    for marker_line, test, test_ids in found:
+        marked.add(test)
+        for i in marked_ids(f"{rel}:{marker_line}", "req", test_ids):
+            names = tested[i].setdefault(rel, [])
+            if test not in names:
+                names.append(test)
+    if test_names:
+        test_counts[rel] = (len(test_names), len(marked))
+
+# The interfaces: each committed contract, by the package of the platform that defines it.
+contract_package: "dict[str, str]" = {}
+if os.path.isdir(os.path.join(ROOT, "contracts")):
+    sources = {
+        repo_rel(p): open(p, encoding="utf-8").read()
+        for p in files_under("src")
+        if p.endswith(".py")
+    }
+    for cid in sorted(os.listdir(os.path.join(ROOT, "contracts"))):
+        for rel, text in sources.items():
+            if f'contract_id = "{cid}"' in text or f'("{cid}",' in text:
+                contract_package[cid] = rel.rsplit("/", 1)[0]
+
+
+def section_text(text, heading_re):
+    """The text under the first heading matching heading_re, up to the next heading."""
+    m = re.search(heading_re, text, re.M)
+    if not m:
+        return ""
+    rest = text[m.end() :]
+    n = re.search(r"^#{1,3} ", rest, re.M)
+    return rest[: n.start()] if n else rest
+
+
+def table_rows(text):
+    """The cells of each row of the first table in text, without its header and separator."""
+    rows = []
+    for line in text.split("\n"):
+        if line.startswith("|") and not re.match(r"^\|[\s:|-]+\|$", line):
+            rows.append([c.strip() for c in line.strip().strip("|").split("|")])
+    return rows[1:]
+
+
+# The Stage 1 plan's section 3: what Stage 1 delivers (3.1, with the unit of each), starts (3.2),
+# applies as design rules (3.3), leaves to later stages (3.4), and does not build (3.5).
+plan_text = open(PLAN1, encoding="utf-8").read() if os.path.exists(PLAN1) else ""
+if not plan_text:
+    errors.append("roadmap/stage-01-foundation-plan.md is missing")
+scope: "collections.OrderedDict[str, tuple[str, Any]]" = collections.OrderedDict()
+delivers: "dict[str, str]" = {}  # what Stage 1 delivers of each, with its row's note if any
+for cells in table_rows(section_text(plan_text, r"^### 3\.1 ")):
+    for i in top_level_ids(cells[0]):
+        scope[i] = ("3.1", re.findall(r"\bU\d\b", cells[-1]))
+        note = " — the plan's row: " + cells[0] if "(" in cells[0] else ""
+        delivers[i] = cells[1] + note
+for cells in table_rows(section_text(plan_text, r"^### 3\.2 ")):
+    for i in top_level_ids(cells[0]):
+        scope.setdefault(i, ("3.2", "started in Stage 1; completed in " + cells[-1]))
+DESIGN_RULE = "applied as a design rule to Stage 1's own work, verified in Gate 2"
+s33 = section_text(plan_text, r"^### 3\.3 ")
+for a, b in re.findall(rf"\b({ID}) to ({ID})\b", s33):
+    if a.split("-")[0] == b.split("-")[0]:
+        for n in range(int(a.split("-")[1]), int(b.split("-")[1]) + 1):
+            scope.setdefault(f"{a.split('-')[0]}-{n:03d}", ("3.3", DESIGN_RULE))
+for i in top_level_ids(s33):
+    scope.setdefault(i, ("3.3", DESIGN_RULE))
+for cells in table_rows(section_text(plan_text, r"^### 3\.4 ")):
+    for i in top_level_ids(cells[0]):
+        scope.setdefault(i, ("3.4", "applied in a later stage: " + cells[-1]))
+for i in top_level_ids(section_text(plan_text, r"^### 3\.5 ")):
+    scope.setdefault(i, ("3.5", "not built"))
+delivered = [i for i, (sec, _d) in scope.items() if sec == "3.1"]
+if plan_text and not delivered:
+    errors.append(
+        "roadmap/stage-01-foundation-plan.md: section 3.1 lists no requirement"
+    )
+
+# The stage record's checkpoints: the units each built, whether it is done, and its record.
+stage_text = open(STAGE1, encoding="utf-8").read() if os.path.exists(STAGE1) else ""
+unit_checkpoint: "dict[str, tuple[str, bool, str | None]]" = {}
+for cells in table_rows(section_text(stage_text, r"^## Checkpoints\s*$")):
+    if len(cells) >= 4:
+        record = re.search(r"\]\(([^)]+)\)", cells[3])
+        for u in re.findall(r"\bU\d\b", cells[1]):
+            unit_checkpoint[u] = (
+                cells[0],
+                cells[2].startswith("Done"),
+                record.group(1) if record else None,
+            )
+
+# U7's acceptance as a check: every requirement Stage 1 delivers is implemented and tested.
+for i in delivered:
+    if not implemented.get(i):
+        errors.append(
+            f"verification matrix: {i} (Stage 1 plan, section 3.1) has no implementation marker"
+        )
+    if not tested.get(i) and not checked_by.get(i):
+        errors.append(
+            f"verification matrix: {i} (Stage 1 plan, section 3.1) has no test or check marker"
+        )
+    for u in scope[i][1]:
+        if u not in unit_checkpoint:
+            errors.append(
+                f"verification matrix: unit {u} of {i} is in no checkpoint of the stage record"
+            )
 
 
 # ---------- preserved verbatim texts (docs/handoffs/, docs/builder/) ----------
@@ -720,11 +953,152 @@ for part, path in ((2, RECON2), (3, RECON3)):
         out.append(line)
     OUT[path] = "\n".join(out).rstrip("\n") + "\n"
 
+
+# ---------- verification-matrix.md (U7) ----------
+def file_link(rel):
+    return f"[`{rel}`](../../{rel})"
+
+
+def tests_cell(i):
+    cells = [
+        file_link(f) + ": " + ", ".join(f"`{t}`" for t in names)
+        for f, names in tested.get(i, {}).items()
+    ]
+    cells += [file_link(f) for f in checked_by.get(i, [])]
+    return "; ".join(cells) or "—"
+
+
+def interfaces_cell(i):
+    packages = {
+        f.rsplit("/", 1)[0] for f in implemented.get(i, []) if f.startswith("src/")
+    }
+    return (
+        ", ".join(f"`{c}`" for c, pkg in contract_package.items() if pkg in packages)
+        or "—"
+    )
+
+
+def requirement_cell(i):
+    return f"[{i}](../{reqs[i]['doc']}) {reqs[i]['title'].strip()}"
+
+
+M = [
+    "# Verification Matrix",
+    "",
+    "> **Generated** by [`tools/docs/build_index.py`](../../tools/docs/README.md) from the requirement markers of the code, "
+    "the tests, and the documents, the [requirements registry](../requirements/registry.md), the "
+    "[System Rules Register](../requirements/system-rules-register.md), the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md)'s "
+    "section 3, and the [stage record](stage-01-foundation.md)'s checkpoints; do not edit it by hand. The markers and how to "
+    "write them are described in the [documentation tools](../../tools/docs/README.md). `build_index.py --check-only` fails "
+    "when this file is out of date, when a marker names an unknown requirement or one that is not approved (ARCH-029, "
+    "GOV-017), and when a requirement of the plan's section 3.1 has no implementation or no test or check.",
+    ">",
+    "> **What it connects** (master execution constitution §145; ARCH-031, ARCH-040): requirement, system rule, owning system, "
+    "interface, implementation, test, verification, and status. The commit of each verification is that of its record, in "
+    "the [project state](../project-state.md)'s checkpoint log: a generated file cannot hold its own commit. The links of "
+    "[owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md)'s §31 chain are reached "
+    "here and in the registry, without a second registry ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), "
+    "decision 4): the requirement ID (here, linked to its specification); the decision (the registry's Source and Approval "
+    "columns); the owner and the system (the owning system, the registry's Owner column, repeated here); the implementation, "
+    "the test, and the verification (here); the roadmap stage (the registry's Default stage, repeated here; the "
+    "[roadmap](../roadmap/roadmap.md) is authoritative where it places a requirement elsewhere); and the status (here).",
+    ">",
+    "> **Columns.** *Interface*: the committed contracts (`contracts/`) defined by a package that implements the requirement. "
+    "*Implementation*: the artifacts whose `Requirements:` marker names it. *Tests and checks*: the test functions whose "
+    "`pytest.mark.req` marker names it, and the checks that are not pytest tests whose `Verifies:` marker names it. "
+    "*Verification*: the checkpoint that built each unit the plan assigns to the requirement, and its verification record. "
+    "*Status*: that of what Stage 1 delivers of the requirement, the second column, not of the whole requirement, which "
+    "is implemented in full only when each part of it is built, in the stages that build them (the "
+    '[requirements README](../requirements/README.md), "Status"): VERIFIED when it is implemented and tested and each of '
+    "those checkpoints passed its three gates; otherwise "
+    "IMPLEMENTED AND TESTED, with the checkpoint whose gates are pending. A marker added after a checkpoint is checked by the "
+    "gates of the change that adds it, recorded in its verification record, and the whole stage again by its own gates at "
+    "its exit (the stage record's X2).",
+    "",
+    "## Requirements delivered by Stage 1 (the plan's section 3.1)",
+    "",
+    "| Requirement | What Stage 1 delivers (the plan's section 3.1) | Owner (system) | Default stage | System rule | Interface "
+    "| Implementation | Tests and checks | Verification | Status |",
+    "|---|---|---|---|---|---|---|---|---|---|",
+]
+for i in delivered:
+    owner, stage = OWNERS[i.split("-")[0]]
+    checkpoints = []
+    for u in scope[i][1]:
+        cp = unit_checkpoint.get(u)
+        if cp and cp not in checkpoints:
+            checkpoints.append(cp)
+    verification = (
+        "; ".join(
+            f"checkpoint {letter}" + (f" ([record]({record}))" if record else "")
+            for letter, _done, record in checkpoints
+        )
+        or "—"
+    )
+    traced = bool(implemented.get(i)) and bool(tested.get(i) or checked_by.get(i))
+    pending = [letter for letter, done, _record in checkpoints if not done]
+    if not traced:
+        status = "GAP"
+    elif pending:
+        status = (
+            "IMPLEMENTED AND TESTED; the gates of checkpoint "
+            + ", ".join(pending)
+            + " pending"
+        )
+    else:
+        status = "VERIFIED"
+    M.append(
+        f"| {requirement_cell(i)} | {delivers[i]} | {owner} | {stage} | {', '.join(rules_of.get(i, [])) or '—'} | "
+        f"{interfaces_cell(i)} | "
+        + "; ".join(file_link(f) for f in implemented.get(i, []))
+        + f" | {tests_cell(i)} | {verification} | {status} |"
+    )
+others = [
+    i
+    for i in ids
+    if i not in delivered and (implemented.get(i) or tested.get(i) or checked_by.get(i))
+]
+M += [
+    "",
+    "## Other requirements named by a marker",
+    "",
+    "Requirements that Stage 1's code, tests, or documents name, outside the plan's section 3.1: each keeps the disposition "
+    "the plan's section 3 gives it, shown here.",
+    "",
+    "| Requirement | Owner (system) | Default stage | Stage 1 plan, section 3 | Implementation | Tests and checks |",
+    "|---|---|---|---|---|---|",
+]
+for i in others:
+    owner, stage = OWNERS[i.split("-")[0]]
+    sec, detail = scope.get(i, ("", ""))
+    plan_cell = f"{sec}: {detail}" if sec else "Not in the plan's section 3"
+    M.append(
+        f"| {requirement_cell(i)} | {owner} | {stage} | {plan_cell} | "
+        + ("; ".join(file_link(f) for f in implemented.get(i, [])) or "—")
+        + f" | {tests_cell(i)} |"
+    )
+M += [
+    "",
+    "## Tests and the requirements they name",
+    "",
+    "Every test module, with its test functions and how many of them name a requirement. A test that names none still "
+    "runs at every checkpoint and on every push; a marker names the requirement a test is evidence for.",
+    "",
+    "| Test module | Test functions | Naming a requirement | Naming none |",
+    "|---|---|---|---|",
+]
+for rel, (count, marked_count) in test_counts.items():
+    M.append(
+        f"| {file_link(rel)} | {count} | {marked_count} | {count - marked_count} |"
+    )
+OUT[MATRIX] = "\n".join(M) + "\n"
+
+
 if CHECK_ONLY:
     stale = [
         os.path.relpath(p, ROOT)
         for p, c in OUT.items()
-        if open(p, encoding="utf-8").read() != c
+        if not os.path.exists(p) or open(p, encoding="utf-8").read() != c
     ]
     if stale:
         print("ERRORS:")

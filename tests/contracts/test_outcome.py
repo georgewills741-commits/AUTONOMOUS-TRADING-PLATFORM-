@@ -59,10 +59,12 @@ def test_a_refusal_inside_an_outcome_names_its_result_and_member(
     assert refused.value.details[0].location == location
 
 
+@pytest.mark.req("ARCH-042")
 def test_there_are_exactly_four_results() -> None:
     assert OUTCOME_RESULTS == ("SUCCESS", "FAILURE", "TIMEOUT", "UNKNOWN")
 
 
+@pytest.mark.req("ARCH-042")
 def test_fold_calls_the_handler_of_each_result() -> None:
     assert _name(Outcome.success(5)) == "SUCCESS 5"
     assert _name(Outcome.failure("refused")) == "FAILURE refused"
@@ -74,6 +76,7 @@ def test_fold_calls_the_handler_of_each_result() -> None:
     "outcome",
     [Outcome.success(1), Outcome.failure("x"), Outcome.timeout(), Outcome.unknown()],
 )
+@pytest.mark.req("ARCH-042")
 def test_an_outcome_has_no_truth_value(outcome: Outcome[Any, Any]) -> None:
     with pytest.raises(TypeError, match="truth value"):
         bool(outcome)
