@@ -80,7 +80,7 @@ A4, a non-blocking finding of the adoption's Gate 3 run 1 (2026-10-20, 23:01 UTC
 - **Applied:** DEC-051's "Later changes" line replaces the sentence with the wording the reviewer specified, quoted in full. The run's report was not committed, since the records of the changes after item 2 state their findings rather than reproduce their reports (the project state's "Next approved step", item 2); the wording was taken by script from the session record, where a tool result of 2026-10-29, 08:00 UTC, quotes the report.
 - **Not drafted under the replaced reading:** `compare_requirements.py b9d635f` reports 734 requirements before and after, none added, removed, or changed, so no requirement was drafted or refined since DEC-051's commit.
 - **A9**, an optional finding of the same run, suggested relabelling the retired draft in the drafts index if DEC-051 were reopened for A4. Not applied: the index's entry already states which parts of the draft were kept and which were superseded.
-- **Its further run:** the reviewer said that this wording changes a decision and needs a further run; it is this change's Gate 3.
+- **Its further run:** the reviewer said that this wording changes a decision and needs a further run; it is this change's Gate 3. Its record had the line made in a change of its own; it is carried by this one, as DEC-057's decision 6 has a closing step carried by the next change.
 
 ## The status report
 
@@ -175,9 +175,9 @@ Continuing with that change now.
 The directive's Rules 25 to 28 and 35, applied to the loss of 2026-10-29. Its account and the recovery are in the [checkpoint D backup verification](stage-01-checkpoint-d-backup-verification.md) ("Failures and fixes"), and the report above gives the paths checked (J), what was recovered (K) and not (L), and why (M); this section adds what the rules ask beyond them.
 
 - **What was missing, and its evidence:** the uncommitted change reconciling checkpoint D's backup: its record, new, and its edits to the project state, the stage record, the documentation index, and the traceability README, made on 2026-10-29 between 07:49 and 07:55 UTC, as the session record's tool calls show; and the builder's workspace. Nothing committed was missing: each of the checkpoint log's 32 commits is in the designated branch's history, whose head equals the remote's (`git merge-base --is-ancestor`; `git ls-remote`, 16:15 UTC), and every backup and archive branch is at the commit the project state records (GitHub's branch list, 15:55 UTC; `git ls-remote`, 16:07 UTC).
-- **Recovered before rebuilt** (Rule 26): the change was rebuilt from the session record's exact edits, not written again, and then passed its three gates as any change does (Rule 28).
+- **Recovered before rebuilt** (Rule 26): the change was rebuilt from the session's record of its edits, with what had changed since, rather than written anew, and then passed its three gates as any change does (Rule 28).
 - **Not recovered:** the workspace's scripts, raw logs, and report texts, and the review copy of the stopped launch. No result of a committed record depends on them: each record states its checks and findings.
-- **The mechanism** (Rule 27): DEC-052's decision 3 backed up a change only once its gate cycle counted as long; DEC-057's decision 4 backs it up as soon as it exists, before each Gate 3 launch, and before any wait or end of a turn. This change ran under it: its backup branch holds each state of its work from 15:50 UTC on.
+- **The mechanism** (Rule 27): DEC-052's decision 3 backed up a change only once its gate cycle counted as long; DEC-057's decision 4 backs it up as soon as it exists, before each Gate 3 launch, and before any wait or end of a turn. This change ran under it: its work was pushed to its backup branch from 15:50 UTC on, as it changed.
 - **The same class elsewhere:** a fix whose wording existed only in an uncommitted report, A4 (above), now in the repository.
 
 ## Checks
@@ -186,26 +186,31 @@ The documentation tools, with the system Python 3.11, and git, on the working tr
 
 | # | Check | How | Result |
 |---|---|---|---|
-| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PENDING |
-| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PENDING |
-| 3 | No requirement changed | `python3 tools/docs/compare_requirements.py c2a6786 --strict` | PENDING |
-| 4 | The code is unchanged | `git diff --name-only c2a6786` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | PENDING |
-| 5 | Hygiene of the change | `git diff --check c2a6786`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PENDING |
-| 6 | The preserved text | The round trip of owner decisions 26 against the session record, by script (`python3 -I`), as the documentation tools' README states it: its text block against the owner's user turn of 2026-11-02, 15:43 UTC; its line in `tools/docs/preserved-texts.sha256` | PENDING |
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changed none of the generated files |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | No requirement changed | `python3 tools/docs/compare_requirements.py c2a6786 --strict` | PASS: 734 requirements before and after; none added, removed, or changed |
+| 4 | The code is unchanged | `git diff --name-only c2a6786` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | PASS: the fifteen files this change adds or changes are `CLAUDE.md`, twelve documents under `docs/` (this record, owner decisions 26, DEC-057, DEC-051, DEC-052, the project state, the stage record, the owner decisions 9 adoption verification, the owner rule sets reconciliation, the traceability README, the documentation index, and the decision log), the documentation tools' README, and the preserved-text manifest |
+| 5 | Hygiene of the change | `git diff --check c2a6786`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved text | The round trip of owner decisions 26 against the session record, by script (`python3 -I`), as the documentation tools' README states it: its text block against the owner's user turn of 2026-11-02, 15:43 UTC; its line in `tools/docs/preserved-texts.sha256` | PASS: the text block equals the user turn, byte for byte (23,931 characters); the manifest's hash is the one the checker computes. The same script, run on owner decisions 25, gives its recorded result (127 characters, equal) |
 
 ## Gates
 
-**Verification 1 — the change works as intended:** PENDING.
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 6 pass, run again after this record's last edit before Gate 3's copy was made, and every statement the change adds, to this record and to the documents it touches, was read back against its evidence before the launch (DEC-057, decision 6): git's output, GitHub's answers, the session record, and the records cited, with their times. The read-backs found the statements corrected below ("Failures and fixes").
 
-**Verification 2 — architecture and consistency:** PENDING.
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. The directive's rules are mapped to the builder texts and the existing mechanisms under Rule 0, in the reconciliation's new section, and its gaps are closed within them (DEC-057): a row of the existing continuation contract, the existing backup lifecycle's trigger strengthened, the exit checklist's criteria stated fixed, and two procedures written into the existing READMEs, with no new register, report, branch convention, or builder text. A4 is applied in the reviewer's words, with the evidence that no requirement was drafted under the replaced sentence. The backup's reconciliation and retirement follow owner decisions 10's eight checks and owner decisions 22's fields, ten checks, rule on retries, and report, as for the five earlier backups. Every current list and count of the retired backups, every statement of the active backup, of A4's status, and of the dates of the state was searched (`git grep`) and updated; the dated records keep what they said at their date (DEC-037). Two statements of the state left stale by the last two changes were found and fixed ("Failures and fixes").
 
-**Verification 3 — independent end-to-end and failure audit:** PENDING.
+**Verification 3 — independent end-to-end and failure audit:** an independent reviewer, a separate agent started with a fresh context, on a push-disabled copy of the repository at `c2a6786` with the change applied, made as the traceability README states and identified by the hash of its `git diff`. Findings are numbered P-01, P-02, and so on, across runs, with the severity DEC-045's decision 2 gives. Run 1: PENDING.
 
 ## Failures and fixes
 
 | Failure | Cause | Fix | Re-run |
 |---|---|---|---|
-| PENDING | | | |
+| Verification 2's sweep: the project state's "Last updated" still read 2026-10-27, though checkpoint D's commit and the reconciliation of its backup had changed the file; and the exit checklist's statuses were dated "as of checkpoint D, 2026-10-27, before its gates", though X7 had since been set to PASS | Dates of the state not updated with it; neither change's sweep searched for them | Both dated 2026-11-02, the checklist's after checkpoint D's commit and the reconciliation of its backup. Class sweep: "Last updated", "as of", and "Statuses as of" in the current documents (the project state, the stage record, the roadmap, the indexes): no other | Check 1 |
+| Verification 1's read-back of DEC-057: decision 2 and an alternative said owner decisions 22 stays in force through DEC-051's decision 3, which DEC-054 (decision 5) does; decision 6 said that most failed runs of the recent changes found statements written from intent; decision 5 cited DEC-045's decision 4 alone; an alternative said the loss happened before the gate cycle counted as long; the context counted five gaps, the reconciliation six | Written from intent or memory, before the records were read | Corrected from the records: DEC-054 named; "many", with the records whose "Failures and fixes" show it; decisions 2, 4, and 7 of DEC-045; neither of the trigger's conditions seen in time; six gaps, the same in both | Checks 1 to 3 |
+| Verification 1's read-back of the status report: its "about 28" runs of record-only and governance changes; its plan to commit the helper scripts | A count made from memory; a plan the decision changed | Kept as given, with the count from the records and the change of plan in "Since the report" | — |
+| Verification 1's read-back of the round trip as first written in the documentation tools' README: it would also match a tool's result, or the summary the client writes when it compacts the session, in the same minute | The procedure was written from the one case at hand | The README names both exclusions; the builder's script made to follow it; the round trips of owner decisions 26 and 25 run again: equal | Check 6 |
+| Check 1 refused the hash function's name, written with its hyphen and its number, in the traceability README's new sentence, as an undefined requirement | The checker reads a capitalized prefix, a hyphen, and a number as a requirement ID | The hash described as the first 12 characters of `git diff \| sha256sum` | Check 1 |
+| Verification 1's read-back of the "Stage convergence" row: it dated the stage's opening from DEC-038 alone and said "the later runs" failed on statements | Written from the status report, not from the records | Authorized on 2026-10-05 (DEC-038), its work begun on 2026-10-06 (the convergence audit); the three runs named | Check 1 |
 
 ## Final status and remaining issues
 
