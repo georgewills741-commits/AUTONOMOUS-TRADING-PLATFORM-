@@ -85,6 +85,14 @@ The 29 areas are not new stages: each belongs to one of the seven stages (RMP-00
 | 3 | CORE TRADING FOUNDATION | ARCH-041 and ARCH-042 enforced in execution, capital, and recovery (SR-46, SR-09) |
 | 7 | OPERATIONALIZATION | Performance hardening re-verified against PERF-023 (SR-47); the continuous engineering lifecycle after release (OPS-021); production never depends on one machine, the owner's computer included (MIG-033) |
 
+### Additions of 2026-11-02 by stage ([DEC-058](../decisions/DEC-058-opportunity-universe-and-economics.md))
+
+| # | Stage | Added |
+|---|---|---|
+| 2 | DATA FOUNDATION | Scanning does not stop at a found opportunity; search prioritization is never a floor, quota, or stopping condition (OPP-021, OPP-022) |
+| 3 | CORE TRADING FOUNDATION | No percentage ceiling on a single opportunity; unusually large opportunities verified, neither rejected nor trusted for their size (V-42); economics across capital sizes; further economic terms (TNP-027 to TNP-030); no "highest percentage wins" rule; allocation sized by the opportunity; intervening in an active trade (V-43) (CAP-047 to CAP-049); SR-48, SR-49 |
+| 4 | DIRECTIONAL TRADING | Opportunity outcome categories in missed- and false-opportunity analysis (PFC-019), with the Performance Controller's core |
+
 PLT-029 (the platform operates without Claude Code) is platform-wide: every stage must leave the platform able to run without the builder.
 
 Part 3's areas 10 (execution), 12 (portfolio), 16 (policy), 24 (security), 25 (monitoring), and 26 (testing) add no new requirement beyond those above; they stay where Parts 1 and 2 placed them. Area 29 (controlled self-improvement) remains STR-009 under the lifecycle. Not in any stage: the feature status registry of P3§509 (GOV-018, replaced by the canonical feature lifecycle GOV-024, which is in FOUNDATION).
