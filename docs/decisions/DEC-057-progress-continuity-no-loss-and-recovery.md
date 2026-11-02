@@ -27,7 +27,7 @@ Most of the directive's rules are already stated in the builder texts or applied
 
 - **Load the directive as a seventh builder text.** Not chosen: its rules are already stated or applied (decision 2), as owner decisions 14, 15, 17, and 22's were when DEC-051 kept them in force through their records; a seventh text would state them a second time (Rule 0).
 - **Commit scripts for the round trip and the Gate 3 copy under `tools/`.** Not chosen now: the round trip reads the client's session record, whose format belongs to the client, not to the project, and what must be repeatable is the procedure, which decision 7 writes down; a script can be added when a stage's plan needs such tooling.
-- **Keep DEC-052's trigger, a backup once a gate cycle counts as long.** Not chosen: the loss of 2026-10-29 happened before the cycle counted as long.
+- **Keep DEC-052's trigger, a backup once a gate cycle counts as long.** Not chosen: on 2026-10-29 the session ended without warning while the change's first Gate 3 run was still running, so neither of the trigger's conditions, a failed first run or a session known to be ending, was seen in time, and the work was lost.
 - **Lower a gate to go faster.** Not the builder's to decide, and the directive forbids it (its Rule 19); decision 6 removes repetition instead.
 
 ## Consequences
