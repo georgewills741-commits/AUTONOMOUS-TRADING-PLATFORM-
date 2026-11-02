@@ -15,7 +15,7 @@
 
 **Added:** this record; DEC-058; ten requirements: OPP-021 and OPP-022 in the [Opportunity Detection Engine](../systems/opportunity-detection.md), TNP-027 to TNP-030 in the [True Net-Profit Engine](../systems/true-net-profit-engine.md), CAP-047 to CAP-049 in [capital management](../systems/capital-management.md), PFC-019 in the [Performance Controller](../systems/performance-controller.md); V-42 and V-43 in the [values register](../requirements/values-register.md); SR-48 and SR-49 in the [System Rules Register](../requirements/system-rules-register.md); the [roadmap](../roadmap/roadmap.md)'s "Additions of 2026-11-02 by stage".
 
-**Changed:** the generated [registry](../requirements/registry.md); the [drafts index](../drafts/README.md) and the draft's disposition; the project state (the current task, the next action, the stage's convergence, the branches, the decisions, the recent changes, the checkpoint log); the [stage record](stage-01-foundation.md) (the retired backups); the indexes ([documentation index](../README.md), [traceability README](README.md), [decision log](../decisions/README.md)).
+**Changed:** the generated [registry](../requirements/registry.md) and [handoff coverage](handoff-coverage.md); the roadmap's current position; the [drafts index](../drafts/README.md) and the draft's banner (its disposition); the project state (its status line and its bullet on owner decisions 8; the status table; the continuation contract's rows "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Decisions in effect", "Other branches", and "Next safe action"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent decisions"; "Recent changes"; "Next approved step"; the checkpoint log); the [stage record](stage-01-foundation.md) (its status line, its "Blockers" row, and the retirements listed for the certificate); the indexes ([documentation index](../README.md), [traceability README](README.md), [decision log](../decisions/README.md)).
 
 **Requirements:** ten added, none removed or changed (check 3).
 
@@ -51,7 +51,7 @@ The audit started from the [draft](../drafts/draft-audit-of-owner-decisions-08.m
 ## Method
 
 1. Every principle of the directive, and each of its twenty numbered points, compared with the requirement lines of the specifications, the values register, the System Rules Register, the roadmap, and the handoffs they came from.
-2. A contradiction search, by script over every requirement line outside the preserved texts, the drafts, and the records: percentages; "percent"; a minimum profit, edge, return, or expected value; "ceiling"; "quota"; "daily target"; "daily return"; "trade count"; "highest" or "largest"; forcing; chasing; "revenge"; "martingale"; "interrupt"; "unwind"; "hysteresis"; "anomal"; "outlier"; "impossible"; "suspicious"; stopping a scan or search. It gives 46 requirement lines, each read in context.
+2. A contradiction search, by script over every requirement line outside the preserved texts, the drafts, and the records: percentages; "percent"; a minimum profit, edge, return, or expected value; "ceiling"; "quota"; "daily target"; "daily return"; "trade count"; "highest" or "largest"; forcing; chasing; "revenge"; "martingale"; "interrupt"; "unwind"; "hysteresis"; "anomal"; "outlier"; "impossible"; "suspicious"; stopping a scan or search. It gives 46 requirement lines besides the ten new ones, each read in context.
 3. The code checked for any limit on opportunity size.
 4. Each gap closed in the specification that owns its subject, citing the existing requirements instead of restating them.
 
@@ -100,7 +100,7 @@ None found. The search's hits that could be read as a floor, a ceiling, a quota,
 | STR-011's "minimum period and trade count" | DEPRECATED / REPLACED ([DEC-015](../decisions/DEC-015-modes-canary-and-policy-governance.md), [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md)); STR-018 makes time and trade count evidence only |
 | The other hits (for example "highest first" in RSK-004 and PERF-015, "forced" in RGM-003 and MIG-001, "interrupt" in the recovery requirements) | Other subjects: a precedence order, a classification, a hosting choice, recovery after an interruption |
 | The roadmap | No stage, item, or feature sets a percentage, target, or quota |
-| The code | No opportunity logic exists. Its only size limits are V-41, a configuration document's bytes (`atp.config`), and V-40, the precision of an amount (`atp.numeric`); neither caps an amount relative to anything |
+| The code | No opportunity logic exists. Its only limits of this kind are V-41, the size of a configuration document (`atp.config`), and V-40, the precision of an amount (`atp.numeric`); the contract schemas constrain formats, not sizes; none caps an amount relative to anything |
 
 ## Duplicates
 
@@ -210,15 +210,33 @@ So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED.
 
 ## Checks
 
-PENDING.
+The documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit (check 4):
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration writes the ten requirements into the registry and DEC-058's row into the handoff coverage, and nothing else |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | The requirements added, and none removed or changed | `python3 tools/docs/compare_requirements.py a52e4ad --strict` | PASS: 734 requirements before, 744 after; added: CAP-047, CAP-048, CAP-049, OPP-021, OPP-022, PFC-019, TNP-027, TNP-028, TNP-029, TNP-030; none removed or changed |
+| 4 | The code is unchanged | `git diff --name-only a52e4ad` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | PASS: the eighteen files this change adds or changes are all under `docs/`: this record, DEC-058, the four specifications, the values register, the System Rules Register, the generated registry and handoff coverage, the roadmap, the project state, the stage record, the draft and the drafts index, the documentation index, the traceability README, and the decision log |
+| 5 | Hygiene of the change | `git diff --check a52e4ad`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The draft's content unchanged | `git diff -U0 a52e4ad -- docs/drafts/draft-audit-of-owner-decisions-08.md` | PASS: only its banner's two lines (its status and its disposition) change; its text blocks, the draft as it was, are untouched |
 
 ## Gates
 
-PENDING.
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 6 pass, run again after this record's last edit before Gate 3's copy was made, and every statement the change adds was read back against its evidence before the launch (DEC-057, decision 6): each cited requirement's text, the search's output, the code, git's output, GitHub's answers, and the session record, with their times. The read-backs found the statements corrected below ("Failures and fixes").
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. Each new requirement sits in the specification that owns its subject, names the requirements it extends, and states only what none of them states, with the directive's own words as its source (owner decisions 9, Rules 3 to 5, 16; DEC-051, decision 2, as corrected); no requirement, value, or system rule duplicates another (the requirement lines, the values register, and the System Rules Register searched for each); each requirement's stage is its specification's, and no later stage's work starts (DEC-038, DEC-040). The backup's reconciliation and retirement follow owner decisions 10 and 22 as for the earlier backups. Every current statement that item 4 was still to come, or that counted the retired backups, was searched (`git grep`) and updated; the dated records keep what they said at their date (DEC-037).
+
+**Verification 3 — independent end-to-end and failure audit:** an independent reviewer, a separate agent started with a fresh context, on a push-disabled copy of the repository at `a52e4ad` with the change applied, made as the traceability README states and identified by the hash of its `git diff`. Findings are numbered E-01, E-02, and so on, across runs, with the severity DEC-045's decision 2 gives. Run 1: PENDING.
 
 ## Failures and fixes
 
-PENDING.
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| Verification 2's duplicate search: CAP-047's further ranking considerations, as drafted, repeated strategy health (CAP-006) and opportunity expiration (CAP-006's opportunity duration, CAP-043's time sensitivity) | The draft listed the directive's ranking terms against CAP-043 and TNP-015 only | Both left out of CAP-047, which names CAP-006 among the requirements it extends ("The draft reconciled") | Checks 1 and 3 |
+| Verification 1's read-back of DEC-058: decision 3 said that each new requirement names the requirements it extends; OPP-022, TNP-028, TNP-029, and CAP-048 did not | Written from the draft's other lines, not read against each | Each of the four now opens with the requirements it extends | Checks 1 and 3 |
+| Verification 2's sweep: the roadmap's current position still said that items 4 and 5 come next | A statement of what comes next, outside the project state | Item 4 done (DEC-058), item 5 next. Class sweep: "item 4" and "items 4 and 5" in the current documents (`git grep`); the others are the owner's order, true as stated, or dated records | Check 1 |
+| Verification 1's read-back of this record: it said that five requirements of the draft (then six) already named what they extend, that the draft's two restatements were removed before its commit, that the code's only size limits were two values, and its Scope's list of the project state's changes was incomplete | Written from memory of the draft and of the code | Restated from the draft's text (five lines; the restatements removed between its first and second versions), from the code and its contract schemas, and from the diff | Checks 1 and 4 |
 
 ## Final status and remaining issues
 
