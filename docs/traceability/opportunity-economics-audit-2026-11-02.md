@@ -174,7 +174,39 @@ None required. Every point is either already canonical or stated by the owner in
 
 ## Reconciliation of the last change's temporary backup
 
-PENDING.
+The change that preserved owner decisions 26, committed as `a52e4ad`, was backed up on `claude/unverified-backup-owner-decisions-26` ([owner decisions 26 verification](owner-decisions-26-verification.md), "Identity"), in 8 commits, each on the one before and the first on `c2a6786`: `26ee405` (2026-11-02, 15:50 UTC), `d361546` (15:57), `32565ce` (16:01), `07af1be` (16:09), `f869703` (16:15), `a58896f` (20:23), `d1c63f7` (20:24), whose tree is that of the copy Gate 3 run 1 reviewed, and `081760e` (20:47). Each carries the seven labels, the emergency checkpoint record of §132 with its seven fields, and the session's trailer. On 2026-11-02, from 20:50 UTC, after `a52e4ad` was pushed and the machine checks passed on it, the builder compared the branch with `a52e4ad` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `a52e4ad`'s tree is `081760e`'s (`git diff --name-status`: no difference): the last backup holds run 1's fixes and the record's final status | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: run 1's fixes in the wording it specified, and its result | PASS |
+| 3 | No required work exists only on the temporary backup | No file of any of the 8 commits is missing from `a52e4ad` (`git diff --diff-filter=D`). Each differs from `c2a6786` only in `CLAUDE.md`, documents under `docs/`, the documentation tools' README, and the preserved-text manifest, so no code, test, tool's code, configuration, or workflow differs | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `a52e4ad`'s parent is `c2a6786`; none of the 8 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `a52e4ad` (20:50 to 20:51 UTC): the documentation checker and its self-test pass, and `compare_requirements.py c2a6786 --strict` reports 734 requirements before and after, none added, removed, or changed; the tests ran in the machine checks (check 7) | PASS |
+| 6 | Required documentation and traceability are updated | `a52e4ad` holds the record's final status, PASS, the checkpoint log's row for the change, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `a52e4ad` is on the remote branch (`git ls-remote`), pushed at 20:47 UTC, and the machine checks passed on it: [run 41522438377](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/41522438377), completed 20:49 UTC, every step, 1,108 tests passed | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `a52e4ad`, the remote branch's commit (20:50 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `a52e4ad`. Its last commit, `081760e`, is kept under the archive branch `claude/archive/unverified-backup-owner-decisions-26`, pushed at 20:51 UTC and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The deletion of `claude/unverified-backup-owner-decisions-26`, a git push made only if the branch was still at `081760e`, was refused at 20:51 UTC with HTTP 403; the branch stays at `081760e`, and is retired as DEC-054 (decision 4) provides.
+
+**The ten checks before "safe to delete"** ([owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set, §5), made on 2026-11-02 for the branch, at `081760e`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `a52e4ad` (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list (20:52 UTC): `claude/archive/unverified-backup-owner-decisions-26` at `081760e` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list; `git ls-remote`, 20:51 UTC) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (20:52 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate (DEC-052, decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | The [open-question register](../open-questions/register.md) and the project state: no decision on it is pending | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, runs on every push and pull request and names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`, 20:52 UTC) | PASS |
+| 9 | Traceability is updated | The project state's "Branches", this record, and the stage record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED. No deletion is tried again (§6): nothing shows that this environment's access has changed, and the owner has not asked. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-owner-decisions-26`; B, `081760e`; C, `claude/archive/unverified-backup-owner-decisions-26`, its work in `a52e4ad`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-11-02, 20:51 UTC); J, no retry now: no evidence that the access has changed; K, kept, retired, until a deletion is permitted, its archive branch kept for audit; L, none now: when a deletion is permitted, or the owner deletes it on GitHub, re-check that it is still retired and at `081760e`, delete it, and record it as RETIRED — PHYSICALLY DELETED.
 
 ## Checks
 
