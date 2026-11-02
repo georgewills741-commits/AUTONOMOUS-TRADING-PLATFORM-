@@ -4,6 +4,7 @@
 - **Date:** 2026-10-20
 - **Decided by:** project owner ([owner decisions 20](../handoffs/owner-decisions-20-question-on-the-rules-order-of-work-and-backups.md)); the builder's: the wording that applies the answers to the records, when a gate cycle counts as long (decision 3), and the reading of "final exit report" as the exit reports X9 and X10 (decision 2)
 - **Resolves:** OQ-31 ([DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md), decision 6)
+- **Later changes:** Decision 3's trigger is strengthened by [DEC-057](DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4: a change's material uncommitted work is pushed to its temporary backup branch as soon as it exists, again before each Gate 3 launch and before any wait or end of a turn that leaves it uncommitted, not only once its gate cycle counts as long. The rest of decision 3 is unchanged. The text below is kept as written.
 
 ## Context
 
