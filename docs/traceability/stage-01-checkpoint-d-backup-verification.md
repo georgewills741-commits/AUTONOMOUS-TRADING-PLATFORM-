@@ -1,0 +1,109 @@
+# Stage 1, Checkpoint D's Temporary Backup — Verification Record
+
+> **Status:** IN PROGRESS — the record of the change that reconciles checkpoint D's temporary backup with checkpoint D's commit, `fd750c3`, keeps the backup's last commit under an archive branch, and retires the backup's branch, whose deletion this environment refuses; the change also enters `fd750c3` and the machine checks' run on it in the project state and the stage record, and preserves the owner's question of 2026-10-29 as [owner decisions 25](../handoffs/owner-decisions-25-question-on-the-stage-and-progress.md) ([DEC-056](../decisions/DEC-056-preserve-owner-question-of-2026-10-29.md)). Its gates are in progress ("Final status and remaining issues"). Format: [traceability README](README.md).
+
+## Identity
+
+- **Date:** 2026-10-29 to 2026-11-02; the change was rebuilt on 2026-11-02, after a reset of the session's container lost its uncommitted work ("Failures and fixes")
+- **Stage:** 1 — FOUNDATION, after checkpoint D and before items 4 and 5 of the project state's "Next approved step": the last steps of checkpoint D's temporary backup, in the lifecycle of [owner decisions 10](../handoffs/owner-decisions-10-unverified-backup-and-lifecycle.md)
+- **Starts from:** commit `fd750c3` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote. This record's own commit is entered in the [project state](../project-state.md)'s checkpoint log by the next change.
+- **Authorization:** [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md) (Stage 1 only); [DEC-052](../decisions/DEC-052-apply-owner-answers-on-order-of-work-and-backups.md), decision 3 (a temporary backup is reconciled with its commit, its last commit is kept under an archive branch, and its branch is then deleted); [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md), decision 4 (a later backup whose deletion is refused is retired as the three earlier ones were, without a retry); DEC-056 (the owner's question kept, under [DEC-004](../decisions/DEC-004-preserve-original-handoffs.md) and [DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7).
+- **Temporary backup** (DEC-052, decision 3): pending: the rebuilt work is pushed to `claude/unverified-backup-checkpoint-d-reconciliation` before its Gate 3 run, since a session ended with it uncommitted ("Failures and fixes"). Its reconciliation with this change's commit, its archive branch, and the attempt to delete it are recorded by the next change.
+
+## Scope
+
+**Added:** this record; [owner decisions 25](../handoffs/owner-decisions-25-question-on-the-stage-and-progress.md), the owner's question of 2026-10-29, word for word; [DEC-056](../decisions/DEC-056-preserve-owner-question-of-2026-10-29.md), which preserves it and changes nothing.
+
+**Changed:**
+
+- **The [project state](../project-state.md):** its status line; the owner's messages listed under "Current stage" (owner decisions 25); the continuation contract's rows "Current task", "In progress, possibly partial", "Decisions in effect", "Other branches", and "Next safe action"; "Branches" (a column for checkpoint D's backup, its archive branch, and this change's backup as the active one); "In-progress work"; "Blockers"; "Recent decisions" (DEC-055 and DEC-056); "Recent changes"; "Next approved step"; and the checkpoint log (`fd750c3` entered, and this change's row).
+- **The [stage record](stage-01-foundation.md):** its status line; checkpoint D's row; X7; and the date of the §152 items' statuses, with the item on commits.
+- **The indexes:** the [documentation index](../README.md) lists this record and owner decisions 25, the [traceability README](README.md) this record, and the [decision log](../decisions/README.md) DEC-056.
+- **The preserved-text manifest** (`tools/docs/preserved-texts.sha256`): owner decisions 25.
+
+**Requirements:** none added, removed, or changed (check 3).
+
+**Out of scope:** items 4 and 5 of "Next approved step"; A4 of the [owner decisions 9 adoption verification](owner-decisions-09-adoption-verification.md), which the next change settles; the deletion of the retired backup branches, which this environment refuses (the project state's "Blockers").
+
+**The owner's messages after the last one the previous record names** (the [checkpoint D verification](stage-01-checkpoint-d-verification.md), whose list ends with the owner's "Continue" of 2026-10-28, 14:46 UTC, before the copy its last Gate 3 run reviewed, made at 21:12 UTC), up to the copy that this record's last Gate 3 run reviews: the owner's "Continue" of 2026-10-29, 07:38 UTC, procedural ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7); the owner's question of 2026-10-29, 08:01 UTC, on the stage and on whether the work is really progressing well, with the instruction to continue while answering, preserved word for word as owner decisions 25 by DEC-056; and the owner's "Try again" of 2026-11-02, 15:13 UTC, procedural (DEC-047, decision 7). The report of checkpoint D's Gate 3 run 3 as the client delivered it (2026-10-28, 21:37 UTC), the summary the client wrote when it compacted the session's context (21:44 UTC; isCompactSummary), the notices that the session's worker process was restarted (2026-10-28, 21:56 UTC, and 2026-10-29, 08:19 UTC; isMeta), the notice that this change's first Gate 3 launch had stopped (2026-10-29, 08:12 UTC), the stop hook's feedback, and the notices of background tasks are the client's own, not the owner's.
+
+## Reconciliation of checkpoint D's temporary backup
+
+Checkpoint D, commit `fd750c3`, was backed up on `claude/unverified-backup-checkpoint-d` while it was built and verified ([checkpoint D verification](stage-01-checkpoint-d-verification.md), "Identity"), in 11 commits, each on the one before and the first on `4983ac1`: `917f4f7` (2026-10-27, 21:47 UTC), `004cbd6` (22:15), `7a89d51` (22:46), `3ecd19e` (23:26), `5f7f7ee` (2026-10-28, 15:44), `b4ed63f` (16:08), `e9987f2` (16:12), `e0c2d7d` (19:57), `20da7b1` (19:59), `0249a85` (20:37), and `b16890b` (21:13). Checkpoint D's record names the trees of five of them: those of the copies Gate 3 runs 1, 2, and 3 reviewed (`3ecd19e`, `20da7b1`, and `b16890b`), and those on which the whole list of mutations ran before run 2 and at the end (`e9987f2` and `0249a85`). Each commit carries the backup's seven labels (TEMPORARY, UNVERIFIED, PENDING VERIFICATION, NOT FOR MERGE, NOT PRODUCTION-READY, NOT APPROVED, and NOT A VERIFIED CHECKPOINT), the emergency checkpoint record of master execution constitution §132 with its seven fields, and the session's trailer. On 2026-10-29, from 07:42 UTC, after `fd750c3` was pushed and the machine checks passed on it, the builder compared the branch with `fd750c3` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `fd750c3` differs from `b16890b`, the tree Gate 3 run 3 reviewed, in six documents only: the project state, the roadmap, the checkpoint D verification, the stage record, the verification matrix, and the documentation tools' README (`git diff --name-status`). They hold what checkpoint D's record says its commit adds to that tree: run 3's fixes, its result, the correction its root-cause review found, and the statuses checkpoint D's completion changes | PASS |
+| 2 | Corrections made during verification are preserved | Those six documents hold the fixes of run 3's findings that changed text (D-17, D-20, and D-21) and the record's final status; no code, test, tool's code, configuration, workflow, or lockfile differs. The fixes of runs 1 and 2 are in `b16890b`'s tree, which run 3 reviewed | PASS |
+| 3 | No required work exists only on the temporary backup | No file of any of the 11 commits is missing from `fd750c3` (`git diff --diff-filter=D`). Each test function (by module and name), each mutation (by name), and each self-test case (by its label) of any of them is in `fd750c3`, read from each commit with Python's `ast`: `fd750c3` has 309 test functions and 461 mutations, and none of the 11 commits has more of either. The earlier commits hold earlier states of the same files | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `fd750c3`'s parent is `4983ac1`; none of the 11 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `fd750c3` (07:43 UTC): the documentation checker and its self-test pass, and `compare_requirements.py 4983ac1 --strict` reports 734 requirements before and after, none added, removed, or changed; the tests ran in the machine checks (check 7) | PASS |
+| 6 | Required documentation and traceability are updated | `fd750c3` holds checkpoint D's verification record with its final status, PASS, the project state's checkpoint log row for checkpoint D, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `fd750c3` is on the remote branch (`git ls-remote`), pushed at 07:40 UTC, and the machine checks passed on it: [run 40836913155](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/40836913155), completed 07:41 UTC, every step, 1,108 tests passed | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `fd750c3`, the remote branch's commit (07:44 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `fd750c3`. Its last commit, `b16890b`, is kept under the archive branch `claude/archive/unverified-backup-checkpoint-d`, pushed at 07:44 UTC and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The deletion of `claude/unverified-backup-checkpoint-d`, a git push made only if the branch was still at `b16890b`, was refused at 07:45 UTC with HTTP 403; the branch stays at `b16890b`, and is retired as DEC-054 (decision 4) provides (below). On 2026-11-02 at 15:14 UTC, GitHub's branch list still showed both branches at `b16890b`, and the designated branch at `fd750c3`.
+
+## Retirement of checkpoint D's temporary backup branch
+
+`claude/unverified-backup-checkpoint-d` is retired as [owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set provides, as the four earlier backup branches were.
+
+**The ten checks before "safe to delete"** (that rule set, §5), made on 2026-10-29 for the branch, at `b16890b`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `fd750c3`: no file of any of its commits is missing from that commit, and the six documents in which its last commit differs are corrected or updated there (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list: `claude/archive/unverified-backup-checkpoint-d` at `b16890b` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list; `git ls-remote`) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it; the work goes on on the designated branch | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (07:45 UTC; again on 2026-11-02, 15:14 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate (DEC-052, decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | The [open-question register](../open-questions/register.md) and the project state: no decision on it is pending | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, runs on every push and pull request and names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`) | PASS |
+| 9 | Traceability is updated | The project state's "Branches", this record, and the stage record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED. No deletion is tried again (§6): nothing shows that this environment's access has changed, and the owner has not asked. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-checkpoint-d`; B, `b16890b`; C, `claude/archive/unverified-backup-checkpoint-d`, its work in `fd750c3`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-10-29, 07:45 UTC); J, no retry now: no evidence that the access has changed; K, kept, retired, until a deletion is permitted, its archive branch kept for audit; L, none now: when a deletion is permitted, or the owner deletes it on GitHub, re-check that it is still retired and at `b16890b`, delete it, and record it as RETIRED — PHYSICALLY DELETED.
+
+## Checks
+
+The documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit (check 4):
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | Pending |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | Pending |
+| 3 | No requirement changed | `python3 tools/docs/compare_requirements.py fd750c3 --strict` | Pending |
+| 4 | The code is unchanged | `git diff --name-only fd750c3` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | Pending |
+| 5 | Hygiene of the change | `git diff --check fd750c3`; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | Pending |
+| 6 | The preserved text | The round trip of owner decisions 25 against the session record, by script (`python3 -I`): its text block against the owner's user turn of 2026-10-29, 08:01 UTC; its line in `tools/docs/preserved-texts.sha256` | Pending |
+
+## Gates
+
+**Verification 1 — the change works as intended:** pending on the rebuilt tree.
+
+**Verification 2 — architecture and consistency:** pending on the rebuilt tree.
+
+**Verification 3 — independent end-to-end and failure audit:** an independent reviewer, a separate agent started with a fresh context, on a push-disabled copy of the repository at `fd750c3` with the change applied, identified by the hash of its `git diff`. Findings are numbered R-01, R-02, and so on, across runs, with the severity DEC-045's decision 2 gives. A first launch, on 2026-10-29 at 07:59 UTC, on a copy made at 07:58 UTC (`747e224c373f…`), stopped at the session's weekly usage limit before it reported (the client's notice, 08:12 UTC); it reviewed nothing, and its copy was lost with the container ([DEC-049](../decisions/DEC-049-preserve-owner-messages-of-2026-10-20.md), decision 3; "Failures and fixes"). Run 1: pending.
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| Verification 1's read-back (2026-10-29): the draft of the eight checks' check 3 said the earlier commits of the backup have fewer test functions and mutations than `fd750c3`; seven of them have 309 test functions, as many as `fd750c3` | Written from what was expected, not read back against the counts | Restated: none of the 11 commits has more of either | That check's comparison, read again |
+| Verification 2 (2026-10-29): the scope's list of the stage record's changes left out its status line and the date of its §152 statuses | The list was written before the last edits | The list completed | Verification 2's reading of the diff |
+| Gate 3: the first launch stopped at the session's weekly usage limit before it reported (2026-10-29, 08:12 UTC) | The limit; the review had not begun | A fresh reviewer on a new copy, as run 1 ([DEC-049](../decisions/DEC-049-preserve-owner-messages-of-2026-10-20.md), decisions 2 and 3) | Gate 3 run 1 |
+| The change's uncommitted work was lost: on 2026-11-02, at 15:13 UTC, the working tree was clean at `fd750c3`, without this change, and the builder's scratchpad, with the review copy and the outputs and scripts of the eight checks' comparisons, was gone; the session record held its entries from 2026-10-28, 21:44 UTC, on | The session's container was reset after the session's last turn of 2026-10-29 and before it resumed on 2026-11-02, while it waited for the usage limit to lift; the change had no backup, since its gate cycle did not yet count as long when its review was launched (DEC-052, decision 3) | The change rebuilt from the session's record of its edits, with what changed since: the owner's messages, owner decisions 25 and DEC-056, this record's account of the stopped launch and of the loss, and this change's backup; GitHub's branches and pull requests, and run 40836913155, read again on 2026-11-02 at 15:14 UTC, unchanged; the rebuilt work backed up on a temporary branch, since a session had ended with it uncommitted | Checks 1 to 6 on the rebuilt tree; Gate 3 run 1 |
+| Verification 2 (2026-11-02): the project state's "Recent decisions" did not list DEC-055, which checkpoint D added (its other lists of decisions name it) | Checkpoint D updated "Decisions in effect" and the decision log, not that list | DEC-055 listed there, with DEC-056 | Check 1 |
+
+## Final status and remaining issues
+
+**IN PROGRESS:** the gates are pending.
+
+Remaining, each in its canonical place: items 4 and 5 of the project state's "Next approved step" ([DEC-052](../decisions/DEC-052-apply-owner-answers-on-order-of-work-and-backups.md)); A4 of the owner decisions 9 adoption verification, settled by the next change, before item 4; this change's temporary backup, to be reconciled with this record's commit by the next change (the project state's "Other branches"); the deletion of the five retired backup branches, which this environment refuses (the project state's "Blockers").
+
+## Environment
+
+The system Python 3.11 for the documentation tools, and the system Python 3.12.3 for the comparison of the eight checks' check 3, read with `ast`; git; the machine checks' run and job log, and GitHub's lists of branches and pull requests, read through this session's access to GitHub.

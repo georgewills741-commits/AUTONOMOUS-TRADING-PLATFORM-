@@ -40,6 +40,7 @@
 | [Stage 1 checkpoint C verification](stage-01-checkpoint-c-verification.md) | Checkpoint C of Stage 1: the configuration and the `atp` command (U4), the security foundation (U5), check 7 as maintained tooling, and the items carried to checkpoint C |
 | [Owner decisions 22 verification](owner-decisions-22-verification.md) | The owner's instruction of 2026-10-27 to fix the limits on record, and two rule sets ([DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md)): the limit on a configuration document's size (V-41), measured and tested; the three temporary backup branches retired after the owner's checks; and the reconciliation of checkpoint C's temporary backup with its commit |
 | [Stage 1 checkpoint D verification](stage-01-checkpoint-d-verification.md) | Checkpoint D of Stage 1: the verification matrix (U7) and the stage record and closure (U8); the reconciliation of DEC-054's temporary backup and its branch's retirement; owner decisions 24 preserved (DEC-055) |
+| [Checkpoint D backup verification](stage-01-checkpoint-d-backup-verification.md) | The reconciliation of checkpoint D's temporary backup with its commit, `fd750c3`, by owner decisions 10's eight checks; its archive branch; its branch's retirement after owner decisions 22's ten checks, its deletion refused; owner decisions 25 preserved (DEC-056) |
 
 Which commit each record belongs to is in the [project state](../project-state.md)'s checkpoint log.
 
