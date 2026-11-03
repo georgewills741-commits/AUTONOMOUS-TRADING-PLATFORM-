@@ -15,13 +15,13 @@
 
 **Added:** this record; DEC-059; five requirements: OPS-022 and OPS-023 in [deployment and operational readiness](../operations/deployment-and-operational-readiness.md), MIG-034 in [hosting, backup, and migration](../operations/hosting-and-migration.md), SEC-010 in the [security architecture](../security/security-architecture.md), and MON-012 in [monitoring and observability](../operations/monitoring-and-observability.md); the [roadmap](../roadmap/roadmap.md)'s "Additions of 2026-11-03 by stage".
 
-**Changed:** SR-43 in the [System Rules Register](../requirements/system-rules-register.md) (OPS-022 listed, with the register's status line); the security architecture's stage line (SEC-010's stages); the generated [registry](../requirements/registry.md) and [handoff coverage](handoff-coverage.md); the roadmap's current position; the [owner rule sets reconciliation](owner-rule-sets-reconciliation.md) (its row for §18 to §25, and its list of where the gaps are handled); __PS__; the [stage record](stage-01-foundation.md) (__SR__); the indexes ([documentation index](../README.md), [traceability README](README.md), [decision log](../decisions/README.md)).
+**Changed:** SR-43 in the [System Rules Register](../requirements/system-rules-register.md) (OPS-022 listed, with the register's status line); the security architecture's stage line (SEC-010's stages); the generated [registry](../requirements/registry.md) and [handoff coverage](handoff-coverage.md); the roadmap's current position; the [owner rule sets reconciliation](owner-rule-sets-reconciliation.md) (its row for §18 to §25, and its list of where the gaps are handled); the project state (its "Last updated", its status line, and its bullet on owner decisions 14; the status table; the continuation contract's rows "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Decisions in effect", "Other branches", and "Next safe action"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent decisions"; "Recent changes"; "Next approved step"; the checkpoint log); the [stage record](stage-01-foundation.md) (its status line, its "Blockers" row, and the retirements listed for the certificate); the indexes ([documentation index](../README.md), [traceability README](README.md), [decision log](../decisions/README.md)).
 
 **Requirements:** five added, none removed or changed (check 3).
 
 **Out of scope:** X9, X2, X10, and the certificate; any later stage's design, interfaces, or code (each new requirement is designed and tested when its stage is planned); owner decisions 14's other sections, which DEC-046 applies through the existing mechanisms (the owner rule sets reconciliation).
 
-**The owner's messages after the last one the previous record names** (the [opportunity and economics audit](opportunity-economics-audit-2026-11-02.md), which names none after the owner's "Continue" of 2026-11-02, 20:23 UTC), up to the copy that this record's last Gate 3 run reviews: __MSGS__
+**The owner's messages after the last one the previous record names** (the [opportunity and economics audit](opportunity-economics-audit-2026-11-02.md), which names none after the owner's "Continue" of 2026-11-02, 20:23 UTC), up to the copy that this record's last Gate 3 run reviews: none. The report of the last change's Gate 3 run 2 as the client delivered it (2026-11-03, 03:00 UTC), the stop hook's feedback, and the notices of background tasks are the client's own.
 
 ## Method
 
@@ -155,18 +155,18 @@ The documentation tools, with the system Python 3.11, and git, on the working tr
 
 | # | Check | How | Result |
 |---|---|---|---|
-| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | __C1__ |
-| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | __C2__ |
-| 3 | The requirements added, and none removed or changed | `python3 tools/docs/compare_requirements.py 32fb8ba --strict` | __C3__ |
-| 4 | The code is unchanged | `git diff --name-only 32fb8ba` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | __C4__ |
-| 5 | Hygiene of the change | `git diff --check 32fb8ba`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | __C5__ |
-| 6 | The preserved texts unchanged | `git diff --name-only 32fb8ba -- docs/handoffs docs/builder` | __C6__ |
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration writes the five requirements into the registry and DEC-059's row into the handoff coverage, and nothing else |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | The requirements added, and none removed or changed | `python3 tools/docs/compare_requirements.py 32fb8ba --strict` | PASS: 744 requirements before, 749 after; added: MIG-034, MON-012, OPS-022, OPS-023, SEC-010; none removed or changed |
+| 4 | The code is unchanged | `git diff --name-only 32fb8ba` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | PASS: the sixteen files this change adds or changes are all under `docs/`: this record, DEC-059, the four specifications, the System Rules Register, the generated registry and handoff coverage, the roadmap, the project state, the stage record, the owner rule sets reconciliation, the documentation index, the traceability README, and the decision log |
+| 5 | Hygiene of the change | `git diff --check 32fb8ba`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved texts unchanged | `git diff --name-only 32fb8ba -- docs/handoffs docs/builder` | PASS: no file under `docs/handoffs/` or `docs/builder/` changes |
 
 ## Gates
 
-**Verification 1 — the change works as intended:** __V1__
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 6 pass, run again after this record's last edit before Gate 3's copy was made, and every statement the change adds was read back against its evidence before the launch (DEC-057, decision 6): each cited requirement's text, the search's output, git's output, GitHub's answers, and the session record, with their times. The read-backs found the statements corrected below ("Failures and fixes").
 
-**Verification 2 — architecture and consistency:** __V2__
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. Each new requirement sits in the specification that owns its subject, names the requirements it extends, and states what none of them states, or states only in general terms, with the owner's words, or what an established requirement it cites determines, as its source (owner decisions 9, Rules 3 to 5, 16; DEC-051, decision 2, as corrected); no requirement or system rule duplicates another (the requirement lines and the System Rules Register searched for each); each requirement's stage is its specification's or that of DEC-059's decision 5, no later stage's work starts (DEC-038, DEC-040), and Stage 1's scope is unchanged (DEC-057, decision 5). The backup's reconciliation and retirement follow owner decisions 10 and 22 as for the earlier backups. Every current statement that item 5 was still to come, or that counted the retired backups, was searched (`git grep`) and updated; the dated records keep what they said at their date (DEC-037).
 
 **Verification 3 — independent end-to-end and failure audit:** an independent reviewer, a separate agent started with a fresh context, on a push-disabled copy of the repository at `32fb8ba` with the change applied, made as the traceability README states and identified by the hash of its `git diff`. Findings are numbered T-01, T-02, and so on, across runs, with the severity DEC-045's decision 2 gives.
 
@@ -179,6 +179,7 @@ The documentation tools, with the system Python 3.11, and git, on the working tr
 | Verification 1's read-back of DEC-059: its "Decided by" and decision 6 gave the owner the reconciliation's procedure; DEC-046, whose decision 3 provides it, was decided by the builder | Written from the rules' request, not from DEC-046's own "Decided by" | The procedure is the builder's, as DEC-046 provides it; the owner's are the rules and the drafting rules | Check 1 |
 | Verification 1's read-back of DEC-059: its context counted six elements that no requirement named; the mapping names more | A count made before the mapping was complete | The count removed; the elements listed, as the mapping gives them | Check 1 |
 | Verification 1's read-back of OPS-023: "deployment targets" could be read as machines, against local hosting (MIG-001, MIG-002) and TEC-011's single host | The rule's words taken without the hosting requirements | DEC-059's second reading: a deployment target is an environment's deployment, not the machine; the contradictions table names the pair | Check 1 |
+| Verification 2's sweep: the project state's "Last updated" still read 2026-11-02 in `32fb8ba`, though item 4's fixes changed the file on 2026-11-03 | The date of the state not updated with its last change; neither of item 4's runs read it | Dated 2026-11-03. Class sweep: "Last updated" and "as of" in the current documents: no other is stale | Check 1 |
 
 ## Final status and remaining issues
 
