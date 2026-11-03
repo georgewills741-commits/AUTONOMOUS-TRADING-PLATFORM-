@@ -1,6 +1,6 @@
 # Security Architecture
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); the roadmap places SEC-006 and SEC-007 in ARBITRAGE, SEC-008 in AI INTELLIGENCE, and SEC-009 in OPERATIONALIZATION, and the Stage 1 plan, section 3.4, places SEC-002 in AI INTELLIGENCE · **Sources:** §89 (also §52)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — its Stage 1 foundation built: the [threat model](threat-model.md), the repository's secret test, and secrets in the configuration · **System:** SYS-31 (cross-cutting) · **Roadmap stage:** FOUNDATION ("Security foundation"); the roadmap places SEC-006 and SEC-007 in ARBITRAGE, SEC-008 in AI INTELLIGENCE, and SEC-009 in OPERATIONALIZATION, and SEC-010 in DATA FOUNDATION and each later stage, for the controls each stage builds; the Stage 1 plan, section 3.4, places SEC-002 in AI INTELLIGENCE · **Sources:** §89 (also §52)
 
 Canonical definition of what the platform must protect. The builder's own rules on secrets (constitution Rules 110 and 153) also apply to this repository.
 
@@ -40,6 +40,12 @@ Already covered: live credentials never in lower environments and paper/live cre
 ## Precedence of security controls ([DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md))
 
 The owner ranked security controls above the user's hard policy, below the safety floor (RSK-049 in the [Risk Engine](../risk/risk-engine.md)). A user hard policy cannot override, for example, the transfer-authority restrictions (SEC-006, SEC-007) or AI least privilege (SEC-008); changing a security control needs a formal, audited security change.
+
+## The owner's rules of 2026-10-14 applied
+
+A new requirement from the owner's rules of 2026-10-14 on company-grade order and traceability ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), its §21), applied by [DEC-059](../decisions/DEC-059-platform-traceability-rules.md). Each of those rules is mapped to its existing requirements in the [platform traceability reconciliation](../traceability/platform-traceability-reconciliation-2026-11-03.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-059's decision 3 says why none of them is reworded).
+
+- **SEC-010** Security traceability and exceptions · CONFIRMED REQUIREMENT · DEC-059 — In addition to ARCH-040's chain, each security control must be traceable from its security requirement to its control, implementation, test, verification, and monitoring. In addition to RSK-049, GOV-016, and STR-021, important security exceptions must not exist informally: any exception must follow the established governance and approval.
 
 ## Findings
 

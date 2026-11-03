@@ -1,6 +1,6 @@
 # Hosting, Backup, and Migration
 
-> **Status:** DOCUMENTED (Handoff Parts 2 and 3) — MIG-004 and MIG-010 built into `atp.config` at Stage 1's checkpoint C, which also holds MIG-027's identifiers as validated settings; the rest not implemented · **Owner:** cross-cutting requirement set (MIG); `atp.config` is its configuration module ([architecture-to-repository map](../architecture/source-of-truth-map.md#architecture-to-repository)), and the modules for the rest are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341; Part 3: P3§491, P3§497; owner decisions: DEC-030, DEC-036
+> **Status:** DOCUMENTED (Handoff Parts 2 and 3) — MIG-004 and MIG-010 built into `atp.config` at Stage 1's checkpoint C, which also holds MIG-027's identifiers as validated settings; the rest not implemented · **Owner:** cross-cutting requirement set (MIG); `atp.config` is its configuration module ([architecture-to-repository map](../architecture/source-of-truth-map.md#architecture-to-repository)), and the modules for the rest are assigned when OPERATIONALIZATION is planned · **Roadmap stage:** OPERATIONALIZATION, except the design rules MIG-004 and MIG-010, which apply from the first implemented stage, and MIG-034, which the roadmap places in DATA FOUNDATION and each later stage, for the settings each stage adds · **Sources:** P2§128–P2§145, P2§149–P2§154, P2§159, P2§167, P2§237–P2§263, P2§268, P2§318–P2§321, P2§340, P2§341; Part 3: P3§491, P3§497; owner decisions: DEC-030, DEC-036
 >
 > Canonical definition of where the platform can run and how its state is backed up and moved between hosts. Split-brain protection, the active execution authority, failover, and standby are defined in [Recovery and Reconciliation](../systems/recovery-and-reconciliation.md) (REC-019 to REC-022). The deployment package and change control are in [Deployment and Operational Readiness](deployment-and-operational-readiness.md) (OPS-007 to OPS-013). Requirement line format: [`docs/requirements/README.md`](../requirements/README.md).
 
@@ -62,6 +62,12 @@ MIG-031 and MIG-032 come from [Handoff Part 3](../handoffs/part-3-consolidated-a
 From [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) ([owner decisions 5](../handoffs/owner-decisions-05-audit-findings.md), Q1), resolving CF-20.
 
 - **MIG-033** Production does not depend on one machine · CONSTRAINT · DEC-036 — Production must not depend on any single machine, the owner's own computer included: it runs as an active copy with a standby that can take over (REC-023) and can be rebuilt without the owner (OPS-017). Local hosting stays supported (MIG-001, MIG-002); a machine of the owner's may host production only if it meets the same production-readiness criteria as any other production host (RDY-022, RMP-010).
+
+## The owner's rules of 2026-10-14 applied
+
+A new requirement from the owner's rules of 2026-10-14 on company-grade order and traceability ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), its §20), applied by [DEC-059](../decisions/DEC-059-platform-traceability-rules.md). Each of those rules is mapped to its existing requirements in the [platform traceability reconciliation](../traceability/platform-traceability-reconciliation-2026-11-03.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-059's decision 3 says why none of them is reworded).
+
+- **MIG-034** Configuration traceability · CONFIRMED REQUIREMENT · DEC-059 — In addition to MIG-010 and MIG-011, to ARCH-018 for operating values, and to GOV-014, which allows one configuration source, each important setting records its canonical source, owner, environment, default, allowed range, validation, security classification, the consequences of a change, and the tests it requires.
 
 ## How this fits the rest of the platform
 
