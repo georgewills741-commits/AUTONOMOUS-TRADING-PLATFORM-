@@ -1,6 +1,6 @@
 # Dependency Map
 
-> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031, Handoff Part 2 (edges D-54 to D-65), and Handoff Part 3 (edges D-66 to D-71). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030).
+> **Status:** ACTIVE — derived from Handoff Part 1, updated 2026-09-30 with decisions DEC-006 to DEC-031, Handoff Part 2 (edges D-54 to D-65), and Handoff Part 3 (edges D-66 to D-71). Part 2 gave roadmap sequences (RMP-004 to RMP-011) but no complete per-requirement dependency list; requirement-level dependencies are recorded when interfaces are designed (ARCH-030). SYS-27 (AI Memory) and SYS-32 (Platform Account / Custody, FUTURE) have no edge here: SYS-27's are recorded when AI INTELLIGENCE's interfaces are designed (ARCH-030), and SYS-32's only if it is ever built ([DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)); recorded on 2026-11-03 by the [company-grade order audit](../traceability/company-grade-order-audit-2026-11-03.md).
 >
 > Canonical record of which systems depend on which (ARCH-014). **STATED** edges come directly from handoff text (source given). **DECIDED** edges were fixed by a decision record. **INFERRED** edges are the builder's reading of the text. System IDs are from the [system registry](system-registry.md).
 

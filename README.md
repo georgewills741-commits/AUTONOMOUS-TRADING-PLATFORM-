@@ -1,6 +1,6 @@
 # AUTONOMOUS-TRADING-PLATFORM-
 
-A production-grade autonomous cryptocurrency trading platform, in **Stage 1 (FOUNDATION)**: the owner approved the Stage 1 plan and authorized its implementation on 2026-10-05. The code foundation is being built in the plan's checkpoints A to D; the platform has no trading capability, and no later stage is authorized.
+A production-grade autonomous cryptocurrency trading platform, in **Stage 1 (FOUNDATION)**: the owner approved the Stage 1 plan and authorized its implementation on 2026-10-05. The code foundation was built in the plan's checkpoints A to D, each verified and committed, and the stage's exit reports are under way; the platform has no trading capability, and no later stage is authorized.
 
 For where the project currently stands, start with [`docs/project-state.md`](docs/project-state.md).
 
