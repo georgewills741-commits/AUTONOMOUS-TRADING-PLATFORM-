@@ -37,6 +37,12 @@ This system also owns two components that Part 2 adds, each specified in its own
 - the [Daily System Intelligence Dashboard and Report](daily-system-intelligence.md) (DSI), which extends the daily report of MON-008;
 - [Incident Management](incident-management.md) (INC).
 
+## The owner's rules of 2026-10-14 applied
+
+A new requirement from the owner's rules of 2026-10-14 on company-grade order and traceability ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), its §24), applied by [DEC-059](../decisions/DEC-059-platform-traceability-rules.md). Each of those rules is mapped to its existing requirements in the [platform traceability reconciliation](../traceability/platform-traceability-reconciliation-2026-11-03.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-059's decision 3 says why none of them is reworded).
+
+- **MON-012** Operational event records · SYSTEM REQUIREMENT · DEC-059 — In addition to MON-009 and AUD-002, where applicable an important operational event records: the event; the system; the state before; the action; the state after; the result; any error or warning; the recovery action. Logs should be useful for debugging, incident response, audit, reconciliation, performance, security, and operational diagnosis; SEC-005 keeps secrets out of them.
+
 ## Findings
 
 **Resolved:** DUP-40 → [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md): MON-009 no longer restates TEC-012's operational-log retention; it points to TEC-012 and V-19 ([findings register](../conflicts/register.md); raised by the [master knowledge-base audit](../traceability/master-knowledge-base-audit-2026-10-02.md)).

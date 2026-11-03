@@ -63,6 +63,12 @@ From [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) ([owner d
 
 - **MIG-033** Production does not depend on one machine · CONSTRAINT · DEC-036 — Production must not depend on any single machine, the owner's own computer included: it runs as an active copy with a standby that can take over (REC-023) and can be rebuilt without the owner (OPS-017). Local hosting stays supported (MIG-001, MIG-002); a machine of the owner's may host production only if it meets the same production-readiness criteria as any other production host (RDY-022, RMP-010).
 
+## The owner's rules of 2026-10-14 applied
+
+A new requirement from the owner's rules of 2026-10-14 on company-grade order and traceability ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), its §20), applied by [DEC-059](../decisions/DEC-059-platform-traceability-rules.md). Each of those rules is mapped to its existing requirements in the [platform traceability reconciliation](../traceability/platform-traceability-reconciliation-2026-11-03.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-059's decision 3 says why none of them is reworded).
+
+- **MIG-034** Configuration traceability · CONFIRMED REQUIREMENT · DEC-059 — In addition to MIG-010 and MIG-011, to ARCH-018 for operating values, and to GOV-014, which allows one configuration source, each important setting records its canonical source, owner, environment, default, allowed range, validation, security classification, the consequences of a change, and the tests it requires.
+
 ## How this fits the rest of the platform
 
 - **Technology.** The initial deployment is Docker Compose on one host (TEC-011, [DEC-009](../decisions/DEC-009-technology-stack.md)). That host can be the operator's computer or a server, so MIG-001 holds without a second deployment. Production runs on at least an active and a standby host (DEC-030), each meeting the production-readiness criteria (MIG-033). The Compose definition is the single deployment source of truth (OPS-010); local and server differ only through explicit overrides.
