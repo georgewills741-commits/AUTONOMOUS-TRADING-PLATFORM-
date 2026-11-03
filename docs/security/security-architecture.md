@@ -45,7 +45,7 @@ The owner ranked security controls above the user's hard policy, below the safet
 
 A new requirement from the owner's rules of 2026-10-14 on company-grade order and traceability ([owner decisions 14](../handoffs/owner-decisions-14-company-grade-order-and-traceability.md), its §21), applied by [DEC-059](../decisions/DEC-059-platform-traceability-rules.md). Each of those rules is mapped to its existing requirements in the [platform traceability reconciliation](../traceability/platform-traceability-reconciliation-2026-11-03.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-059's decision 3 says why none of them is reworded).
 
-- **SEC-010** Security traceability and exceptions · CONFIRMED REQUIREMENT · DEC-059 — In addition to ARCH-040's chain, each security control should be traceable from its security requirement to its control, implementation, test, verification, and monitoring. In addition to RSK-049 and GOV-016, important security exceptions must not exist informally: any exception follows the established governance and approval.
+- **SEC-010** Security traceability and exceptions · CONFIRMED REQUIREMENT · DEC-059 — In addition to ARCH-040's chain, each security control must be traceable from its security requirement to its control, implementation, test, verification, and monitoring. In addition to RSK-049, GOV-016, and STR-021, important security exceptions must not exist informally: any exception must follow the established governance and approval.
 
 ## Findings
 
