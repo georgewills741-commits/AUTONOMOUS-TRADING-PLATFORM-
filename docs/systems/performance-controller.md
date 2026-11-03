@@ -58,6 +58,12 @@ New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-
 
 PFC-018's actions are applied through PFC-008 and the owning systems (the Global Capital Authority reduces allocation; the Risk Engine suspends; Strategy Management revalidates or retires), never by this controller editing a strategy (STR-006, STR-010). P3§382 (canary failure) is STR-017.
 
+## The owner's directive of 2026-10-07 applied
+
+New requirements from the owner's directive of 2026-10-07 ([owner decisions 8](../handoffs/owner-decisions-08-opportunity-universe-and-economics.md)), applied by [DEC-058](../decisions/DEC-058-opportunity-universe-and-economics.md). The directive restates principles that are already canonical; each is mapped to its existing requirements in the [opportunity and economics audit](../traceability/opportunity-economics-audit-2026-11-02.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-058's decision 3 says why none of them is reworded).
+
+- **PFC-019** Opportunity outcome categories · SYSTEM REQUIREMENT · DEC-058 — In addition to the reasons of PFC-012 and PFC-016, missed- and false-opportunity analysis distinguishes, where measurable: detected and executed; detected and rejected, by reason (risk, liquidity, execution confidence, capital, and the others); detected but expired; disappeared before execution; missed because of system, data, or venue latency; never detected (where measurable, found afterwards in recorded market data). The results are used to improve data quality, detection, filtering, execution, latency, capital allocation, strategy quality, and system performance, through the validated change processes and never by weakening safety controls (RSK-044, PFC-018).
+
 ## Boundary (§92)
 
 - **Owns:** the comparison of expected against actual results, and deterioration detection (PFC-002, PFC-003).

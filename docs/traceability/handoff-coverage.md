@@ -146,6 +146,7 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-034](../decisions/DEC-034-verification-and-platform-independence.md) | PLT-029, OPS-021, GOV-021, GOV-022, GOV-023 |
 | [DEC-035](../decisions/DEC-035-owner-decisions-part-3-findings.md) | RSK-049, GOV-024 |
 | [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) | MIG-033 |
+| [DEC-058](../decisions/DEC-058-opportunity-universe-and-economics.md) | OPP-021, OPP-022, TNP-027, TNP-028, TNP-029, TNP-030, CAP-047, CAP-048, CAP-049, PFC-019 |
 
 ## §100 questions — where the repository answers them
 

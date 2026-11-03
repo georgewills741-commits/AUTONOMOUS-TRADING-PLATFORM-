@@ -47,6 +47,13 @@ New requirements from [Handoff Part 3](../handoffs/part-3-consolidated-autonomy-
 
 OPP-017 to OPP-020 stay within OPP-013: whole-market scanning remains bounded by data quality, liquidity, venue availability, resource constraints, risk policy, and market eligibility, and never runs everything through AI (OPP-004). The platform-wide principle is PLT-022. P3§516 (the complete opportunity loop) is OPP-005 with the economic, capital, and risk steps of TNP-020, CAP-016, and AIV-016. Missed and false opportunities (P3§392, P3§393) are analysed by the Performance Controller (PFC-012, PFC-013, PFC-016) from this system's Opportunity Database (OPP-014, OPP-015).
 
+## The owner's directive of 2026-10-07 applied
+
+New requirements from the owner's directive of 2026-10-07 ([owner decisions 8](../handoffs/owner-decisions-08-opportunity-universe-and-economics.md)), applied by [DEC-058](../decisions/DEC-058-opportunity-universe-and-economics.md). The directive restates principles that are already canonical; each is mapped to its existing requirements in the [opportunity and economics audit](../traceability/opportunity-economics-audit-2026-11-02.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (DEC-058's decision 3 says why none of them is reworded).
+
+- **OPP-021** Scanning does not stop at a found opportunity · CONSTRAINT · DEC-058 — In addition to OPP-001 and OPP-018, opportunity discovery continues across the authorized universe whatever has already been found. Finding an opportunity of any size (5%, 3%, 1%, or less) is not a reason to stop searching or to ignore smaller opportunities. Computational resources are managed within the bounds of OPP-013 and the backpressure controls of PERF-014 and PERF-021.
+- **OPP-022** Search prioritization is not a floor · CONSTRAINT · DEC-058 — In addition to TNP-005 and TNP-016, which allow no universal minimum, the system may search and evaluate higher-value candidates first (for example 5%, then 3%, 2%, 1.5%, 1%, 0.9%, 0.5%, 0.4%, 0.2%, 0.1%, and onward across the valid range). This order is a search priority only. It must never become: a minimum profit requirement; a trade quota; a daily target; a stopping condition; a universe restriction; a reason to ignore smaller opportunities.
+
 ## Boundary (§92)
 
 - **Owns:** scanning of the configured universe and production of candidate opportunities.
