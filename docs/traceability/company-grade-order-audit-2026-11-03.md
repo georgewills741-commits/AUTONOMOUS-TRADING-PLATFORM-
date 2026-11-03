@@ -14,7 +14,7 @@
 
 **Added:** this record.
 
-**Changed:** the [stage record](stage-01-foundation.md) (X9's row and status line; the retirements listed for the certificate); the project state (its status line; the continuation contract's rows "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Other branches", and "Next safe action"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent changes"; "Next approved step"; the checkpoint log); the indexes ([documentation index](../README.md), [traceability README](README.md)); and the corrections of "Inconsistencies found and their handling": the documentation index's "Current state", the repository's [README](../../README.md), and the [dependency map](../architecture/dependency-map.md)'s status line.
+**Changed:** the [stage record](stage-01-foundation.md) (X9's row and status line; the retirements listed for the certificate); the project state (its status line; the continuation contract's rows "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Other branches", and "Next safe action"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent changes"; "Next approved step"; the checkpoint log); the [roadmap](../roadmap/roadmap.md)'s current position; the indexes ([documentation index](../README.md), [traceability README](README.md)); and the corrections of "Inconsistencies found and their handling": the documentation index's "Current state", the repository's [README](../../README.md), and the [dependency map](../architecture/dependency-map.md)'s status line.
 
 **Requirements:** none added, removed, or changed (check 3).
 
@@ -24,13 +24,13 @@
 
 ## Method
 
-Each item was reviewed on the tree at `0a9a8a5` with this change: by reading the canonical documents, and by script (`python3`) over the tracked files (`git ls-files`), the requirements registry, the decision log, the system registry, the source-of-truth map, the verification matrix, the values register, the System Rules Register, git, and GitHub's branch list and pull requests. What each count counts is stated with it, so that a fresh session can repeat it (DEC-057, decision 7). A result that another record holds is cited, not restated (DEC-057, decision 6). An inconsistency is a statement that the repository contradicts; a gap is something the canonical place does not yet hold; each is handled below.
+Each item was reviewed on the files tracked at `0a9a8a5`, the commit this change starts from, and, where this change alters them, on the result: by reading the canonical documents, and by script (`python3`) over the tracked files (`git ls-files`), the requirements registry, the decision log, the system registry, the source-of-truth map, the verification matrix, the values register, the System Rules Register, git, and GitHub's branch list and pull requests. What each count counts is stated with it, so that a fresh session can repeat it (DEC-057, decision 7). A result that another record holds is cited, not restated (DEC-057, decision 6). An inconsistency is a statement that the repository contradicts; a gap is something the canonical place does not yet hold; each is handled below.
 
 ## The audit (owner decisions 14, §40)
 
 | # | Item | Review performed | Result |
 |---|---|---|---|
-| 1 | Canonical documents and locations | The 286 tracked files, 216 of them Markdown documents under `docs/`: each document's status banner, or, where it has none, its opening lines; the [source-of-truth map](../architecture/source-of-truth-map.md); the documentation checker (check 1), which resolves every link and reference and finds no orphaned document | Every document states its status or its purpose in its opening lines: 195 have a status line (42 ACTIVE, 42 DOCUMENTED, 15 REFERENCE, 31 HISTORICAL, 3 DRAFT, 1 APPROVED, 1 DECIDED, and the 60 decision records, ACCEPTED), and the other 21 (the indexes, the project state, the generated files, and verification records whose banner gives their date and scope) open with their purpose. The source-of-truth map names one canonical location for each concept it lists, and every system's canonical document is in the [system registry](../architecture/system-registry.md) (the map's "Product domains"), each of the 34 present. Two statements of the current state were stale (O-01, O-02) |
+| 1 | Canonical documents and locations | The 286 files tracked at `0a9a8a5`, 216 of them Markdown documents under `docs/`: each document's status banner, or, where it has none, its opening lines; the [source-of-truth map](../architecture/source-of-truth-map.md); the documentation checker (check 1), which resolves every link and reference and finds no orphaned document | Every document states its status or its purpose in its opening lines: 195 have a status line (42 ACTIVE, 42 DOCUMENTED, 15 REFERENCE, 31 HISTORICAL, 3 DRAFT, 1 APPROVED, 1 DECIDED, and the 60 decision records, ACCEPTED), and the other 21 state it otherwise: the indexes, the project state, and the generated files open with their purpose, and the other records and one specification state their status in words ("verification record of …", custody's "FUTURE, not built") or give their date and scope, or their result, in their banner. This record adds one ACTIVE document. The source-of-truth map names one canonical location for each concept it lists, and every system's canonical document is in the [system registry](../architecture/system-registry.md) (the map's "Product domains"), each of the 34 present. Two statements of the current state were stale (O-01, O-02) |
 | 2 | Requirements traceability status | The [registry](../requirements/registry.md)'s 749 rows, each row's source, owner, specification, default stage, and approval; the [verification matrix](verification-matrix.md) | Every requirement has a source (Handoff Part 1, 228; Part 2, 185; Part 3, 109; decision records, 227), an owner (47 owners), its specification, a default stage, which the [roadmap](../roadmap/roadmap.md) refines for individual requirements, and its approval. The 49 requirements of the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md)'s section 3.1 are traced to their implementation, tests, and verification in the matrix, which the checker regenerates and enforces (the stage record's X3); every requirement stays DOCUMENTED as a whole, with what Stage 1 delivers of each recorded in the matrix ([requirements README](../requirements/README.md)) |
 | 3 | Decision traceability status | The 60 decision records against the [decision log](../decisions/README.md)'s 60 rows; each row's status and "Decided by"; the requirements whose source is a decision | Each record is in the log, ACCEPTED (some noting what later decisions changed), with who decided it; 17 early records keep who decided only in the log, which is canonical for it. 227 requirements cite a decision as their source, and the [handoff coverage](handoff-coverage.md)'s decision table, generated, lists them by decision |
 | 4 | Architecture traceability status | The system registry's 34 systems: each one's canonical document, requirement prefix, and stage; the source-of-truth map's "Architecture to repository" | Each system's canonical document exists, with its prefix and stage; the five code modules built (`atp`, `atp.numeric`, `atp.contracts`, `atp.config`, `atp.cli`) each have one row, with their responsibility, owner, requirements, code, tests, documentation, and the modules each may import, which `tests/repository/test_structure.py` enforces |
@@ -101,19 +101,36 @@ So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED.
 
 ## Checks
 
-PENDING.
+The documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit (check 4):
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changes no generated file |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 0a9a8a5 --strict` | PASS: 749 requirements before and after; none added, removed, or changed |
+| 4 | The code is unchanged | `git diff --name-only 0a9a8a5` and `git ls-files --others --exclude-standard`; the machine checks run the tests on this record's commit | PASS: the eight files this change adds or changes are documents: this record, the project state, the stage record, the roadmap, the documentation index, the traceability README, the dependency map, and the repository's README |
+| 5 | Hygiene of the change | `git diff --check 0a9a8a5`, its new file included; a scan of the lines this change adds, its new file included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved texts unchanged | `git diff --name-only 0a9a8a5 -- docs/handoffs docs/builder` | PASS: no file under `docs/handoffs/` or `docs/builder/` changes |
 
 ## Gates
 
-PENDING.
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 6 pass, run again after this record's last edit before Gate 3's copy was made, and the statements the change adds were read back against their evidence before the launch (DEC-057, decision 6): each count against its script's output, each cited record and requirement against its text, git's output, and GitHub's answers, with their times. The read-backs found the statements corrected below ("Failures and fixes").
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. The audit reports each of §40's items from the canonical place that holds it and cites the records that hold other results (DEC-057, decision 6), adding no second source; the three corrections bring two summaries into line with the project state, which is canonical for where the project stands, and make the dependency map say what it does not hold, as its own status line already does for requirement-level edges; no requirement, decision, or rule changes. The backup's reconciliation and retirement follow owner decisions 10 and 22 as for the earlier backups. Every current statement that X9 was still to come, or that counted the retired backups, was searched (`git grep`) and updated; the dated records keep what they said at their date (DEC-037).
+
+**Verification 3 — independent end-to-end and failure audit:** PENDING.
 
 ## Failures and fixes
 
-PENDING.
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| Verification 1's read-back: the record said that no handoff states an edge for SYS-27, which the audit did not check | A reason written for the gap, not found | The gap stated without a reason, in the record and in the dependency map | Check 1 |
+| Verification 1's read-back: the record's counts of documents did not say which tree they counted, and item 1 described the 21 documents without a status line as indexes, generated files, and records giving their date and scope, though some state their status in words | The counts taken by `git ls-files`, which does not list this record; the 21 described from a sample | The counts are those of the files tracked at `0a9a8a5`, as the method and item 1 now say, with this record added; item 1 describes the 21 as they are | Check 1 |
 
 ## Final status and remaining issues
 
 PENDING.
+
 
 ## Environment
 
