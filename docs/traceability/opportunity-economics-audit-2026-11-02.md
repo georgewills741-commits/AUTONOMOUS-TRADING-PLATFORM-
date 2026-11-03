@@ -21,7 +21,7 @@
 
 **Out of scope:** item 5 of "Next approved step"; any later stage's design, interfaces, or code (each new requirement is designed and tested when its stage is planned); the values V-42 and V-43, which are derived or set with their stages.
 
-**The owner's messages after the last one the previous record names** (the [owner decisions 26 verification](owner-decisions-26-verification.md), whose list ends with the owner's "Continue" of 2026-11-02, 20:23 UTC), up to the copy that this record's last Gate 3 run reviews: none. The report of that change's Gate 3 run 1 as the client delivered it (20:43 UTC), the stop hook's feedback, and the notices of background tasks are the client's own.
+**The owner's messages after the last one the previous record names** (the [owner decisions 26 verification](owner-decisions-26-verification.md), whose list ends with the owner's "Continue" of 2026-11-02, 20:23 UTC), up to the copy that this record's last Gate 3 run reviews: none. The reports of that change's Gate 3 run 1 and of this change's as the client delivered them (2026-11-02, 20:43 and 21:31 UTC), the stop hook's feedback, the notices of background tasks and of the worker's restarts, and the summary the client wrote when it compacted the session (2026-11-03, 02:25 UTC) are the client's own.
 
 ## The status report the owner asked for first
 
