@@ -11,23 +11,85 @@
 
 ## Scope
 
-PENDING.
+**Added:** this record.
+
+**Changed:** the stage record (the exit checklist's X1, X2, X6, X7, and X10, and its date; the §152 items and their date; the completion certificate, written at its end; its status line; its "Blockers"; the retirements listed for the certificate); the [roadmap](../roadmap/roadmap.md) (its current position; the feature-status table's row for U8); the project state (its status line; the table under "Current stage"; the continuation contract's rows "Current stage and substage", "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Pending verification", "Other branches", and "Next safe action"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent changes"; "Next approved step"; the checkpoint log); the indexes ([documentation index](../README.md), [traceability README](README.md)).
+
+**Requirements:** none added, removed, or changed (check 3).
+
+**Out of scope:** the owner's approval to proceed to Stage 2 planning (X8), which is asked for after this change's commit; any later stage's work.
+
+**The owner's messages after the last one the previous record names** ([Stage 1 transition audit](stage-01-transition-audit.md): "Continue" of 2026-11-05, 02:40 UTC), up to the copy that this record's last Gate 3 run reviews: OWNERMSGS. Since that record's copy (2026-11-05, 02:59 UTC), the report of its Gate 3 run as the client delivered it (03:31 UTC), the notices of background tasks, and the stop hook's feedback are the client's own.
 
 ## Checks
 
-PENDING.
+The change's own checks: the documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit, and they ran on `6d58014` in the recovery test of X10's repetition.
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changes no generated file |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 6d58014 --strict` | PASS: 749 requirements before and after; none added, removed, or changed |
+| 4 | The code is unchanged | `git diff --name-only 6d58014` and `git ls-files --others --exclude-standard` | PASS: the files this change adds or changes are documents under `docs/` |
+| 5 | Hygiene of the change | `git diff --check 6d58014`, its new file included; a scan of the lines this change adds, its new file included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved texts unchanged | `git diff --name-only 6d58014 -- docs/handoffs docs/builder` | PASS: no file under `docs/handoffs/` or `docs/builder/` changes |
 
 ## X10 repeated on `6d58014`
 
-PENDING.
+X10's pass condition: a correction it requires reopens X2, X6, and X7, and X10 is repeated on the new final commit. Its correction Y-01 is carried by `6d58014`, which passed its gates ([Stage 1 transition audit](stage-01-transition-audit.md)) and its machine checks ([run 41962764078](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/41962764078)), so X2 and X7 are closed again, and X10 was repeated on that commit on 2026-11-05, from 03:38 UTC, with the scripts and commands used on `ff2a282`:
+
+| § | What was checked on `6d58014` | Result |
+|---|---|---|
+| §23 | The fifteen confirmations again: each artifact the plan's units name is present, none missing; the four packages (18 Python files) and the tests (19), with 1,108 tests passing in the machine checks and in the recovery test below; DEC-001 to DEC-061 in the decision log; the owner's messages in the session record, from 2026-10-28, 21:44 UTC on, each preserved word for word, procedural, or, for 2026-11-03, 07:21 UTC, the same words as owner decisions 26; every Gate 3 finding fixed or recorded, or kept with its record's reason (the same eleven as on `ff2a282`; X10's nine fixed); the findings register's 21 findings RESOLVED, and no owner decision pending; the two drafts SUPERSEDED AND RETIRED; no code, test, configuration, contract, lockfile, or workflow changed since checkpoint D's commit, `fd750c3`, and, outside `docs/`, only the manifest of preserved texts since `ff2a282`; the last backup's work in `6d58014` (the reconciliation below) | PASS: no correction required |
+| §24 | The same search on the 291 files of `6d58014`: 822 occurrences in 129 files, each classified by the same rules, with two added for X10's own change: its record, a dated record, and the project state's row on pending verification, which names this repetition. NON-BLOCKING DOCUMENTATION 449; TEMPORARY ARTIFACT 241; VALID INTENTIONAL DRAFT 60; not a draft indicator 72; no BLOCKING INCOMPLETE WORK, STALE TEXT, or UNRESOLVED OWNER DECISION | PASS |
+| §27 | A fresh clone of the designated branch from GitHub (03:38 UTC), at `6d58014`, its tree the local commit's (`bda79ec…`): the documentation checker and its self-test pass, and `compare_requirements.py ff2a282 --strict` reports 749 requirements before and after; with uv 0.12.23, the 27 end-to-end commands pass (03:38 to 03:41 UTC), with 1,108 tests, and `compare_requirements.py 69d3b86 --strict` reports the 15 requirements of items 4 and 5 added and none removed or changed; `git status --ignored` shows only the virtual environment, the build's output, and the tools' caches; a scan of its 291 files finds only the secret test's own planted samples, besides the identifiers that two preserved Gate 3 reports quote | PASS |
+| §28 | Each condition as on `ff2a282` (X10's record), with X2 and X7 closed again on `6d58014`: Gates 1 to 3 (X2); the independent review; the mutation result (check 7, the code unchanged since `fd750c3`); completeness; traceability; documentation; the final diff review (X10's change, before its commit); the backups reconciled up to X10's (below); no uncommitted or untracked work at `6d58014`, clean when pushed (03:37 UTC); the verified checkpoint, `6d58014`, and its remote copy; the stage's status recorded; and DATA FOUNDATION identified as next | MET |
+| §30 | A: the designated branch. B: `6d58014319796d51553deebd1cbfd83c14086e41`. C to F: clean at `6d58014`; since, only this change, on its backup branch. G and H: the two drafts, SUPERSEDED AND RETIRED. I and J: thirteen backup branches, the twelve earlier ones retired with their archive branches (X10's included, below), and this change's active until the next change reconciles it. K and L: X10's fixes of Z-01 to Z-09, in `6d58014`. M and N: none missing. O: none since Y-01. P: none. Q: X3. R: the checkpoint log; `6d58014` to the Stage 1 transition audit, with its run. S: on the remote, and recovered from it. T: none for the stage's work; the deletion of the retired branches waits for an access that allows it. U: the project state's "Non-blocking findings and technical debt", TC-09, TC-10, and the options of DEC-056. V: none authorized; next, after this certificate, the owner's approval to plan Stage 2, DATA FOUNDATION (X8): not READY TO PROCEED until the owner approves | REPORTED |
+
+**Result:** no correction is required. X10 is PASS on `6d58014`, and X2 and X7 are PASS again.
 
 ## The transition checklist (§152) and the certificate (§143)
 
-PENDING.
+Both are in the stage record, where §143 places the certificate (the traceability README): its "The §152 items" and its "Completion certificate (§143)". Two items needed work beyond the earlier records:
+
+- **System Rules Register updated:** the [register](../requirements/system-rules-register.md) was read against what Stage 1 enforces. Of its 49 rules, two have a canonical requirement that Stage 1 delivers in part, as the verification matrix shows: SR-09, with ARCH-042, the outcome type (SUCCESS, FAILURE, TIMEOUT, and UNKNOWN, consumed only through a fold that handles each), and SR-46, with ARCH-041, the idempotency key. Each rule is enforced where the register places it: SR-09 in the Risk Engine, the Regime Engine, and recovery; SR-46 at client order IDs, capital reservation and release, and recovery. Later stages build those; Stage 1 enforces neither there. So every rule stays DOCUMENTED, as the register says, and nothing in it changes.
+- **Next stage dependencies verified:** the [dependency map](../architecture/dependency-map.md)'s stage-level dependencies make DATA FOUNDATION depend on FOUNDATION as a whole, whose outputs exist and are verified (X2 to X5, X7, and X10). DATA FOUNDATION's entry gate, its own check of its prerequisites, is made with its plan, which waits for the owner's approval to plan it (X8).
 
 ## Reconciliation of the last change's temporary backup
 
-PENDING.
+The stage-transition audit, committed as `6d58014`, was backed up on `claude/unverified-backup-x10` ([Stage 1 transition audit](stage-01-transition-audit.md), "Identity"), in six commits, each on the one before and the first on `ff2a282`, committed on 2026-11-05 from 02:41 UTC (`69de7dc`) to 03:36 UTC (`57aaf13`). `25dc2ac` holds the tree of the copy given to its Gate 3 run 1. Each commit carries the seven labels, the emergency checkpoint record of §132 with its seven fields, and the session's trailer (a check of every commit's message). On 2026-11-05, from 03:40 UTC, after `6d58014` was pushed and the machine checks passed on it, the builder compared the branch with `6d58014` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `6d58014`'s tree is `57aaf13`'s (`git diff --name-only`: no difference): the last backup holds the fixes of Gate 3 run 1 and the record's final status | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: the fixes of run 1's findings, and their results | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the ten files that the six commits change is in `6d58014`. Outside `docs/`, the commits change only `tools/docs/preserved-texts.sha256`, owner decisions 28's line; no code, test, tool's code, configuration, or workflow | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `6d58014`'s parent is `ff2a282`; none of the six commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `6d58014` (03:38 UTC): the documentation checker and its self-test pass, and `compare_requirements.py ff2a282 --strict` reports 749 requirements before and after; the tests ran in the machine checks (check 7) and in the recovery test | PASS |
+| 6 | Required documentation and traceability are updated | `6d58014` holds the record's final status, PASS for its gates, the checkpoint log's row for the change, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `6d58014` is on the remote branch (`git ls-remote`), pushed at 03:37 UTC, and the machine checks passed on it ("Identity") | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `6d58014`, the remote branch's commit (03:37 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `6d58014`. Its last commit, `57aaf13`, is kept under the archive branch `claude/archive/unverified-backup-x10`, pushed at 03:40 UTC and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The deletion of `claude/unverified-backup-x10`, a git push made only if the branch was still at `57aaf13`, was refused at 03:40 UTC with HTTP 403; the branch stays at `57aaf13`, and is retired as [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md) (decision 4) provides.
+
+**The ten checks before "safe to delete"** ([owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set, §5), made on 2026-11-05 for the branch, at `57aaf13`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `6d58014` (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list (03:40 UTC): `claude/archive/unverified-backup-x10` at `57aaf13` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list, 03:40 UTC; `git ls-remote`, 03:40 UTC) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (03:40 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate (DEC-052, decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | The open-question register and the project state: no decision on it is pending | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, runs on every push and pull request and names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`) | PASS |
+| 9 | Traceability is updated | The project state's "Branches", this record, and the stage record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED. No deletion is tried again (§6): nothing shows that this environment's access has changed, and the owner has not asked. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-x10`; B, `57aaf13`; C, `claude/archive/unverified-backup-x10`, its work in `6d58014`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-11-05, 03:40 UTC); J, no retry now: no evidence that the access has changed; K, kept, retired, until a deletion is permitted, its archive branch kept for audit; L, none now: when a deletion is permitted, or the owner deletes it on GitHub, re-check that it is still retired and at `57aaf13`, delete it, and record it as RETIRED — PHYSICALLY DELETED.
 
 ## Gates
 
