@@ -1,0 +1,188 @@
+# Stage 1 Transition Audit — Owner Decisions 15's Persistence Audit and Report (X10)
+
+> **Status:** ACTIVE record of X10 of the [stage record](stage-01-foundation.md)'s exit checklist: the stage-transition persistence audit and report of [owner decisions 15](../handoffs/owner-decisions-15-stage-transition-persistence-and-commit-integrity.md), its commit-completeness audit (§23), draft audit (§24), recovery test (§27), transition gate's conditions (§28), and final report in items A to V (§30), made on the stage's last pushed checkpoint commit, `ff2a282`, and its remote copy ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 5). The change also preserves the owner's question of 2026-11-03, 19:58 UTC ([owner decisions 28](../handoffs/owner-decisions-28-question-on-where-the-work-stands-and-progress.md), [DEC-061](../decisions/DEC-061-preserve-owner-question-on-progress-of-2026-11-03.md)), and reconciles the last change's temporary backup with that change's commit, `ff2a282`, and retires its branch ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 6). Its three gates: "Final status and remaining issues". Format: [traceability README](README.md).
+
+## Identity
+
+- **Date:** 2026-11-05
+- **Stage:** 1 — FOUNDATION; X10 of the exit checklist, after X9 and X2 and before the certificate (X6) and the owner's approval (X8) ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 6). This change writes documentation only; it starts no later stage's work ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md))
+- **Audits, and starts from:** commit `ff2a282` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote: the commit of X2, the stage's own three gates on its final tree ([Stage 1 verification](stage-01-verification.md)), whose machine checks passed ([run 41713216040](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/41713216040), every step, 1,108 tests, completed on 2026-11-03 at 20:32 UTC). This record's own commit is entered in the project state's checkpoint log by the next change.
+- **Temporary backup** (DEC-057, decision 4): the work is pushed to `claude/unverified-backup-x10`, from 2026-11-05, 02:41 UTC, and again as it changes; its first two files were written before that ("Failures and fixes"). Each commit carries the seven labels of [DEC-042](../decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md) (decision 4) and the emergency checkpoint record of master execution constitution §132. Its reconciliation with this change's commit is recorded by the next change.
+
+## Scope
+
+**Added:** this record; [owner decisions 28](../handoffs/owner-decisions-28-question-on-where-the-work-stands-and-progress.md); [DEC-061](../decisions/DEC-061-preserve-owner-question-on-progress-of-2026-11-03.md).
+
+**Changed:** the manifest of preserved texts (`tools/docs/preserved-texts.sha256`, owner decisions 28's line); the [decision log](../decisions/README.md); the stage record (the exit checklist's X10 and its date; its status line; its "Blockers"; the retirements listed for the certificate); the [roadmap](../roadmap/roadmap.md)'s current position; the project state (its status line; the table under "Current stage"; the continuation contract's rows "Current stage and substage", "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Pending verification", "Decisions in effect", "Other branches", "Known risks", and "Next safe action"; "Recent decisions"; "Branches"; "Completed work"; "In-progress work"; "Blockers"; "Recent changes"; "Next approved step"; the checkpoint log); the indexes ([documentation index](../README.md), [traceability README](README.md)).
+
+**Requirements:** none added, removed, or changed (check 3).
+
+**Out of scope:** the certificate (X6) and the owner's approval (X8); any later stage's work.
+
+**The owner's messages after the last one the previous record names** ([Stage 1 verification](stage-01-verification.md): "Try again" of 2026-11-03, 19:13 UTC; its final status leaves to this record the question that came after its copy), up to the copy that this record's last Gate 3 run reviews: the question of 2026-11-03, 19:58 UTC, preserved word for word as owner decisions 28 (DEC-061); and "Continue" of 2026-11-05, 02:40 UTC, after the session had stood still since 2026-11-03, 20:38 UTC: procedural ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7). Since that record's copy (2026-11-03, 19:50 UTC), the report of its Gate 3 run as the client delivered it (20:18 UTC), the notices of background tasks, the stop hook's feedback, the notice of the worker's restart (20:38 UTC), and the usage limit's message (20:38 UTC) are the client's own.
+
+## Checks
+
+The documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit, and they ran on `ff2a282` in the recovery test below.
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changes no generated file |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py ff2a282 --strict` | PASS: 749 requirements before and after; none added, removed, or changed |
+| 4 | The code is unchanged | `git diff --name-only ff2a282` and `git ls-files --others --exclude-standard` | PASS: outside `docs/`, only the manifest of preserved texts changes |
+| 5 | Hygiene of the change | `git diff --check ff2a282`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports only the two lines of owner decisions 28 that end with the owner's spaces, kept as received (DEC-061); the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved texts | `git diff --name-only ff2a282 -- docs/handoffs docs/builder`; the round trip of owner decisions 28 against its user turn in the session record, by script (`python3 -I`); its manifest line | PASS: one file added, owner decisions 28, and none changed; its text block equals the turn of 19:58 UTC byte for byte (109 characters, with the spaces that end its two lines); the manifest's hash is the one the checker computes |
+
+## The commit-completeness audit (§23)
+
+The approved Foundation requirements, those of the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md) (sections 3.1 and 4, and its exit checklist), against the final committed state, `ff2a282` (its 288 files), each confirmation by script or by reading:
+
+| # | Confirmation (§23) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every required Foundation artifact exists | Each file and directory the plan's units name ("Files:", section 4), checked on the tree of `ff2a282` by script: U1's `pyproject.toml`, `uv.lock`, `.python-version`, `src/atp/`, `tests/`, `.gitignore`, the repository test for secrets, and the developer guide; U6's test layout, mirroring `src/atp/`, and the workflow; U2's `src/atp/numeric/`, `tests/numeric/`, and the numerical policy; U3's `src/atp/contracts/`, `tests/contracts/`, the committed schemas, and the contract conventions; U4's `src/atp/config/`, `tests/config/`, `config/examples/` (`platform.toml` and the six environments), and the command (`src/atp/cli/`, and its entry point in `pyproject.toml`); U5's threat model and the security architecture; U7's documentation tools and the verification matrix; U8's stage record, roadmap, source-of-truth map, and project state; and the settings of pytest and Hypothesis in `pyproject.toml`. None is missing | PASS |
+| 2 | Every required implementation is committed | The four packages of the plan under `src/atp/` (18 Python files); each of the 24 requirements of the plan's section 3.1 has its implementation in the [verification matrix](verification-matrix.md), which the checker enforces (X3) | PASS |
+| 3 | Every required test is committed | `tests/` (19 Python files): 1,108 tests pass in the machine checks on `ff2a282` and in this audit's recovery test; each section 3.1 requirement has its tests in the matrix (X3) | PASS |
+| 4 | Every required document is committed | Each document X5 names exists at `ff2a282` and was read on the final tree (X2's Gate 2), with the stage record and its checkpoints' records | PASS |
+| 5 | Every required decision is preserved | DEC-001 to DEC-060 at `ff2a282`, each in the decision log, which the checker reads. The owner's messages in the session record, from 2026-10-28, 21:44 UTC on, compared by script with the preserved texts: each is under `docs/handoffs/` word for word, or recorded as procedural ("Continue", "Try again"), or, for the directive sent again on 2026-11-03 at 07:21 UTC, recorded as the same words as owner decisions 26 ([DEC-060](../decisions/DEC-060-preserve-owner-questions-of-2026-11-03.md)); the question of 2026-11-03, 19:58 UTC, which came after X2's copy, is preserved by this change | PASS, with this change |
+| 6 | Every required traceability update is preserved | The verification matrix is current at `ff2a282` (the checker's step in run 41713216040); the stage record's exit checklist, the checkpoint log, and the feature-status table agree with the records (X2's Gate 2) | PASS |
+| 7 | Every Gate 3 correction is preserved | Each record of the stage's checkpoints and later changes lists its Gate 3 findings with their fixes and statuses. A script over those tables at `ff2a282` finds each finding fixed or recorded, or kept with the reason its record gives (E-18, A9, L-07, L-08, L-11, L-18, P-08, R-07, D-19); A4, open in its record, was settled on 2026-11-02 (the project state's "Non-blocking findings and technical debt"). X2's fixes are in `ff2a282` (its diff) | PASS |
+| 8 | Every required verification artifact is preserved or referenced | The verification records of checkpoints A to D and of every later change, each named in the checkpoint log; the reports of earlier Gate 3 runs committed as evidence; the mutation checks as run; the machine-check runs, cited by their identifiers with the results the records rely on, so that no result depends on GitHub keeping a run's log | PASS |
+| 9 | No valid work remains only locally | The working tree was clean at `ff2a282` (2026-11-03, 20:30 UTC). Since then, only this change exists outside it, on its backup branch, apart from the gap "Failures and fixes" records. What stays in the container only is not project state (the recovery test, below) | PASS |
+| 10 | No duplicate authoritative material was introduced | The documentation checker at `ff2a282`: one entry for each requirement ID, each requirement in its owning specification, each decision once in the log; the [company-grade order audit](company-grade-order-audit-2026-11-03.md)'s items 1 and 20; X2's Gate 2, one owner for each module | PASS |
+| 11 | No conflicting material remains unresolved | The findings register's 21 findings are RESOLVED at `ff2a282`; the open-question register's open items are TC-09 and TC-10, each for a later stage's plan; no owner decision is pending (the project state's "Decisions pending") | PASS |
+| 12 | No important draft is forgotten | The draft audit below: the two drafts under `docs/drafts/` are SUPERSEDED AND RETIRED ([drafts index](../drafts/README.md)), and no draft indicator marks blocking incomplete work | PASS |
+| 13 | No future-stage implementation was accidentally included | X2's Gate 2 (`src/atp/` holds what the plan names; a search of `src/` finds no exchange connection, order, or trading behavior) and its Gate 3 | PASS |
+| 14 | No secret or inappropriate artifact was committed | The repository test for secrets passes on `ff2a282` (run 41713216040); a scan of the 288 files of the recovery test's clone (2026-11-05, 02:50 UTC) finds only the secret test's own planted samples, besides the identifiers that two preserved Gate 3 reports quote ([Stage 1 verification](stage-01-verification.md), S-07); `git status --ignored` in that clone, after every check ran, shows only the virtual environment, the build's output, and the tools' caches, all ignored | PASS |
+| 15 | No required change is missing from the final checkpoint | X2's temporary backup holds no work that `ff2a282` lacks (the reconciliation below), and each change since checkpoint D is committed, pushed, and passes its machine checks (the checkpoint log) | PASS |
+
+## The draft audit (§24)
+
+A script searched the 288 files of `ff2a282`, read from git, for §24's indicators as whole words in any case (DRAFT, TODO, TBD, WIP, PLACEHOLDER, TEMP, PROVISIONAL, UNVERIFIED, PENDING, OPEN QUESTION, REQUIRES DECISION): 764 occurrences in 128 files. Each was classified, by rules over the file and the words around it, and the 44 that no rule covered were read one by one and their classes added as rules, until none was left. None was removed.
+
+| §24 class | Occurrences | What they are | Disposition |
+|---|---|---|---|
+| NON-BLOCKING DOCUMENTATION | 407 | Dated records and decision records, stating what was true at their date ([DEC-037](../decisions/DEC-037-final-decision-checkpoint-classifications.md)): 240 in 54 files. Preserved texts, the owner's and the builder texts' words as received: 139 in 23 files. Statements of the drafts' history and disposition, and a document class's definition, in the documentation index, the decision log, and the project state: 22. The continuation contract's rows on pending items, each reading none: 4. Answered questions kept with their answers (OQ-30, OQ-31): 2 | Kept as they are |
+| TEMPORARY ARTIFACT | 226, in 28 files | The temporary backup branches, their names, and their labels | Each backup reconciled, archived, and retired, or, for this change's, active until the next change reconciles it (the [project state](../project-state.md)'s "Branches") |
+| VALID INTENTIONAL DRAFT | 60 | The drafts area, 46 in 3 files: two drafts, each labelled and SUPERSEDED AND RETIRED. The example configuration's placeholder values and the documents that describe them, 14 in 11 files: the plan's U4 requires placeholder values only, and they cannot be mistaken for implemented behavior (§25) | Kept as they are |
+| (Not a draft indicator) | 71 | The words in their ordinary sense: variables and values named `pending` or `todo` in code, and a docstring on a later operation's states, 29 in 7 files; states and pending actions in later stages' specifications, 18 in 10 files; defined terms, classes, categories, states, and procedures, 16 in 10 files; JSON Schema's dialect, draft 2020-12, 8 in 8 files | None needed |
+| BLOCKING INCOMPLETE WORK | 0 | — | — |
+| FUTURE WORK | 0 by the words | The open-question register's TC-09 and TC-10, open for the plans of OPERATIONALIZATION and CORE TRADING FOUNDATION, say "OPEN", not "OPEN QUESTION" | Kept in the register |
+| STALE TEXT | 0 | The stale statements X2's Gate 3 found were fixed in `ff2a282` | — |
+| UNRESOLVED OWNER DECISION | 0 | The project state's "Decisions pending": none | — |
+
+No placeholder completion (§25): the occurrences in `src/` and `tests/` are ordinary words, and no required behavior is a placeholder, a stub, a disabled check, or a fake success: X2's Gate 3 read each of the 53 requirement markers against its requirement. This change's own files use the words to describe this audit and the preserved text; they are not drafts.
+
+## The recovery test (§27)
+
+Assume the container is destroyed now: can the complete intended Foundation state be recovered from the repository and approved persistent systems?
+
+- **From GitHub alone:** a fresh clone of the designated branch (2026-11-05, 02:43 UTC) is at `ff2a282`, and its tree is the local commit's (`ed1af86…`). In it: the documentation checker and its self-test pass, and `compare_requirements.py 1c6772c --strict` reports 749 requirements before and after. With uv 0.12.23, the version the project requires, the stage record's "End to end from a clean clone" (02:45 to 02:49 UTC): the 27 commands pass, as in X2's Gate 1, with 1,108 tests, both builds, the configuration command accepting the six examples and refusing each broken copy, and `compare_requirements.py 69d3b86 --strict` reporting the 15 requirements of items 4 and 5 added and none removed or changed.
+- **What GitHub holds:** the designated branch, the one authoritative state; the archive and backup branches of each change, labelled ("Branches"); the machine-check runs.
+- **What only the container holds, and why none of it is needed:** the builder's scratch scripts and their outputs, whose commands the records state; the review copies and the Gate 3 reviewers' reports as delivered, whose findings, fixes, and results the records hold ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 4); the session record, whose owner messages are preserved (§23, item 5); and uv 0.12.23 in a scratch environment, which the developer guide names and the workflow installs. This change's work in progress is on its backup branch.
+
+**Result: PASS.** The intended Foundation state is recoverable from the repository and GitHub.
+
+## The transition gate's conditions (§28)
+
+| Condition (§28) | Evidence | Status |
+|---|---|---|
+| Foundation requirements satisfied | The 24 requirements of the plan's section 3.1, each implemented and tested (X3); U1 to U7 PASS, U8's acceptance, the plan's section 9, met at the exit (X1) | MET; X1 closes with the certificate |
+| Gate 1 pass; Gate 2 pass; Gate 3 pass | X2 ([Stage 1 verification](stage-01-verification.md)) | MET |
+| Required independent review pass | X2's Gate 3, an independent reviewer from a fresh clone, its blocking findings fixed in the wording it specified (DEC-045, decision 5) | MET |
+| Required mutation testing pass | Check 7 on checkpoint D's final tree: all 461 mutations killed; the code and tests unchanged since (X2's Gate 1) | MET |
+| Repository completeness pass; commit completeness pass | §23 above | MET |
+| Traceability pass | X3; the matrix current at `ff2a282` | MET |
+| Documentation pass | X5 | MET |
+| Final diff review pass | X2's diff, reviewed before its commit ([Stage 1 verification](stage-01-verification.md), its last checks); this change's, before its commit (its gates) | MET for `ff2a282` |
+| Temporary backups reconciled | Every backup up to X2's reconciled, archived, and retired (below; "Branches"); this change's, by the next change | MET up to `ff2a282` |
+| No material uncommitted work; no material untracked work | None at `ff2a282`; this change, backed up, is committed after its gates | MET |
+| Verified checkpoint created | `ff2a282`, its three gates passed and its machine checks green | MET |
+| Remote durability confirmed where required | `ff2a282` on GitHub (`git ls-remote`), and recovered from it (§27) | MET |
+| Current stage status recorded | The project state and the stage record, updated by this change | MET |
+| Next authorized stage identified | DATA FOUNDATION, the roadmap's Stage 2, which may be planned only after the certificate and with the owner's approval (X8) | MET: identified; not yet authorized |
+
+The next stage does not begin on these conditions alone: it waits for the certificate (X6) and the owner's approval (X8).
+
+## The final report (§30)
+
+- **A. Current branch:** `claude/code-builder-constitution-rrewgf`.
+- **B. Final verified commit:** `ff2a282757b71bafd3fd9e326f9af4f82a2eef19`.
+- **C. Git working-tree status:** clean at `ff2a282`; during this audit, only this change's files, on its backup branch.
+- **D. Staged changes remaining:** none.
+- **E. Unstaged changes remaining:** this change's, which its commit carries.
+- **F. Material untracked files remaining:** this change's three new files, which its commit carries; nothing else.
+- **G. Draft documents discovered:** the two drafts under `docs/drafts/`, and the indicators of §24.
+- **H. Disposition of every material draft:** both drafts SUPERSEDED AND RETIRED (the drafts index); each indicator classified (§24).
+- **I. Temporary backups discovered:** twelve backup branches: those of checkpoints B, C, and D, item 3, DEC-054's change, the reconciliation of checkpoint D's, the preservation of owner decisions 26, items 4 and 5, X9, and X2, each with its archive branch; and this change's, `claude/unverified-backup-x10`.
+- **J. Their final disposition:** the eleven earlier ones RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED, each at the commit its archive branch keeps; this change's active until the next change reconciles it.
+- **K. Gate 3 changes made:** X2's fixes of S-01 to S-10, recorded with each finding in its record; each earlier change's in its record.
+- **L. All Gate 3 fixes preserved:** yes (§23, item 7).
+- **M. Required Foundation artifacts checked:** §23, items 1 to 4.
+- **N. Missing artifacts discovered:** none.
+- **O. Duplicate or conflicting artifacts discovered:** none (§23, items 10 and 11).
+- **P. Secrets and inappropriate files:** none (§23, item 14).
+- **Q. Traceability completeness:** the 24 requirements of section 3.1 traced to their implementation and tests (X3).
+- **R. Verification evidence by commit:** the checkpoint log maps each commit to its record; `ff2a282` to the Stage 1 verification, with run 41713216040; this change's commit, by the next change.
+- **S. Remote durability:** `ff2a282` is on the remote and was recovered from it (§27).
+- **T. Remaining blockers:** none for the stage's work. The deletion of the eleven retired backup branches, which this environment refuses, waits for a session whose access allows it or for the owner. Before the exit: the certificate (X6) and the owner's approval (X8).
+- **U. Remaining non-blocking future work:** the project state's "Non-blocking findings and technical debt", S-06 and S-08 among it; TC-09 and TC-10; and the options of [DEC-056](../decisions/DEC-056-preserve-owner-question-of-2026-10-29.md), the owner's to decide.
+- **V. Exact next authorized stage:** none is authorized now. Next comes the certificate (X6); then the owner's approval to plan Stage 2, DATA FOUNDATION (X8). The evidence supports going on to the certificate, not yet to Stage 2: not READY TO PROCEED.
+
+## Reconciliation of the last change's temporary backup
+
+The stage's own gates, committed as `ff2a282`, were backed up on `claude/unverified-backup-x2` ([Stage 1 verification](stage-01-verification.md), "Identity"), in five commits, each on the one before and the first on `1c6772c`, committed on 2026-11-03 from 19:29 UTC (`37a7fc4`) to 20:27 UTC (`5b3f9f4`). `02695e3` holds the tree of the copy given to its Gate 3 run 1. Each commit carries the seven labels, the emergency checkpoint record of §132 with its seven fields, and the session's trailer (a check of every commit's message). On 2026-11-05, from 02:42 UTC, after `ff2a282` was pushed and the machine checks passed on it, the builder compared the branch with `ff2a282` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `ff2a282`'s tree is `5b3f9f4`'s but for one line of the record, where the commit filled in the times of Gate 1's last run, written after the last backup (`git diff`) | PASS |
+| 2 | Corrections made during verification are preserved | The same: the fixes of Gate 3 run 1's findings, and their results | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the seven files that the five commits change is in `ff2a282`; none is outside `docs/` | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `ff2a282`'s parent is `1c6772c`; none of the five commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `ff2a282` (02:43 UTC): the documentation checker and its self-test pass, and `compare_requirements.py 1c6772c --strict` reports 749 requirements before and after; the tests ran in the machine checks (check 7) and in the recovery test | PASS |
+| 6 | Required documentation and traceability are updated | `ff2a282` holds the record's final status, PASS, the checkpoint log's row for the change, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `ff2a282` is on the remote branch (`git ls-remote`), pushed on 2026-11-03 at 20:30 UTC, and the machine checks passed on it ("Identity") | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `ff2a282`, the remote branch's commit (2026-11-03, 20:30 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `ff2a282`. Its last commit, `5b3f9f4`, is kept under the archive branch `claude/archive/unverified-backup-x2`, pushed on 2026-11-05 at 02:44 UTC and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The deletion of `claude/unverified-backup-x2`, a git push made only if the branch was still at `5b3f9f4`, was refused at 02:44 UTC with HTTP 403; the branch stays at `5b3f9f4`, and is retired as [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md) (decision 4) provides.
+
+**The ten checks before "safe to delete"** ([owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set, §5), made on 2026-11-05 for the branch, at `5b3f9f4`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `ff2a282` (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list (02:44 UTC): `claude/archive/unverified-backup-x2` at `5b3f9f4` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list, 02:44 UTC; `git ls-remote`, 02:44 UTC) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (02:44 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate (DEC-052, decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | The open-question register and the project state: no decision on it is pending | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, runs on every push and pull request and names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`) | PASS |
+| 9 | Traceability is updated | The project state's "Branches", this record, and the stage record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED. No deletion is tried again (§6): nothing shows that this environment's access has changed, and the owner has not asked. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-x2`; B, `5b3f9f4`; C, `claude/archive/unverified-backup-x2`, its work in `ff2a282`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-11-05, 02:44 UTC); J, no retry now: no evidence that the access has changed; K, kept, retired, until a deletion is permitted, its archive branch kept for audit; L, none now: when a deletion is permitted, or the owner deletes it on GitHub, re-check that it is still retired and at `5b3f9f4`, delete it, and record it as RETIRED — PHYSICALLY DELETED.
+
+## Gates
+
+**Verification 1 — the change works as intended:** PENDING.
+
+**Verification 2 — architecture and consistency:** PENDING.
+
+**Verification 3 — independent end-to-end and failure audit:** PENDING.
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| The change's first two files, owner decisions 28 and DEC-061, were written on 2026-11-03 at 20:32 UTC and first backed up on 2026-11-05 at 02:41 UTC, not at once as DEC-057's decision 4 requires: the session stopped at 20:38 UTC, at the usage limit, after the worker's restart | The files were written while X2's machine checks were finishing, and their indexes begun, before the change's first backup | Backed up as soon as the session resumed; nothing was lost, since the files stayed in the container. Class: a change's first backup is pushed in the step after its first file is written, before any other step | The backup branch, from 02:41 UTC |
+
+## Final status and remaining issues
+
+PENDING.
+
+## Environment
+
+System Python 3.11 (`python3`) for the documentation tools and the audit's scripts; uv 0.12.23 and the project's Python 3.12 for the recovery test; git; GitHub's branch list, pull requests, and workflow runs, read through the session's GitHub tools.
