@@ -98,7 +98,9 @@ PENDING.
 
 ## Failures and fixes
 
-PENDING.
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| An edit of the stage record, made on 2026-11-05 at 03:54 UTC, was first backed up on 2026-11-06 at 12:00 UTC: the 5-hour limit stopped the session at 03:54 UTC, right after the edit and before its backup; its worker's restart at 05:24 UTC met the limit again | The edit and its backup were separate steps, and the limit came between them, as it can at any step without warning | Backed up as soon as the session resumed; nothing was lost, since the file stayed in the container. Class: from this change on, an edit and its backup are one step, the backup run in the same command as the edit (DEC-057, decision 4) | Checks 1 to 6 |
 
 ## Final status and remaining issues
 
