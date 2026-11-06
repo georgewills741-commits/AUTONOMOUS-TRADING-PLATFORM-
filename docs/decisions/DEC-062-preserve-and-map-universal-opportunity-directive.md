@@ -15,10 +15,10 @@ Its first line asks the builder to continue what it is doing; to take the most v
 
 It ends: "BEGIN WITH THE REPOSITORY AUDIT. PRESERVE THE EXISTING CHECKPOINT. IMPLEMENT ONLY WHAT IS GENUINELY NECESSARY."
 
-Several of its platform principles were restated by [owner decisions 8](../handoffs/owner-decisions-08-opportunity-universe-and-economics.md) and are in the canonical requirements since [DEC-058](DEC-058-opportunity-universe-and-economics.md). Among them:
+Several of its platform principles are already in the canonical requirements, some since [owner decisions 8](../handoffs/owner-decisions-08-opportunity-universe-and-economics.md) restated them and its audit added them ([DEC-058](DEC-058-opportunity-universe-and-economics.md)). Among them:
 
-- the order 3%, 2%, 1.5%, 1%, 0.9%, and lower, as a search priority only (OPP-022);
-- scanning that does not stop at a found opportunity (OPP-021);
+- the order 3%, 2%, 1.5%, 1%, 0.9%, and lower, as a search priority only (OPP-022, from DEC-058);
+- scanning that does not stop at a found opportunity (OPP-021, from DEC-058);
 - no guaranteed or fixed daily return, and no daily ceiling (TNP-012 to TNP-014, TNP-026);
 - economic eligibility from the true net expected result (TNP-018 to TNP-020).
 
