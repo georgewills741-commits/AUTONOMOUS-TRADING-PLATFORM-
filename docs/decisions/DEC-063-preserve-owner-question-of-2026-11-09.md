@@ -8,12 +8,13 @@
 
 On 2026-11-06 at 12:38 UTC the weekly usage limit stopped the session, and with it the first Gate 3 launch of the change that repeats X10 and writes Stage 1's completion certificate (X6), before that reviewer reported ([Stage 1 certificate verification](../traceability/stage-01-certificate-verification.md), "Gates"). The limit reset on 2026-11-09 at 12:00 UTC. At 14:01 UTC the owner asked where the work stands now, and said that the owner hopes there is no problem and that everything is in order. It is a user turn of its own in the session record, of origin human, not one of the client's own entries (its notices of restarts, the stop hook's feedback, its notices of background tasks), so it is the owner's message.
 
-The builder answered at 14:03 UTC, from the repository and GitHub:
+The builder checked the state at 14:02 UTC: the working tree's tree was that of the backup commit `3365a98`. It then preserved the question, made a fresh copy for Gate 3, launched a fresh reviewer on it ([DEC-049](DEC-049-preserve-owner-messages-of-2026-10-20.md)), and answered at 14:08 UTC:
 
-- **Where the work is:** Stage 1, FOUNDATION, at its exit. Its last commit, `6d58014`, is on the designated branch with passing machine checks (1,108 tests); the code is unchanged since checkpoint D; no blocking finding is open.
-- **Whether everything is in order:** yes, and nothing was lost. The certificate's change is complete and passes its checks 1 to 6. It is uncommitted, and its backup on GitHub, `3365a98`, holds the same tree as the working tree, checked at 14:02 UTC.
-- **What happened:** the change was sent to its independent review on 2026-11-06; the weekly limit stopped the session and the reviewer at 12:38 UTC, before the reviewer reported.
-- **What comes next:** the question preserved in the same change; a fresh reviewer on a new copy ([DEC-049](DEC-049-preserve-owner-messages-of-2026-10-20.md)); the fixes, the commit, the push, and the machine checks; then four questions to the owner (the approval to plan Stage 2, X8; the retired backup branches; the reading of the aspirational daily objective of owner decisions 29; and adaptive execution, EXE-011); then the mapping of owner decisions 29 ([DEC-062](DEC-062-preserve-and-map-universal-opportunity-directive.md)).
+- **Everything in order:** nothing is lost. While the session was stopped, all of the work was on GitHub, so nothing existed only in the container.
+- **The question:** preserved word for word as owner decisions 30, equal to the session record, and pushed to GitHub at 14:04 UTC; it changes nothing.
+- **The stop:** recorded. The weekly limit stopped the session on 2026-11-06 at 12:38 UTC and reset on 2026-11-09 at 12:00 UTC, and it cut off the first Gate 3 launch before the reviewer reported.
+- **The checks:** checks 1 to 6 pass on the updated change; the space that ends each of the owner's two messages is kept as received.
+- **What comes next:** the fresh reviewer at work, on a copy made at 14:07 UTC and backed up as `cc5e6a8`; then the fixes, the commit, the push, and the machine checks; then four questions to the owner together: the approval to plan Stage 2 (X8), the twelve retired backup branches, the reading of the aspirational daily objective of owner decisions 29 ([DEC-062](DEC-062-preserve-and-map-universal-opportunity-directive.md)), and adaptive execution (EXE-011).
 
 ## Decision
 
