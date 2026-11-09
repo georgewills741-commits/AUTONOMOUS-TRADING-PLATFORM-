@@ -19,10 +19,12 @@ The builder answered at 15:01 UTC:
 
 The builder also said that the message, which came after the copy that the second run reviews, would be preserved with the next change. That run failed, and a third run follows on a new copy, made after the message.
 
+Gate 3's third run (19:45 UTC) found one point of that answer wrong ([Stage 1 certificate verification](../traceability/stage-01-certificate-verification.md), W-23): checking was lost. The machine checks' run of the repository test for secrets on each push was the threat model's monitoring of SEC-005, and since 14:36 UTC no backup had it. The builder corrected its answer to the owner after that run, in its messages from 19:53 UTC, and [DEC-064](DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md) (decision 2) now keeps that test on each backup snapshot, before its push; the 20 backups pushed with the marker were scanned, with no finding.
+
 ## Decision
 
 1. **The message is preserved word for word**, as [owner decisions 32](../handoffs/owner-decisions-32-question-on-skipping-checks-for-backup-commits.md), a HISTORICAL source listed in the preserved-text manifest. It was taken by script from its user turn of 15:00 UTC in the session record and kept byte for byte, including the two spaces after "problem" and the space that ends its first line, so `git diff --check` reports that line; the text is not trimmed to satisfy it. It was pushed to this change's temporary backup at 15:05 UTC ([DEC-057](DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4).
-2. **It changes nothing.** It asks whether the choice could cause problems, which the builder answered. DEC-064 stands.
+2. **It changes nothing by itself.** It asks whether the choice could cause problems, which the builder answered. DEC-064 stands, its decision 2 corrected on the point of the answer that Gate 3's third run found wrong (above).
 3. **It is preserved with this change, whose record names it**, and not with the next one as the builder first said. A record names the owner's messages received up to the copy that its last Gate 3 run reviews ([traceability README](../traceability/README.md), Scope), and this change's last run reviews a copy made after the message.
 
 ## Alternatives considered
