@@ -22,13 +22,13 @@
 
 1. **The twelve retired branches are kept until the owner removes them.**
    - This is the owner's explicit, recorded approval to carry them past Stage 1 (DEC-044, decision 2).
-   - They stay RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED, and no deletion is tried from this environment (DEC-054, decision 4).
+   - They stay RETIRED — DELETION BLOCKED — SAFE TO DELETE WHEN PERMITTED, and no deletion is tried from this environment unless the owner asks for one (DEC-054, decision 4).
    - When the owner deletes them, the next session records each as RETIRED — PHYSICALLY DELETED, after checking on GitHub that its archive branch is still at the branch's last commit. The archive branches are kept (DEC-052, decision 3).
-   - A branch retired later the same way is kept likewise and named to the owner, so that the owner can remove it with the others.
+   - A branch retired later the same way is kept likewise and named to the owner, so that the owner can remove it with the others. Carrying it past Stage 1 needs the owner's explicit, recorded approval, as theirs did (DEC-044, decision 2).
 2. **The choice on the emails: temporary backup commits are kept out of the machine checks.**
    - **Now:** from 2026-11-09, 14:29 UTC, each backup commit carries GitHub's `[skip ci]` marker in its message, so GitHub starts no run for it and sends no email about it. The first such backup was pushed at 14:36 UTC.
    - **No verification is lost.** A backup is evidence for no gate (DEC-052, decision 3), and the builder runs the checks before each Gate 3 copy and each commit. Every commit on the designated branch and every pull request still run every check.
-   - **Later, as its own change through the three gates, after Stage 1's exit (X8):** the workflow skips pushes to `claude/unverified-backup-*` and `claude/archive/*` branches itself. The rule then does not depend on a marker in a message, and it holds for the code work of later stages, where a snapshot taken in the middle of work fails more often.
+   - **Later, as its own change through the three gates, after Stage 1's exit (X8):** the workflow skips pushes to `claude/unverified-backup-*` and `claude/archive/*` branches itself. The rule then does not depend on a marker in a message, and it holds for the code work of later stages, where a snapshot taken in the middle of work fails more often. The same change brings the workflow's header comment and the verification matrix's generated sentence, each of which says that the checks run on every push, into line.
    - **Not now:** the workflow is part of the stage that its completion certificate certifies at `6d58014`.
    - **D4's "every push"** reads from now on: every push except a temporary backup commit's. The [developer guide](../development.md) says so.
 3. **Nothing else changes now.** No requirement, rule, gate, or code changes with this record. The workflow's change comes as described in decision 2.
