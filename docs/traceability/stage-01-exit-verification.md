@@ -13,13 +13,13 @@
 
 **Added:** this record; owner decisions 34, taken by script from the session record, equal to it; DEC-067.
 
-**Changed:** SCOPE-CHANGED-PLACEHOLDER
+**Changed:** the manifest of preserved texts (`tools/docs/preserved-texts.sha256`, the line of owner decisions 34); the [decision log](../decisions/README.md); DEC-062 (a "Later changes" line: the mapping follows this change); the stage record (its status line; its "Stage" table's rows "Implementation status", "Blockers", and "Next stage"; the exit checklist's date line, X1, and X8; the paragraph on the backups listed on the certificate; the §152 item on the commit; the completion certificate's opening sentence and its fields "Version or commit", "Remaining future work", "Temporary backups", and "Approved to proceed"); the [roadmap](../roadmap/roadmap.md) (its current position; the stages table's rows for FOUNDATION and DATA FOUNDATION; the feature-status table's row for U8); the project state (its status line; under "Current stage", the first entry on Stage 1, an entry for owner decisions 34, added, and the table's rows "Human approval to implement", "The §152 transition checklist and the completion certificate (X6)", and "Product implementation", with a row for the owner's approval, added; "Current objective"; the continuation contract's rows "Current stage and substage", "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Pending verification", "Decisions in effect", "Decisions pending", "Other branches", "Known risks", "Next safe action", and "Do not implement yet"; "Branches": a thirteenth branch, the status label, the archive branches, and the active backup; "Completed work"; "In-progress work"; "Blockers"; "Open questions"; "Recent decisions"; "Recent changes"; "Next approved step", its first paragraph and its items 1 and 7; the checkpoint log); the [glossary](../glossary.md) (the status label of a retired backup branch); the indexes ([documentation index](../README.md), its current state and its links; [traceability README](README.md)); the repository's [README](../../README.md) (its current state).
 
 **Requirements:** none added, removed, or changed (check 3).
 
 **Out of scope:** the mapping of owner decisions 29, the next change, which applies DEC-067's decisions 3 and 4 to the requirements ([DEC-062](../decisions/DEC-062-preserve-and-map-universal-opportunity-directive.md)); the workflow's change (DEC-064, decision 2); Stage 2's entry gate and plan; any later stage's work.
 
-**The owner's messages after the last one the previous record names** ([Stage 1 certificate verification](stage-01-certificate-verification.md): the question of 2026-11-09, 20:12 UTC), up to the copy that this record's last Gate 3 run reviews: the owner's answers of 2026-11-10, 04:31 UTC, to the builder's four questions of 02:49 UTC, and the owner's message of 07:04 UTC, queued at 07:02 UTC, a user turn of origin human, preserved word for word as owner decisions 34 (DEC-067). Since that record's last copy (2026-11-10, 02:26 UTC), the report of its Gate 3 run 6 as the client delivered it (02:42 UTC), the stop hook's feedback, the notices of background tasks, and the client's notices of the worker's restarts (04:31 and 07:02 UTC) are the client's own.
+**The owner's messages after the last one the previous record names** ([Stage 1 certificate verification](stage-01-certificate-verification.md): the question of 2026-11-09, 20:12 UTC), up to the copy that this record's last Gate 3 run reviews: the owner's answers of 2026-11-10, 04:31 UTC, to the builder's four questions of 02:49 UTC, and the owner's message of 07:04 UTC, queued at 07:02 UTC, a user turn of origin human, preserved word for word as owner decisions 34 (DEC-067). The owner's "Continue" of 13:11 UTC is procedural ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7). Since that record's last copy (2026-11-10, 02:26 UTC), the report of its Gate 3 run 6 as the client delivered it (02:42 UTC), the stop hook's feedback, the notices of background tasks, and the client's notices of the worker's restarts (04:31, 07:02, and 07:43 UTC) are the client's own.
 
 ## Checks
 
@@ -27,12 +27,12 @@ The change's own checks: the documentation tools, with the system Python 3.11, a
 
 | # | Check | How | Result |
 |---|---|---|---|
-| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PENDING |
-| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PENDING |
-| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 3b7a41d --strict` | PENDING |
-| 4 | The code is unchanged | `git diff --name-only 3b7a41d` and `git ls-files --others --exclude-standard` | PENDING |
-| 5 | Hygiene of the change | `git diff --check 3b7a41d`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PENDING |
-| 6 | The preserved texts unchanged, and the new one as received | `git diff --name-only 3b7a41d -- docs/handoffs docs/builder`; owner decisions 34's questions, options, and answers against the builder's question entry and its answer entry in the session record, and the round trip of its message against its user turn there, by the documentation tools' rule for preserved texts; the checker's check of its manifest line (check 1) | PENDING |
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changes no generated file |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 61 cases and the control |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 3b7a41d --strict` | PASS: 749 requirements before and after; none added, removed, or changed |
+| 4 | The code is unchanged | `git diff --name-only 3b7a41d` and `git ls-files --others --exclude-standard` | PASS: the files this change adds or changes are documents under `docs/`, the repository's README, and the manifest of preserved texts, the line of owner decisions 34 |
+| 5 | Hygiene of the change | `git diff --check 3b7a41d`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PASS: `git diff --check` reports nothing; the scan finds no local path, session or model identifier, or secret |
+| 6 | The preserved texts unchanged, and the new one as received | `git diff --name-only 3b7a41d -- docs/handoffs docs/builder`; owner decisions 34's questions, options, and answers against the builder's question entry and its answer entry in the session record, and the round trip of its message against its user turn there, by the documentation tools' rule for preserved texts; the checker's check of its manifest line (check 1) | PASS: no file under `docs/handoffs/` or `docs/builder/` changes; owner decisions 34, added, equals the session record: its four questions, with their labels and options, and the four answers, and its message byte for byte (4,561 characters, no line ending with a space); and its manifest line holds |
 
 ## The certificate's commit
 
@@ -92,13 +92,18 @@ So the branch is RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO 
 
 ## Gates
 
-PENDING.
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 6 pass, run again after this record's last edit before Gate 3's copy was made. Before the copy, every statement the change adds or changes was listed with the evidence that supports it, and the statements of each fact the change touches were searched for by subject in every current document ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 6; the classes of the [Stage 1 certificate verification](stage-01-certificate-verification.md)'s "Failures and fixes"). What the search found is in "Failures and fixes".
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. The owner's approval and answers are preserved as the earlier answers were (owner decisions 31; DEC-064) and applied through one decision record. The stage record, the roadmap, and the project state each state the exit and cite this record. The two answers that concern requirements are left to the mapping, so that no requirement changes outside [owner decisions 9](../handoffs/owner-decisions-09-requirement-drafting-and-anti-drift-rules.md)'s rules. The backup's reconciliation and retirement follow owner decisions 10 and 22, as for the earlier backups, with one label for the retired branches' state (DEC-067, decision 5). No requirement, rule, gate, value, or code changes (checks 3 and 4).
+
+**Verification 3 — independent end-to-end and failure audit:** PENDING.
 
 ## Failures and fixes
 
 | Failure | Cause | Fix | Re-run |
 |---|---|---|---|
 | The owner's answers of 04:31 UTC stood only in the session record until 07:13 UTC | The 5-hour limit stopped the session at 04:32 UTC, 32 seconds after the answers arrived; it reset at 06:50 UTC, and the session resumed with its worker's restart at 07:02 UTC | Saved from the session record at 07:04 UTC, as the first act after the resume, and written to the repository and pushed to the backup at 07:13 UTC, with the owner's message of 07:04 UTC; nothing was lost, since the session record held them | Check 6 |
+| The search by subject, made after the first edits and before Gate 3's copy, found three current statements that the stage's exit made stale and those edits had left: the documentation index's current state ("its exit waiting for the owner's approval to proceed"), the project state's first entry on Stage 1 ("Stage 1 is in progress"), and, in its "Next approved step", the status of checkpoint B's retired branch, written with the earlier label | The first edits were listed from the rows the builder knew to state each fact, before the search was made | Each corrected; and DEC-062 given a "Later changes" line, since the mapping now follows this change. Class: the search by subject comes before the list of edits, not after it | Checks 1 to 6 |
 
 ## Final status and remaining issues
 
