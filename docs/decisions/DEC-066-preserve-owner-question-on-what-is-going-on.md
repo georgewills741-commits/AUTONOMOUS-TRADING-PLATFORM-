@@ -1,7 +1,7 @@
 # DEC-066 — Preserve the owner's question of 2026-11-09, 20:12 UTC, on what is going on, hoping that no problem draws the work back (owner decisions 33)
 
 - **Status:** ACCEPTED
-- **Date:** 2026-11-09
+- **Date:** 2026-11-10
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and [DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md) (decision 7: the owner's messages that carry an approval, an instruction, or a question are kept). The message is the owner's.
 
 ## Context
@@ -20,7 +20,7 @@ Run 4 then failed, with three blocking findings ([Stage 1 certificate verificati
 
 ## Decision
 
-1. **The message is preserved word for word**, as [owner decisions 33](../handoffs/owner-decisions-33-question-on-what-is-going-on.md), a HISTORICAL source listed in the preserved-text manifest. It was taken by script from its user turn of 20:12 UTC in the session record, at 20:13 UTC, and kept byte for byte, including the space that ends it, so `git diff --check` reports its line; the text is not trimmed to satisfy it. It was kept in the builder's scratch folder until run 4 reported, which settled the change that preserves it, and then pushed to this change's temporary backup ([DEC-057](DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4).
+1. **The message is preserved word for word**, as [owner decisions 33](../handoffs/owner-decisions-33-question-on-what-is-going-on.md), a HISTORICAL source listed in the preserved-text manifest. It was taken by script from its user turn of 20:12 UTC in the session record, at 20:13 UTC, and kept byte for byte, including the space that ends it, so `git diff --check` reports its line; the text is not trimmed to satisfy it. It was kept in the builder's scratch folder until run 4 reported, which settled the change that preserves it. Its file, written at 20:46 UTC, was pushed to this change's temporary backup on 2026-11-10 at 01:53 UTC: the 5-hour limit stopped the session at 20:46 UTC, before the push ([Stage 1 certificate verification](../traceability/stage-01-certificate-verification.md), "Failures and fixes"; [DEC-057](DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4).
 2. **It changes nothing.** It asks a question, which the builder answered. The run that failed after the answer is recorded with its fixes, and the work goes on in the order of the [project state](../project-state.md)'s "Next approved step".
 3. **It is preserved with this change, whose record names it.** A record names the owner's messages received up to the copy that its last Gate 3 run reviews ([traceability README](../traceability/README.md), Scope). The message came after run 4's copy (20:09 UTC); run 4 failed, and run 5 reviews a copy made after the message, as with owner decisions 32 ([DEC-065](DEC-065-preserve-owner-question-on-skipping-checks.md), decision 3).
 
