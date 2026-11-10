@@ -1,0 +1,109 @@
+# Stage 1 Exit Verification — The Owner's Approval (X8), the Certificate's Last Field, and the Last Backup's Reconciliation
+
+> **Status:** ACTIVE record of the change that records Stage 1's exit: the owner's approval to proceed to Stage 2 planning, X8 of the [stage record](stage-01-foundation.md)'s exit checklist, given on 2026-11-10, with which X1 closes and the completion certificate's "Approved to proceed" is filled. The change also preserves the owner's answers and message of that day word for word, as [owner decisions 34](../handoffs/owner-decisions-34-approval-to-plan-stage-2-and-answers-on-the-directive.md), which [DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md) applies; records the certificate's commit, `3b7a41d`, with its machine checks; and reconciles the certificate's temporary backup with that commit and retires its branch ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 6). Its three gates: "Final status and remaining issues". Format: [traceability README](README.md).
+
+## Identity
+
+- **Date:** 2026-11-10
+- **Stage:** 1 — FOUNDATION; X8 and X1 of the exit checklist, its last two items, after X6 ([DEC-046](../decisions/DEC-046-preserve-company-grade-order-and-traceability-rules.md), decision 6). This change writes documentation only; it starts no later stage's work ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md); DEC-067, decision 2)
+- **Starts from:** commit `3b7a41d` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote: the commit of the certificate's change ([Stage 1 certificate verification](stage-01-certificate-verification.md)), whose machine checks passed ("The certificate's commit" below). This record's own commit is entered in the project state's checkpoint log by the next change.
+- **Temporary backup** (DEC-057, decision 4): the work is pushed to `claude/unverified-backup-x8` as soon as it exists and as it changes, each command that writes to the working tree ending with the backup. Each commit carries the seven labels of [DEC-042](../decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md) (decision 4), the emergency checkpoint record of master execution constitution §132, and `[skip ci]` in its subject, and the repository test for secrets runs on its snapshot before its push ([DEC-064](../decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). Its reconciliation with this change's commit is recorded by the next change.
+
+## Scope
+
+**Added:** this record; owner decisions 34, taken by script from the session record, equal to it; DEC-067.
+
+**Changed:** SCOPE-CHANGED-PLACEHOLDER
+
+**Requirements:** none added, removed, or changed (check 3).
+
+**Out of scope:** the mapping of owner decisions 29, the next change, which applies DEC-067's decisions 3 and 4 to the requirements ([DEC-062](../decisions/DEC-062-preserve-and-map-universal-opportunity-directive.md)); the workflow's change (DEC-064, decision 2); Stage 2's entry gate and plan; any later stage's work.
+
+**The owner's messages after the last one the previous record names** ([Stage 1 certificate verification](stage-01-certificate-verification.md): the question of 2026-11-09, 20:12 UTC), up to the copy that this record's last Gate 3 run reviews: the owner's answers of 2026-11-10, 04:31 UTC, to the builder's four questions of 02:49 UTC, and the owner's message of 07:04 UTC, queued at 07:02 UTC, a user turn of origin human, preserved word for word as owner decisions 34 (DEC-067). Since that record's last copy (2026-11-10, 02:26 UTC), the report of its Gate 3 run 6 as the client delivered it (02:42 UTC), the stop hook's feedback, the notices of background tasks, and the client's notices of the worker's restarts (04:31 and 07:02 UTC) are the client's own.
+
+## Checks
+
+The change's own checks: the documentation tools, with the system Python 3.11, and git, on the working tree with this change. No code changed, so the [developer guide](../development.md)'s other commands run in the machine checks on this record's commit, and they ran on `3b7a41d` ("The certificate's commit").
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PENDING |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PENDING |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 3b7a41d --strict` | PENDING |
+| 4 | The code is unchanged | `git diff --name-only 3b7a41d` and `git ls-files --others --exclude-standard` | PENDING |
+| 5 | Hygiene of the change | `git diff --check 3b7a41d`, its new files included; a scan of the lines this change adds, its new files included, for local paths, session or model identifiers, and the shapes of secrets | PENDING |
+| 6 | The preserved texts unchanged, and the new one as received | `git diff --name-only 3b7a41d -- docs/handoffs docs/builder`; owner decisions 34's questions, options, and answers against the builder's question entry and its answer entry in the session record, and the round trip of its message against its user turn there, by the documentation tools' rule for preserved texts; the checker's check of its manifest line (check 1) | PENDING |
+
+## The certificate's commit
+
+The certificate's change was committed and pushed on 2026-11-10, after its Gate 3 passed ([Stage 1 certificate verification](stage-01-certificate-verification.md), "Final status and remaining issues"). Checked then, and again for this record:
+
+| What | Evidence | Result |
+|---|---|---|
+| The commit holds what was checked | `3b7a41d`, on `6d58014`; its tree, `dcee137`, is the tree that checks 1 to 6 last passed on (02:44 UTC) and that of the last backup commit, `ab0beac` | PASS |
+| Its content | 23 files: documents under `docs/`, the repository's README, the documentation tools' README, and the manifest of preserved texts; no code, test, tool's code, configuration, or workflow (`git show --stat`) | PASS |
+| It is on the remote | Pushed at 02:46 UTC; `git ls-remote` gives `3b7a41d` for the designated branch; the working tree was clean after the commit | PASS |
+| The machine checks ran and passed | Its message carries no skip marker; [run 42745016017](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/42745016017) started on the push at 02:46 UTC and completed at 02:48 UTC, every step passing, "Tests" included | PASS |
+
+## The owner's approval and the stage's exit
+
+- **X8.** Its pass condition is the owner's explicit approval, recorded. On 2026-11-10 at 02:49 UTC, after the certificate's commit and its machine checks, the builder asked whether the owner approves moving on to Stage 2 planning, saying that it is "planning only". At 04:31 UTC the owner answered: "Approve Stage 2 planning (Recommended)". The owner's message of 07:04 UTC asks the builder to "Continue the authorized Stage 2 planning process". Both are preserved word for word (owner decisions 34). X8 is PASS.
+- **X1.** U8's acceptance is the plan's section 9, whose last criterion is X8, so X1 closes with it ([Stage 1 certificate verification](stage-01-certificate-verification.md), "The transition checklist (§152) and the certificate (§143)"). X1 is PASS.
+- **The exit checklist is complete:** X1 to X10 are PASS, each with its evidence in the stage record. The stage is complete as constitution Rule 213 defines it: its completion criteria are met, its tests and verification passed, its documentation and the project state agree with it, and no blocking issue is open.
+- **The certificate's last field,** "Approved to proceed", is filled with the owner's approval. Its "Version or commit" now names the certificate's own commit, and its "Temporary backups" the certificate's backup, reconciled below.
+- **What the approval authorizes:** the planning of Stage 2, DATA FOUNDATION. Its implementation begins only when the owner has approved its plan (DEC-067, decision 2; constitution Rules 134 to 136). The mapping of owner decisions 29 comes before the plan (DEC-062, decision 3).
+- **The feature states.** The roadmap's feature-status table keeps Stage 1's eight features at VERIFYING, the last state of GOV-024's lifecycle they have entered: its next, PAPER/SAFE TEST, no feature of Stage 1 has entered. U8's row records the closure.
+
+## Reconciliation of the last change's temporary backup
+
+The certificate's change, committed as `3b7a41d`, was backed up on `claude/unverified-backup-x6` ([Stage 1 certificate verification](stage-01-certificate-verification.md), "Identity"), in 67 commits, each on the one before and the first on `6d58014`, committed from 2026-11-05, 03:42 UTC (`586bfdd`) to 2026-11-10, 02:44 UTC (`ab0beac`). Each commit carries the seven labels, the emergency checkpoint record of §132 with its seven fields, and the session's trailer (a check of every commit's message); the 40 from 2026-11-09, 14:35 UTC on carry `[skip ci]`. On 2026-11-10, from 07:05 UTC, after `3b7a41d` was pushed and the machine checks passed on it, the builder compared the branch with `3b7a41d` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `3b7a41d`'s tree is `ab0beac`'s (`git diff --name-only`: no difference): the last backup holds the fixes of Gate 3 run 6 and the record's final status | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: the fixes of the six runs' findings, and their results | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the 23 files that the 67 commits change against `6d58014` is in `3b7a41d`. Outside `docs/`, they change only the repository's README, the documentation tools' README, and `tools/docs/preserved-texts.sha256`; no code, test, tool's code, configuration, or workflow | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `3b7a41d`'s parent is `6d58014`; none of the 67 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `3b7a41d` (07:07 UTC): the documentation checker and its self-test pass, and `compare_requirements.py 6d58014 --strict` reports 749 requirements before and after; the tests ran in the machine checks ("The certificate's commit") | PASS |
+| 6 | Required documentation and traceability are updated | `3b7a41d` holds the record's final status, PASS for its gates, the checkpoint log's row for the change, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `3b7a41d` is on the remote branch (`git ls-remote`), pushed at 02:46 UTC, and the machine checks passed on it | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `3b7a41d`, the remote branch's commit, after the commit (02:46 UTC) and when the session resumed (07:02 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `3b7a41d`. Its last commit, `ab0beac`, is kept under the archive branch `claude/archive/unverified-backup-x6`, pushed at 07:08 UTC, after a check that no archive branch for it existed, and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The push started no run of the machine checks: its commit carries the marker. The deletion of `claude/unverified-backup-x6`, a git push made only if the branch was still at `ab0beac`, was refused at 07:08 UTC with HTTP 403; the branch stays at `ab0beac`, and is retired as [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md) (decision 4) provides, and kept as the owner chose (DEC-067, decision 5).
+
+**The ten checks before "safe to delete"** ([owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set, §5), made on 2026-11-10 for the branch, at `ab0beac`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `3b7a41d` (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list (07:08 UTC): `claude/archive/unverified-backup-x6` at `ab0beac` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list and `git ls-remote`, 07:08 UTC) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (07:08 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate ([DEC-052](../decisions/DEC-052-apply-owner-answers-on-order-of-work-and-backups.md), decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | None: the owner's choice of 2026-11-10, to keep it with the twelve retired branches, is made and recorded (owner decisions 34; DEC-067) | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`) | PASS |
+| 9 | Traceability is updated | The project state's "Branches", this record, and the stage record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO DELETE WHEN PERMITTED, the status as the owner wrote it (DEC-067, decision 5). No deletion is tried again (§6): the owner chose to keep it until the owner removes it, and nothing shows that this environment's access has changed. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-x6`; B, `ab0beac`; C, `claude/archive/unverified-backup-x6`, its work in `3b7a41d`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-11-10, 07:08 UTC); J, no retry now: the owner chose to keep it until the owner removes it or asks for its deletion from this environment (DEC-067; DEC-064), and nothing shows that the access has changed; K, kept, retired, until the owner removes it or asks for its deletion from this environment, its archive branch kept for audit; L, none now: when the owner deletes it on GitHub, check that its archive branch is still at `ab0beac`, and record it as RETIRED — PHYSICALLY DELETED; if the owner asks for its deletion from this environment and it is permitted, re-check that it is still retired and at `ab0beac`, delete it, and record it the same way.
+
+## Gates
+
+PENDING.
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| The owner's answers of 04:31 UTC stood only in the session record until 07:13 UTC | The 5-hour limit stopped the session at 04:32 UTC, 32 seconds after the answers arrived; it reset at 06:50 UTC, and the session resumed with its worker's restart at 07:02 UTC | Saved from the session record at 07:04 UTC, as the first act after the resume, and written to the repository and pushed to the backup at 07:13 UTC, with the owner's message of 07:04 UTC; nothing was lost, since the session record held them | Check 6 |
+
+## Final status and remaining issues
+
+PENDING.
+
+## Environment
+
+System Python 3.11 (`python3`) for the documentation tools and the change's scripts; git; GitHub's branch list, pull requests, and workflow runs, read through the session's GitHub tools.
