@@ -21,7 +21,7 @@ This creates `.venv/` and installs exactly the versions in `uv.lock`, the develo
 
 ## Checks
 
-Every check below passes before a checkpoint commit, and the machine checks run the same commands, except `uv build`, on every push. `--locked` makes each command fail if the lockfile is out of date.
+Every check below passes before a checkpoint commit, and the machine checks run the same commands, except `uv build`, on every push but a temporary backup commit's (below). `--locked` makes each command fail if the lockfile is out of date.
 
 ```text
 uv run --locked ruff check                                # lint: src/, tests/, tools/
@@ -48,7 +48,7 @@ At each checkpoint the requirement comparison is also run against the previous c
 
 ## Machine checks
 
-`.github/workflows/checks.yml` runs the checks above, except `uv build`, on every push and pull request, on GitHub's Ubuntu 24.04 runner (GOV-023: they keep running without Claude Code). The job:
+`.github/workflows/checks.yml` runs the checks above, except `uv build`, on every push and pull request, on GitHub's Ubuntu 24.04 runner (GOV-023: they keep running without Claude Code). A temporary backup commit (the [project state](project-state.md)'s "Branches") carries `[skip ci]` in its message, so GitHub starts no run for it: a backup is evidence for no gate. The builder runs the repository test for secrets on each backup snapshot before its push instead, and a finding stops the push ([DEC-064](decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). The job:
 
 - has read-only repository permissions and does not keep the checkout's credentials;
 - references no repository secret and deploys nothing;
@@ -127,4 +127,4 @@ ATP_EXAMPLE_SERVER_CREDENTIAL=<any value> uv run --locked atp config check --env
 
 ## Secrets
 
-Secrets never enter the repository (SEC-005). `.gitignore` excludes local environment and key files, and `tests/repository/test_no_secrets.py` fails if any file that is tracked, or that git would add, has a secret-like name or contains a credential-like value, or if a TOML file declares a secret otherwise than by a name and a kind as the configuration's own contract reads them (`atp.config.SecretDeclaration`) ("Configuration" above). It reads the files in the working tree, so run it before staging; the machine checks run it on exactly the pushed commit. The test reports where a match is, never the value. If it fails, remove the file or value; never weaken the test to pass (constitution Rule 116).
+Secrets never enter the repository (SEC-005). `.gitignore` excludes local environment and key files, and `tests/repository/test_no_secrets.py` fails if any file that is tracked, or that git would add, has a secret-like name or contains a credential-like value, or if a TOML file declares a secret otherwise than by a name and a kind as the configuration's own contract reads them (`atp.config.SecretDeclaration`) ("Configuration" above). It reads the files in the working tree, so run it before staging; the machine checks run it, as their last step, on exactly the pushed commit when the checks before it pass, except a temporary backup commit, whose snapshot the builder checks with it before its push ("Machine checks" above). The test reports where a match is, never the value. If it fails, remove the file or value; never weaken the test to pass (constitution Rule 116).

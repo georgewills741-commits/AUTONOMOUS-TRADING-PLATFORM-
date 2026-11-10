@@ -74,7 +74,7 @@ After adding, changing, or removing a marker or a test function, run `build_inde
 
 ## Code checks for the tools
 
-The tools themselves are checked at every checkpoint with the project's linter, formatter, and type checker, ruff and mypy (TEC-009, [DEC-009](../../docs/decisions/DEC-009-technology-stack.md)), and by the machine checks on every push. They are development checks, not dependencies: the scripts still run with Python 3 and its standard library alone.
+The tools themselves are checked at every checkpoint with the project's linter, formatter, and type checker, ruff and mypy (TEC-009, [DEC-009](../../docs/decisions/DEC-009-technology-stack.md)), and by the machine checks on every push but a temporary backup commit's ([DEC-064](../../docs/decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md)). They are development checks, not dependencies: the scripts still run with Python 3 and its standard library alone.
 
 ```text
 uv run --locked ruff check tools/docs                     # lint
