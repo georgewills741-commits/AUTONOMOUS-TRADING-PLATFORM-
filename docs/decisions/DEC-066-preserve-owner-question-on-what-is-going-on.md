@@ -16,7 +16,7 @@ The builder answered at 20:13 UTC:
 - **Next:** the commit, its push, and the machine checks; then the owner's approval to plan Stage 2, with the questions on owner decisions 29.
 - **The message:** kept word for word, with this change or the next, depending on whether another run follows.
 
-Run 4 then failed, with three blocking findings ([Stage 1 certificate verification](../traceability/stage-01-certificate-verification.md), W-31 to W-33). One of them, W-32, completes the correction on the secret test: the 29 backups whose runs failed at an earlier step had never had it either, so the scan of the 20 marked backups did not cover every snapshot that had no test on GitHub. Every commit on GitHub was then scanned, with no finding ([DEC-064](DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). The builder tells the owner with this change's report.
+Run 4 then failed, with three blocking findings ([Stage 1 certificate verification](../traceability/stage-01-certificate-verification.md), W-31 to W-33). One of them, W-32, completes the correction on the secret test: the 29 backups whose runs failed at an earlier step had never had it either, so the scan of the 20 marked backups did not cover every snapshot that had no test on GitHub. Every commit on GitHub was then scanned, with no finding ([DEC-064](DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). The builder told the owner in its message of 2026-11-10, 02:03 UTC.
 
 ## Decision
 
