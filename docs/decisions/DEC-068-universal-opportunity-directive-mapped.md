@@ -45,7 +45,7 @@ The [universal opportunity mapping](../traceability/universal-opportunity-mappin
 ## Alternatives considered
 
 - **Reword EXE-011, or replace it with two requirements.** Not chosen: the owner wrote "Keep advanced order splitting and adaptive pricing as future capabilities under EXE-011", and a rewording would change what DEC-027 approved and mix the sources (DEC-058, decision 3).
-- **A component named "Adaptive Opportunity Intensity Controller".** Not chosen: market monitoring has one owner (OPP-010), the directive asks to "create or refine" it "using existing infrastructure wherever possible", and the owner's message forbids additional systems (Rule 0).
+- **A component named "Adaptive Opportunity Intensity Controller".** Not chosen: market monitoring has one owner (OPP-010), the directive asks for it to be created or refined "using existing infrastructure wherever possible", and the owner's message forbids additional systems (Rule 0).
 - **A system rule of its own for the daily benchmark.** Not chosen: SR-19 already governs fixed daily targets; PFC-021 joins it.
 - **A requirement for each point of the directive.** Not chosen: what a requirement already states is mapped, not restated (owner decisions 9, Rules 5 and 10).
 - **V-44 as a DESIGN TARGET.** Not chosen: that class steers design and optimization (DEC-020); the owner chose "Measurement only".
