@@ -34,7 +34,7 @@ The owner's later rule sets are not loaded here; each stays in force through its
 
 ## Where to start
 
-The current stage, blockers, next approved step, and continuation contract are recorded in [`docs/project-state.md`](docs/project-state.md). Read it first (Constitution Rule 51). Before continuing, compare it with `git status`, `git log`, and the remote's branches (`git ls-remote --heads origin`): an active temporary backup branch, which its "Branches" names, holds work not yet committed ([DEC-057](docs/decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 7). Update the project state after any major piece of work and before a session ends (Rule 174). Verification records follow [`docs/traceability/README.md`](docs/traceability/README.md).
+The current stage, blockers, next approved step, and continuation contract are recorded in [`docs/project-state.md`](docs/project-state.md). Read it first (Constitution Rule 51). Before continuing, compare it with `git status`, `git log`, the remote's branches (`git ls-remote --heads origin`), and the repository's open pull requests: an active temporary backup branch, which its "Branches" names, holds work not yet committed ([DEC-057](docs/decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 7), and a pull request may hold work already under way ([DEC-068](docs/decisions/DEC-068-universal-opportunity-directive-mapped.md), decision 7). Update the project state after any major piece of work and before a session ends (Rule 174). Verification records follow [`docs/traceability/README.md`](docs/traceability/README.md).
 
 How to install, check, and test the code, and the checks every code change passes, are in the [developer guide](docs/development.md).
 

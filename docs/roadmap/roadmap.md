@@ -102,9 +102,19 @@ The 29 areas are not new stages: each belongs to one of the seven stages (RMP-00
 
 PLT-029 (the platform operates without Claude Code) is platform-wide: every stage must leave the platform able to run without the builder.
 
+### Additions of 2026-11-11 by stage ([DEC-068](../decisions/DEC-068-universal-opportunity-directive-mapped.md))
+
+| # | Stage | Added |
+|---|---|---|
+| 2 | DATA FOUNDATION | The search order a preference, not a blocking sequence (OPP-023); adaptive discovery intensity, which never by itself causes more trades, larger positions, higher leverage, or relaxed risk limits (OPP-024) |
+| 3 | CORE TRADING FOUNDATION | Each cost counted once in executable economics (TNP-031); the maker-versus-taker selection the owner approved (EXE-012) |
+| 4 | DIRECTIONAL TRADING | Account-level net return; daily performance and the frequency of days at each level, the owner's benchmark a measurement only (V-44); results labelled by their origin (PFC-020 to PFC-022), with the Performance Controller's core |
+
+Statistical arbitrage, and funding-rate and basis strategies, are research candidates in no stage (STR-029, FUTURE).
+
 Part 3's areas 10 (execution), 12 (portfolio), 16 (policy), 24 (security), 25 (monitoring), and 26 (testing) add no new requirement beyond those above; they stay where Parts 1 and 2 placed them. Area 29 (controlled self-improvement) remains STR-009 under the lifecycle. Not in any stage: the feature status registry of P3§509 (GOV-018, replaced by the canonical feature lifecycle GOV-024, which is in FOUNDATION).
 
-Not in any stage: domain command language (ARCH-034, PROPOSED, kept as an idea by the owner); adaptive execution (EXE-011, FUTURE until the owner approves it; of it, the owner approved on 2026-11-10 the maker-versus-taker selection alone, for the stage that builds execution, which the mapping of owner decisions 29 applies to the requirements: [DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md), decision 4); custody additions (CUS-004, CUS-005, LED-008 apply only if custody is approved).
+Not in any stage: domain command language (ARCH-034, PROPOSED, kept as an idea by the owner); adaptive execution (EXE-011, FUTURE until the owner approves it, but for its maker-versus-taker selection, which the owner approved on 2026-11-10 for the stage that builds execution and which is EXE-012, in CORE TRADING FOUNDATION: [DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md), decision 4; [DEC-068](../decisions/DEC-068-universal-opportunity-directive-mapped.md)); research candidates for statistical arbitrage, and funding-rate and basis strategies (STR-029, FUTURE); custody additions (CUS-004, CUS-005, LED-008 apply only if custody is approved).
 
 **Cross-cutting in every stage:** numerical precision (ARCH-010, ARCH-011, TEC-003), security (SEC), and each instrument type being gated by its risk controls (PLT-012).
 
@@ -133,7 +143,7 @@ Each major feature's state in the canonical feature lifecycle (GOV-024), kept cu
 | Each item of stage 6 in the stage tables above | 6 AI INTELLIGENCE | PROPOSED | As above |
 | Each item of stage 7 in the stage tables above | 7 OPERATIONALIZATION | PROPOSED | As above |
 
-A later stage's items get one row each when that stage is planned, as Stage 1's did. Items in no stage have no row and belong to no stage's scope; they are not approved (ARCH-029), and their class in the [registry](../requirements/registry.md) is their status: the domain command language (ARCH-034, PROPOSED), adaptive execution (EXE-011, FUTURE, but for its maker-versus-taker selection, which the owner approved on 2026-11-10 for the stage that builds execution and the mapping of owner decisions 29 places: DEC-067, decision 4), and the custody model (SYS-32, FUTURE) with the additions that apply only if custody is approved.
+A later stage's items get one row each when that stage is planned, as Stage 1's did. Items in no stage have no row and belong to no stage's scope; they are not approved (ARCH-029), and their class in the [registry](../requirements/registry.md) is their status: the domain command language (ARCH-034, PROPOSED), adaptive execution (EXE-011, FUTURE, but for its maker-versus-taker selection, which the owner approved on 2026-11-10 for the stage that builds execution and which is EXE-012: DEC-067, decision 4; DEC-068), the research candidates of STR-029 (FUTURE), and the custody model (SYS-32, FUTURE) with the additions that apply only if custody is approved.
 
 ## What Parts 2 and 3 did and did not supply
 
