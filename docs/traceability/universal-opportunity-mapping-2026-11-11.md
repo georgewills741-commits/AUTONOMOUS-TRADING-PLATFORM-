@@ -19,7 +19,7 @@
 
 **Out of scope:** the workflow's change (DEC-064, decision 2), the next change; Stage 2's entry gate and plan, after it; any implementation of a requirement this change adds, which its stage's approved plan builds.
 
-**The owner's messages after the last one the previous record names** ([Stage 1 exit verification](stage-01-exit-verification.md): the owner's "Continue" of 2026-11-11, 04:16 UTC), up to the copy that this record's last Gate 3 run reviews: SCOPE-PLACEHOLDER
+**The owner's messages after the last one the previous record names** ([Stage 1 exit verification](stage-01-exit-verification.md): the owner's "Continue" of 2026-11-11, 04:16 UTC), up to the copy that this record's last Gate 3 run reviews: none. Since that record's last copy (2026-11-11, 04:35 UTC), the stop hook's feedback (04:36 UTC), the report of its Gate 3 run 2 as the client delivered it (04:52 UTC), and the notices of background tasks (04:52 and 04:58 UTC) are the client's own.
 
 ## Checks
 
@@ -163,12 +163,18 @@ So the branch is RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO 
 
 ## Gates
 
-PENDING.
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 7 pass, run again after this record's last edit before Gate 3's copy was made. Before the copy, every statement the change adds or changes was listed with the evidence that supports it, every requirement, system rule, and value the record and DEC-068 cite was checked to exist, and the statements of each fact the change touches were searched for by subject, in every active document and with every word for the fact's tenses and statuses (the classes of the [Stage 1 exit verification](stage-01-exit-verification.md)'s "Failures and fixes"). What the search found is in "Failures and fixes".
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. Each new requirement is in the specification of the system that owns its subject, names the requirements it extends, and leaves them as they were; no component, authority, system rule, or source of truth is added (owner decisions 17, Rule 0; owner decisions 9, Rules 3, 7, and 16), and EXE-011 keeps its text, as the owner wrote. The benchmark is a value of the values register and a requirement of the Performance Controller under SR-19, and no scanning, allocation, risk, or execution requirement reads it. The roadmap places each new requirement in the stage that builds its system. The builder's parts map to the builder texts without renaming DEC-032's gates. The backup's reconciliation and retirement follow owner decisions 10 and 22, as for the earlier backups. No code, configuration, gate, or existing requirement changes (checks 3 and 4).
+
+**Verification 3 — independent end-to-end and failure audit:** PENDING.
 
 ## Failures and fixes
 
 | Failure | Cause | Fix | Re-run |
 |---|---|---|---|
+| The search by subject, made after the first edits and before Gate 3's copy, found current statements that the mapping made stale and those edits had left: the roadmap's current position and its row for DATA FOUNDATION, the stage record's "Next stage", and owner decisions 29's status banner, each still giving the mapping as to come; and, in the future tense, DEC-062, DEC-067, and two dated entries of the project state | The first edits were listed from DEC-068's consequences before the search was made. The class is the one the Stage 1 exit verification recorded (the search by subject comes before the list of edits, not after it), met again; the search still ran before the copy, so no stale statement reached the review | Each corrected; DEC-062 and DEC-067 given a "Later changes" line; the banner changed by DEC-068 (decision 11). Class, recurring: the search by subject is made first, and its list is the list of edits | Checks 1 to 7 |
+| Check 7 found that PFC-020's example and its sentence on account-level profitability, and DEC-068's quotation of "create or refine", were not as the owner wrote them ("about" for "approximately", "other" for "additional", "platform" for "system", and a lowercased quotation); and that TNP-031's sentence on the gross spread, and EXE-012's on order splitting, could keep more of the owner's words | They were retyped from the owner's text, not copied from it | The owner's words restored in PFC-020, TNP-031, and EXE-012; DEC-068 reworded so that it quotes only words the owner wrote. Class: a passage in the owner's words is copied from the preserved text, never retyped | Check 7 |
 
 ## Final status and remaining issues
 
