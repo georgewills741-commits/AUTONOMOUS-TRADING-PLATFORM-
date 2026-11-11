@@ -3,7 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-11-10
 - **Decided by:** the owner: the approval to proceed to Stage 2 planning, and the three answers with their conditions ([owner decisions 34](../handoffs/owner-decisions-34-approval-to-plan-stage-2-and-answers-on-the-directive.md)). The builder: how each is recorded and applied, under [DEC-004](DEC-004-preserve-original-handoffs.md) and [DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md) (decision 7).
-- **Later changes:** On 2026-11-11 the mapping of owner decisions 29 applied decisions 3 and 4 to the requirements: V-44 and PFC-021, and EXE-012 ([DEC-068](DEC-068-universal-opportunity-directive-mapped.md)).
+- **Later changes:** On 2026-11-11 the mapping of owner decisions 29 applied decisions 3 and 4 to the requirements: V-44 and PFC-021, and EXE-012 ([DEC-068](DEC-068-universal-opportunity-directive-mapped.md)). Contrary to decision 4's "EXE-011's text and class change there", EXE-011 keeps its text and class: the maker-versus-taker selection is EXE-012, beside it, and its order splitting and adaptive pricing stay future capabilities under it, as the owner wrote (DEC-068, decision 3 and its alternatives).
 
 ## Context
 
