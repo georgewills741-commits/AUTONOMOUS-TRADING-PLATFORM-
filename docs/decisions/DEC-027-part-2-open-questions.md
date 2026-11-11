@@ -4,6 +4,7 @@
 - **Date:** 2026-09-30
 - **Decided by:** project owner ([owner decisions 3, Q2, Q3, Q4, Q8, Q10](../handoffs/owner-decisions-03-part-2-findings.md)), each choosing the recommended option
 - **Resolves:** OQ-24, OQ-25, OQ-26; confirms ARCH-034 as a proposal and [DEC-024](DEC-024-part-2-reconciliation.md) as a whole
+- **Later changes:** On 2026-11-10 the owner approved, of adaptive execution (EXE-011), the maker-versus-taker selection alone, for the stage that builds execution; order splitting and adaptive pricing stay FUTURE ([DEC-067](DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md), decision 4). The mapping of owner decisions 29 applies it to EXE-011.
 
 ## Decision
 
