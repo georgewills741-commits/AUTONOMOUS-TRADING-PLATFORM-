@@ -1,0 +1,137 @@
+# Universal Opportunity Mapping — Owner Decisions 29 and the Owner's Answers of 2026-11-10
+
+> **Status:** ACTIVE record of the change that maps the owner's directive of 2026-11-06 ([owner decisions 29](../handoffs/owner-decisions-29-universal-opportunity-intelligence-and-profit-optimization.md)) and the owner's answers and message of 2026-11-10 ([owner decisions 34](../handoffs/owner-decisions-34-approval-to-plan-stage-2-and-answers-on-the-directive.md)) to the canonical requirements, as [DEC-062](../decisions/DEC-062-preserve-and-map-universal-opportunity-directive.md) (decision 3) and [DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md) (decisions 2 to 4) provide, applied by [DEC-068](../decisions/DEC-068-universal-opportunity-directive-mapped.md); and that reconciles the last change's temporary backup with its commit and retires its branch ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 6). Its three gates: "Final status and remaining issues". Format: [traceability README](README.md).
+
+## Identity
+
+- **Date:** 2026-11-11
+- **Stage:** between Stage 1, COMPLETE, and Stage 2 (DATA FOUNDATION), whose planning is authorized and whose implementation is not (DEC-067, decision 2): the mapping that DEC-067 places after the change that records Stage 1's exit and before the workflow's change and Stage 2's entry gate and plan. This change writes documentation only; it starts no stage's work (DEC-068, decision 11).
+- **Starts from:** commit `ad60e54` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote: the commit of the change that records Stage 1's exit ([Stage 1 exit verification](stage-01-exit-verification.md)), whose machine checks passed ([run 42962433011](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/42962433011), from 04:56 to 04:57 UTC, every step passing, "Tests" included; the only run for that commit). This record's own commit is entered in the project state's checkpoint log by the next change.
+- **Temporary backup** (DEC-057, decision 4): the work is pushed to `claude/unverified-backup-owner-decisions-29` as soon as it exists and as it changes, each command that writes to the working tree ending with the backup. Each commit carries the seven labels of [DEC-042](../decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md) (decision 4), the emergency checkpoint record of master execution constitution §132, and `[skip ci]` in its subject, and the repository test for secrets runs on its snapshot before its push ([DEC-064](../decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). Its reconciliation with this change's commit is recorded by the next change.
+
+## Scope
+
+**Added:** this record; DEC-068.
+
+**Changed:** the specifications of the [Opportunity Detection Engine](../systems/opportunity-detection.md) (OPP-023, OPP-024), the [True Net-Profit Engine](../systems/true-net-profit-engine.md) (TNP-031), the [Execution Engine](../systems/execution-engine.md) (EXE-012), the [Performance Controller](../systems/performance-controller.md) (PFC-020 to PFC-022), and [strategy management](../systems/strategy/strategy-management.md) (STR-029), each with a section "The owner's directive of 2026-11-06 applied"; the [values register](../requirements/values-register.md) (V-44); the [System Rules Register](../requirements/system-rules-register.md) (SR-19's canonical requirements and sources); the [open-question register](../open-questions/register.md) (its status line; OQ-32 and OQ-33, added); the [roadmap](../roadmap/roadmap.md) ("Additions of 2026-11-11 by stage", added; its two statements on items in no stage); the [glossary](../glossary.md) (the Opportunity Detection Engine's variants; adaptive execution; the daily benchmark, added); the [Part 1 handoff coverage](handoff-coverage.md) (what remains unapproved); DEC-014 and DEC-027 (their "Later changes"); `CLAUDE.md` ("Where to start": the open pull requests); the [decision log](../decisions/README.md); the generated [registry](../requirements/registry.md), coverage tables, and [verification matrix](verification-matrix.md); and the indexes and the project state, as this record's last edits list them.
+
+**Requirements:** eight added (OPP-023, OPP-024, TNP-031, EXE-012, PFC-020, PFC-021, PFC-022, STR-029); none removed or changed (check 3).
+
+**Out of scope:** the workflow's change (DEC-064, decision 2), the next change; Stage 2's entry gate and plan, after it; any implementation of a requirement this change adds, which its stage's approved plan builds.
+
+**The owner's messages after the last one the previous record names** ([Stage 1 exit verification](stage-01-exit-verification.md): the owner's "Continue" of 2026-11-11, 04:16 UTC), up to the copy that this record's last Gate 3 run reviews: SCOPE-PLACEHOLDER
+
+## Checks
+
+SECTION-CHECKS-PLACEHOLDER
+
+## The mapping
+
+Each point of the directive is mapped to where the canonical project states it; none is restated. The status column gives where its requirement stands, in owner decisions 9's classes (Rule 8). Its implementation, in the directive's own statuses (§2), is the same for every platform point and is not repeated in the table: BLOCKED until the plan of the stage that builds it is approved ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md); [DEC-040](../decisions/DEC-040-later-stage-features-proposed.md); DEC-067), apart from what Stage 1 delivered, VERIFIED EXISTING for that part (exact decimal arithmetic, TEC-003, cited by PFC-020; the [verification matrix](verification-matrix.md)). No point is IMPLEMENTED BUT UNVERIFIED, CONFLICTING, or an UNNECESSARY DUPLICATE. The builder's points are in use: this record applies them (DEC-068's reading notes).
+
+| § | The directive's point | Where the canonical project states it | Status |
+|---|---|---|---|
+| 3 | Continuously discover, evaluate, rank, and capture eligible opportunities across supported markets, exchanges, instruments, and strategies | PLT-022; OPP-001, OPP-003, OPP-017, OPP-018, OPP-021; ranking CAP-017, CAP-043 | EXISTING REQUIREMENT |
+| 3 | Aggressive opportunity discovery, intelligent profit selection, conservative risk management, capital preservation; substantial and smaller repeatable net-positive opportunities | PLT-022, OPP-017, PLT-006; TNP-006, TNP-008, TNP-009; master execution constitution §80, §172 | EXISTING REQUIREMENT |
+| 3, 12 | A daily objective of about 1.2% net, aspirational and never forced: no forced trades, no extra exposure or leverage, no weakened risk controls; less is acceptable, a 0% day is acceptable, losing days are possible; no unsubstantiated claims; never an execution requirement | V-44 and PFC-021, new (the owner's answer: a measurement only, DEC-067, decision 3); PLT-007, PLT-008, TNP-012 to TNP-014, TNP-026; RSK-031, RSK-044, RSK-047, CAP-034; PLT-006; SR-19 | NEW CONFIRMED REQUIREMENT (the benchmark); the rest EXISTING |
+| 3, 15 | Capital preservation and risk authorization always take priority over profit targets; the aim is to improve the probability of capturing legitimate opportunities, not to manufacture a return | PLT-006, PLT-007; SR-02, SR-19 | EXISTING REQUIREMENT |
+| 4 | Search across the authorized universe, not one strategy or return threshold; the 0.1% to 3% and higher examples are not returns or thresholds; a legitimate 0.1% opportunity is not rejected for the daily objective, and a tiny one is not executed merely because positive; each opportunity passes profitability, risk, liquidity, execution quality, and allocation | OPP-018, OPP-022, OPP-001; TNP-005, TNP-006, TNP-011, TNP-016, TNP-027; OPP-019; SR-48 | EXISTING REQUIREMENT |
+| 4 | The preference ladder 3% → 2% → 1.5% → 1% → 0.9% → lower, preserved; a preference, not a blocking sequence; tiers evaluated simultaneously | OPP-022 (its order, from 5%); OPP-023, new | REFINED EXISTING REQUIREMENT (OPP-023) |
+| 5 | An Adaptive Opportunity Intensity Controller, created or refined from existing infrastructure: adaptive scanning frequency and market prioritization by demonstrated opportunity quality | OPP-024, new, a function of SYS-05 (OPP-010: one owner of market monitoring); OPP-012, OPP-013 | REFINED EXISTING REQUIREMENT (OPP-024); no new component |
+| 5 | Its other items: liquid pairs, cross-exchange comparisons, concurrent strategies, regime awareness, order-book updates, expiration and detection latency, spreads, volatility and liquidity, computing resources, rate limits, unnecessary requests and duplicate scanning | OPP-001, OPP-002, OPP-012, OPP-017, OPP-018, OPP-020; RGM; TNP-023, TNP-025; PERF-005, PERF-008, PERF-014 to PERF-017; EXA-014; listed in OPP-024 for its evaluation | EXISTING REQUIREMENT |
+| 5 | No repeated analysis of identical or stale conditions; more aggressive scanning never causes more trades, larger positions, higher leverage, or relaxed risk limits by itself | PERF-017 and OPP-017, in general terms; MKD-012; CAP-034, RSK-047; OPP-024, new | REFINED EXISTING REQUIREMENT (in OPP-024) |
+| 6 | At least three connected exchanges as an initial design objective, where legally accessible, compatible, and approved; accounts, permissions, balances, and connectivity not assumed | EXA-005 (five initial venues), EXA-007, EXA-008; RDY-018, RDY-021; the quality directive's §7 | EXISTING REQUIREMENT |
+| 6 | Concurrent monitoring; price comparison; triangular routes; executable depth; inventory per exchange; available and locked balances reconciled; fee schedules and tiers; API reliability and latency; partial-fill and failed-order protection; exchange health scoring; exchange-specific exposure limits; imbalance detection; cost-aware rebalancing within approved controls; safe isolation | OPP-001, OPP-002, OPP-012, XAR-003; the triangular arbitrage specification; TNP-018; CAP-002, CAP-019, LED-005, LED-009, REC-002, REC-008; QNT-005; EXA-015, MON-003, PERF-008, TNP-030; EXE-002, TAR-004, RSK-033; per-venue health, under that name (HLT-011, HLT-015, TNP-015, CAP-038); CAP-025, CAP-033, RSK-002, RSK-008; CAP-040, CAP-041; CAP-023, CAP-024, CAP-031; HLT-005, RSK-038, PERF-011 | EXISTING REQUIREMENT |
+| 6 | Pre-positioned inventory; all capital across exchanges accounted for; three exchanges guarantee no profit | XAR-005, CAP-038, CAP-039; CAP-002, LED-005, LED-006, PRT-002; PLT-007, TNP-014 | EXISTING REQUIREMENT |
+| 7 | A conservative estimate of net executable profitability before any trade, with fees, spreads, slippage, depth, impact, funding, borrowing, transfers, partial fills, hedging and unwind costs, price movement, estimation error, and margins | TNP-017 to TNP-020, TNP-023, TNP-025, TNP-029, TNP-030; QNT-005, QNT-007; EXE-004 | EXISTING REQUIREMENT |
+| 7 | Prevent double counting when costs are already included in executable prices; a gross market spread is not net profitability | TNP-031, new (in addition to TNP-018, DEC-014's formula) | REFINED EXISTING REQUIREMENT (TNP-031) |
+| 7 | A dynamic minimum worthwhile edge, calibrated; no universal fixed floor; small theoretical edges unlikely to survive execution rejected | TNP-019, TNP-022, TNP-023; TNP-005, TNP-016; TNP-011, TNP-020 | EXISTING REQUIREMENT |
+| 8 | The existing allocator improved, not duplicated, coordinating across strategies, markets, and exchanges, with its thirteen factors; small repeatable against larger riskier, risk-adjusted; not the largest percentage; no double commitment; several qualified opportunities at once | the Global Capital Authority (SYS-07): CAP-006, CAP-008, CAP-016, CAP-017, CAP-043; TNP-007, TNP-015, TNP-019, TNP-021, TNP-030; CAP-002, CAP-019, CAP-024, CAP-033, CAP-045; RSK-002; PLT-019; CAP-027, PERF-022; TNP-008 | EXISTING REQUIREMENT |
+| 8, 9 | Profit on deployed capital is not profit on total account equity; account-level net profitability calculated correctly; returns from different allocations never summed as though each used the full portfolio; capital-weighted returns, realized P&L, and compounding calculated correctly | PFC-020, new; LED-005, LED-006, PRT-004, CAP-012, CAP-026, TEC-003 | NEW CONFIRMED REQUIREMENT (PFC-020) |
+| 9 | Small gains accumulated over 24 hours; no fixed number of opportunities, no minimum trade count, no trades for the target; not every opportunity fills; losses, failed orders, unused capital, and costs never ignored; worthwhile opportunities pursued when the preferred return looks unlikely; a smaller achievable return over unjustified risk | TNP-008, TNP-013, TNP-014; PLT-019, RSK-044; TNP-025, TNP-030; PFC-001, PFC-011, CAP-036, DSI-002; OPP-021, TNP-026, RSK-047, PLT-006 | EXISTING REQUIREMENT |
+| 10 | The strategy roadmap and deterministic execution preserved: cross-exchange, triangular, and directional trading; strategies competing for capital under one risk authority; no duplicate services; a validated net edge before production capital | the roadmap; EXE-001; the cross-exchange, triangular, and directional specifications; CAP-008, CAP-016, CAP-043; OPP-010, PFC-006, GOV-020; STR-001, STR-024, PAP-003, PAP-012, RDY-002 | EXISTING REQUIREMENT |
+| 10 | Statistical arbitrage, and funding-rate and basis strategies, as research candidates, not production features | STR-029, new, in no stage | FUTURE CAPABILITY (STR-029) |
+| 11 | Deterministic authority over data validation, calculations, sizing, accounting, risk, authorization, execution, reconciliation, shutdown, and recovery; AI's contributions; the existing agents and conditional activation kept, no duplicates; event-driven use, caching, routing, and cost controls; AI never bypasses risk authorization | SR-03; ARCH-019, ARCH-020; EXE-001, EXE-003; AGT-016 and the agent specifications; AIL-005, AIL-006, AIL-008, AIL-016; PERF-005; RTR-001; COST-001, COST-002; AIV-014; master execution constitution §29, §77, §171; GOV-020 | EXISTING REQUIREMENT |
+| 12 | The desired, expected, realized, and unrealized returns, remaining capacity, opportunity quality, and forecast uncertainty distinguished; performance evaluated over meaningful periods | PFC-021, new; PRT-002, CAP-002, TNP-019, TNP-021 | NEW CONFIRMED REQUIREMENT (in PFC-021) |
+| 12 | Capture 1.5% where legitimate; smaller outcomes without forced trades; wait when unsafe; no rule that raises trading intensity because the day is below target; scanning goes on after the target, with no bypass and no unnecessary turnover | TNP-013, TNP-026; RSK-044; RSK-032, PLT-018; RSK-047, PFC-021; OPP-021, RSK-046 | EXISTING REQUIREMENT |
+| 13 | Maker-versus-taker execution decisions | EXE-012, new (the owner's approval, DEC-067, decision 4); EXE-011 unchanged | NEW CONFIRMED REQUIREMENT (EXE-012) |
+| 13 | Slippage modeling, liquidity, expiration and price deterioration, partial fills, idempotent submission, duplicates, failed hedges, timeouts, order and balance reconciliation, transaction records, emergency unwind, outage isolation, controlled retries; retries never blindly add exposure; recovery from reconciled state; a restart authorizes no trading before health, reconciliation, and risk gates pass | QNT-007, TNP-018, TNP-019, TNP-024; EXE-004, TNP-023; EXE-002; ARCH-041, EXE-006, EXE-008, PERF-022; TAR-004, RSK-033; EXE-005; REC-008, EXE-007; LED-005, AUD-001; RSK-016, RSK-017; HLT-005, RSK-008; EXA-014; REC-004, REC-015, REC-025, HLT-012; master execution constitution §48, §140 | EXISTING REQUIREMENT |
+| 14 | Detected, rejected with reasons, and attempted opportunities; fills; gross and net profits, losses, costs; by strategy and exchange; expected against actual slippage and P&L; utilization, turnover, efficiency; drawdown | DSI-002, OPP-014, OPP-015, PFC-012, PFC-019; PRT-002, PRT-006, LED-005; PFC-001, PFC-011, PFC-014, PFC-017; CAP-036, RSK-046; BKT-009 | EXISTING REQUIREMENT |
+| 14 | By opportunity-size tier; the worst day; profit factor; positive and negative days; the daily account-equity return; how often account-level returns reach 1.0% to 1.5%; meaningful samples and uncertainty | PFC-020, PFC-021, new; V-44 | NEW CONFIRMED REQUIREMENT (PFC-021) |
+| 14 | Simulated, paper, and live results distinguished; hypothetical results never presented as verified real performance; a successful day proves no sustainable strategy | PFC-015, PAP-012, PAP-013, MODE-001, in part; PFC-022, new | REFINED EXISTING REQUIREMENT (PFC-022) |
+| 15 | Everything subordinate to the risk engine: exposure, risk budgets, exchange limits, concentration, drawdown, loss streaks, slippage and liquidity limits, leverage, exchange health, reserves, circuit breakers and kill switches, safe recovery; its final veto; no target, AI suggestion, strategy, or ranking overrides it; capital preservation, risk authorization, execution, profit optimization, in that order | RSK-002, RSK-008, RSK-009, RSK-010, RSK-013, RSK-022, RSK-023, RSK-026, RSK-028, RSK-045; CAP-033, CAP-045; REC-004; CAP-016; SR-02, SR-03, SR-19; PLT-006; RSK-044 | EXISTING REQUIREMENT |
+| 1 | The builder's role and standard: never assume a requirement is new; no blind creation; continue from the verified checkpoint | the constitution's role and Rules 1, 35 to 41, and 84; DEC-034 (the platform outlives the builder); owner decisions 9, Rules 1, 5, and 10; owner decisions 17, Rule 0 | EXISTING (builder) |
+| 2 | The audit before implementation, its eight steps and its statuses | constitution Rules 35 to 41 and 51; master execution constitution §05, §25; owner decisions 9, Rules 1, 5, 6, and 13; DEC-057, decision 7; DEC-068's reading notes | EXISTING (builder); step 7, the pull requests, REFINED in `CLAUDE.md` (DEC-068, decision 7) |
+| 16 | Three verification gates: architecture, functional and quantitative, operational readiness | DEC-032's Verifications 2, 1, and 3, with GOV-024's PAPER/SAFE TEST and CANARY, master execution constitution §104 and §105, RDY, STR-016 (DEC-068's reading notes); names and order kept (owner decisions 9, Rules 3 and 27) | EXISTING (builder) |
+| 17 to 20 | Root-cause correction and the anti-loop rule; change management; the workflow, which stops only at a genuine blocker; the final report | constitution Rules 125 and 191 to 193, Parts X, XI, XXIX, and XLIX; master execution constitution §19, §153; the quality directive's §6 and §15; owner decisions 9, Rules 9, 22, 23, and 28, and its final command; owner decisions 13; DEC-045 (decision 7); the checkpoint rule's final completion requirement | EXISTING (builder) |
+
+## The owner's seven points and conditions of 2026-11-10
+
+The owner's message of 07:04 UTC (owner decisions 34) asks that the platform continue to meet seven points, with PLT-008, TNP-014, and every existing risk, capital, execution, security, and AI-authority constraint maintained:
+
+| # | The owner's point | Where the canonical project states it |
+|---|---|---|
+| 1 | Aggressive, continuous discovery across supported markets, exchanges, assets, and approved strategies | OPP-017, OPP-018, OPP-021, OPP-001, OPP-002; PLT-022; SR-04 |
+| 2 | Small and large opportunities evaluated, from 0.1% to 2% and higher | TNP-005, TNP-006, TNP-008, TNP-027; OPP-022, OPP-023 |
+| 3 | Selection by executable net profitability, expected dollar profit, risk-adjusted expected value, capital efficiency, liquidity, fees, slippage, execution reliability, and the safety constraints | TNP-018 to TNP-021, TNP-024, TNP-030 (the result in quote currency, and relative to capital), TNP-031; CAP-043, CAP-048; QNT-005, QNT-007; TNP-015; the risk engine |
+| 4 | The best qualifying opportunities captured when 1.2% is not achievable, without forced trades | RSK-044, RSK-031; CAP-036; TNP-006; SR-05 |
+| 5 | Discovery and evaluation continue after the day exceeds 1.2% | TNP-026, TNP-013, OPP-021; SR-19 |
+| 6 | Zero-return, no-trade, and unavoidable loss days accepted, without revenge trading or risk escalation | RSK-031, RSK-032, RSK-044, RSK-047; TNP-014 |
+| 7 | The benchmark measured against actual net whole-account daily returns, with costs and capital changes correctly accounted for | PFC-020, PFC-021, new; V-44 |
+
+Its conditions: the benchmark must not directly determine trade frequency, position sizing, risk limits, execution decisions, or whether scanning continues (PFC-021, in those words; SR-19); research and improvement aim at long-term risk-adjusted performance by evidence, not by chasing the benchmark (PFC-022; master execution constitution §79; PFC-019); the maker-versus-taker selection evaluates the best genuinely executable, risk-adjusted net outcome, with no automatic preference for maker or taker orders, inside the existing deterministic Execution Engine, without duplicate logic or weakened controls (EXE-012, in those words), and is not built in Stage 2 (DEC-067; the roadmap places it in CORE TRADING FOUNDATION); order splitting and adaptive pricing stay future capabilities under EXE-011.
+
+## The drafted requirements (owner decisions 9, Rules 4, 8, 13, and 14)
+
+| ID | Class | Classification (Rule 8) | Provenance | Extends | Owner | Stage |
+|---|---|---|---|---|---|---|
+| OPP-023 | CONSTRAINT | REFINED EXISTING REQUIREMENT | Owner decisions 29, §4, in its words | OPP-021, OPP-022 | SYS-05 | DATA FOUNDATION |
+| OPP-024 | SYSTEM REQUIREMENT | REFINED EXISTING REQUIREMENT | Owner decisions 29, §5, in its words | OPP-012, OPP-013, OPP-017, OPP-021 | SYS-05 | DATA FOUNDATION |
+| TNP-031 | CONSTRAINT | REFINED EXISTING REQUIREMENT | Owner decisions 29, §7, in its words; it refines DEC-014's formula, the builder's delegated decision, which the owner may override | TNP-018, TNP-030 | SYS-06 | CORE TRADING FOUNDATION |
+| EXE-012 | CONFIRMED REQUIREMENT | NEW CONFIRMED REQUIREMENT | The owner's answer and conditions of 2026-11-10 (owner decisions 34; DEC-067, decision 4), in the owner's words | EXE-011 | SYS-10 | CORE TRADING FOUNDATION |
+| PFC-020 | SYSTEM REQUIREMENT | NEW CONFIRMED REQUIREMENT | Owner decisions 29, §8 and §9, and the owner's seventh point, in their words | PFC-001, PRT-002, PRT-006 | SYS-21 | DIRECTIONAL TRADING |
+| PFC-021 | SYSTEM REQUIREMENT | NEW CONFIRMED REQUIREMENT | Owner decisions 29, §12 and §14; the owner's answer and condition of 2026-11-10 (DEC-067, decision 3), in their words | DSI-002, BKT-009, PFC-017 | SYS-21 | DIRECTIONAL TRADING |
+| PFC-022 | CONSTRAINT | REFINED EXISTING REQUIREMENT | Owner decisions 29, §14, and the owner's message of 2026-11-10, in their words | PFC-015, PAP-012 | SYS-21 | DIRECTIONAL TRADING |
+| STR-029 | FUTURE | FUTURE CAPABILITY | Owner decisions 29, §10, in its words | STR-001 | SYS-14 | None |
+
+Each states only what the directive or the owner's message says, or what an established requirement it cites determines; each names the requirements it extends, which stay as they were. Dependencies and impact (Rule 13): each changes the scope of the stage the roadmap places it in, which its plan will design; none changes an interface, schema, configuration, or code now, nor a risk, capital, security, or AI authority. TNP-031 and EXE-012 depend on the Fee and Slippage Engines (QNT-005, QNT-007) and on TNP-018; PFC-020 and PFC-021 on the ledger and the portfolio (LED-006, PRT-004) and on V-44; OPP-024 on venue rate limits (EXA-014) and backpressure (PERF-014, PERF-021).
+
+## Final reconciliation report (owner decisions 9, Rule 23)
+
+1. **Existing requirements identified:** those the mapping's tables name for each point; most of the directive and of the owner's points.
+2. **Requirements mapped:** every point of the directive's twenty sections, and the owner's seven points and conditions (the tables above).
+3. **Requirements refined:** OPP-022 by OPP-023; OPP-012, OPP-013, and OPP-017 by OPP-024; TNP-018 by TNP-031; PFC-015 and PAP-012 by PFC-022; each by a new line, none reworded.
+4. **Genuine new requirements:** EXE-012, PFC-020, PFC-021.
+5. **Duplicates rejected:** a separate "Adaptive Opportunity Intensity Controller" (OPP-010); a system rule for the benchmark (SR-19); a requirement for each point already stated (§6's capabilities, §13's execution items, §15's protections).
+6. **Unnecessary items rejected:** none.
+7. **Future capabilities identified:** statistical arbitrage, and funding-rate and basis strategies (STR-029); order splitting and adaptive pricing stay FUTURE under EXE-011.
+8. **Owner decisions required:** none now; the two the directive raised were answered on 2026-11-10 (OQ-32, OQ-33).
+9. **Conflicts discovered:** none. The daily objective would have conflicted with PLT-008 and TNP-014 had it been an execution target; the owner's answer resolved it before the mapping.
+10. **Conflicts resolved:** that one, by the owner (DEC-067, decision 3).
+11. **Dependencies affected:** the scope of DATA FOUNDATION (OPP-023, OPP-024), CORE TRADING FOUNDATION (TNP-031, EXE-012), and DIRECTIONAL TRADING (PFC-020 to PFC-022), each for its stage's plan.
+12. **Canonical sources updated:** the five specifications, the values register, the System Rules Register, the open-question register, the roadmap, the glossary, the Part 1 handoff coverage, DEC-014, DEC-027, `CLAUDE.md`, and the generated registry, coverage, and matrix.
+13. **Enforcement locations identified:** for each new requirement, the system that owns it (the drafted requirements' table) and, for the benchmark's condition, SR-19's enforcement: design review and policy validation (the System Rules Register).
+14. **Tests added or updated:** none; no code changes, and each requirement is tested by the stage that builds it.
+15. **Three-pass verification performed:** "Gates" below.
+16. **Remaining unresolved items:** none of the mapping's; the later work is in "Final status and remaining issues".
+
+## Reconciliation of the last change's temporary backup
+
+RECONCILIATION-PLACEHOLDER
+
+## Gates
+
+PENDING.
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+
+## Final status and remaining issues
+
+PENDING.
+
+## Environment
+
+System Python 3.11 (`python3`) for the documentation tools and the change's scripts; git; GitHub's branch list, pull requests, and workflow runs, read through the GitHub command-line tool and the session's GitHub tools.
