@@ -117,7 +117,39 @@ Each states only what the directive or the owner's message says, or what an esta
 
 ## Reconciliation of the last change's temporary backup
 
-RECONCILIATION-PLACEHOLDER
+The change that records Stage 1's exit, committed as `ad60e54`, was backed up on `claude/unverified-backup-x8` ([Stage 1 exit verification](stage-01-exit-verification.md), "Identity"), in 18 commits, each on the one before and the first on `3b7a41d`, committed from 2026-11-10, 07:13 UTC (`57ede76`) to 2026-11-11, 04:54 UTC (`4dbd429`). Each commit carries the seven labels, the emergency checkpoint record of §132 with its seven fields, the session's trailer, and `[skip ci]` (a check of every commit's message); none is a merge. On 2026-11-11, from 05:04 UTC, after `ad60e54` was pushed and the machine checks passed on it, the builder compared the branch with `ad60e54` by owner decisions 10's eight checks:
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `ad60e54`'s tree is `4dbd429`'s (`git diff --name-only`: no difference): the last backup holds the fixes of Gate 3 run 2 and the record's final status | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: the fixes of the two runs' findings, and their results | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the 17 files that the 18 commits change against `3b7a41d` is in `ad60e54`. Outside `docs/`, they change only the repository's README and `tools/docs/preserved-texts.sha256`; no code, test, tool's code, configuration, or workflow | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `ad60e54`'s parent is `3b7a41d`; none of the 18 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `ad60e54` (05:04 UTC): the documentation checker and its self-test pass, and `compare_requirements.py 3b7a41d --strict` reports 749 requirements before and after; the tests ran in the machine checks, and locally, 1,108 passed | PASS |
+| 6 | Required documentation and traceability are updated | `ad60e54` holds the record's final status, PASS for its gates, the checkpoint log's row for the change, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `ad60e54` is on the remote branch (`git ls-remote`), pushed at 04:56 UTC, and the machine checks passed on it ([run 42962433011](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/42962433011)) | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `ad60e54`, the remote branch's commit, after the commit and its push (04:56 UTC) | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `ad60e54`. Its last commit, `4dbd429`, is kept under the archive branch `claude/archive/unverified-backup-x8`, pushed at 05:05 UTC, after a check that no archive branch for it existed, and checked on GitHub at that commit (`git ls-remote`, and GitHub's branch list). The push started no run of the machine checks: its commit carries the marker, and GitHub lists no run for it. The deletion of `claude/unverified-backup-x8`, a git push made only if the branch was still at `4dbd429`, was refused at 05:05 UTC with HTTP 403; the branch stays at `4dbd429`, and is retired as [DEC-054](../decisions/DEC-054-configuration-size-limit-and-retired-backup-branches.md) (decision 4) provides, and kept with the others without a new question to the owner (DEC-067, decision 5).
+
+**The ten checks before "safe to delete"** ([owner decisions 22](../handoffs/owner-decisions-22-configuration-limit-and-branch-retirement.md)'s first rule set, §5), made on 2026-11-11 for the branch, at `4dbd429`:
+
+| # | Check | Evidence | Result |
+|---|---|---|---|
+| 1 | All valid unique work is preserved elsewhere | Its commits are its archive branch's (check 3), and its work is in `ad60e54` (the reconciliation above) | PASS |
+| 2 | The canonical archive exists | GitHub's branch list (05:05 UTC): `claude/archive/unverified-backup-x8` at `4dbd429` | PASS |
+| 3 | Commit and content parity | The branch is at the same commit as its archive branch, so its content is the same (GitHub's branch list and `git ls-remote`, 05:05 UTC) | PASS |
+| 4 | No open work depends on it | The project state's work in progress and next steps name it only as done: reconciled, archived, and retired, with nothing left to do on it | PASS, in this change |
+| 5 | No active pull request depends on it | GitHub's list of the repository's pull requests, in every state: none (05:05 UTC) | PASS |
+| 6 | No required verification evidence exists only on it | A backup is evidence for no gate ([DEC-052](../decisions/DEC-052-apply-owner-answers-on-order-of-work-and-backups.md), decision 3); every record is on the designated branch; and the backup's commits are on its archive branch too | PASS |
+| 7 | No unresolved owner decision depends on it | None: a later backup branch whose deletion is refused is retired and kept without a new question to the owner (DEC-067, decision 5) | PASS |
+| 8 | No deployment or automation depends on it | The one workflow, `.github/workflows/checks.yml`, names no branch; nothing is deployed; outside `docs/`, the repository does not name the branch (`git grep`) | PASS |
+| 9 | Traceability is updated | The project state's "Branches" and this record | PASS, in this change |
+| 10 | A canonical rule permits retirement and deletion | DEC-052, decision 3: the backup branch is deleted once its archive is checked; DEC-054, decision 4: a later backup whose deletion is refused is retired the same way; DEC-067, decision 5; owner decisions 10: "RETIRE / DELETE TEMPORARY BACKUP WHEN SAFE" | PASS |
+
+So the branch is RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO DELETE WHEN PERMITTED (DEC-067, decision 5). No deletion is tried again (§6): DEC-067 keeps a refused branch with the others until the owner removes it, and nothing shows that this environment's access has changed. The branch is not protected on GitHub (its branch list).
+
+**The report, A to L** (§14): A, `claude/unverified-backup-x8`; B, `4dbd429`; C, `claude/archive/unverified-backup-x8`, its work in `ad60e54`; D, parity verified (the same commit as its archive branch; reconciled above); E, RETIRED — DELETION BLOCKED — NON-AUTHORITATIVE — SAFE TO DELETE WHEN PERMITTED; F, not authoritative; G, nothing depends on it (checks 4 to 8); H, safe to delete when permitted (the ten checks); I, HTTP 403 from this session's access to GitHub (2026-11-11, 05:05 UTC); J, no retry now: the owner keeps the retired branches until the owner removes them or asks for their deletion from this environment (DEC-067; DEC-064), and nothing shows that the access has changed; K, kept, retired, until the owner removes it or asks for its deletion from this environment, its archive branch kept for audit; L, none now: when the owner deletes it on GitHub, check that its archive branch is still at `4dbd429`, and record it as RETIRED — PHYSICALLY DELETED; if the owner asks for its deletion from this environment and it is permitted, re-check that it is still retired and at `4dbd429`, delete it, and record it the same way.
 
 ## Gates
 
