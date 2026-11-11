@@ -148,6 +148,7 @@ These did not come from a handoff section. Each cites the decision record that c
 | [DEC-036](../decisions/DEC-036-owner-decisions-audit-findings.md) | MIG-033 |
 | [DEC-058](../decisions/DEC-058-opportunity-universe-and-economics.md) | OPP-021, OPP-022, TNP-027, TNP-028, TNP-029, TNP-030, CAP-047, CAP-048, CAP-049, PFC-019 |
 | [DEC-059](../decisions/DEC-059-platform-traceability-rules.md) | MON-012, SEC-010, OPS-022, OPS-023, MIG-034 |
+| [DEC-068](../decisions/DEC-068-universal-opportunity-directive-mapped.md) | OPP-023, OPP-024, TNP-031, EXE-012, STR-029, PFC-020, PFC-021, PFC-022 |
 
 ## §100 questions — where the repository answers them
 
