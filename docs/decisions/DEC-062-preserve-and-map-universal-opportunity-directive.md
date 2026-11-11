@@ -3,7 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-11-06
 - **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and [DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md) (decision 7: the owner's messages that carry an approval, an instruction, or a question are kept). The message, its directive, and its instructions are the owner's.
-- **Later changes:** From 2026-11-10 to 2026-11-11, the change after the certificate's recorded Stage 1's exit, the owner's approval to plan Stage 2 with the owner's answers on two of the directive's points ([DEC-067](DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md)). The mapping of decision 3 follows that change, and applies those answers; its place in the order of work, before Stage 2's plan, is unchanged.
+- **Later changes:** From 2026-11-10 to 2026-11-11, the change after the certificate's recorded Stage 1's exit, the owner's approval to plan Stage 2 with the owner's answers on two of the directive's points ([DEC-067](DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md)). The mapping of decision 3 follows that change, and applies those answers; its place in the order of work, before Stage 2's plan, is unchanged. The mapping was made on 2026-11-11 ([DEC-068](DEC-068-universal-opportunity-directive-mapped.md)).
 
 ## Context
 
