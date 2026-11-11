@@ -79,6 +79,12 @@ New requirements from [Handoff Part 3](../../handoffs/part-3-consolidated-autono
 
 P3§458 (autonomous learning must be controlled) and P3§459 (the self-improvement loop) are STR-002, STR-009, and AGT-013 (DUP-37). Failure data comes from its owners (incidents INC-002, missed and false opportunities PFC-012, PFC-013, PFC-016, expected vs actual PFC-001) and is referenced, not copied. STR-028's research runs in the research environment and follows the lifecycle (STR-001); it never activates a capability, which remains the Readiness System's decision (RDY-008, RDY-016).
 
+## The owner's directive of 2026-11-06 applied
+
+New requirements from the owner's directive of 2026-11-06 ([owner decisions 29](../../handoffs/owner-decisions-29-universal-opportunity-intelligence-and-profit-optimization.md)) and the owner's answers and message of 2026-11-10 ([owner decisions 34](../../handoffs/owner-decisions-34-approval-to-plan-stage-2-and-answers-on-the-directive.md)), applied by [DEC-068](../../decisions/DEC-068-universal-opportunity-directive-mapped.md). Most of the directive is already canonical; each of its points is mapped to the requirements that state it in the [universal opportunity mapping](../../traceability/universal-opportunity-mapping-2026-11-11.md). Only what no requirement stated, or stated only in general terms, is added here, each line naming the requirements it extends, so that what was approved stays as it was (as DEC-058's decision 3 provides).
+
+- **STR-029** Research candidates: statistical arbitrage, and funding-rate and basis strategies · FUTURE · DEC-068 — Statistical arbitrage, and funding-rate and basis strategies, are evaluated as research candidates, not automatically authorized production features (owner decisions 29, §10): each enters the strategy lifecycle (STR-001) as an idea, and a strategy must demonstrate a credible net edge through appropriate validation before receiving production capital. They are in no stage until the owner approves one.
+
 ## Boundary (§92)
 
 - **Owns:** strategy versions, lifecycle state, promotion, and retirement.
