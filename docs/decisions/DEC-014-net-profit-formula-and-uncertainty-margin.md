@@ -3,7 +3,7 @@
 - **Status:** ACCEPTED (delegated: builder decision under the owner's instruction to resolve all open items; the owner may override)
 - **Date:** 2026-09-30
 - **Resolves:** OQ-05, TC-01, TC-04
-- **Later changes:** Part 2 did not supply the numerical methods for slippage and market impact that this record expected from it; they are specified with the True Net-Profit Engine's interface contract when its stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences).
+- **Later changes:** Part 2 did not supply the numerical methods for slippage and market impact that this record expected from it; they are specified with the True Net-Profit Engine's interface contract when its stage is planned (ARCH-025; [DEC-024](DEC-024-part-2-reconciliation.md), Consequences). On 2026-11-11 the owner's directive of 2026-11-06 refined the formula: each cost is counted once, a cost already reflected in the executable prices at the intended size not being subtracted again (TNP-031, in addition to TNP-018; [DEC-068](DEC-068-universal-opportunity-directive-mapped.md)).
 
 ## Context
 
