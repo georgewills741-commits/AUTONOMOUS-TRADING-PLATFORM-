@@ -55,9 +55,9 @@ The builder gave it in the session on 2026-11-16 at 18:40 UTC. Its evidence, mea
 - **B. Where tokens and time go:**
   1. The main session: 2,120 calls from 2026-10-28 to 2026-11-16, each carrying the conversation, 454,593 tokens of context on average, 947,239,363 cached tokens in all.
   2. Gate 3: 18 runs from 2026-11-02 to 2026-11-11, from 315,902 to 456,505 tokens each as the client reported them, 7,012,455 in all: about two runs a change, and six for the certificate's.
-  3. What the runs found: of about 110 findings recorded since 2026-11-02, 108 are documentation issues, and none is a code defect. Their main cause is the same facts restated in many active documents, so that each change must update each statement of them: the project state alone is 188,309 bytes, with a line of 7,113 characters.
-  4. Eighteen decision records exist only to preserve an owner's message.
-  5. Fixed context: `CLAUDE.md` and the six builder texts it loads, 174,337 bytes on every call, an estimated 44,000 tokens at about four bytes a token.
+  3. What the runs found: of the 158 findings in the nine records written since 2026-11-02, 148 are documentation issues; the others are 6 non-blocking improvements, 2 blocking defects, a regression caused by a fix, and a test-infrastructure issue (the report said 108 of about 110, and no code defect, having counted six of the nine records; the builder corrected it to the owner the same evening). Many are statements a change left stale, because the same facts are restated in many active documents and each change must update each statement of them: the project state alone is 188,309 bytes, with a line of 7,113 characters.
+  4. Seventeen committed decision records are titled as preserving the owner's messages; nine of them keep questions or short messages and change nothing (the report said eighteen, counting a draft of DEC-069, and that each only preserves a message; corrected the same way).
+  5. Fixed context: `CLAUDE.md` and the six builder texts it loads, 174,337 bytes on every call (174,511 with this change), an estimated 44,000 tokens at about four bytes a token.
   6. The usage limits' stops: from 2026-10-29 to 2026-11-02, from 2026-11-06 to 2026-11-09, and from 2026-11-11 to 2026-11-16 (the project state's "Stage convergence").
   Not measured: how cached tokens count toward the owner's plan's limits.
 - **C. The existing mechanisms:** the owner rule sets reconciliation's section for owner decisions 36.
