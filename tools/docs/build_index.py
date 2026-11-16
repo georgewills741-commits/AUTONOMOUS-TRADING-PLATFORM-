@@ -1082,7 +1082,8 @@ M += [
     "## Tests and the requirements they name",
     "",
     "Every test module, with its test functions and how many of them name a requirement. A test that names none still "
-    "runs at every checkpoint and on every push; a marker names the requirement a test is evidence for.",
+    "runs at every checkpoint, on every pull request, and on every push but one to a temporary backup or archive branch; "
+    "a marker names the requirement a test is evidence for.",
     "",
     "| Test module | Test functions | Naming a requirement | Naming none |",
     "|---|---|---|---|",

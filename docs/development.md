@@ -21,7 +21,7 @@ This creates `.venv/` and installs exactly the versions in `uv.lock`, the develo
 
 ## Checks
 
-Every check below passes before a checkpoint commit, and the machine checks run the same commands, except `uv build`, on every push but a temporary backup commit's (below). `--locked` makes each command fail if the lockfile is out of date.
+Every check below passes before a checkpoint commit, and the machine checks run the same commands, except `uv build`, on every pull request and on every push but one to a temporary backup or archive branch (below). `--locked` makes each command fail if the lockfile is out of date.
 
 ```text
 uv run --locked ruff check                                # lint: src/, tests/, tools/
@@ -48,7 +48,7 @@ At each checkpoint the requirement comparison is also run against the previous c
 
 ## Machine checks
 
-`.github/workflows/checks.yml` runs the checks above, except `uv build`, on every push and pull request, on GitHub's Ubuntu 24.04 runner (GOV-023: they keep running without Claude Code). A temporary backup commit (the [project state](project-state.md)'s "Branches") carries `[skip ci]` in its message, so GitHub starts no run for it: a backup is evidence for no gate. The builder runs the repository test for secrets on each backup snapshot before its push instead, and a finding stops the push ([DEC-064](decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). The job:
+`.github/workflows/checks.yml` runs the checks above, except `uv build`, on GitHub's Ubuntu 24.04 runner (GOV-023: they keep running without Claude Code), in two jobs ([DEC-064](decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md), decision 2). The job `secrets` runs the repository test for secrets on every push and every pull request, whatever the other checks find. The job `checks` runs every check on every pull request and on every push but one to a temporary backup branch (`claude/unverified-backup-*`) or an archive branch (`claude/archive/*`), whose snapshots are evidence for no gate (the [project state](project-state.md)'s "Branches"). A backup commit therefore carries no marker in its message, and the builder still runs the repository test for secrets on each backup snapshot before its push, a finding stopping the push. Each job:
 
 - has read-only repository permissions and does not keep the checkout's credentials;
 - references no repository secret and deploys nothing;
