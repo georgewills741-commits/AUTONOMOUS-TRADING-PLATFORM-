@@ -1,10 +1,17 @@
-# Machine checks (Stage 1 plan, U6; GOV-023): the checks of docs/development.md, run on every push
-# and pull request, so they keep running whether or not Claude Code is present. The job has
-# read-only repository permissions, references no repository secret, and deploys nothing. Every
-# action is pinned to a commit hash and uv to one version with its checksum (constitution Rule 102).
+# Machine checks (Stage 1 plan, U6; GOV-023; DEC-064, decision 2): the checks of docs/development.md,
+# so they keep running whether or not Claude Code is present. Two jobs:
+# - "secrets" runs the repository test for secrets on every push and every pull request, whatever
+#   the other checks find (SEC-005's monitoring, the threat model);
+# - "checks" runs every check of the developer guide on every pull request and on every push but one
+#   to a temporary backup branch (claude/unverified-backup-*) or an archive branch (claude/archive/*),
+#   whose snapshots are evidence for no gate (DEC-052, decision 3).
+# The jobs have read-only repository permissions, reference no repository secret, and deploy
+# nothing. Every action is pinned to a commit hash and uv to one version with its checksum
+# (constitution Rule 102).
 #
-# Requirements: GOV-023 (the checks keep running without Claude Code), GOV-012 (every test, on
-# every push), TEC-009 (the locked tools, installed from the lockfile).
+# Requirements: GOV-023 (the checks keep running without Claude Code), GOV-012 (every test, on every
+# pull request and on every push but one to a temporary backup or archive branch), TEC-009 (the
+# locked tools, installed from the lockfile), SEC-005 (no secret in the repository).
 name: checks
 
 on:
@@ -15,7 +22,34 @@ permissions:
   contents: read
 
 jobs:
+  secrets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.23"
+          # SHA-256 of uv-x86_64-unknown-linux-gnu.tar.gz 0.12.23, from the publisher's manifest.
+          checksum: "9167d72b3319674b6303c4cbe071854bba13ebdf3d76b1a7cbdc175471fb66d6"
+          enable-cache: false
+
+      - name: Install the locked dependencies
+        run: uv sync --locked
+
+      - name: Repository test for secrets
+        run: uv run --locked pytest tests/repository/test_no_secrets.py
+
   checks:
+    if: >-
+      github.event_name == 'pull_request' ||
+      !(startsWith(github.ref, 'refs/heads/claude/unverified-backup-') ||
+        startsWith(github.ref, 'refs/heads/claude/archive/'))
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
