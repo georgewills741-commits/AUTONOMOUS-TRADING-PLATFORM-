@@ -3,6 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-11-09
 - **Decided by:** the owner, on the retired branches ([owner decisions 31](../handoffs/owner-decisions-31-retired-branches-and-failure-emails.md), Q1). On the emails, the builder chose, as the owner asked in the same answers (Q2).
+- **Later changes:** On 2026-11-16 the workflow's change that decision 2 describes was made ([workflow and efficiency record](../traceability/workflow-and-efficiency-2026-11-16.md)): the job `secrets` runs the repository test for secrets on every push and every pull request, whatever the other checks find; the job `checks` runs every other check on every pull request and on every push but one to a temporary backup or archive branch; a backup commit carries no marker from that change's commit on. The Stage 1 plan's "every push" reads accordingly. The text below is kept as written.
 
 ## Context
 
