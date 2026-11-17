@@ -3,6 +3,7 @@
 - **Status:** ACCEPTED
 - **Date:** 2026-11-02
 - **Decided by:** project owner (the directive, [owner decisions 26](../handoffs/owner-decisions-26-progress-continuity-no-loss-and-recovery.md): mandatory and permanent, for all stages and all future sessions); the builder's: the mapping of its rules to the existing mechanisms, made under the owner's Rule 0 ([owner decisions 17](../handoffs/owner-decisions-17-reuse-reinforce-and-enhance-existing-controls.md)), and the strengthened controls below, which the directive's Rules 3, 4, 17, 27, and 31 ask for, with Rules 5, 10, and 11 for decision 4, and which lower no control; the extension of the owner's answer to OQ-31 (decision 4) is the builder's reading of them, which the owner can correct.
+- **Later changes:** On 2026-11-16 decision 4's backups of sequential changes go to one reusable branch, append-only, under the owner's conditions ([DEC-071](DEC-071-one-reusable-backup-branch.md)). The text below is kept as written.
 
 ## Context
 

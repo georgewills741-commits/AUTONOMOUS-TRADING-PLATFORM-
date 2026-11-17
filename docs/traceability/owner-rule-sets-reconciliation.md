@@ -129,6 +129,7 @@
   - Already stated: §52 ("committed or explicitly documented as intentionally uncommitted"), §132 (the emergency checkpoint), and §133 (unverified work labelled).
   - Applied: DEC-042 to DEC-044, for checkpoint B's backup: its labels, the eight checks of its reconciliation, and its retention: under an archive tag (DEC-043) until 2026-10-20, when the owner chose an archive branch instead (DEC-052, decision 4). Its lifecycle applies to any later backup (DEC-042, decision 7).
   - Gap: whether a later backup may be made, and how it is retained or retired, was OQ-31, which the owner answered on 2026-10-20 (DEC-052, decisions 3 and 4).
+  - Since 2026-11-16, sequential changes back up on one reusable branch, append-only, reconciled by the eight checks before each reuse, with no archive branch, deletion attempt, or retirement for each change: the owner's approval and conditions ([owner decisions 38](../handoffs/owner-decisions-38-one-reusable-backup-branch.md); [DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md)). Owner decisions 22's ten checks apply only to a branch of a single change, still used where work overlaps (DEC-071, decision 6).
 
 ## Gaps and their handling
 
