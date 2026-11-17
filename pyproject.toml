@@ -3,8 +3,10 @@
 # (docs/architecture/technology-stack.md; constitution Rules 99-101).
 #
 # Requirements: TEC-001 (Python 3.12 or later; strict type checks), TEC-009 (uv and its lockfile,
-# ruff, mypy, pytest, and Hypothesis; testcontainers come with storage, in DATA FOUNDATION),
-# GOV-012 (the test settings).
+# ruff, mypy, pytest, Hypothesis, and testcontainers), GOV-012 (the test settings). The runtime
+# packages Stage 2 adds (decision D12 of the Stage 2 plan, DEC-073; their review is in the Stage 2
+# record): TEC-005 (CCXT), TEC-006 (DuckDB, and psycopg, the PostgreSQL driver), TEC-010
+# (OpenTelemetry's API and SDK).
 
 [project]
 name = "atp"
@@ -13,6 +15,11 @@ description = "Autonomous trading platform"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "ccxt>=4.5,<5",
+    "duckdb>=2.0,<3",
+    "opentelemetry-api>=1.45,<2",
+    "opentelemetry-sdk>=1.45,<2",
+    "psycopg[binary]>=3.3,<4",
     "pydantic>=2.13,<3",
 ]
 
@@ -26,6 +33,7 @@ dev = [
     "mypy>=2.4",
     "pytest>=9.1",
     "ruff>=0.16",
+    "testcontainers>=4.15,<5",
 ]
 
 [build-system]
