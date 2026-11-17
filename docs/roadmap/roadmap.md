@@ -41,7 +41,7 @@ The 29 areas are not new stages: each belongs to one of the seven stages (RMP-00
 
 ## Stages
 
-"Items (§95)" are the handoff's own lists, verbatim. "Added by DEC-016" lists items §95 did not map, or mapped ambiguously, together with the items of the owner's correction that [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) placed or reworded in each stage. The Part 2 additions are in the next table. Constitution Rule 140 fields (objective, scope, tests, verification, completion criteria) are completed for each stage when it is planned, before its implementation is approved; Part 2 did not supply per-stage entry and exit criteria. Stage 1's are in the [Stage 1 plan](stage-01-foundation-plan.md) (APPROVED, [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)).
+"Items (§95)" are the handoff's own lists, verbatim. "Added by DEC-016" lists items §95 did not map, or mapped ambiguously, together with the items of the owner's correction that [DEC-019](../decisions/DEC-019-company-grade-autonomous-operating-model.md) placed there or reworded. The Part 2 additions are in the next table. Constitution Rule 140 fields (objective, scope, tests, verification, completion criteria) are completed for each stage when it is planned, before its implementation is approved; Part 2 did not supply per-stage entry and exit criteria. Stage 1's are in the [Stage 1 plan](stage-01-foundation-plan.md) (APPROVED, [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)).
 
 | # | Stage | Items (§95) | Added by DEC-016 | Systems | Status |
 |---|---|---|---|---|---|
