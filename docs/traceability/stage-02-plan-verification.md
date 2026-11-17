@@ -1,0 +1,121 @@
+# Stage 2 Plan Verification — the Plan, One Reusable Backup Branch, and the Owner's Messages of 2026-11-16
+
+> **Status:** ACTIVE record of the change that writes Stage 2's entry gate and plan for the owner's approval ([Stage 2 plan](../roadmap/stage-02-data-foundation-plan.md)); preserves the owner's question, answer, and conditions of 2026-11-16 word for word and applies the approval of one reusable temporary backup branch ([DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md)); and reconciles the last change's temporary backup with its commit ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 6). Its three gates: "Final status and remaining issues". Format: [traceability README](README.md).
+
+## Identity
+
+- **Date:** 2026-11-17; the change began on 2026-11-16 at 19:45 UTC, when the owner's messages were taken from the session record.
+- **Stage:** Stage 2 (DATA FOUNDATION), whose planning is authorized and whose implementation is not ([DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md), decision 2): this change writes its entry gate and plan for the owner's approval. It changes documentation only: no code and no requirement changes, and no venue was contacted.
+- **Starts from:** commit `62f9eb1` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote: the workflow's change ([workflow and efficiency](workflow-and-efficiency-2026-11-16.md)), whose machine checks passed ([run 43942141850](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/43942141850): the job "secrets" from 19:42:35 to 19:42:50 UTC and the job "checks" from 19:42:36 to 19:44:15 UTC, both passing; the only run for that commit). This record's own commit is entered in the project state's checkpoint log by the next change.
+- **Temporary backup** ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4; [DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md)): the one reusable branch, `claude/unverified-backup-reusable`, which this change starts. Its first commit, `97f3c29`, has as its parent the workflow change's last backup commit, `ba4158c`, and was pushed on 2026-11-16 at 19:46 UTC; each later commit is a child of the branch's tip, pushed as a fast-forward and never forced, each command that writes to the working tree ending with the backup. Each commit carries the seven labels of [DEC-042](../decisions/DEC-042-preserve-anti-drift-rules-and-backup-instructions.md) (decision 4) and the emergency checkpoint record of master execution constitution §132, and no marker; the repository test for secrets runs on its snapshot before its push, and on GitHub only that test runs (check 11). Its reconciliation with this change's commit is recorded by the next change, which names the last commit it checks (DEC-071, decision 4).
+
+## Scope
+
+**Added:** this record; the [Stage 2 plan](../roadmap/stage-02-data-foundation-plan.md), drafted by a separate agent of this session that read the repository and wrote only its draft, then reviewed in full and corrected by the builder ("The plan" below); [owner decisions 38](../handoffs/owner-decisions-38-one-reusable-backup-branch.md), taken by script from the session record and equal to it (check 6); DEC-071.
+
+**Changed:** DEC-052 and DEC-057 (a "Later changes" line each); the [owner rule sets reconciliation](owner-rule-sets-reconciliation.md) (its account of owner decisions 10: a line naming DEC-071); the [decision log](../decisions/README.md); the [documentation index](../README.md) (its links to owner decisions 38 and the plan); the manifest of preserved texts (`tools/docs/preserved-texts.sha256`, one line); the [traceability README](README.md) (a row for this record); the [roadmap](../roadmap/roadmap.md) (its current position; the stages table's row for DATA FOUNDATION); and the [project state](../project-state.md) (its "Last updated"; its status line; under "Current stage", two entries, added; "Current objective"; the continuation contract's rows "Current task", "In progress, possibly partial", "Blocked", "Stage convergence", "Decisions in effect", "Decisions pending", "Other branches", "Known risks", and "Next safe action"; "Branches": the active backup, and the reconciled one; "In-progress work"; "Recent decisions"; "Recent changes"; "Next approved step"; the checkpoint log).
+
+**Requirements:** none added, removed, or changed (check 3).
+
+**Out of scope:** any Stage 2 implementation, including the decision record of the plan's approval and U1's environment work; the owner's decisions D1 to D12 (the plan's section 10); any request to a venue.
+
+**The owner's messages after the last one the previous record names** ([workflow and efficiency](workflow-and-efficiency-2026-11-16.md), whose final status names the three of 2026-11-16 below as the next record's), up to the copy that this record's last Gate 3 run reviews: the owner's question of 19:15 UTC; the owner's answer of 19:21 UTC to the builder's question of 19:15 UTC; and the owner's message of 19:21 UTC, which approves the proposal with twelve mandatory conditions, delivered while the builder worked: the three preserved as owner decisions 38 (DEC-071); and the owner's "Try again" of 2026-11-17, 05:50 UTC, procedural ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7). Since that record's copy (2026-11-16, 19:09 UTC), the stop hook's feedback, the report of that record's Gate 3 run 1 as the client delivered it (19:36 UTC), the client's notice of the 5-hour limit (19:47 UTC), the report of the agent that drafted the plan as the client delivered it (2026-11-17, 06:25 UTC), the summary the client wrote when it compacted the conversation (06:29 UTC), and the notices of background tasks are the client's own.
+
+## Checks
+
+The change's own checks, on the working tree with this change: the documentation tools with the system Python 3.11, git, the [developer guide](../development.md)'s checks through `uv run --locked`, and GitHub's branch list and workflow runs.
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; the regeneration changes no generated file |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: SELFTEST_RESULT |
+| 3 | No requirement added, removed, or changed | `python3 tools/docs/compare_requirements.py 62f9eb1 --strict` | PASS: 757 requirements before and after; none added, removed, or changed |
+| 4 | The developer guide's checks | `uv run --locked` with `ruff check`, `ruff format --check`, `mypy`, `mypy --config-file tools/docs/mypy.ini`, and `pytest` | PASS: DEVCHECKS_RESULT |
+| 5 | Hygiene of the change | `git diff --check 62f9eb1`, its new files included; a scan of the lines it adds for local paths, session or model identifiers, and the shapes of secrets | PASS: HYGIENE_RESULT |
+| 6 | The preserved texts unchanged, and the new one as received | `git diff --name-only 62f9eb1 -- docs/handoffs docs/builder`; the round trip of owner decisions 38's two messages against the session record, by the documentation tools' rule for preserved texts; its question, options, and answer against the question and the answer the session record holds; its manifest line (check 1) | PASS: no existing file there changes; the two messages equal the session record's byte for byte (40 and 2,423 characters); the label, question, two options with their descriptions, and the answer are each found in it as recorded; its manifest line holds |
+| 7 | Quotations | A script: every quoted string in the lines this change adds, looked for in the owner's texts under `docs/handoffs/` and in the other documents | PASS: QUOTES_RESULT |
+| 8 | The plan's identifiers and the placement of its requirements | A script: each identifier the plan cites, looked up with its title in the registry, the System Rules Register, the values register, the dependency map, the system registry, or the open-question register; the requirements whose registry default stage is DATA FOUNDATION, compared with the plan's list; each requirement section 3 names, counted in its dispositions | PASS: each of the IDS_COUNT identifiers exists, and its title names the point it is cited for; the registry's 67 requirements of the stage are the plan's 67; each of them, and each of the 19 others section 3 names, is placed once |
+| 9 | Stale statements ([DEC-069](../decisions/DEC-069-owner-questions-and-efficiency-directive.md), decision 4) | STALE_HOW | PASS: STALE_RESULT |
+| 10 | The plan's observations of this environment | Read-only, on 2026-11-17: `docker info`; the PostgreSQL programs; a search of the file system for TimescaleDB; `uv --version` on the path; the network policy the session's environment tool reported at 05:52 UTC | PASS, as the plan's entry gate states them: a Docker client and no running daemon; PostgreSQL 16's server programs and no TimescaleDB file; uv 0.11.32 on the path; network access unrestricted. No venue was contacted |
+| 11 | The reusable branch: append-only, and only the secret test on GitHub | `git rev-list --parents` on the branch fetched from GitHub; the backup script; GitHub's workflow runs for the branch and their jobs; GitHub's branch list | PASS: BRANCH_RESULT |
+
+## The plan
+
+The [Stage 2 plan](../roadmap/stage-02-data-foundation-plan.md) gives the fields of constitution Rule 140 in the form of the approved [Stage 1 plan](../roadmap/stage-01-foundation-plan.md): the objective; the entry gate of master execution constitution §12, every condition met but the environment, which U1 completes; the disposition of each requirement of the stage; eleven work units in five checkpoints, A to E; what is out of scope; the outputs, tests, verification, and completion criteria; twelve decisions for the owner, D1 to D12, each RECOMMENDED — NOT YET APPROVED; the sequence; and the risks. A separate agent of this session drafted it (launched on 2026-11-17 at 05:53 UTC; it reported at 06:25 UTC), reading the repository and writing only its draft, outside the repository. The builder then read it in full, as Gate 2's review, checked its identifiers, the placement of its requirements, its quotations, and its observations of this environment (checks 7, 8, and 10), and corrected seven points before Gate 3's copy was made:
+
+- it cited DEC-016 for the placement of the measurement framework in the stage, which DEC-016 does not state: the roadmap places it, and the plan now says so;
+- it said the Stage 1 plan had left TEC-010, TEC-011, and OPS-010 to this stage: the Stage 1 plan left them to the first running or deployable service, as the plan now says;
+- its tests table said the machine checks run everything but the live checks on every push: they run the developer guide's checks but `uv build`, on every pull request and on every push but one to a temporary backup or archive branch (DEC-064, decision 2), as it now says;
+- it cited the numerical policy's N6, on amounts in JSON, for amounts as text in Parquet: it now states the analogy;
+- it cited TEC-011 as keeping Compose for development: TEC-011 names Compose for the initial deployment; it now calls Compose TEC-011's tool;
+- three cells of D1 and D2 addressed the owner as "you": they now name the owner;
+- its sequence named DEC-057 and DEC-064 for the backups of Stage 2's checkpoints: it now names DEC-071 with them.
+
+The owner's decisions are in the plan's section 10. D1 needs a fact only the owner has: which of the five initial venues (EXA-005) the operator's account may use ([DEC-008](../decisions/DEC-008-venues-and-trading-universe.md): their availability "depends on the operator's jurisdiction"). No venue is contacted before that confirmation and the plan's approval.
+
+## One reusable backup branch: the owner's twelve conditions
+
+The owner approved one reusable temporary backup branch on 2026-11-16 at 19:21 UTC with twelve mandatory conditions ([owner decisions 38](../handoffs/owner-decisions-38-one-reusable-backup-branch.md)); DEC-071 applies the approval. Each condition, how DEC-071 meets it, and the evidence:
+
+| # | Condition (owner decisions 38) | How it is met | Evidence |
+|---|---|---|---|
+| 1 | One reusable branch for sequential changes, if it preserves the required recovery history | `claude/unverified-backup-reusable` (DEC-071, decision 2) | Check 11; the recovery test below |
+| 2 | Nothing important overwritten, forced away, deleted, reset, or made unreachable | Append-only: each commit a child of the branch's tip, pushed as a fast-forward and never forced; nothing on the branch reset or deleted; the workflow change's branch kept as it is (decisions 3 and 5) | Check 11: the backup script takes the branch's tip on GitHub as each commit's parent and pushes without force, so git refuses any push that is not a fast-forward; every commit is the child of the one before |
+| 3 | Recoverable history and exact checkpoint SHAs; append-only, fast-forward updates | Every commit kept with its SHA; the first commit's parent is the workflow change's last backup commit (decisions 2 and 3) | Check 11; `ba4158c` reachable from the branch (the recovery test) |
+| 4 | Before reuse, the previous change's unique work preserved, reconciled with its verified checkpoint, and traceable | The eight checks before reuse; the record of the change that reuses the branch names the last backup commit checked (decision 4) | "Reconciliation of the last change's temporary backup" below, which names `ba4158c` |
+| 5 | The eight reconciliation checks and the three gates kept; the same checks reused, no duplicate process | The same eight checks and three gates (decision 4); no new check, script in the repository, or rule set | This record's checks and gates |
+| 6 | The secret test before each backup push; full testing and verification before any work becomes authoritative | The repository test for secrets on each snapshot before its push (decision 3); the three gates before each commit to the designated branch | Check 11; this record's gates |
+| 7 | An isolated mechanism where work overlaps | A change that backs up while another's backup is not yet reconciled uses a branch of its own (decision 6) | No work overlapped in this change |
+| 8 | No new archive branch, deletion attempt, or retirement report for each change | None for each change (decision 5) | This record has none; GitHub's branch list (check 11) |
+| 9 | The historical branches and archives kept, under their rules | The fifteen retired branches and their fifteen archive branches unchanged (decision 5) | Check 11: each retired branch is at its archive branch's commit |
+| 10 | The canonical repository and backup rules updated; no competing governance system | "Later changes" lines in DEC-052 and DEC-057; the owner rule sets reconciliation; the project state's "Other branches" and "Branches"; no new rule set | Check 9 |
+| 11 | Recovery of unfinished work verified after a container reset, a session interruption, or months of inactivity | A recovery test from a fresh clone before the branch was relied on (decision 7) | "The recovery test" below |
+| 12 | Without these guarantees, the existing process kept; no claim of safety without evidence | Had the recovery test failed, the lifecycle of a single change would have stayed (decision 7) | The recovery test passed before any later backup relied on the branch |
+
+One statement the builder made to the owner needs correcting. The builder's message of 2026-11-16, 19:22 UTC, said that GitHub refuses any push that is not a plain fast-forward, so that overwriting is impossible. GitHub refuses one only on a protected branch, and this branch is not protected (GitHub's branch information, 2026-11-17). What keeps it append-only is that git refuses to push a commit that is not a fast-forward unless the push is forced, and the backup script never forces it (check 11). The builder corrects the statement to the owner in its closing message.
+
+## The recovery test
+
+On 2026-11-16, at 19:46 UTC, right after the first push to the reusable branch, which did not exist on GitHub before (`97f3c29`, its parent `ba4158c`), the repository was cloned afresh from GitHub, with nothing checked out; the branch was fetched and its tip restored in a separate worktree: commit `97f3c29`, tree `0610fe6e`, the snapshot of the working tree the backup was made from, and `ba4158c`, with the workflow change's whole backup history, reachable from it. A comparison of every file found only the test library's cache, `.hypothesis/`, in the working tree and not in the restored one (`diff` exited 1): git ignores it, through its own `.gitignore`. Without it, the restored work equals the working tree file by file: 312 files (19:46:56 UTC).
+
+A real interruption followed: at 19:47 UTC the 5-hour usage limit stopped the session, with nothing unpushed; on 2026-11-17, at 05:51 UTC, after the owner's "Try again", the working tree's tree was still `0610fe6e`, the backup's. A container reset would have lost the working tree, and the fresh clone above restores it; after a pause of months the case is the same, the branch being on GitHub and named in the project state's "Branches", which a new session reads first, after checking the remote's branches (`CLAUDE.md`, "Where to start").
+
+## Reconciliation of the last change's temporary backup
+
+The workflow's change, committed as `62f9eb1`, was backed up on `claude/unverified-backup-workflow` in 13 commits, each on the one before and the first on `2618740`, committed on 2026-11-16 from 18:46 UTC (`207e48c`) to 19:41 UTC (`ba4158c`). Each carries the seven labels, the emergency checkpoint record of §132, and both trailers; each but `01efb7e`, pushed without it to test the workflow ([workflow and efficiency](workflow-and-efficiency-2026-11-16.md), check 7), carries the marker (checked by script on 2026-11-16, 19:43 UTC).
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `62f9eb1`'s tree is `ba4158c`'s, `a20600f4` (`git diff --name-only`: no difference) | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: Gate 3 run 1's fixes and that record's account of them | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the 23 files the commits change against `2618740` is in `62f9eb1`; outside `docs/`, the workflow, `CLAUDE.md`, the documentation tools' README, `tools/docs/build_index.py`, and the manifest of preserved texts; no file is in an earlier commit and not in the last | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `62f9eb1`'s parent is `2618740`; none of the 13 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `62f9eb1` (19:43 UTC): the documentation checker and its self-test pass, and `compare_requirements.py 2618740 --strict` reports 757 requirements before and after; the tests ran in the machine checks | PASS |
+| 6 | Required documentation and traceability are updated | `62f9eb1` holds that record's final status, PASS for its gates, the checkpoint log's row, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `62f9eb1` is on the remote branch, pushed at 19:42 UTC, and the machine checks passed on it ([run 43942141850](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/43942141850)) | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `62f9eb1` after the commit and its push | PASS |
+
+**Result: PASS.** The backup's work is VERIFIED AND INCORPORATED in `62f9eb1`. The last backup commit checked is `ba4158c`. The branch is kept as it is, at `ba4158c`, with no archive branch, since its commits are reachable from the reusable branch, no deletion attempt, and no ten checks (DEC-071, decision 5).
+
+## Gates
+
+**Verification 1 — the change works as intended:** PASS. Checks 1 to 11 pass, run again after this record's last edit before Gate 3's copy was made.
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff and of the plan in full. The plan follows the approved Stage 1 plan's form and adds no requirement, rule, component, or source of truth: its choices are section 10's decisions, each RECOMMENDED — NOT YET APPROVED; it places each requirement of the stage once and keeps later stages' work out (its sections 3 and 5); its identifiers, quotations, and observations hold (checks 7, 8, and 10), after the seven corrections above. DEC-071 applies the owner's approval within the existing backup rules, which it amends by "Later changes" lines, not by a new rule set (owner decisions 38, condition 10; owner decisions 9, Rules 3 and 16); the reconciliation follows owner decisions 10.
+
+**Verification 3 — independent end-to-end and failure audit:** GATE3_RESULT
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| The plan's draft held seven points the builder's review corrected ("The plan") | Drafted from the repository by an agent whose citations were not checked against the texts they cite, and before DEC-071 was written | The seven corrections. Class: each citation and statement of the plan checked against its source by script or by reading (checks 7, 8, and 10) | Checks 1, 7, 8, and 9 |
+| The builder's message of 2026-11-16, 19:22 UTC, told the owner that GitHub refuses any push that is not a fast-forward | Not checked against the branch's protection | The account above; the correction to the owner | — |
+
+## Final status and remaining issues
+
+FINAL_STATUS
+
+## Environment
+
+System Python 3.11 (`python3`) for the documentation tools and the change's scripts; uv 0.12.23 with the locked tools of `uv.lock` for the developer guide's checks; git; GitHub's branch list, branch information, and workflow runs, read through the GitHub command-line tool; the session's environment tool for the network policy.
