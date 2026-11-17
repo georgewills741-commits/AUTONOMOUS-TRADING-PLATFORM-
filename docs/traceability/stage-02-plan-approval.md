@@ -75,7 +75,7 @@ The change that wrote the plan, committed as `9d1104c`, was backed up on the reu
 
 **Verification 1 — the change works as intended:** PASS. Checks 1 to 10 pass, run in full on the tree that Gate 3's copy holds.
 
-**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. The approval is recorded as the owner gave it, each point applied where the table above shows; the plan changes only where the owner's changes to D1 and D2 reach, and its other parts and the decisions D3 to D12 are unchanged; no requirement, rule, component, or source of truth is added. EXA-007 keeps its text, applied to each operation as the owner decided (DEC-073, decision 3); DEC-008, EXA-005, and EXA-006 are unchanged. Stage 2's features move to DESIGNED, as DEC-040 provides, one row for each of the plan's features of U2 to U10, as its section 11 says.
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. The approval is recorded as the owner gave it, each point applied where the table above shows; the plan changes only where the owner's changes to D1 and D2 reach, and its other parts and the decisions D3 to D12 are unchanged, but for D11's reference to D1, reworded from its confirmation to its verification; no requirement, rule, component, or source of truth is added. EXA-007 keeps its text, applied to each operation as the owner decided (DEC-073, decision 3); DEC-008, EXA-005, and EXA-006 are unchanged. Stage 2's features move to DESIGNED, as DEC-040 provides, one row for each of the plan's features of U2 to U10, as its section 11 says.
 
 **Verification 3 — independent end-to-end and failure audit:** PENDING.
 

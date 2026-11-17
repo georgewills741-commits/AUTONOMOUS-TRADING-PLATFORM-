@@ -1,6 +1,6 @@
 # Technology Stack
 
-> **Status:** DECIDED — [DEC-009](../decisions/DEC-009-technology-stack.md) (builder choice under the owner's explicit delegation, 2026-09-30). Choosing the stack did not authorize implementation; only [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md) does, for Stage 1. Stage 1 applies TEC-001, TEC-003, TEC-004, TEC-008, and TEC-009 (the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), section 3.1; testcontainers excepted, which comes with storage).
+> **Status:** DECIDED — [DEC-009](../decisions/DEC-009-technology-stack.md) (builder choice under the owner's explicit delegation, 2026-09-30). Choosing the stack did not authorize implementation; only [DEC-038](../decisions/DEC-038-stage-1-plan-approved.md) does, for Stage 1, and [DEC-073](../decisions/DEC-073-stage-2-plan-approved-with-changes.md), for Stage 2. Stage 1 applies TEC-001, TEC-003, TEC-004, TEC-008, and TEC-009 (the [Stage 1 plan](../roadmap/stage-01-foundation-plan.md), section 3.1; testcontainers excepted, which comes with storage).
 >
 > Canonical definition of the languages, libraries, storage, messaging, tooling, and deployment the platform will use. The reasons and alternatives are in DEC-009. Adding a dependency not listed here requires a decision record (constitution Rules 99–101). Classes follow [DEC-020](../decisions/DEC-020-value-classification.md): technology and mechanism choices are IMPLEMENTATION CHOICE; concrete values (versions, retention periods) are in the [values register](../requirements/values-register.md).
 
@@ -21,6 +21,8 @@
 - **TEC-013** Supervision and execution lease · IMPLEMENTATION CHOICE · DEC-019 — Containers run with automatic restart policies and health checks, and start automatically when the host boots. The execution lease (REC-013) is a PostgreSQL lease record with an expiry and a monotonically increasing fencing token; every order and transfer request carries the token and is rejected if it is not current (EXE-010).
 
 **Dependencies added by the Stage 1 plan ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)):** the build backend `uv_build`, pinned to one exact version in `pyproject.toml`, and, for the machine checks only, the GitHub actions `actions/checkout` and `astral-sh/setup-uv`, each pinned to a commit hash. The other libraries Stage 1 uses are those of TEC-004 and TEC-009.
+
+**Dependencies added by the Stage 2 plan ([DEC-073](../decisions/DEC-073-stage-2-plan-approved-with-changes.md), D12):** psycopg 3, a PostgreSQL driver; the others D12 adds are those of TEC-005, TEC-006, TEC-009, and TEC-010. Their versions, and the TimescaleDB image's digest, are fixed at Stage 2's checkpoint A.
 
 **Where versions are fixed (since Stage 1's checkpoint A):** the libraries and tools in `uv.lock`; uv and the build backend in `pyproject.toml`; the actions in `.github/workflows/checks.yml`. How a version is changed: the [developer guide](../development.md).
 

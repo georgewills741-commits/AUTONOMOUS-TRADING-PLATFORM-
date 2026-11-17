@@ -1,6 +1,6 @@
 # AUTONOMOUS-TRADING-PLATFORM-
 
-A production-grade autonomous cryptocurrency trading platform, with **Stage 1 (FOUNDATION) complete**: the owner approved the Stage 1 plan and authorized its implementation on 2026-10-05. The code foundation was built in the plan's checkpoints A to D, each verified and committed, the stage's exit reports were made and its completion certificate written, and on 2026-11-10 the owner approved proceeding to the planning of Stage 2 (DATA FOUNDATION). The platform has no trading capability, and no later stage's implementation is authorized.
+A production-grade autonomous cryptocurrency trading platform, with **Stage 1 (FOUNDATION) complete**: the owner approved the Stage 1 plan and authorized its implementation on 2026-10-05. The code foundation was built in the plan's checkpoints A to D, each verified and committed, the stage's exit reports were made and its completion certificate written, and on 2026-11-10 the owner approved proceeding to the planning of Stage 2 (DATA FOUNDATION), and on 2026-11-17 its plan, with changes, which authorizes Stage 2's implementation, checkpoint by checkpoint (DEC-073). The platform has no trading capability, and no stage after Stage 2 is authorized.
 
 For where the project currently stands, start with [`docs/project-state.md`](docs/project-state.md).
 
