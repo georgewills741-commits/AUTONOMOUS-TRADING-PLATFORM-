@@ -26,5 +26,5 @@ Until 2026-11-16 each change backed up its uncommitted work on a temporary branc
 
 ## Consequences
 
-- DEC-052 and DEC-057 gain a line under "Later changes"; the owner rule sets reconciliation's account of owner decisions 10 names this decision; the project state's "Other branches" and "Branches" describe the reusable branch.
+- DEC-042, DEC-052, and DEC-057 gain a line under "Later changes"; the owner rule sets reconciliation's account of owner decisions 10 names this decision; the project state's "Other branches" and "Branches" describe the reusable branch.
 - No requirement, platform rule, gate, or code changes.
