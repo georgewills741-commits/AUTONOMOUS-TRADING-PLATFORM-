@@ -75,7 +75,7 @@ Below, once each: the 67 requirements whose registry default stage is DATA FOUND
 | OPP-008 | Deterministic high-volume screening | AI INTELLIGENCE: selective AI activation |
 | OPP-009 | Every market of the enabled types on the enabled venues, following listings and delistings (D1) | CORE: the Policy System's exclusions (D-44) |
 | OPP-013 | Bounds from data quality, liquidity, venue availability, resources, eligibility; the universe-selection architecture completed (D10) | CORE: bounds from risk policy |
-| OPP-017, OPP-020 | Breadth, depth, speed, continuity, cross-market and cross-venue comparison; markets, venues, routes, depth scaled within budgets | DIRECTIONAL TRADING: strategy diversity and count |
+| OPP-017, OPP-020 | Breadth, depth, speed, continuity, cross-market and cross-venue comparison; markets, venues, and depth scaled within budgets | DIRECTIONAL TRADING: strategy diversity and count; ARBITRAGE: arbitrage routes |
 | OPP-024 | Adaptive frequency, depth, expansion, and analysis depth within budgets and rate limits, never re-analysing unchanged inputs (D10) | DIRECTIONAL TRADING: priority by demonstrated quality (PFC-012, PFC-013, from CORE's Opportunity Database); concurrent strategy evaluations |
 | HLT-014 | UTC event times, monotonic durations, venue server times compared (D5) | OPERATIONALIZATION: host clock synchronization as code (OPS-014) |
 | PERF-008 | Market-data, processing, and detection latency; public requests' round trip | CORE: decision, risk, reservation, submission, order round-trip, fill, end-to-end latency |
