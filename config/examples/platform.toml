@@ -4,3 +4,25 @@
 
 # The platform's identifier (MIG-027): lowercase letters and digits, in parts joined by hyphens.
 platform_id = "example-platform"
+
+# The market data the platform monitors (the Stage 2 plan's D1, D8, D9).
+[market_data]
+# Each venue whose public market data is monitored, once, listed only after access to it is
+# verified as permitted (D1). This example names no venue, since none has an adapter yet
+# (GOV-017). A venue is written:
+#
+#   [[market_data.venues]]
+#   venue = "<the venue's identifier>"
+#   instrument_types = ["spot"]          # of "spot", "perpetual", and "margin", each once
+#
+#   [[market_data.venues.fees]]          # at most one per instrument type monitored
+#   instrument_type = "spot"
+#   maker = "<the rate, as text: 0.001 is 0.1%>"
+#   taker = "<the rate, as text>"
+#   source = "<the venue's published fee schedule>"
+#   as_of = "<the date it was read, YYYY-MM-DD>"
+venues = []
+
+# The timeframes, in seconds, of the bars the Market Regime Engine classifies, each once (D9).
+# None in this example.
+regime_timeframes_seconds = []

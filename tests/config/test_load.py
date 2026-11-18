@@ -710,8 +710,12 @@ def test_the_summary_shows_no_secret_value(tmp_path: Path) -> None:
     )
     assert summary(configuration) == [
         "platform_id: atp",
+        "market data: no venue monitored",
+        "regime timeframes (seconds): none",
         "environment: paper",
         "environment_id: example-paper",
+        "database: not configured",
+        "archive directory: not configured",
         f"secret ATP_DB (server): {REDACTED}",
     ]
     assert SECRET not in repr(configuration)

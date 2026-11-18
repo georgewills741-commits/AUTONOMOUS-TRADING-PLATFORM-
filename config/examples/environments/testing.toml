@@ -10,10 +10,24 @@ environment = "testing"
 # This environment's identifier (MIG-027).
 environment_id = "example-testing"
 
+# The directory of this environment's permanent Parquet archive of market data (TEC-012), an
+# absolute path.
+archive_directory = "/srv/atp/archive"
+
+# The PostgreSQL database that holds this environment's market data (TEC-006): its host and
+# port, the database, its user, and the name of the declared "server" secret below that holds
+# the user's password, never the password itself (SEC-005).
+[database]
+host = "db.example.invalid"
+port = 5432
+name = "atp"
+user = "atp"
+password_secret = "ATP_EXAMPLE_SERVER_CREDENTIAL"
+
 # Each secret this environment needs, by name and kind, never by value: the value is read from
 # the process environment variable of that name (SEC-005). The kinds are "server", "ai", and
 # "trading"; only production may declare a trading-enabled credential (MODE-006, SEC-004), and
-# in Stage 1 no environment has one.
+# no environment has one yet.
 [[secrets]]
 name = "ATP_EXAMPLE_SERVER_CREDENTIAL"
 kind = "server"
