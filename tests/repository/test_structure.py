@@ -56,6 +56,7 @@ ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "contracts": frozenset({"numeric"}),
     "config": frozenset({"contracts", "numeric"}),
     "cli": frozenset({"config"}),
+    "marketdata": frozenset({"contracts"}),
 }
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
