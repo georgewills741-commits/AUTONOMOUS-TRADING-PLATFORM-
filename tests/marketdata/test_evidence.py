@@ -75,7 +75,7 @@ def test_each_identifying_part_changes_the_identifier() -> None:
         _by_key(venue="other", market=OTHER_VENUE_SPOT),
         _by_key(stream=Stream.TICKER),
         _by_key(market=PERPETUAL),
-        _by_key(market=None),
+        _by_key(stream=Stream.VENUE_STATUS, market=None),
         _by_key(venue_key="5091224"),
     ]
     assert _by_key() not in variants
@@ -103,8 +103,17 @@ def test_exactly_one_of_a_venue_key_and_content_is_given() -> None:
         ({"venue": "", "market": None}, "a venue's name"),
         ({"venue": "other"}, "its market's venue"),
         ({"venue_key": 5091223}, "key is text"),
+        ({"market": None}, "names its market"),
+        ({"stream": Stream.VENUE_STATUS}, "names its market"),
     ],
-    ids=["venue-not-a-name", "venue-empty", "venue-not-the-market's", "key-a-number"],
+    ids=[
+        "venue-not-a-name",
+        "venue-empty",
+        "venue-not-the-market's",
+        "key-a-number",
+        "market-missing",
+        "venue-status-with-a-market",
+    ],
 )
 @pytest.mark.req("MKD-005")
 def test_inputs_that_could_give_one_item_two_identifiers_are_refused(

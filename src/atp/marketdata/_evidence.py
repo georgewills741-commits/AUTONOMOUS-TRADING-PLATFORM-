@@ -36,16 +36,22 @@ def evidence_id(
     one of `venue_key` and `content` is given, and `venue_key` is not empty; anything else
     raises `ValueError`.
 
-    The inputs are checked first, so that one item cannot get two identifiers: the venue is a
-    venue's name, and the market's venue where a market is given; the event time, where it is
-    given, is a whole number of nanoseconds from 0 to 2**63 - 1, never a boolean or a float;
-    the venue's key and the content are text. Anything else raises `ValueError`.
+    The inputs are checked first, so that malformed inputs cannot give one item another
+    identifier: the venue is a venue's name, and the market's venue where a market is given; a
+    market is given for every stream but the venue's status, and none for it; the event time,
+    where it is given, is a whole number of nanoseconds from 0 to 2**63 - 1, never a boolean or
+    a float; the venue's key and the content are text. Anything else raises `ValueError`. Where
+    an item is identified by its content, the caller gives its event time wherever the venue
+    gives one: the same content given with and without it gets two identifiers.
     """
     if type(venue) is not str or re.fullmatch(VENUE_PATTERN, venue) is None:
         msg = "an evidence identifier's venue is a venue's name"
         raise ValueError(msg)
     if market is not None and market.venue != venue:
         msg = "an evidence identifier's venue is its market's venue"
+        raise ValueError(msg)
+    if (market is None) != (stream is Stream.VENUE_STATUS):
+        msg = "an item names its market, unless it is a venue's status, which names none"
         raise ValueError(msg)
     if event_time_ns is not None and (
         type(event_time_ns) is not int or not 0 <= event_time_ns <= _INT64_MAX
