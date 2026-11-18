@@ -265,7 +265,9 @@ def summary(configuration: Configuration) -> list[str]:
             f"taker {fee.taker} ({fee.source}, as of {fee.as_of})"
             for fee in venue.fees
         )
-    timeframes = ", ".join(str(seconds) for seconds in market_data.regime_timeframes_seconds)
+    timeframes = ", ".join(
+        str(seconds) for seconds in market_data.regime_timeframes_seconds
+    )
     lines.append(f"regime timeframes (seconds): {timeframes or 'none'}")
     lines.append(f"environment: {specific.environment.value}")
     lines.append(f"environment_id: {specific.environment_id}")
