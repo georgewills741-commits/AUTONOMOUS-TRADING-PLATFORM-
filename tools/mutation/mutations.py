@@ -3654,4 +3654,33 @@ MUTATIONS: list[Mutation] = [
         "        if False:",
         TESTS,
     ),
+    # J-02's class beyond run 1's places: the checks that read an earlier field.
+    Mutation(
+        "S2-U2 a refused instrument type reported as the settlement check's failure",
+        "src/atp/marketdata/_contracts.py",
+        'kind = info.data.get("instrument_type")',
+        'kind = info.data["instrument_type"]',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 a refused first sequence reported as the order check's failure",
+        "src/atp/marketdata/_contracts.py",
+        'first = info.data.get("first_sequence")',
+        'first = info.data["first_sequence"]',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 a refused venue status reported as the cause check's failure",
+        "src/atp/marketdata/_contracts.py",
+        'status = info.data.get("status")',
+        'status = info.data["status"]',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 a refused venue status reported with a cause it does not allow",
+        "src/atp/marketdata/_contracts.py",
+        "            status is not None\n            and status is not VenueStatus.UNAVAILABLE",
+        "            status is not VenueStatus.UNAVAILABLE",
+        TESTS,
+    ),
 ]

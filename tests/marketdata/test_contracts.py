@@ -265,6 +265,30 @@ def test_an_event_time_and_its_resolution_are_given_together() -> None:
     assert Ticker.from_json(json.dumps(neither)).event_time_ns is None
 
 
+@pytest.mark.parametrize(
+    ("contract", "data", "field", "bad", "refusal"),
+    [
+        (MarketRef, PERPETUAL, "instrument_type", "option", "enum"),
+        (BookUpdate, VALID[BookUpdate], "first_sequence", -1, "greater_than_equal"),
+        (VenueState, VALID[VenueState], "status", "closed", "enum"),
+    ],
+    ids=["market-instrument-type", "book-update-first-sequence", "venue-status"],
+)
+@pytest.mark.req("EXA-013")
+def test_a_refused_field_is_reported_as_itself_by_the_checks_that_read_it(
+    contract: type[Contract],
+    data: dict[str, object],
+    field: str,
+    bad: object,
+    refusal: str,
+) -> None:
+    # The settlement asset's, the sequence order's, and the cause's checks read an earlier
+    # field: when it was refused, they leave it to its own refusal and add none.
+    with pytest.raises(ContractError) as error:
+        contract.from_json(_with(data, (field,), bad))
+    assert _types(error) == [refusal]
+
+
 @pytest.mark.req("HLT-014")
 def test_a_refused_event_time_is_reported_as_itself() -> None:
     # The resolution's check leaves an event time that was refused to that time's own refusal.
