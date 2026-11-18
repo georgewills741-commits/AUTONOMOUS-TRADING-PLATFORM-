@@ -3683,4 +3683,19 @@ MUTATIONS: list[Mutation] = [
         "            status is not VenueStatus.UNAVAILABLE",
         TESTS,
     ),
+    # Gate 3 run 2's findings: J-16 (the market rule), J-19 (the zero boundary).
+    Mutation(
+        "S2-U2 an evidence identifier's market not checked against its stream",
+        "src/atp/marketdata/_evidence.py",
+        "    if (market is None) != (stream is Stream.VENUE_STATUS):",
+        "    if False:",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U3 a zero delay counted as below zero",
+        "src/atp/measurement/_telemetry.py",
+        "                if sample.value_ns < 0:",
+        "                if sample.value_ns <= 0:",
+        TESTS,
+    ),
 ]

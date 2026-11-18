@@ -91,11 +91,12 @@ def test_a_delay_below_zero_is_counted_never_lost(
     provider = MeterProvider(metric_readers=[reader])
     try:
         exporter = TelemetryExporter(provider.get_meter("atp.measurement.test"))
-        recorder = Recorder(2, clock=StoppedClock(), clock_reliable=lambda: False)
-        recorder.delay(
-            RECEIVE, event_time_ns=100, receive_time_ns=0
-        )  # the clocks disagree
+        recorder = Recorder(3, clock=StoppedClock(), clock_reliable=lambda: False)
+        # The clocks disagree: a delay below zero.
+        recorder.delay(RECEIVE, event_time_ns=100, receive_time_ns=0)
         recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=250)
+        # A delay of zero is no disagreement: the histogram holds it.
+        recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=0)
         with caplog.at_level(logging.WARNING):
             exporter.export(recorder.drain())
         points = _points(reader)
@@ -103,7 +104,7 @@ def test_a_delay_below_zero_is_counted_never_lost(
         provider.shutdown()
 
     delay = _histogram(points, "atp.delay")
-    assert (delay.count, delay.sum) == (1, 250)
+    assert (delay.count, delay.sum) == (2, 250)
     negative = _number(points, "atp.delay.negative")
     assert negative.value == 1
     assert dict(negative.attributes or {})["atp.reliable"] is False
