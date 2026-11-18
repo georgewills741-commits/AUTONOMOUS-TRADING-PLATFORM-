@@ -13,7 +13,7 @@
 | Systems affected | SYS-01, SYS-02, SYS-03 with the Fee and Slippage Engines, SYS-04, SYS-05, SYS-29's drift detection, and the cross-cutting modules of the plan's D4 |
 | Files | Each checkpoint's verification record, "Scope": [checkpoint A verification](stage-02-checkpoint-a-verification.md) |
 | Implementation status | Checkpoint A built: U1, the readiness check, the dependencies and their review, and the venue verification; U2, SYS-02's contracts and Stage 2's settings; U3, the measurement framework (below) |
-| Test status | 1,427 tests, all passing, with every other check of the developer guide, on checkpoint A's tree ([checkpoint A verification](stage-02-checkpoint-a-verification.md), "Checks"); before U2 and U3, every Stage 1 check passed on the new lockfile, 1,108 tests among them (2026-11-17, 23:50 UTC) |
+| Test status | 1,430 tests, all passing, with every other check of the developer guide, on checkpoint A's tree ([checkpoint A verification](stage-02-checkpoint-a-verification.md), "Checks"); before U2 and U3, every Stage 1 check passed on the new lockfile, 1,108 tests among them (2026-11-17, 23:50 UTC) |
 | Verification 1, 2, 3 | Per checkpoint, in its verification record |
 | Security status | No credential is used or held; the database's password appears only as the name of a declared secret (SEC-005); no venue endpoint has been contacted (venue verification below) |
 | Performance status | No baseline exists; none is claimed. U3's framework measures and sets no target (V-45, V-46) |
@@ -141,7 +141,7 @@ From CCXT 4.5.92's own code, with network use refused during the inspection; not
 
 **Stage 2's settings** (`atp.config`; MIG-010, MIG-034, SEC-005). Version 1.1 of both parts of the configuration, adding settings whose defaults keep a 1.0 document's meaning: in the portable part, `market_data`, with the venues and instrument types monitored (D1), each venue's published fee schedules with their source and date (D8), and the regime timeframes (D9); in the environment-specific part, `database` (its address, database, user, and the name of the declared `server` secret that holds the password) and `archive_directory`. Each setting's record (MIG-034) is in the [developer guide](../development.md)'s "Configuration", and each rule has a test that refuses a document breaking it. The examples name no venue (GOV-017), and each environment's gives a database at a host of the reserved `.invalid` domain.
 
-**Tests:** 228 for the contracts and 16 for evidence identifiers (`tests/marketdata/`), 40 for the settings (`tests/config/test_stage_2_settings.py`); the schema snapshots of every contract (`tests/contracts/test_schemas.py`); `atp config check` passes on every example (`tests/cli/test_cli.py`).
+**Tests:** 231 for the contracts and 16 for evidence identifiers (`tests/marketdata/`), 40 for the settings (`tests/config/test_stage_2_settings.py`); the schema snapshots of every contract (`tests/contracts/test_schemas.py`); `atp config check` passes on every example (`tests/cli/test_cli.py`).
 
 ## Checkpoint A: U3, the measurement framework
 

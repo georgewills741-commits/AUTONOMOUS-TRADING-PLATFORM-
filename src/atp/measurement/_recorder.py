@@ -16,8 +16,9 @@ _COMPONENT: Final = re.compile(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*")
 
 class Path(enum.Enum):
     """A latency path of PERF-009 that Stage 2's code runs on: market data, the detection part of
-    the arbitrage and directional paths, and monitoring. Each has its own budget, so no figure is
-    ever combined across paths."""
+    the arbitrage and directional paths, and monitoring. Each has its own budget (PERF-009):
+    every sample carries its point's path, and every metric is labelled with it, so that figures
+    can be kept per path."""
 
     MARKET_DATA = "market-data"
     ARBITRAGE_DETECTION = "arbitrage-detection"

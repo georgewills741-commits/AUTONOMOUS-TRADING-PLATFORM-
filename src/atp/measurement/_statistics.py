@@ -21,7 +21,8 @@ PERCENTILES: Final = (("p50", 500), ("p95", 950), ("p99", 990), ("p99.9", 999))
 @dataclass(frozen=True, slots=True)
 class Summary:
     """A distribution's size, its percentiles, and its maximum. A figure the samples are too few
-    for is `None`, reported as "insufficient": a percentile needs at least one sample beyond it,
+    for is `None`, which stands for "insufficient" (the plan's U3): a percentile needs at least
+    one sample beyond it,
     so p50 needs 2 samples, p95 20, p99 100, and p99.9 1,000; the maximum needs one."""
 
     count: int
