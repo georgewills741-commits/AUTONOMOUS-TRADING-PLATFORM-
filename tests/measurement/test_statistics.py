@@ -30,7 +30,9 @@ def test_a_percentile_needs_enough_samples(
 ) -> None:
     share = dict(PERCENTILES)[name]
     assert percentile(list(range(too_few)), share) is None
-    assert percentile(list(range(enough)), share) == enough - 1
+    # With just enough samples, one sample is beyond the percentile: it is the second
+    # largest.
+    assert percentile(list(range(enough)), share) == enough - 2
 
 
 @pytest.mark.req("PERF-010")
