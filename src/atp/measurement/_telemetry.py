@@ -30,7 +30,12 @@ def _attributes(point: Point) -> dict[str, str]:
 
 
 class TelemetryExporter:
-    """Records drained measurements as OpenTelemetry metrics, on the cold path."""
+    """Records drained measurements as OpenTelemetry metrics, on the cold path.
+
+    A delay below zero, which the clocks' disagreement can give (`Recorder.delay`), is one a
+    histogram cannot hold: it is counted in `atp.delay.negative`, with its point and
+    `atp.reliable`, instead of being lost.
+    """
 
     def __init__(self, meter: Meter) -> None:
         self._histograms = {
@@ -67,13 +72,22 @@ class TelemetryExporter:
             unit="{sample}",
             description="Samples dropped because the recorder's buffer was full",
         )
+        self._negative_delays = meter.create_counter(
+            "atp.delay.negative",
+            unit="{sample}",
+            description="Delays below zero, which a histogram cannot hold",
+        )
 
     def export(self, drained: Drained) -> None:
-        """Record one drain's samples, counts, queue depths, and dropped samples."""
+        """Record one drain's samples, counts, queue depths, and dropped samples; a delay
+        below zero is counted, not recorded in the histogram."""
         for sample in drained.samples:
             attributes: dict[str, str | bool] = dict(_attributes(sample.point))
             if sample.kind is Kind.DELAY:
                 attributes["atp.reliable"] = sample.reliable
+                if sample.value_ns < 0:
+                    self._negative_delays.add(1, attributes)
+                    continue
             self._histograms[sample.kind].record(sample.value_ns, attributes)
         for point, count in drained.errors.items():
             self._errors.add(count, _attributes(point))

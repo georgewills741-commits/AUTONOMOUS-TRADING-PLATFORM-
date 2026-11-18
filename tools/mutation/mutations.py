@@ -3580,4 +3580,78 @@ MUTATIONS: list[Mutation] = [
         '{"atp.numeric._rounding"}',
         TESTS,
     ),
+    # Gate 3 run 1's findings: J-01 (negative delays), J-02 (two guards), J-13 (evidence inputs).
+    Mutation(
+        "S2-U3 a negative delay given to the histogram",
+        "src/atp/measurement/_telemetry.py",
+        "                if sample.value_ns < 0:\n"
+        "                    self._negative_delays.add(1, attributes)\n"
+        "                    continue\n",
+        "",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U3 a negative delay counted and also given to the histogram",
+        "src/atp/measurement/_telemetry.py",
+        "                    self._negative_delays.add(1, attributes)\n"
+        "                    continue\n",
+        "                    self._negative_delays.add(1, attributes)\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 a refused event time reported as its resolution's failure",
+        "src/atp/marketdata/_contracts.py",
+        '    if "event_time_ns" in info.data and (info.data["event_time_ns"] is None) != (',
+        '    if (info.data["event_time_ns"] is None) != (',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 a refused secret declaration reported as the database's failure",
+        "src/atp/config/_settings.py",
+        "            and secrets is not None\n",
+        "",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's venue not checked",
+        "src/atp/marketdata/_evidence.py",
+        "    if type(venue) is not str or re.fullmatch(VENUE_PATTERN, venue) is None:",
+        "    if False:",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's venue may differ from its market's",
+        "src/atp/marketdata/_evidence.py",
+        "    if market is not None and market.venue != venue:",
+        "    if False:",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's event time not checked",
+        "src/atp/marketdata/_evidence.py",
+        "        type(event_time_ns) is not int or not 0 <= event_time_ns <= _INT64_MAX",
+        "        False",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's event time may be a boolean",
+        "src/atp/marketdata/_evidence.py",
+        "        type(event_time_ns) is not int or not 0 <= event_time_ns <= _INT64_MAX",
+        "        not isinstance(event_time_ns, int) or not 0 <= event_time_ns <= _INT64_MAX",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's key may be a number",
+        "src/atp/marketdata/_evidence.py",
+        "        if type(venue_key) is not str:",
+        "        if False:",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U2 an evidence identifier's content may be other than text",
+        "src/atp/marketdata/_evidence.py",
+        "        if type(content) is not str:",
+        "        if False:",
+        TESTS,
+    ),
 ]

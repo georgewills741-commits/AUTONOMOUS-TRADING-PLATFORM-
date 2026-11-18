@@ -193,6 +193,17 @@ def test_the_database_password_is_a_declared_server_secret(
     assert _types(error) == ["database_secret_undeclared"]
 
 
+@pytest.mark.req("SEC-005", "MIG-034")
+def test_a_refused_secret_declaration_beside_a_database_is_reported_as_itself() -> None:
+    # The database's check leaves secrets that were refused to their own refusal.
+    declaration = {"name": "atp_db", "kind": "server"}
+    with pytest.raises(ContractError) as error:
+        EnvironmentConfiguration.from_json(_environment(secrets=[declaration]))
+    assert [(detail.location, detail.type) for detail in error.value.details] == [
+        (("secrets", 0, "name"), "string_pattern_mismatch")
+    ]
+
+
 @pytest.mark.req("MIG-010")
 def test_an_amount_written_as_a_toml_number_is_refused() -> None:
     document = (

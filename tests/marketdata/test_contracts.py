@@ -265,6 +265,14 @@ def test_an_event_time_and_its_resolution_are_given_together() -> None:
     assert Ticker.from_json(json.dumps(neither)).event_time_ns is None
 
 
+@pytest.mark.req("HLT-014")
+def test_a_refused_event_time_is_reported_as_itself() -> None:
+    # The resolution's check leaves an event time that was refused to that time's own refusal.
+    with pytest.raises(ContractError) as error:
+        Ticker.from_json(_with(VALID[Ticker], ("event_time_ns",), -1))
+    assert _types(error) == ["greater_than_equal"]
+
+
 @pytest.mark.parametrize(
     ("path", "bad"),
     [

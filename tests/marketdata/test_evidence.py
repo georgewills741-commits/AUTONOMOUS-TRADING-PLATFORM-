@@ -12,6 +12,9 @@ from atp.marketdata import EVIDENCE_FORM, MarketRef, Stream, Trade, evidence_id
 SPOT = MarketRef.from_json(
     '{"venue":"example","base":"BTC","quote":"USDT","instrument_type":"spot"}'
 )
+OTHER_VENUE_SPOT = MarketRef.from_json(
+    '{"venue":"other","base":"BTC","quote":"USDT","instrument_type":"spot"}'
+)
 PERPETUAL = MarketRef.from_json(
     '{"venue":"example","base":"BTC","quote":"USDT","instrument_type":"perpetual",'
     '"settle":"USDT"}'
@@ -69,7 +72,7 @@ def test_an_item_without_a_venue_key_gets_its_identifier_from_time_and_content()
 @pytest.mark.req("MKD-005")
 def test_each_identifying_part_changes_the_identifier() -> None:
     variants = [
-        _by_key(venue="other"),
+        _by_key(venue="other", market=OTHER_VENUE_SPOT),
         _by_key(stream=Stream.TICKER),
         _by_key(market=PERPETUAL),
         _by_key(market=None),
@@ -91,6 +94,44 @@ def test_exactly_one_of_a_venue_key_and_content_is_given() -> None:
         _by_key(venue_key=None)
     with pytest.raises(ValueError, match="not empty"):
         _by_key(venue_key="")
+
+
+@pytest.mark.parametrize(
+    ("changes", "refusal"),
+    [
+        ({"venue": "Example", "market": None}, "a venue's name"),
+        ({"venue": "", "market": None}, "a venue's name"),
+        ({"venue": "other"}, "its market's venue"),
+        ({"venue_key": 5091223}, "key is text"),
+    ],
+    ids=["venue-not-a-name", "venue-empty", "venue-not-the-market's", "key-a-number"],
+)
+@pytest.mark.req("MKD-005")
+def test_inputs_that_could_give_one_item_two_identifiers_are_refused(
+    changes: dict[str, object], refusal: str
+) -> None:
+    with pytest.raises(ValueError, match=refusal):
+        _by_key(**changes)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("event_time", [True, 1.0, -1, 2**63])
+@pytest.mark.req("MKD-005")
+def test_an_event_time_is_a_whole_number_of_nanoseconds_in_range(
+    event_time: object,
+) -> None:
+    with pytest.raises(ValueError, match="event time"):
+        _by_content(event_time_ns=event_time)  # type: ignore[arg-type]
+
+
+@pytest.mark.req("MKD-005")
+def test_the_content_is_text() -> None:
+    with pytest.raises(ValueError, match="content"):
+        evidence_id(
+            venue="example",
+            stream=Stream.BOOK,
+            market=SPOT,
+            content=BOOK.encode(),  # type: ignore[arg-type]
+        )
 
 
 @pytest.mark.req("MKD-005")

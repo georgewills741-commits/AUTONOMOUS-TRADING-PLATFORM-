@@ -67,7 +67,9 @@ class Sample:
 
 
 class Clock(Protocol):
-    """The two clocks a recorder reads, so that tests can inject them."""
+    """The clocks of measurement, injected in tests: a recorder reads `monotonic_ns` for
+    durations; `wall_ns` is the clock callers read for the receipt times they pass to
+    `delay`."""
 
     def monotonic_ns(self) -> int:
         """Nanoseconds on a clock that never goes back, for durations."""

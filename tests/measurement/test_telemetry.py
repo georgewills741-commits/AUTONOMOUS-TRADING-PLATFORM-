@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 import pytest
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import (
@@ -79,6 +81,36 @@ def test_drained_measurements_become_opentelemetry_metrics() -> None:
     assert _number(points, "atp.errors").value == 1
     assert _number(points, "atp.shed").value == 2
     assert _number(points, "atp.measurement.dropped").value == 1
+
+
+@pytest.mark.req("TEC-010", "PERF-010")
+def test_a_delay_below_zero_is_counted_never_lost(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    reader = InMemoryMetricReader()
+    provider = MeterProvider(metric_readers=[reader])
+    try:
+        exporter = TelemetryExporter(provider.get_meter("atp.measurement.test"))
+        recorder = Recorder(2, clock=StoppedClock(), clock_reliable=lambda: False)
+        recorder.delay(
+            RECEIVE, event_time_ns=100, receive_time_ns=0
+        )  # the clocks disagree
+        recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=250)
+        with caplog.at_level(logging.WARNING):
+            exporter.export(recorder.drain())
+        points = _points(reader)
+    finally:
+        provider.shutdown()
+
+    delay = _histogram(points, "atp.delay")
+    assert (delay.count, delay.sum) == (1, 250)
+    negative = _number(points, "atp.delay.negative")
+    assert negative.value == 1
+    assert dict(negative.attributes or {})["atp.reliable"] is False
+    # OpenTelemetry would log a warning for each negative value given to a histogram.
+    assert not [
+        record for record in caplog.records if record.levelno >= logging.WARNING
+    ]
 
 
 def test_the_buckets_rise_from_one_microsecond_and_set_no_target() -> None:
