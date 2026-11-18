@@ -11,23 +11,23 @@
 | Dependencies | Stage 1, complete ([DEC-067](../decisions/DEC-067-stage-1-exit-and-owner-answers-of-2026-11-10.md)); the entry gate re-checked below |
 | Requirements | The plan's section 3: delivered (3.1), started (3.2), applied as design rules (3.3), applied in later stages (3.4), not built (3.5) |
 | Systems affected | SYS-01, SYS-02, SYS-03 with the Fee and Slippage Engines, SYS-04, SYS-05, SYS-29's drift detection, and the cross-cutting modules of the plan's D4 |
-| Files | Each checkpoint's verification record, "Scope" |
-| Implementation status | Checkpoint A in progress: U1's readiness check, dependency review, and venue verification done (below) |
-| Test status | On the new lockfile, every Stage 1 check passes: lint, formatting, both type checks, 1,108 tests, the documentation checker and its self-test (2026-11-17, 23:50 UTC) |
+| Files | Each checkpoint's verification record, "Scope": [checkpoint A verification](stage-02-checkpoint-a-verification.md) |
+| Implementation status | Checkpoint A built: U1, the readiness check, the dependencies and their review, and the venue verification; U2, SYS-02's contracts and Stage 2's settings; U3, the measurement framework (below) |
+| Test status | 1,415 tests, all passing, with every other check of the developer guide, on checkpoint A's tree ([checkpoint A verification](stage-02-checkpoint-a-verification.md), "Checks"); before U2 and U3, every Stage 1 check passed on the new lockfile, 1,108 tests among them (2026-11-17, 23:50 UTC) |
 | Verification 1, 2, 3 | Per checkpoint, in its verification record |
-| Security status | No credential is used or held; no venue endpoint has been contacted (venue verification below) |
-| Performance status | No baseline exists; none is claimed |
-| Documentation status | This record; the developer guide and the specifications as each unit changes them |
-| Traceability status | The generated [verification matrix](verification-matrix.md) traces Stage 1's requirements; Stage 2's are added as their code and tests are written |
+| Security status | No credential is used or held; the database's password appears only as the name of a declared secret (SEC-005); no venue endpoint has been contacted (venue verification below) |
+| Performance status | No baseline exists; none is claimed. U3's framework measures and sets no target (V-45, V-46) |
+| Documentation status | This record; the developer guide's records of the new settings (MIG-034); the contract conventions, the numerical policy, the technology stack, the architecture-to-repository map, and the values register (V-41's note, V-45, V-46); the roadmap and the project state |
+| Traceability status | The generated [verification matrix](verification-matrix.md) lists Stage 2's markers as their code and tests are written: `atp.marketdata`, `atp.measurement`, and their tests and the settings' at checkpoint A. Its check of delivered requirements reads the Stage 1 plan only, until U11 extends it to Stage 2's |
 | Git commit | Each checkpoint's commit is in the [project state](../project-state.md)'s checkpoint log |
-| Blockers | No venue is verified for public market data ("Checkpoint A: venue verification", below): the work that needs a venue's live data (U4's live checks and recorded responses, U10's runs) waits for the owner's answer |
+| Blockers | No venue is verified for public market data ("Checkpoint A: venue verification", below; OQ-34 of the [open-question register](../open-questions/register.md)): the work that needs a venue's data (U4's adapter, recorded responses, and live checks for each venue; U10's runs) waits for the owner's answer |
 | Next stage | CORE TRADING FOUNDATION, after this stage's exit and the owner's approval |
 
 ## Checkpoints
 
 | Checkpoint | Units | Status |
 |---|---|---|
-| A | U1 readiness, dependencies, and venue verification; U2 contracts and configuration; U3 measurement | In progress |
+| A | U1 readiness, dependencies, and venue verification; U2 contracts and configuration; U3 measurement | Built; its three gates are in its verification record, [checkpoint A verification](stage-02-checkpoint-a-verification.md) |
 | B | U4 adapters; U5 validation and clock drift | Not started |
 | C | U6 storage; U7 the Quantitative Engine with the Fee and Slippage Engines | Not started |
 | D | U8 the Market Regime Engine; U9 the Opportunity Detection Engine | Not started |
@@ -116,7 +116,7 @@ Checked on 2026-11-17 in a scratch copy of the project with the new lockfile, un
 | Bybit | Terms of Service: the page answered HTTP 503; the API introduction says nothing on locations or accounts | None: no request made | **Disabled**: the terms are unread | Not established |
 | KuCoin | Terms of Use (last updated 2026-10-29): "Users must register with the Platform before they may access the Platform services" (Art. 11), real-time quotations being among those services (Art. 24(2)); a user declares that it "is not a resident of or registered in, any of the Restricted Locations", which include "the United States (including its territories such as Puerto Rico, Guam, the Northern Mariana Islands, American Samoa, etc)" (Art. 17(5)) | None: no request made | **Disabled**: the terms read require registration before access to its services and exclude residents of the United States | Not established |
 
-**Result.** No venue is verified for public market data, and no venue endpoint has been contacted: every venue stays disabled, its status recorded, as the owner decided (DEC-073, decision 3). Adding a venue later needs no platform change (EXA-006). What would resolve each is owner-level information or a reading the builder could not do from here: the operator's jurisdiction (KuCoin's and OKX's terms turn on residence, and OKX's allowed use on the operator), a human reading of the terms that refused automated reading (Binance, Coinbase, Bybit), and, for the venues whose terms exclude access from the United States, an environment located where their terms and the law permit it, which this one is not.
+**Result.** No venue is verified for public market data, and no venue endpoint has been contacted: every venue stays disabled, its status recorded, as the owner decided (DEC-073, decision 3). Adding a venue later needs no platform change (EXA-006). What would resolve each is owner-level information or a reading the builder could not do from here, put to the owner as OQ-34: the operator's jurisdiction (KuCoin's and OKX's terms turn on residence, and OKX's allowed use on the operator), a human reading of the terms that refused automated reading (Binance, Coinbase, Bybit), and, for the venues whose terms exclude access from the United States, an environment located where their terms and the law permit it, which this one is not.
 
 ## Checkpoint A: CCXT findings (D5)
 
@@ -134,3 +134,47 @@ From CCXT 4.5.92's own code, with network use refused during the inspection; not
 | `bybit` | Yes | Emulated | Yes | Yes | Not declared | Spot, swap, margin |
 | `kucoin` | Yes | Yes | Yes | Yes | Yes | Spot, swap, margin |
 | `kucoinfutures` | Yes | Yes | Yes | Yes | Yes | Swap |
+
+## Checkpoint A: U2, the contracts and the settings
+
+**SYS-02's contracts** (`atp.marketdata`; ARCH-025, EXA-013, MKD-005, MKD-010, HLT-014). Fourteen contracts at version 1.0, each with its committed schema under `contracts/`: the market and an item's lineage; market metadata (the venue's symbol, status, increments, and minimums); ticker; trade; book level, book snapshot, and book update (with the venue's sequence numbers that place it); OHLCV bar; funding rate; venue state; and this system's quality assessment, quarantine record, and record of untranslatable input. Each item names its market, or its venue, the venue's event time where it gives one with that time's resolution, the local receipt time, its evidence identifier, and its lineage (D5). Times are integer nanoseconds since the Unix epoch, UTC, refused below zero or beyond a signed 64-bit integer; amounts are `Amount`, a float or JSON number refused; identifiers are checked against patterns. Evidence identifiers (MKD-005) are SHA-256 digests of the form `atp.evidence/1` over the venue, the stream, the market, and the venue's own key of the item, or, where the venue gives none, the item's event time and a digest of its content, so the same item received twice has the same identifier.
+
+**Stage 2's settings** (`atp.config`; MIG-010, MIG-034, SEC-005). Version 1.1 of both parts of the configuration, adding settings whose defaults keep a 1.0 document's meaning: in the portable part, `market_data`, with the venues and instrument types monitored (D1), each venue's published fee schedules with their source and date (D8), and the regime timeframes (D9); in the environment-specific part, `database` (its address, database, user, and the name of the declared `server` secret that holds the password) and `archive_directory`. Each setting's record (MIG-034) is in the [developer guide](../development.md)'s "Configuration", and each rule has a test that refuses a document breaking it. The examples name no venue (GOV-017), and each environment's gives a database at a host of the reserved `.invalid` domain.
+
+**Tests:** 227 for the contracts and 7 for evidence identifiers (`tests/marketdata/`), 39 for the settings (`tests/config/test_stage_2_settings.py`); the schema snapshots of every contract (`tests/contracts/test_schemas.py`); `atp config check` passes on every example (`tests/cli/test_cli.py`).
+
+## Checkpoint A: U3, the measurement framework
+
+`atp.measurement` (PERF-008, PERF-009, PERF-010, PERF-018, PERF-020, TEC-010), built first so that the later units are measured as they are built:
+
+- **Points:** a name, one of PERF-009's paths that Stage 2's code runs on (market data; the detection part of the arbitrage and directional paths; monitoring), and a component.
+- **The recorder:** durations on the monotonic clock; delays from a venue's event time to local receipt on the wall clock, marked unreliable while the local clock's drift is beyond its limit, which the caller reports (`atp.health` from checkpoint B); queue depth and the time items waited; counts of errors and of shed work. Samples go into a buffer of fixed capacity: when it is full, a sample is dropped and counted, and the call returns at once.
+- **Exact statistics:** p50, p95, p99, p99.9, and the maximum, as nearest-rank percentiles on integers, so each figure is one of the samples; a percentile is reported only with enough samples (V-45); jitter is the same figures over the absolute differences between consecutive samples.
+- **OpenTelemetry metrics**, on the cold path: histograms with fixed bucket edges (V-46), a gauge of queue depth, and counters of errors, shed work, and dropped samples.
+
+No target is set. **Tests:** 33 (`tests/measurement/`), and the agreement of V-45 and V-46 with the values register (`tests/repository/test_values.py`).
+
+## Checkpoint A: builder details and plan wording
+
+Choices the plan left to implementation, and one plan item moved to a later unit. None changes a requirement or a decision.
+
+| Item | What was done | Why |
+|---|---|---|
+| D10's budgets | Not added at checkpoint A: the per-venue budget of depth subscriptions and the scan frequency are added with U9, as a further minor version of the portable configuration. U2's other settings are added | The plan's U2 names "universe bounds and budgets, D10", but their meaning is designed with the Opportunity Detection Engine and their values come from measurement (D10). The universe's bounds are the enabled venues and instrument types (OPP-009), which U2 adds; exclusions are the Policy System's (CORE). A budget defined before its consumer could need a major version once U9 is designed, while a minor version can add it later with a default |
+| What the contracts check | Structure only: types, forms, and fields that belong together (an event time and its resolution, a perpetual and its settlement asset, a book update's first and last sequence numbers, an unavailable venue and its cause) | A well-formed but implausible item reaches SYS-02's validation and is quarantined with its evidence (MKD-009, MKD-013), never refused unseen at the adapter |
+| Margin markets | A margin market is described by its metadata; its book, trades, ticker, and bars are its spot market's | A venue publishes one book per spot pair, which margin trading uses (PLT-011) |
+| Lineage | The venue's endpoint or channel, and the adapter and its version; the validation version is carried by the validated item (U5) | MKD-010's other parts (dataset, feature, strategy, and policy versions) belong to the calculations and decisions of later units |
+| Jitter | The distribution of the absolute differences between consecutive samples, with the same figures as the samples (the delay variation of RFC 3393) | PERF-010 names jitter without defining it; this definition is exact on integers and needs no float or mean |
+| Percentiles | Nearest-rank, with at least one sample beyond a reported percentile (V-45) | Exact; the plan's "p99.9: at least 1,000" extends to each percentile by the same rule |
+| Integer division | `atp.measurement._statistics` is listed in the structure test's `INTEGER_DIVISION_ALLOWED`; it refuses any value that is not a whole number | It divides only integers, to find a rank, as N4 of the [numerical policy](../architecture/numerical-policy.md) provides for such a module |
+| The recorder | Used from the process's event loop, not shared between threads; a full buffer drops the new sample | One process (TEC-008); keeping the oldest samples means a burst cannot erase what came before it, and each drop is counted |
+| Fee rates | Maker above -1 and below 1, below zero a rebate; taker from 0 to below 1; written as text | Maker rebates exist; a rate of 100% or more is no fee schedule; amounts are text in configuration (N6) |
+| Dates in configuration | Text, YYYY-MM-DD, checked to be a date that exists | The loader refuses TOML dates, and Pydantic's date type would also read a Unix timestamp written as text ([contract conventions](../architecture/contracts.md)) |
+| The database's password | The name of a secret declared with the kind `server`, checked against the environment's declarations | SEC-005: a secret's value comes only from the process environment |
+| The examples' layout | Each environment file's database table comes before its secret declarations | The repository test for secrets plants a value at the end of each environment example, beside the declaration it expects there; this layout keeps that test's assumption, so the test was not changed |
+
+## Carried to later units
+
+- **Checkpoint B (U4):** the mypy exception for CCXT, confined to `atp.exchange` ("Checkpoint A: strict typing and warnings"); per venue, from recorded responses, whether CCXT gives amounts as the venue's text ("Checkpoint A: CCXT findings"); the adapter, recorded responses, and live checks of each venue only after its verification, which waits for the owner's answer to OQ-34 ([open-question register](../open-questions/register.md)).
+- **Checkpoint C (U6):** the developer guide's command to start the Docker daemon with Google's mirror ("Checkpoint A: environment readiness"); the first pull of the image on the machine checks' runners; the server started with `timescaledb.license=apache` ("Checkpoint A: versions, dependency review, and licenses"); testcontainers' module `testcontainers.community.postgres` or `testcontainers.core`, not the deprecated `testcontainers.postgres`.
+- **Checkpoint D (U9):** D10's budgets (above).
