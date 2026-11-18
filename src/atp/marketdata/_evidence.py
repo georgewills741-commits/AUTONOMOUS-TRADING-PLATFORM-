@@ -51,7 +51,9 @@ def evidence_id(
         msg = "an evidence identifier's venue is its market's venue"
         raise ValueError(msg)
     if (market is None) != (stream is Stream.VENUE_STATUS):
-        msg = "an item names its market, unless it is a venue's status, which names none"
+        msg = (
+            "an item names its market, unless it is a venue's status, which names none"
+        )
         raise ValueError(msg)
     if event_time_ns is not None and (
         type(event_time_ns) is not int or not 0 <= event_time_ns <= _INT64_MAX
