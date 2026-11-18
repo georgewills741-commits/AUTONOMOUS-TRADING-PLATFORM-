@@ -38,7 +38,7 @@
 | Condition | Result |
 |---|---|
 | Prerequisite stage, architecture, contracts, decisions, documentation | As the plan's section 2 records; the owner approved the plan on 2026-11-17 (DEC-073), effective with commit `447290f` |
-| Required environment | U1's readiness check, below: what Stage 2 needs is available here, with one difference in how the database image is fetched |
+| Required environment | U1's readiness check, below: the tools and services Stage 2 needs are available here, with one difference in how the database image is fetched; access to the venues' public market data is the venue verification's question, below |
 | Python | 3.12.3, the system interpreter, as in Stage 1 |
 | Package index and advisory database | Both reachable: pypi.org, and the OSV service (api.osv.dev), which Stage 1 could not reach |
 
