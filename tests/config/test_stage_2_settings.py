@@ -40,7 +40,9 @@ SERVER_SECRET = {"name": "ATP_DB", "kind": "server"}
 
 
 def _market_data(**changes: object) -> str:
-    return json.dumps({"venues": [VENUE], "regime_timeframes_seconds": [3600], **changes})
+    return json.dumps(
+        {"venues": [VENUE], "regime_timeframes_seconds": [3600], **changes}
+    )
 
 
 def _venue(**changes: object) -> str:
@@ -75,7 +77,11 @@ def test_the_market_data_settings_are_read() -> None:
     assert venue.venue == "example"
     assert venue.instrument_types == (InstrumentType.SPOT, InstrumentType.PERPETUAL)
     (fee,) = venue.fees
-    assert (str(fee.maker), str(fee.taker), fee.as_of) == ("0.001", "0.001", "2026-11-17")
+    assert (str(fee.maker), str(fee.taker), fee.as_of) == (
+        "0.001",
+        "0.001",
+        "2026-11-17",
+    )
     assert settings.regime_timeframes_seconds == (3600,)
 
 
@@ -98,7 +104,7 @@ def test_a_stage_1_document_reads_as_monitoring_nothing_with_no_database() -> No
         (_venue(venue="Example"), "string_pattern_mismatch"),
         (_venue(instrument_types=[]), "too_short"),
         (_venue(instrument_types=["spot", "spot"]), "duplicate_instrument_type"),
-        (_venue(instrument_types=["option"]), "enum"),
+        (_venue(instrument_types=["spot", "option"]), "enum"),
         (_venue(fees=[FEE, FEE]), "duplicate_fee_schedule"),
         (_venue(instrument_types=["perpetual"]), "fee_schedule_not_monitored"),
         (_market_data(venues=[VENUE, VENUE]), "duplicate_venue"),
@@ -109,7 +115,9 @@ def test_a_stage_1_document_reads_as_monitoring_nothing_with_no_database() -> No
     ],
 )
 @pytest.mark.req("MIG-034")
-def test_each_rule_on_venues_and_timeframes_refuses(document: str, refusal: str) -> None:
+def test_each_rule_on_venues_and_timeframes_refuses(
+    document: str, refusal: str
+) -> None:
     with pytest.raises(ContractError) as error:
         MarketDataSettings.from_json(document)
     assert _types(error) == [refusal]
@@ -131,7 +139,9 @@ def test_each_rule_on_venues_and_timeframes_refuses(document: str, refusal: str)
     ],
 )
 @pytest.mark.req("MIG-034")
-def test_each_rule_on_a_fee_schedule_refuses(changes: dict[str, object], refusal: str) -> None:
+def test_each_rule_on_a_fee_schedule_refuses(
+    changes: dict[str, object], refusal: str
+) -> None:
     with pytest.raises(ContractError) as error:
         MarketDataSettings.from_json(_fee(**changes))
     assert _types(error) == [refusal]
@@ -152,7 +162,10 @@ def test_a_maker_rebate_is_accepted() -> None:
         ({"database": {**DATABASE, "port": 65536}}, "less_than_equal"),
         ({"database": {**DATABASE, "name": "ATP"}}, "string_pattern_mismatch"),
         ({"database": {**DATABASE, "user": "a" * 64}}, "string_pattern_mismatch"),
-        ({"database": {**DATABASE, "password_secret": "atp_db"}}, "string_pattern_mismatch"),
+        (
+            {"database": {**DATABASE, "password_secret": "atp_db"}},
+            "string_pattern_mismatch",
+        ),
         ({"database": {**DATABASE, "password": "x"}}, "extra_forbidden"),
         ({"archive_directory": "srv/atp/archive"}, "string_pattern_mismatch"),
         ({"archive_directory": "/srv/atp\n"}, "string_pattern_mismatch"),
@@ -240,8 +253,10 @@ def test_the_summary_shows_the_stage_2_settings_and_no_secret_value(
     assert lines[:8] == [
         "platform_id: atp",
         "venue example: public market data for spot",
-        "venue example fees for spot: maker 0.0008, taker 0.001 "
-        "(Example fee schedule, as of 2026-11-17)",
+        (
+            "venue example fees for spot: maker 0.0008, taker 0.001 "
+            "(Example fee schedule, as of 2026-11-17)"
+        ),
         "regime timeframes (seconds): 3600, 86400",
         "environment: paper",
         "environment_id: example-paper",

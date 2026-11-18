@@ -46,8 +46,10 @@ def test_every_example_environment_checks(
         "  regime timeframes (seconds): none",
         f"  environment: {environment}",
         f"  environment_id: example-{environment}",
-        "  database: atp@db.example.invalid:5432/atp, password from the secret "
-        f"{EXAMPLE_VARIABLE}",
+        (
+            "  database: atp@db.example.invalid:5432/atp, password from the secret "
+            f"{EXAMPLE_VARIABLE}"
+        ),
         "  archive directory: /srv/atp/archive",
         f"  secret {EXAMPLE_VARIABLE} (server): {REDACTED}",
     ]
