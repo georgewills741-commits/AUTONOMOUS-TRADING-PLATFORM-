@@ -57,6 +57,7 @@ ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "config": frozenset({"contracts", "numeric"}),
     "cli": frozenset({"config"}),
     "marketdata": frozenset({"contracts"}),
+    "measurement": frozenset(),
 }
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
@@ -116,7 +117,9 @@ FLOAT_MODULES = frozenset({"math", "cmath", "statistics"})
 # Integer division and remainder truncate toward zero on a Decimal without signalling; the one
 # module that implements rounding uses `divmod` exactly (N4). A module that divides only
 # integers (timestamps, counts) gets its entry here by a reviewed change (numerical policy, N4).
-INTEGER_DIVISION_ALLOWED = frozenset({"atp.numeric._rounding"})
+INTEGER_DIVISION_ALLOWED = frozenset(
+    {"atp.numeric._rounding", "atp.measurement._statistics"}
+)
 FLOAT_CONVERTERS = frozenset({"float", "complex"})
 # Modules allowed to use floats and float rounding (TEC-003: indicators, signals, research).
 # A module that needs it gets its entry here deliberately; none does in Stage 1.
