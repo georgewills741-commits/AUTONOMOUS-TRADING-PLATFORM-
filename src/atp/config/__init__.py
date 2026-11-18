@@ -26,11 +26,15 @@ from atp.config._load import (
 )
 from atp.config._secrets import REDACTED, ProcessEnvironment, Secret, SecretSource
 from atp.config._settings import (
+    DatabaseSettings,
     Environment,
     EnvironmentConfiguration,
+    FeeSchedule,
+    MarketDataSettings,
     PortableConfiguration,
     SecretDeclaration,
     SecretKind,
+    VenueSettings,
 )
 
 __all__ = [
@@ -40,14 +44,18 @@ __all__ = [
     "REDACTED",
     "Configuration",
     "ConfigurationError",
+    "DatabaseSettings",
     "Environment",
     "EnvironmentConfiguration",
+    "FeeSchedule",
+    "MarketDataSettings",
     "PortableConfiguration",
     "ProcessEnvironment",
     "Secret",
     "SecretDeclaration",
     "SecretKind",
     "SecretSource",
+    "VenueSettings",
     "configure_process",
     "environment_named",
     "load_configuration",

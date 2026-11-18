@@ -54,7 +54,7 @@ TESTS_ROOT = REPOSITORY_ROOT / "tests"
 ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "numeric": frozenset(),
     "contracts": frozenset({"numeric"}),
-    "config": frozenset({"contracts", "numeric"}),
+    "config": frozenset({"contracts", "numeric", "marketdata"}),
     "cli": frozenset({"config"}),
     "marketdata": frozenset({"contracts"}),
     "measurement": frozenset(),

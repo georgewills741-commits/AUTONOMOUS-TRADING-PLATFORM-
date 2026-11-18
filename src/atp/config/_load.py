@@ -252,11 +252,32 @@ def load_configuration(
 
 def summary(configuration: Configuration) -> list[str]:
     """The configuration as lines of text, each secret's value shown as `<redacted>`."""
-    lines = [
-        f"platform_id: {configuration.portable.platform_id}",
-        f"environment: {configuration.environment.environment.value}",
-        f"environment_id: {configuration.environment.environment_id}",
-    ]
+    market_data = configuration.portable.market_data
+    specific = configuration.environment
+    lines = [f"platform_id: {configuration.portable.platform_id}"]
+    if not market_data.venues:
+        lines.append("market data: no venue monitored")
+    for venue in market_data.venues:
+        kinds = ", ".join(kind.value for kind in venue.instrument_types)
+        lines.append(f"venue {venue.venue}: public market data for {kinds}")
+        lines.extend(
+            f"venue {venue.venue} fees for {fee.instrument_type.value}: maker {fee.maker}, "
+            f"taker {fee.taker} ({fee.source}, as of {fee.as_of})"
+            for fee in venue.fees
+        )
+    timeframes = ", ".join(str(seconds) for seconds in market_data.regime_timeframes_seconds)
+    lines.append(f"regime timeframes (seconds): {timeframes or 'none'}")
+    lines.append(f"environment: {specific.environment.value}")
+    lines.append(f"environment_id: {specific.environment_id}")
+    database = specific.database
+    lines.append(
+        "database: not configured"
+        if database is None
+        else f"database: {database.user}@{database.host}:{database.port}/{database.name}, "
+        f"password from the secret {database.password_secret}"
+    )
+    archive = specific.archive_directory
+    lines.append(f"archive directory: {archive or 'not configured'}")
     if not configuration.secrets:
         lines.append("secrets: none declared")
     for declaration, _secret in configuration.secrets:
