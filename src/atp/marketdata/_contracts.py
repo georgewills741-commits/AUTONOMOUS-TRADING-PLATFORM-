@@ -319,7 +319,9 @@ class BookUpdate(Contract):
 
     @field_validator("last_sequence")
     @classmethod
-    def _check_sequence_order(cls, last: int | None, info: ValidationInfo) -> int | None:
+    def _check_sequence_order(
+        cls, last: int | None, info: ValidationInfo
+    ) -> int | None:
         first = info.data.get("first_sequence")
         if first is not None and last is not None and last < first:
             raise PydanticCustomError(
