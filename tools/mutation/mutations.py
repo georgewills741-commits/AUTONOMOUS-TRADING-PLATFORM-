@@ -2543,8 +2543,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "U4 a secret declared twice accepted",
         "src/atp/config/_settings.py",
-        "        if len(set(names)) != len(names):",
-        "        if False:",
+        "        names = [declaration.name for declaration in secrets]\n        if len(set(names)) != len(names):",
+        "        names = [declaration.name for declaration in secrets]\n        if False:",
         TESTS,
     ),
     Mutation(
@@ -3118,8 +3118,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "U4 the configuration may import the command",
         "tests/repository/test_structure.py",
-        '    "config": frozenset({"contracts", "numeric"}),',
-        '    "config": frozenset({"contracts", "numeric", "cli"}),',
+        '    "config": frozenset({"contracts", "numeric", "marketdata"}),',
+        '    "config": frozenset({"contracts", "numeric", "marketdata", "cli"}),',
         TESTS,
     ),
     # Checkpoint D: the verification matrix's rules (U7; tools/docs/), killed by the self-test's
