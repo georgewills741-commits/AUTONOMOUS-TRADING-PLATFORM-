@@ -17,7 +17,8 @@
   `to_integral_value`, rounding dunders, `__float__`, or `__int__`; no `math`, `cmath`, or
   `statistics`; no `float` or `complex` called or handed on as a converter; no integer
   division, remainder, or `divmod` (also a decimal context's `divide_int`) outside the modules
-  in `INTEGER_DIVISION_ALLOWED` (only `atp.numeric._rounding`). Only the modules in
+  in `INTEGER_DIVISION_ALLOWED` (`atp.numeric._rounding`, and `atp.measurement._statistics`,
+  which finds a percentile's rank). Only the modules in
   `FLOAT_ALLOWED` are exempt; none is.
 - Outside `atp.contracts`, Pydantic is used only through the names in `PYDANTIC_ALLOWED`: no
   model that is not a contract, no Pydantic dataclass, `create_model`, `validate_call`,
