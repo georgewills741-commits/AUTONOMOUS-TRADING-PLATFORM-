@@ -290,10 +290,10 @@ def test_a_malformed_market_identifier_is_refused(
 @pytest.mark.parametrize("bad", ["4F" * 32, "4f" * 31 + "4", "4f" * 33, "z" * 64, ""])
 @pytest.mark.req("MKD-005")
 def test_a_malformed_evidence_identifier_is_refused(bad: str) -> None:
-    for contract in VALID:
+    for contract, valid in VALID.items():
         field = "content_sha256" if contract is UntranslatableInput else "evidence_id"
         with pytest.raises(ContractError) as error:
-            contract.from_json(_with(VALID[contract], (field,), bad))
+            contract.from_json(_with(valid, (field,), bad))
         assert _types(error) == ["string_pattern_mismatch"]
 
 
