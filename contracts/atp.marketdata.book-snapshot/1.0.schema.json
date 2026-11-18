@@ -1,0 +1,207 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    },
+    "BookLevel": {
+      "additionalProperties": false,
+      "description": "One price level of an order book: its price and the quantity there, in the base asset.\nIn a book update, a quantity of zero removes the level.",
+      "properties": {
+        "price": {
+          "$ref": "#/$defs/Amount"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Amount"
+        }
+      },
+      "required": [
+        "price",
+        "quantity"
+      ],
+      "title": "BookLevel",
+      "type": "object"
+    },
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "Lineage": {
+      "additionalProperties": false,
+      "description": "Where an item came from and what produced it (MKD-010): the venue's endpoint or channel,\nand the adapter and its version.",
+      "properties": {
+        "adapter": {
+          "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+          "title": "Adapter",
+          "type": "string"
+        },
+        "adapter_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "source": {
+          "pattern": "^[\\x20-\\x7e]{1,200}$",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "adapter",
+        "adapter_version"
+      ],
+      "title": "Lineage",
+      "type": "object"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    },
+    "TimeResolution": {
+      "description": "The resolution of a venue's event times.",
+      "enum": [
+        "second",
+        "millisecond",
+        "microsecond",
+        "nanosecond"
+      ],
+      "title": "TimeResolution",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.book-snapshot/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A market's order book at one time: its bid levels, best first, its ask levels, best\nfirst, and the venue's sequence number of the snapshot where it gives one.",
+  "properties": {
+    "asks": {
+      "items": {
+        "$ref": "#/$defs/BookLevel"
+      },
+      "title": "Asks",
+      "type": "array"
+    },
+    "bids": {
+      "items": {
+        "$ref": "#/$defs/BookLevel"
+      },
+      "title": "Bids",
+      "type": "array"
+    },
+    "event_time_ns": {
+      "anyOf": [
+        {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event Time Ns"
+    },
+    "event_time_resolution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TimeResolution"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "lineage": {
+      "$ref": "#/$defs/Lineage"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "receive_time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Receive Time Ns",
+      "type": "integer"
+    },
+    "sequence": {
+      "anyOf": [
+        {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sequence"
+    }
+  },
+  "required": [
+    "market",
+    "bids",
+    "asks",
+    "receive_time_ns",
+    "evidence_id",
+    "lineage"
+  ],
+  "title": "BookSnapshot",
+  "type": "object"
+}

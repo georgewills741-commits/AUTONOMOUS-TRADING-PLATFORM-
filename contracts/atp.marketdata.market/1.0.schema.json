@@ -1,0 +1,59 @@
+{
+  "$defs": {
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.market/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+  "properties": {
+    "base": {
+      "pattern": "^[A-Z0-9]{1,32}$",
+      "title": "Base",
+      "type": "string"
+    },
+    "instrument_type": {
+      "$ref": "#/$defs/InstrumentType"
+    },
+    "quote": {
+      "pattern": "^[A-Z0-9]{1,32}$",
+      "title": "Quote",
+      "type": "string"
+    },
+    "settle": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Settle"
+    },
+    "venue": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Venue",
+      "type": "string"
+    }
+  },
+  "required": [
+    "venue",
+    "base",
+    "quote",
+    "instrument_type"
+  ],
+  "title": "MarketRef",
+  "type": "object"
+}

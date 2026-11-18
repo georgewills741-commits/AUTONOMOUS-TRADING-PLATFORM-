@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "Freshness": {
+      "description": "How fresh a stream's data is (MKD-012): valid, stale past its limit, invalid beyond it.",
+      "enum": [
+        "valid",
+        "stale",
+        "invalid"
+      ],
+      "title": "Freshness",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.quality/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "This system's assessment of one item (MKD-008, MKD-012): its freshness and age when\nassessed, and its quality score, from 0 to 100, under the named version of the rules.",
+  "properties": {
+    "age_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Age Ns",
+      "type": "integer"
+    },
+    "assessed_time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Assessed Time Ns",
+      "type": "integer"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "freshness": {
+      "$ref": "#/$defs/Freshness"
+    },
+    "rule_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Score",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "assessed_time_ns",
+    "freshness",
+    "age_ns",
+    "score",
+    "rule_version"
+  ],
+  "title": "QualityAssessment",
+  "type": "object"
+}
