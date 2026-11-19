@@ -20,7 +20,7 @@
 | Documentation status | This record; the developer guide's records of the new settings (MIG-034); the contract conventions, the numerical policy, the technology stack, the architecture-to-repository map, and the values register (V-41's note, V-45, V-46); the roadmap and the project state |
 | Traceability status | The generated [verification matrix](verification-matrix.md) lists Stage 2's markers as their code and tests are written: `atp.marketdata`, `atp.measurement`, and their tests and the settings' at checkpoint A. Its check of delivered requirements reads the Stage 1 plan only, until U11 extends it to Stage 2's |
 | Git commit | Each checkpoint's commit is in the [project state](../project-state.md)'s checkpoint log |
-| Blockers | No venue is verified for public market data ("Checkpoint A: venue verification", below; OQ-34 of the [open-question register](../open-questions/register.md)): the work that needs a venue's data (U4's adapter, recorded responses, and live checks for each venue; U10's runs) waits for the owner's answer |
+| Blockers | No venue is verified for public market data ("Venue verification for the operator's country", below; OQ-34 of the [open-question register](../open-questions/register.md)): the work that needs a venue's data (U4's adapter, recorded responses, and live checks for each venue; U10's runs) waits for the rest of OQ-34: the owner's approval of a server, and each venue's verification |
 | Next stage | CORE TRADING FOUNDATION, after this stage's exit and the owner's approval |
 
 ## Checkpoints
