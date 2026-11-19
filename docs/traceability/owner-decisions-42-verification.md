@@ -1,0 +1,83 @@
+# Owner Decisions 42 Verification — Stage 2 Operating Decisions and Future Company Membership
+
+> **Status:** ACTIVE record of the change that preserves the owner's decisions of 2026-11-19 on the server's approval, the exchanges' terms, local law, and future company membership ([owner decisions 42](../handoffs/owner-decisions-42-stage-2-operating-decisions-and-future-membership.md)), applies them ([DEC-075](../decisions/DEC-075-owner-operating-decisions-and-future-membership.md)), makes the server's assessment the owner asked for, and reconciles the backup commits of the change that records owner decisions 41 with its commit ([DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md), decision 4). Its three gates: "Final status".
+
+## Identity
+
+- **Date:** 2026-11-19.
+- **Stage:** Stage 2 (DATA FOUNDATION). This change records the owner's decisions; it changes documentation only, builds nothing, buys nothing, and contacts no venue endpoint: Hetzner's official pages, the venues' developer documentation, and the official sources on the law that answered were read.
+- **Starts from:** commit `44c2e84` on branch `claude/code-builder-constitution-rrewgf`, equal to the remote: the change that records owner decisions 41 ([owner decisions 41 verification](owner-decisions-41-verification.md)), whose machine checks passed ([run 44611022745](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/44611022745): the job `secrets` from 20:40:16 to 20:40:27 UTC and the job `checks` from 20:40:16 to 20:42:17 UTC, both passing; the only run for that commit). This record's own commit is the checkpoint log's row "The commit that adds this row".
+- **Temporary backup** ([DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md), decision 4; DEC-071): the reusable branch `claude/unverified-backup-reusable`, reused after the eight checks below. This change's first backup commit, `da31d11`, has as its parent `8346dc2`, the last backup commit of the change that records owner decisions 41, and was pushed at 21:53 UTC; each later commit is a child of the branch's tip, pushed as a fast-forward and never forced. Each command that writes to the working tree ends with the backup.
+- **Pause:** at 21:53 UTC, once owner decisions 42 was preserved in the backup, the builder stopped, as its point 5 asks when the weekly usage limit may be exhausted (the limit's notice of 19:40 UTC: [owner decisions 41 verification](owner-decisions-41-verification.md), Identity); at 22:00 UTC the owner said the limits had not run out and asked the builder to continue.
+
+## Scope
+
+**Added:** this record; [owner decisions 42](../handoffs/owner-decisions-42-stage-2-operating-decisions-and-future-membership.md), taken by script from the session record and equal to it (check 6); DEC-075.
+
+**Changed:** the [platform overview](../product/platform-overview.md) (PLT-030 added, FUTURE, under "Decisions applied (2026-11-19)"; the sources of the decisions of 2026-09-30 name it); [DEC-006](../decisions/DEC-006-single-operator-and-trading-ledger.md)'s later changes; the [roadmap](../roadmap/roadmap.md) (Stage 2's row; the items in no stage); the [open-question register](../open-questions/register.md) (its banner; OQ-34 narrowed; OQ-35 resolved); the [Stage 2 record](stage-02-data-foundation.md) (OKX's status; the further reading of the venues' documentation; the law; the result; what the comparison of offers did not compare; the server's assessment; the recommendation); the [project state](../project-state.md) (its summary; the continuation contract's rows on the current task, the work in progress, what is blocked, the stage's convergence, the decisions in effect and pending, the other branches, the next safe action, and what is not implemented yet; the active temporary backup; the open questions; the recent decisions and changes; the next approved step; the checkpoint log, `44c2e84`'s row given its commit); the [documentation index](../README.md); the [decision log](../decisions/README.md); the [traceability README](README.md)'s list of records; and the manifest of preserved texts (owner decisions 42's line).
+
+**Requirements:** one added, PLT-030 (FUTURE); none removed or changed (check 3).
+
+**Out of scope:** ordering or setting up a server; any request to a venue's API; building any part of the company membership; checkpoint B's work.
+
+**The owner's messages after the last one the previous record names** ([owner decisions 41 verification](owner-decisions-41-verification.md): none after its run 1's copy, up to its last edit at 20:39 UTC), up to the copy that this record's last Gate 3 run reviews: the decisions of 21:47 UTC, preserved as owner decisions 42 (DEC-075); and the message of 22:00 UTC, "dont worry continue i haven't ran out limits", procedural ([DEC-047](../decisions/DEC-047-preserve-stage-transition-persistence-rules.md), decision 7). The notice of uncommitted changes of 21:53 UTC, the reports of the page-reading agents and of Gate 3's reviewer, and the notices of background tasks are the client's own.
+
+## Checks
+
+The change's own checks, on the working tree with this change: the documentation tools with the system Python 3.11, the [developer guide](../development.md)'s checks through `uv run --locked`, git, and GitHub's branch list and workflow runs.
+
+| # | Check | How | Result |
+|---|---|---|---|
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | @@C1@@ |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | @@C2@@ |
+| 3 | Requirements added, removed, or changed | `python3 tools/docs/compare_requirements.py 44c2e84 --strict` | @@C3@@ |
+| 4 | The developer guide's checks | `uv run --locked` with `ruff check`, `ruff format --check`, `mypy`, `mypy --config-file tools/docs/mypy.ini`, and `pytest` | @@C4@@ |
+| 5 | Hygiene of the change | `git diff --check 44c2e84`, its new files included; a scan of the lines it adds for local paths, session or model identifiers, and the shapes of secrets | @@C5@@ |
+| 6 | The preserved texts | `git diff --name-only 44c2e84 -- docs/handoffs docs/builder`; owner decisions 42's message compared by script with the session record | @@C6@@ |
+| 7 | Quotations | The quotation script on the lines this change adds to the documents; each quotation of a source outside the repository looked for in it | @@C7@@ |
+| 8 | The reusable branch | `git rev-list --parents` on the branch fetched from GitHub; the labels, record, trailers, and marker of each commit; GitHub's workflow runs for the branch and their jobs; GitHub's branch information | @@C8@@ |
+| 9 | Stale statements ([DEC-069](../decisions/DEC-069-owner-questions-and-efficiency-directive.md), decision 4) | The stale-statement script on the active documents, by subject: OQ-35 and the open questions (`OQ-35`, `Two questions`, `two owner-level`), the last decision (`DEC-074`, `DEC-001 to`), the backups' reconciliation (`owner decisions 41`, `holds the backup`), the server (`PENDING OWNER APPROVAL`, `server the owner approves`), and the single operator (`PLT-010`, `single operator`); each line that states the current state read whole | @@C9@@ |
+| 10 | The new statements on the server, the venues, and the law | The Stage 2 record's new text, DEC-075, OQ-34, and PLT-030 read back, statement by statement, against owner decisions 42 and the reports of the three page-reading agents and the two web searches (2026-11-19, from 22:01 UTC), as the session record holds them | @@C10@@ |
+
+The mutation check ([DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 6) does not apply: this change adds no code, test, or rule; PLT-030 is FUTURE, with nothing to enforce.
+
+## Reconciliation of the last change's temporary backup
+
+The change that records owner decisions 41, committed as `44c2e84`, was backed up on the reusable branch in 8 commits, each on the one before and the first, `9a56f70`, on `f197069`, committed on 2026-11-19 from 19:36 to 20:39 UTC (`8346dc2`). Each carries the seven labels, the emergency checkpoint record of §132, and both trailers, and none carries the marker (checked by script on 2026-11-19, from 21:50 to 21:52 UTC).
+
+| # | Check (owner decisions 10) | Evidence | Result |
+|---|---|---|---|
+| 1 | Every intended valid change is preserved | `44c2e84`'s tree is `8346dc2`'s, `00d51499` (`git diff --name-only`: no difference) | PASS |
+| 2 | Corrections made during verification are preserved | The same tree: the fixes of that change's Gate 3 run 1 and its record's account of them | PASS |
+| 3 | No required work exists only on the temporary backup | Each of the 11 files the commits change against `f197069`, whose tree is `ec4de57`'s (`b8129a81`), is in `44c2e84`, one of them outside `docs/` (the manifest of preserved texts); no file is in an earlier commit and not in the last | PASS |
+| 4 | No unverified or rejected implementation is accidentally promoted | `44c2e84`'s parent is `ec4de57`; none of the 8 commits is in its history or in that of `main`, at `7172a5c` (`git merge-base --is-ancestor`) | PASS |
+| 5 | The authoritative branch contains the correct final state | On a fresh clone of the designated branch from GitHub, at `44c2e84` (21:51 UTC): the documentation checker and its self-test pass, and `compare_requirements.py ec4de57 --strict` reports 757 requirements before and after; the tests ran on its tree (its record, check 4) and in the machine checks | PASS |
+| 6 | Required documentation and traceability are updated | `44c2e84` holds its record with its final status, PASS for its gates, the checkpoint log's row, and the backup in the project state's "Branches", as active until reconciled | PASS |
+| 7 | The official verified checkpoint has been successfully pushed | `44c2e84` is on the remote branch, pushed at 20:40 UTC, and the machine checks passed on it ([run 44611022745](https://github.com/georgewills741-commits/AUTONOMOUS-TRADING-PLATFORM-/actions/runs/44611022745)) | PASS |
+| 8 | Repository status is clean and consistent | The working tree was clean at `44c2e84` after the commit and its push, and again at 21:51 UTC, before this change's first write | PASS |
+
+**Result: PASS.** The backup commits' work is VERIFIED AND INCORPORATED in `44c2e84`. The last backup commit checked is `8346dc2`. The branch is then reused for this change, as DEC-071 provides (decisions 4 and 5). GitHub ran the workflow on each of the 8 pushes, each run passing its job `secrets` with its job `checks` skipped, and the branch is not protected.
+
+## Gates
+
+**Verification 1 — the change works as intended:** @@V1@@
+
+**Verification 2 — architecture and consistency:** PASS, by the builder's review of the whole diff. Each decision is applied through an existing rule, none duplicated: the server through D2, which allows an environment the owner provides (MIG-004), with no purchase, no change to the stack (TEC-011, TEC-012), and no infrastructure requirement added; the venues through D1 and DEC-073's decisions 3 and 5, the five candidates kept (EXA-005); the law through D1, the professional interpretation a compliance prerequisite of D1's verification, not a new rule; the usage instruction through DEC-069 and DEC-057. Future company membership is one FUTURE requirement, PLT-030, in the owning specification of PLT-010, which it leaves unchanged; it is kept apart from the custody model (CUS-001 to CUS-005; LED-008), creates no system, authority, or component, and is placed in no stage (ARCH-029). OQ-35 is resolved and OQ-34 narrowed in place. The owner's word PENDING AUTHORIZATION replaces PENDING OWNER APPROVAL in the current statements, with the same meaning (DEC-075, decision 3); records keep their words. No credential, venue endpoint, or account is used.
+
+**Verification 3 — independent end-to-end and failure audit:** @@V3@@
+
+- **The builder's own separate pass:** @@PASS@@
+
+## Failures and fixes
+
+| Failure | Cause | Fix | Re-run |
+|---|---|---|---|
+| The FATF's page and report on São Tomé and Príncipe (HTTP 403) and the central bank's strategic plan (HTTP 503) refused the page-reading agent; Binance's, Bybit's, and Coinbase's developer documentation named their terms without giving them | The sites' answers to an automated reader | Not fetched again, as the owner asked; the missing evidence, with its official addresses, put to the owner (OQ-34) | — |
+
+## Final status and remaining issues
+
+PENDING
+
+## Environment
+
+This cloud environment, in the United States (its outbound address in Council Bluffs, Iowa, on Google's network, as checkpoint A read it), with x86-64 processors. The documentation tools with the system Python 3.11.18; the developer guide's checks through uv 0.12.23 and `uv run --locked`; git and GitHub's API for the branches and the machine checks' runs. Hetzner's, the venues', and the official sources' pages read by page-reading agents, which fetched through this environment.
