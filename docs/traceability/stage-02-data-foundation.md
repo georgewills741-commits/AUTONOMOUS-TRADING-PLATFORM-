@@ -122,7 +122,7 @@ Checked on 2026-11-17 in a scratch copy of the project with the new lockfile, un
 
 **The operator.** An individual resident in São Tomé and Príncipe, trading the owner's own capital through the owner's own accounts, as PLT-010 states ([owner decisions 41](../handoffs/owner-decisions-41-answers-on-jurisdiction-operator-server-and-exchanges.md); [DEC-074](../decisions/DEC-074-owner-answers-on-jurisdiction-operator-server-and-exchanges.md)). Each venue's terms and the law are checked against that operator, and against access from Germany, where the owner prefers Stage 2's live work to run (below).
 
-**Method.** Option B, the owner's choice: each venue's official legal and documentation pages read again on 2026-11-19 from 19:28 UTC, by a separate page-reading agent per venue; each URL fetched once, and a page that failed not fetched again, as the owner asked; no API endpoint, account, credential, archived copy, or third-party site. The pages were served to this environment, in the United States. The law of São Tomé and Príncipe: one web search.
+**Method.** Option B, the owner's choice: each venue's official legal and documentation pages read again on 2026-11-19 from 19:30 UTC, by a separate page-reading agent per venue; each URL fetched once, and a page that failed not fetched again, as the owner asked; no API endpoint, account, credential, archived copy, or third-party site. The pages were served to this environment, in the United States. The law of São Tomé and Príncipe: one web search.
 
 | Venue | Pages read | The operator's country | Germany; Japan | Public market data and its use | Status for public market data | Trading eligibility |
 |---|---|---|---|---|---|---|
@@ -152,7 +152,7 @@ Checked on 2026-11-17 in a scratch copy of the project with the new lockfile, un
 | AWS Lightsail, Frankfurt | 2 vCPUs, 4 GB, 80 GB SSD | US$24 (US$20 without a public IPv4 address) | Snapshots at US$0.05 per GB a month | 4 TB; inbound not charged |
 | Tokyo | Not compared | — | — | Not suitable for Stage 2: OKX restricts Japan |
 
-The next sizes up: Hetzner's CPX32 (4 vCPUs, 8 GB, 160 GB NVMe), €35.99 in Nuremberg; DigitalOcean's 4 vCPUs and 8 GiB, US$48; Lightsail's 2 vCPUs and 8 GB, US$44.
+The next sizes up: Hetzner's CPX32 (4 vCPUs, 8 GB, 160 GB NVMe), €35.99 in Nuremberg; DigitalOcean's 4 vCPUs and 8 GiB, US$48; Lightsail's 2 vCPUs and 8 GB, US$44. Lightsail's page states no price by region.
 
 **Recommendation: PROPOSED, PENDING OWNER APPROVAL.** Hetzner's CPX22 in Germany (Nuremberg or Falkenstein), with its automatic backups: €19.99 a month before VAT, plus the backups, about the owner's ceiling of US$25 depending on the exchange rate and the backups' price; or the same server in Helsinki for €16.99, if a location outside Germany is acceptable. Reasons: the most traffic included, an NVMe disk, and €19.99 against US$24 before backups for the others. The owner orders the server on the owner's own account; the builder buys nothing and holds no billing access (DEC-073, decision 6; DEC-074, decision 4). Once it is approved, the server's setup is written in the repository and verified through the three gates: login by key only, a firewall admitting only the operator's own access, automatic security updates, and no secret in the repository.
 
