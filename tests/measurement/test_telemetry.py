@@ -93,7 +93,7 @@ def test_a_delay_below_zero_is_counted_never_lost(
         exporter = TelemetryExporter(provider.get_meter("atp.measurement.test"))
         recorder = Recorder(3, clock=StoppedClock(), clock_reliable=lambda: False)
         # The clocks disagree: a delay below zero.
-        recorder.delay(RECEIVE, event_time_ns=100, receive_time_ns=0)
+        recorder.delay(RECEIVE, event_time_ns=1, receive_time_ns=0)
         recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=250)
         # A delay of zero is no disagreement: the histogram holds it.
         recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=0)

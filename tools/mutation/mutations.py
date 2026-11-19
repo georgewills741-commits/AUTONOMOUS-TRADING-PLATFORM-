@@ -3698,4 +3698,12 @@ MUTATIONS: list[Mutation] = [
         "                if sample.value_ns <= 0:",
         TESTS,
     ),
+    # Gate 3 run 3's finding J-25: the other side of the boundary.
+    Mutation(
+        "S2-U3 a delay of -1 given to the histogram",
+        "src/atp/measurement/_telemetry.py",
+        "                if sample.value_ns < 0:",
+        "                if sample.value_ns < -1:",
+        TESTS,
+    ),
 ]

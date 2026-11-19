@@ -42,7 +42,9 @@ def evidence_id(
     where it is given, is a whole number of nanoseconds from 0 to 2**63 - 1, never a boolean or
     a float; the venue's key and the content are text. Anything else raises `ValueError`. Where
     an item is identified by its content, the caller gives its event time wherever the venue
-    gives one: the same content given with and without it gets two identifiers.
+    gives one: the same content given with and without it gets two identifiers. An item of a
+    margin market's book, trades, ticker, or bars names its spot market: the same item named
+    under both gets two identifiers.
     """
     if type(venue) is not str or re.fullmatch(VENUE_PATTERN, venue) is None:
         msg = "an evidence identifier's venue is a venue's name"
