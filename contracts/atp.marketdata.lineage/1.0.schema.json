@@ -1,0 +1,30 @@
+{
+  "$id": "atp.marketdata.lineage/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Where an item came from and what produced it (MKD-010): the venue's endpoint or channel,\nand the adapter and its version.",
+  "properties": {
+    "adapter": {
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+      "title": "Adapter",
+      "type": "string"
+    },
+    "adapter_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Adapter Version",
+      "type": "string"
+    },
+    "source": {
+      "pattern": "^[\\x20-\\x7e]{1,200}$",
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source",
+    "adapter",
+    "adapter_version"
+  ],
+  "title": "Lineage",
+  "type": "object"
+}

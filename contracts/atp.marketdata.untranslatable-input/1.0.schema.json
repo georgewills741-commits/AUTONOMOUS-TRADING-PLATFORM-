@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "Lineage": {
+      "additionalProperties": false,
+      "description": "Where an item came from and what produced it (MKD-010): the venue's endpoint or channel,\nand the adapter and its version.",
+      "properties": {
+        "adapter": {
+          "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+          "title": "Adapter",
+          "type": "string"
+        },
+        "adapter_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "source": {
+          "pattern": "^[\\x20-\\x7e]{1,200}$",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "adapter",
+        "adapter_version"
+      ],
+      "title": "Lineage",
+      "type": "object"
+    },
+    "Stream": {
+      "description": "A kind of market data, as an adapter receives it.",
+      "enum": [
+        "markets",
+        "ticker",
+        "trades",
+        "book",
+        "ohlcv",
+        "funding",
+        "venue-status"
+      ],
+      "title": "Stream",
+      "type": "string"
+    },
+    "UntranslatableCause": {
+      "description": "Why an adapter could not translate a venue's input into a canonical item.",
+      "enum": [
+        "malformed",
+        "oversized",
+        "missing-field",
+        "amount-not-text",
+        "unknown-market",
+        "refused-by-contract"
+      ],
+      "title": "UntranslatableCause",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.untranslatable-input/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A venue's input an adapter could not translate (EXA-013): where it came from, when it was\nreceived, why it was refused, and the SHA-256 digest and length in bytes of its content,\nwhich itself is not kept here.",
+  "properties": {
+    "cause": {
+      "$ref": "#/$defs/UntranslatableCause"
+    },
+    "content_length": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Content Length",
+      "type": "integer"
+    },
+    "content_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "lineage": {
+      "$ref": "#/$defs/Lineage"
+    },
+    "receive_time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Receive Time Ns",
+      "type": "integer"
+    },
+    "stream": {
+      "$ref": "#/$defs/Stream"
+    },
+    "venue": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Venue",
+      "type": "string"
+    }
+  },
+  "required": [
+    "venue",
+    "stream",
+    "lineage",
+    "receive_time_ns",
+    "cause",
+    "content_sha256",
+    "content_length"
+  ],
+  "title": "UntranslatableInput",
+  "type": "object"
+}

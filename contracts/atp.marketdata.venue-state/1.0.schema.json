@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "Lineage": {
+      "additionalProperties": false,
+      "description": "Where an item came from and what produced it (MKD-010): the venue's endpoint or channel,\nand the adapter and its version.",
+      "properties": {
+        "adapter": {
+          "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+          "title": "Adapter",
+          "type": "string"
+        },
+        "adapter_version": {
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "source": {
+          "pattern": "^[\\x20-\\x7e]{1,200}$",
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "adapter",
+        "adapter_version"
+      ],
+      "title": "Lineage",
+      "type": "object"
+    },
+    "TimeResolution": {
+      "description": "The resolution of a venue's event times.",
+      "enum": [
+        "second",
+        "millisecond",
+        "microsecond",
+        "nanosecond"
+      ],
+      "title": "TimeResolution",
+      "type": "string"
+    },
+    "UnavailableCause": {
+      "description": "Why a venue is unavailable.",
+      "enum": [
+        "region-refused",
+        "rate-limited",
+        "connection-failed",
+        "timeout",
+        "venue-error"
+      ],
+      "title": "UnavailableCause",
+      "type": "string"
+    },
+    "VenueStatus": {
+      "description": "Whether a venue answers, as its adapter observes it.",
+      "enum": [
+        "available",
+        "maintenance",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "VenueStatus",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.venue-state/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Whether a venue answers, as its adapter observes it, and why it is unavailable when it\nis.",
+  "properties": {
+    "cause": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/UnavailableCause"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "event_time_ns": {
+      "anyOf": [
+        {
+          "maximum": 9223372036854775807,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event Time Ns"
+    },
+    "event_time_resolution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TimeResolution"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "lineage": {
+      "$ref": "#/$defs/Lineage"
+    },
+    "receive_time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Receive Time Ns",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/VenueStatus"
+    },
+    "venue": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Venue",
+      "type": "string"
+    }
+  },
+  "required": [
+    "venue",
+    "status",
+    "receive_time_ns",
+    "evidence_id",
+    "lineage"
+  ],
+  "title": "VenueState",
+  "type": "object"
+}

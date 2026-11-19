@@ -1,0 +1,27 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.book-level/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One price level of an order book: its price and the quantity there, in the base asset.\nIn a book update, a quantity of zero removes the level.",
+  "properties": {
+    "price": {
+      "$ref": "#/$defs/Amount"
+    },
+    "quantity": {
+      "$ref": "#/$defs/Amount"
+    }
+  },
+  "required": [
+    "price",
+    "quantity"
+  ],
+  "title": "BookLevel",
+  "type": "object"
+}

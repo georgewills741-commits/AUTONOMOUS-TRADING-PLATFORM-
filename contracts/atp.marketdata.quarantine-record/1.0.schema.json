@@ -1,0 +1,142 @@
+{
+  "$defs": {
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    },
+    "QuarantineCause": {
+      "description": "Why an item was quarantined: the causes of MKD-013.",
+      "enum": [
+        "invalid-timestamp",
+        "missing-field",
+        "impossible-price",
+        "duplicate-event",
+        "sequence-gap",
+        "exchange-inconsistency",
+        "outlier",
+        "clock-problem"
+      ],
+      "title": "QuarantineCause",
+      "type": "string"
+    },
+    "Stream": {
+      "description": "A kind of market data, as an adapter receives it.",
+      "enum": [
+        "markets",
+        "ticker",
+        "trades",
+        "book",
+        "ohlcv",
+        "funding",
+        "venue-status"
+      ],
+      "title": "Stream",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.quarantine-record/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An item held back from consumers (MKD-009, MKD-013): the item's evidence identifier, its\nvenue, market, and stream, the cause, and the version of the rule that found it.",
+  "properties": {
+    "cause": {
+      "$ref": "#/$defs/QuarantineCause"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "market": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MarketRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "quarantined_time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Quarantined Time Ns",
+      "type": "integer"
+    },
+    "rule_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "stream": {
+      "$ref": "#/$defs/Stream"
+    },
+    "venue": {
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+      "title": "Venue",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "venue",
+    "stream",
+    "cause",
+    "quarantined_time_ns",
+    "rule_version"
+  ],
+  "title": "QuarantineRecord",
+  "type": "object"
+}

@@ -1,0 +1,44 @@
+{
+  "$id": "atp.config.database/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The PostgreSQL database that holds the platform's market data: its host and port, the\ndatabase's name, its user, and the name of the declared server secret that holds the user's\npassword, never the password itself.",
+  "properties": {
+    "host": {
+      "maxLength": 253,
+      "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$",
+      "title": "Host",
+      "type": "string"
+    },
+    "name": {
+      "pattern": "^[a-z_][a-z0-9_]{0,62}$",
+      "title": "Name",
+      "type": "string"
+    },
+    "password_secret": {
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Password Secret",
+      "type": "string"
+    },
+    "port": {
+      "maximum": 65535,
+      "minimum": 1,
+      "title": "Port",
+      "type": "integer"
+    },
+    "user": {
+      "pattern": "^[a-z_][a-z0-9_]{0,62}$",
+      "title": "User",
+      "type": "string"
+    }
+  },
+  "required": [
+    "host",
+    "port",
+    "name",
+    "user",
+    "password_secret"
+  ],
+  "title": "DatabaseSettings",
+  "type": "object"
+}

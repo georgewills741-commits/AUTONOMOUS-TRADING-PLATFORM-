@@ -22,7 +22,7 @@
 
 **Dependencies added by the Stage 1 plan ([DEC-038](../decisions/DEC-038-stage-1-plan-approved.md)):** the build backend `uv_build`, pinned to one exact version in `pyproject.toml`, and, for the machine checks only, the GitHub actions `actions/checkout` and `astral-sh/setup-uv`, each pinned to a commit hash. The other libraries Stage 1 uses are those of TEC-004 and TEC-009.
 
-**Dependencies added by the Stage 2 plan ([DEC-073](../decisions/DEC-073-stage-2-plan-approved-with-changes.md), D12):** psycopg 3, a PostgreSQL driver; the others D12 adds are those of TEC-005, TEC-006, TEC-009, and TEC-010. Their versions, and the TimescaleDB image's digest, are fixed at Stage 2's checkpoint A.
+**Dependencies added by the Stage 2 plan ([DEC-073](../decisions/DEC-073-stage-2-plan-approved-with-changes.md), D12):** psycopg 3, a PostgreSQL driver; the others D12 adds are those of TEC-005, TEC-006, TEC-009, and TEC-010. Their versions were fixed at Stage 2's checkpoint A, and the TimescaleDB image chosen by its digest; their review is in the [Stage 2 record](../traceability/stage-02-data-foundation.md).
 
 **Where versions are fixed (since Stage 1's checkpoint A):** the libraries and tools in `uv.lock`; uv and the build backend in `pyproject.toml`; the actions in `.github/workflows/checks.yml`. How a version is changed: the [developer guide](../development.md).
 
