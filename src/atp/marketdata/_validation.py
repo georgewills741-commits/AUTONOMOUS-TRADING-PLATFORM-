@@ -41,7 +41,8 @@ ticker's last price (else its bid, else its ask), and a snapshot's best bid (els
 book updates, funding rates, metadata, and venue states have none. Prices are compared exactly,
 as integer ratios, without division or rounding. An item that passes is assessed (`assess`) and
 returned as `Validated`, the only form in which consumers accept market data; it is eligible for
-use only while VALID (MKD-012, SR-12).
+use only if VALID when assessed (MKD-012, SR-12): `eligible` keeps that assessment, so an item
+used later is assessed again at the time of use (`assess`).
 
 Out-of-order data (MKD-004) is still checked and assessed, but an item never replaces a
 reference or latest price that describes a later time, and a book update out of the venue's
@@ -115,7 +116,8 @@ class Validated[ItemT: MarketItem]:
 
     @property
     def eligible(self) -> bool:
-        """Whether it may be used: only while VALID when assessed (MKD-012, SR-12)."""
+        """Whether it was VALID when assessed (MKD-012, SR-12); it does not change as the item
+        ages."""
         return self.assessment.freshness is Freshness.VALID
 
 
@@ -304,7 +306,12 @@ class MarketDataValidator:
         self._latest: dict[_CanonicalKey, dict[str, tuple[Decimal, int]]] = {}
 
     def needs_snapshot(self, market: MarketRef) -> bool:
-        """Whether `market`'s book needs a fresh snapshot: it has none yet, or a gap broke it."""
+        """Whether `market`'s book needs a fresh snapshot: it has none yet, or a gap broke it.
+
+        Until then each update given is quarantined and its evidence identifier remembered, so
+        the same update given again after the snapshot is a duplicate while it is remembered: an
+        adapter holds the updates it receives until the snapshot and gives only those that follow
+        it, as its venue's procedure has it (U4)."""
         state = self._chains.get(market)
         return state is None or state == _BROKEN
 
@@ -385,7 +392,7 @@ class MarketDataValidator:
         )
         if last is None:
             return self._gap(update.market)
-        if update.previous_sequence is not None and update.previous_sequence == state:
+        if update.previous_sequence == state and last >= state:
             return None
         if last <= state:
             return QuarantineCause.DUPLICATE_EVENT

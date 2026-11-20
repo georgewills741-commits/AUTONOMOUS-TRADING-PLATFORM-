@@ -428,6 +428,18 @@ def test_updates_after_a_snapshot_without_a_sequence_are_not_checked() -> None:
     assert not validator.needs_snapshot(SPOT)
 
 
+@pytest.mark.req("MKD-004")
+def test_an_update_behind_its_own_previous_number_is_not_applied() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(snapshot(), validator) is None
+    # Its previous number is the book's, but its own numbers are already held.
+    assert check(update(5, 8, previous=10), validator) is QuarantineCause.DUPLICATE_EVENT
+    # The book stays at 10: a keep-alive naming it as its previous number is applied.
+    assert check(update(10, 10, previous=10), validator) is None
+    assert check(update(11, 11, previous=10), validator) is None
+    assert not validator.needs_snapshot(SPOT)
+
+
 @pytest.mark.req("MKD-008", "MKD-013")
 def test_an_outlier_is_quarantined_until_the_move_is_confirmed() -> None:
     validator = MarketDataValidator(LIMITS)
@@ -739,6 +751,38 @@ def test_nothing_quarantined_or_stale_is_eligible(
     for item in _items(pairs, repeats=True):
         result = validator.validate(item, now_ns=NOW, drifting_venues=frozenset())
         if isinstance(result, Validated):
-            assert result.eligible is (result.assessment.freshness is Freshness.VALID)
+            assert result.eligible is (NOW - result.item.event_time_ns <= STALE)
         else:
             assert isinstance(result, QuarantineRecord)
+
+
+@pytest.mark.req("MKD-008", "MKD-013")
+def test_a_ticker_without_a_last_price_is_checked_by_its_bid_else_its_ask() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(ticker("99", "101", "100"), validator) is None
+    assert check(ticker("80", "105", None), validator) is QuarantineCause.OUTLIER
+    assert check(ticker(None, "150", None), validator) is QuarantineCause.OUTLIER
+
+
+@pytest.mark.req("MKD-008", "MKD-013")
+def test_a_snapshot_without_bids_is_checked_by_its_best_ask() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(snapshot(), validator) is None
+    lone_ask = snapshot(bids=[], asks=levels(("200", "1")), sequence=11)
+    assert check(lone_ask, validator) is QuarantineCause.OUTLIER
+
+
+@pytest.mark.req("MKD-004")
+def test_items_of_one_time_are_in_the_venue_s_sequence() -> None:
+    pairs = ((update(1, 1), update(2, 2)) for _ in range(64))
+    one, two = next((a, b) for a, b in pairs if a.evidence_id > b.evidence_id)
+    assert in_order([two, one]) == [one, two]
+
+
+@pytest.mark.req("MKD-009", "MKD-013")
+def test_a_quarantine_record_is_timed_by_its_check() -> None:
+    record = MarketDataValidator(LIMITS).validate(
+        trade(price="0"), now_ns=NOW + 1, drifting_venues=frozenset()
+    )
+    assert isinstance(record, QuarantineRecord)
+    assert record.quarantined_time_ns == NOW + 1

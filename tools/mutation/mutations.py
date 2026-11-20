@@ -4146,7 +4146,7 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U5 an update following its previous number refused",
         "src/atp/marketdata/_validation.py",
-        "        if update.previous_sequence is not None and update.previous_sequence == state:",
+        "        if update.previous_sequence == state and last >= state:",
         "        if False:",
         TESTS,
     ),
@@ -4606,6 +4606,48 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     # Carried from checkpoint A: J-28 (the quarantine record's market), J-32 (a reliable delay).
+    Mutation(
+        "S2-U5 a ticker without a last price not checked by its bid",
+        "src/atp/marketdata/_validation.py",
+        "        for price in (item.last, item.bid, item.ask):",
+        "        for price in (item.last, item.ask):",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 a ticker with only an ask not checked",
+        "src/atp/marketdata/_validation.py",
+        "        for price in (item.last, item.bid, item.ask):",
+        "        for price in (item.last, item.bid):",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 a snapshot without bids not checked by its best ask",
+        "src/atp/marketdata/_validation.py",
+        "        best = item.bids or item.asks",
+        "        best = item.bids",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 items of one time ordered without the venue's sequence",
+        "src/atp/marketdata/_validation.py",
+        "        key=lambda item: (item_time_ns(item), _sequence_key(item), item.evidence_id),",
+        "        key=lambda item: (item_time_ns(item), item.evidence_id),",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 a quarantine record timed by the item's receipt",
+        "src/atp/marketdata/_validation.py",
+        "                quarantined_time_ns=now_ns,",
+        "                quarantined_time_ns=item.receive_time_ns,",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 an update whose own numbers precede its previous number applied",
+        "src/atp/marketdata/_validation.py",
+        "        if update.previous_sequence == state and last >= state:",
+        "        if update.previous_sequence == state:",
+        TESTS,
+    ),
     Mutation(
         "S2-U2 a quarantine record's market not checked against its stream",
         "src/atp/marketdata/_contracts.py",
