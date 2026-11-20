@@ -7,9 +7,7 @@ from __future__ import annotations
 import asyncio
 
 import pytest
-from pydantic import ValidationError
-
-from atp.contracts import Outcome
+from atp.contracts import ContractError, Outcome
 from atp.exchange import (
     Backoff,
     CircuitBreaker,
@@ -180,7 +178,7 @@ def test_resilience_limits_are_a_contract() -> None:
     }
     assert ResilienceLimits.from_python(good).failure_threshold == 1
     for name in ("failure_threshold", "open_ns", "heartbeat_timeout_ns"):
-        with pytest.raises(ValidationError):
+        with pytest.raises(ContractError):
             ResilienceLimits.from_python({**good, name: 0})
 
 
