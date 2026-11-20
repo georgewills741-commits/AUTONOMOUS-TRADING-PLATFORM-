@@ -789,3 +789,26 @@ def test_a_quarantine_record_is_timed_by_its_check() -> None:
     )
     assert isinstance(record, QuarantineRecord)
     assert record.quarantined_time_ns == NOW + 1
+
+
+@pytest.mark.req("MKD-008", "MKD-013")
+def test_a_bar_is_checked_by_its_close() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(bar("100", "100", "100", "100"), validator) is None
+    assert check(bar("150", "150", "150", "150"), validator) is QuarantineCause.OUTLIER
+
+
+@pytest.mark.req("MKD-004")
+def test_snapshots_of_one_time_are_in_the_venue_s_sequence() -> None:
+    pairs = ((snapshot(sequence=10), snapshot(sequence=11)) for _ in range(64))
+    one, two = next((a, b) for a, b in pairs if a.evidence_id > b.evidence_id)
+    assert in_order([two, one]) == [one, two]
+
+
+@pytest.mark.req("MKD-004")
+def test_a_book_from_sequence_zero_follows_its_updates() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(snapshot(sequence=0), validator) is None
+    assert check(update(1, 1), validator) is None
+    assert check(update(2, 2), validator) is None
+    assert not validator.needs_snapshot(SPOT)

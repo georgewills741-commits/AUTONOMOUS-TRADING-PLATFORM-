@@ -4649,6 +4649,27 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U5 a bar's close not checked",
+        "src/atp/marketdata/_validation.py",
+        "    if isinstance(item, OhlcvBar):\n        return item.close",
+        "    if isinstance(item, OhlcvBar):\n        return None",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 snapshots of one time ordered without their sequence",
+        "src/atp/marketdata/_validation.py",
+        "    if isinstance(item, BookSnapshot) and item.sequence is not None:\n        return item.sequence",
+        "    if isinstance(item, BookSnapshot) and item.sequence is not None:\n        return -1",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U5 a book from sequence 0 not advanced by its updates",
+        "src/atp/marketdata/_validation.py",
+        "isinstance(item, BookUpdate) and self._chains.get(item.market, _BROKEN) >= 0",
+        "isinstance(item, BookUpdate) and self._chains.get(item.market, _BROKEN) > 0",
+        TESTS,
+    ),
+    Mutation(
         "S2-U2 a quarantine record's market not checked against its stream",
         "src/atp/marketdata/_contracts.py",
         "        if (market is None) != (stream is Stream.VENUE_STATUS):",
