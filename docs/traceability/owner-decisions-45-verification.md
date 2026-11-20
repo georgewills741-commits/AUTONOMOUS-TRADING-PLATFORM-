@@ -19,7 +19,7 @@
 
 **Out of scope:** U4's parts that need no venue's data, the next change; any venue's adapter, endpoint, or account; contacting an exchange, which the owner may do with the pack's five questions; the server.
 
-**The owner's messages after the last one the previous record names** ([checkpoint B (U5) verification](stage-02-checkpoint-b-u5-verification.md), Scope: those delivered after its run 2's copy are the next record's), up to the copy that this record's last Gate 3 run reviews: the question queued at 12:07 UTC and delivered at 12:33 UTC, on the server's work, and the message of 16:04 UTC with the evidence pack, preserved as owner decisions 45 ([DEC-078](../decisions/DEC-078-owner-messages-and-exchange-terms-evidence-pack.md)). NOTICES
+**The owner's messages after the last one the previous record names** ([checkpoint B (U5) verification](stage-02-checkpoint-b-u5-verification.md), Scope: those delivered after its run 2's copy are the next record's), up to the copy that this record's last Gate 3 run reviews: the question queued at 12:07 UTC and delivered at 12:33 UTC, on the server's work, and the message of 16:04 UTC with the evidence pack, preserved as owner decisions 45 ([DEC-078](../decisions/DEC-078-owner-messages-and-exchange-terms-evidence-pack.md)). The notices of uncommitted changes at 12:33 UTC, twice, and at 16:07 UTC, the usage limit's notices of 12:34 and 13:04 UTC, the notice of the worker's restart at 13:04 UTC, the notices of background tasks, and the reports of Gate 3's reviewers and of the page-reading agent are the client's own.
 
 ## Checks
 
@@ -27,16 +27,16 @@ The change's own checks, on the working tree with this change: the documentation
 
 | # | Check | How | Result |
 |---|---|---|---|
-| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | CHECK1 |
-| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | CHECK2 |
-| 3 | Requirements added, removed, or changed | `python3 tools/docs/compare_requirements.py 7597a62 --strict` | CHECK3 |
-| 4 | The developer guide's checks | `uv run --locked` with `ruff check`, `ruff format --check`, `mypy`, `mypy --config-file tools/docs/mypy.ini`, and `pytest` | CHECK4 |
+| 1 | The documentation checker | `python3 tools/docs/build_index.py --check-only`, after `python3 tools/docs/build_index.py` | PASS: exit 0; 758 requirements; the generated files unchanged by this change |
+| 2 | The documentation tools' self-test | `python3 tools/docs/selftest.py` | PASS: 62 cases, its two controls included |
+| 3 | Requirements added, removed, or changed | `python3 tools/docs/compare_requirements.py 7597a62 --strict` | PASS: 758 requirements before and after; none added, removed, or changed |
+| 4 | The developer guide's checks | `uv run --locked` with `ruff check`, `ruff format --check`, `mypy`, `mypy --config-file tools/docs/mypy.ini`, and `pytest` | PASS on 2026-11-20 from 16:53 to 16:57 UTC: each exits 0; 1,560 tests pass, the repository test for secrets among them, on a tree that holds the pack; no code or test changes |
 | 5 | Hygiene of the change | `git diff --check 7597a62`, its new files included; a scan of the lines it adds for local paths, session or model identifiers, and the shapes of secrets | CHECK5 |
-| 6 | The preserved texts | The change's files against `7597a62`, its new files included, under `docs/handoffs` and `docs/builder`; owner decisions 45 compared by script with the session record, a block with the owner's recorded user turn of its minute, the words after the client's reference to the attached file where the turn begins with one, and the pack with the attached file by sha256 | CHECK6 |
+| 6 | The preserved texts | The change's files against `7597a62`, its new files included, under `docs/handoffs` and `docs/builder`; owner decisions 45 compared by script with the session record, a block with the owner's recorded user turn of its minute, the words after the client's reference to the attached file where the turn begins with one, and the pack with the attached file by sha256 | PASS: the only files there are owner decisions 45 and the pack, added; its first message is in it byte for byte, 98 characters, with the space that ends it; its second, after the client's reference to the attached file, 57 characters, with the space that ends it; and the pack's sha256 equals the attached file's (`a67b9851…`) |
 | 7 | Quotations | The quotation script on the lines this change adds to the documents; each quotation of a source outside the repository looked for in it | CHECK7 |
 | 8 | The reusable branch | `git rev-list --parents` on the branch fetched from GitHub; the labels, record, trailers, and marker of each commit; GitHub's workflow runs for the branch and their jobs; GitHub's branch information | CHECK8 |
-| 9 | Stale statements ([DEC-069](../decisions/DEC-069-owner-questions-and-efficiency-directive.md), decision 4) | The stale-statement script on the active documents, by subject: the last decision (`DEC-001 to`), the owner's messages and the pack (`owner decisions 4[45]`, `DEC-07[78]`, `evidence pack`), the backups' reconciliation (`holds the backup`, `7597a62`), the venues' status (`NOT VERIFIED`), and the next action (`U4's parts`, `Next safe action`); each line that states the current state read whole | CHECK9 |
-| 10 | The new statements on the venues | DEC-078, the Stage 2 record's new paragraph and "Result", and OQ-34 read back, statement by statement, against the pack, the page-reading agent's report of 16:45 UTC, and the session record | CHECK10 |
+| 9 | Stale statements ([DEC-069](../decisions/DEC-069-owner-questions-and-efficiency-directive.md), decision 4) | The stale-statement script on the active documents, by subject: the last decision (`DEC-001 to`), the owner's messages and the pack (`owner decisions 4[45]`, `DEC-07[78]`, `evidence pack`), the backups' reconciliation (`holds the backup`, `7597a62`), the venues' status (`NOT VERIFIED`), and the next action (`U4's parts`, `Next safe action`); each line that states the current state read whole | PASS: each current statement of these subjects agrees with the change: owner decisions 45 and DEC-078 are named where owner decisions 44 and DEC-077 are, the decisions in effect run to DEC-078, the reusable branch's account names this change's backups and U5's as VERIFIED AND INCORPORATED in `7597a62`, OQ-34 and the project state's decisions pending name the pack, and U4's parts that need no venue's data are the next action |
+| 10 | The new statements on the venues | DEC-078, the Stage 2 record's new paragraph and "Result", and OQ-34 read back, statement by statement, against the pack, the page-reading agent's report of 16:45 UTC, and the session record | PASS after one correction: each statement found in the pack, the page-reading agent's report, or the session record; DEC-078's account of the builder's answer of 16:07 UTC reworded to the answer's own terms ("Failures and fixes") |
 
 The mutation check ([DEC-045](../decisions/DEC-045-apply-foundation-convergence-audit.md), decision 6) does not apply: this change adds no code, test, or rule.
 
@@ -74,6 +74,7 @@ None yet: Gate 3's run 1 is pending.
 | Failure | Cause | Fix | Re-run |
 |---|---|---|---|
 | The documentation checker failed on the first write: DEC-078's name of the hash, in capitals with a hyphen, was read as a requirement's identifier, and three links named this record before it existed | The name's shape; the record written after the files that link to it | The name written in lower case, without the hyphen; this record added | Check 1 |
+| Read back against the session record, DEC-078 said that the five questions were only the owner's to send; the builder's answer of 16:07 UTC said that sending them is the owner's call and that the builder cannot contact the exchanges | The builder's paraphrase | The sentence reworded to the answer's terms | Check 10 |
 
 ## Final status and remaining issues
 
