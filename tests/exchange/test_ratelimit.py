@@ -307,6 +307,30 @@ def test_a_failure_of_the_queue_is_given_to_every_waiting_request() -> None:
     assert admitted == [1_100]
 
 
+def test_a_failure_of_the_queue_skips_requests_whose_callers_stopped_waiting() -> None:
+    rate = limiter(("rest", 1, 100))
+
+    async def body(queue: RequestQueue, clock: FakeClock) -> None:
+        rate.take({"rest": 1}, clock())
+        clock.now -= 1
+        stopped = asyncio.ensure_future(queue.admit({"rest": 1}, Priority.NORMAL))
+        waiting = [
+            asyncio.ensure_future(queue.admit({"rest": 1}, priority))
+            for priority in (Priority.LOW, Priority.HIGH, Priority.LOW)
+        ]
+        await asyncio.sleep(0)
+        stopped.cancel()
+        # The queue fails with the stopped request among those waiting; each other request
+        # is still given the failure.
+        for request in waiting:
+            with pytest.raises(ValueError, match="never goes back"):
+                await request
+
+    run_queue(
+        lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body
+    )
+
+
 def test_the_queue_checks_costs_before_waiting() -> None:
     async def body(queue: RequestQueue, clock: FakeClock) -> None:
         with pytest.raises(ValueError, match="no limit is named"):
