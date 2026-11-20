@@ -50,9 +50,10 @@ Requirements: MKD-003, MKD-004, MKD-006, MKD-008, MKD-009, MKD-011, MKD-012, MKD
 from __future__ import annotations
 
 from collections import OrderedDict, deque
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 from decimal import Decimal
-from typing import Final, Generic, TypeVar, final
+from itertools import pairwise
+from typing import Final, final
 
 from atp.marketdata._contracts import (
     BookLevel,
@@ -86,48 +87,24 @@ VALIDATION_RULE_VERSION: Final = "1.0"
 """The version of the checks above; a change to them is a new version, which every quarantine
 record and validated item carries."""
 
-T = TypeVar("T", bound=MarketItem)
-_Item_co = TypeVar("_Item_co", bound=MarketItem, covariant=True)
-
+# The token only this module holds, without which `Validated` refuses to be created.
 _CREATOR: Final = object()
 
 
 @final
-class Validated(Generic[_Item_co]):
-    """An item this system validated: the item, its quality assessment, and the version of the
-    validation rules. Only `MarketDataValidator` creates one, and none is changed after."""
+@dataclass(frozen=True, slots=True)
+class Validated[ItemT: MarketItem]:
+    """An item this system validated, and its quality assessment when validated. Only
+    `MarketDataValidator` creates one, and none is changed after."""
 
-    __slots__ = ("_assessment", "_item")
+    item: ItemT
+    assessment: QualityAssessment
+    creator: InitVar[object]
 
-    _item: _Item_co
-    _assessment: QualityAssessment
-
-    def __init__(
-        self, item: _Item_co, assessment: QualityAssessment, *, creator: object
-    ) -> None:
+    def __post_init__(self, creator: object) -> None:
         if creator is not _CREATOR:
             msg = "only atp.marketdata's validator creates validated data"
             raise TypeError(msg)
-        object.__setattr__(self, "_item", item)
-        object.__setattr__(self, "_assessment", assessment)
-
-    def __setattr__(self, name: str, value: object) -> None:
-        msg = "validated data is not changed"
-        raise AttributeError(msg)
-
-    def __delattr__(self, name: str) -> None:
-        msg = "validated data is not changed"
-        raise AttributeError(msg)
-
-    @property
-    def item(self) -> _Item_co:
-        """The validated item."""
-        return self._item
-
-    @property
-    def assessment(self) -> QualityAssessment:
-        """Its freshness, age, and quality score when it was validated."""
-        return self._assessment
 
     @property
     def validation_version(self) -> str:
@@ -137,14 +114,14 @@ class Validated(Generic[_Item_co]):
     @property
     def eligible(self) -> bool:
         """Whether it may be used: only while VALID when assessed (MKD-012, SR-12)."""
-        return self._assessment.freshness is Freshness.VALID
+        return self.assessment.freshness is Freshness.VALID
 
 
-# The state of a market's book chain: the last sequence number applied (0 or more), or one of:
-_BROKEN: Final = -1  # a gap was found: every update is a gap until a fresh snapshot
-_UNSEQUENCED: Final = (
-    -2
-)  # the last snapshot gave no sequence number: updates are not checked
+# The state of a market's book chain: the last sequence number applied (0 or more), or one of
+# these. A gap was found, and every update is a gap until a fresh snapshot:
+_BROKEN: Final = -1
+# The last snapshot gave no sequence number, and updates are not checked:
+_UNSEQUENCED: Final = -2
 
 _CanonicalKey = tuple[str, str, InstrumentType, str | None, Stream]
 
@@ -208,7 +185,7 @@ def _levels_impossible(
     if not snapshot:
         return False
     prices = [level.price for level in levels]
-    pairs = zip(prices, prices[1:], strict=False)
+    pairs = pairwise(prices)
     if falling:
         return any(later >= earlier for earlier, later in pairs)
     return any(later <= earlier for earlier, later in pairs)
@@ -329,7 +306,7 @@ class MarketDataValidator:
         state = self._chains.get(market)
         return state is None or state == _BROKEN
 
-    def validate(
+    def validate[T: MarketItem](
         self, item: T, *, now_ns: int, drifting_venues: frozenset[str]
     ) -> Validated[T] | QuarantineRecord:
         """Check `item` at `now_ns`, the local time, with the venues whose clocks SYS-29 finds

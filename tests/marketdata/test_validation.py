@@ -554,9 +554,9 @@ def test_only_the_validator_creates_validated_data_and_none_changes() -> None:
     with pytest.raises(TypeError, match="only atp.marketdata's validator"):
         Validated(item, result.assessment, creator=object())
     with pytest.raises(AttributeError):
-        result._item = trade()  # noqa: SLF001
+        result.item = trade()  # type: ignore[misc]
     with pytest.raises(AttributeError):
-        del result._assessment  # noqa: SLF001
+        del result.assessment
 
 
 @pytest.mark.req("MKD-009", "MKD-013")
