@@ -1,0 +1,42 @@
+# DEC-078 — The owner's messages of 2026-11-20, 12:33 and 16:04 UTC, and the evidence pack on three exchanges' terms (owner decisions 45)
+
+- **Status:** ACCEPTED
+- **Date:** 2026-11-20
+- **Decided by:** builder, under [DEC-004](DEC-004-preserve-original-handoffs.md) (original source material is preserved verbatim) and [DEC-047](DEC-047-preserve-stage-transition-persistence-rules.md) (decision 7: the owner's messages that carry an approval, an instruction, or a question are kept), for the preservation; and under [DEC-073](DEC-073-stage-2-plan-approved-with-changes.md) (decision 3: a venue's access verified before it is used, its status recorded), for the record of the evidence. The messages and the pack are the owner's.
+
+## Context
+
+During and after Gate 3's run 2 of the first increment of Stage 2's checkpoint B, the owner sent two messages ([owner decisions 45](../handoffs/owner-decisions-45-server-work-question-and-exchange-terms-evidence-pack.md)). The client delivered each as a user turn of its own, of origin human, so each is the owner's.
+
+The first, queued at 12:07 UTC while the builder worked and delivered at 12:33 UTC, asks the builder to confirm that it cannot set the server up from here, that the work continues here, and that what is done on the server is the collection of data. The builder answered at 12:33 UTC that it is so: the building continues in this environment and the repository; on the server, in Stage 2, run the collectors of the venues whose access is verified, the database with 30 days of market data, and the measurements of speed and data quality, with each venue's live checks, and what it collects comes back to the repository; its setup is done on the server itself, through Claude Code run there under the owner's login, once a server is approved ([DEC-077](DEC-077-owner-questions-on-where-the-work-continues-and-access-to-the-server.md)); nothing is needed from the owner yet.
+
+The second, of 16:04 UTC, attaches a PDF of three pages, an evidence pack on the terms of Binance, Bybit, and Coinbase prepared on 2026-11-20, and asks the builder to check whether it meets what the builder needs, and to continue. The pack gives links to official pages of the three venues and its preparer's summary of them, not their text; it says that it is neither an authorization nor a legal opinion; it concludes that all three remain NOT VERIFIED for the operator's use; and it lists five questions the owner could put to the exchanges. As it reports them:
+
+- **Binance:** the international terms page loads only as a page shell, its text not examinable; a UK-labelled list of prohibited countries and the API documentation are accessible; which terms apply to a resident of São Tomé and Príncipe is not confirmed.
+- **Bybit:** its Platform Terms, a PDF effective 2026-10-16, inspected: their section 12.1 limits the platform to the user's own account or internal business purposes and restricts services on behalf of third parties; their list of restricted jurisdictions and that of Bybit's help article differ (the PDF's section 11.3 naming France and Australia, for example).
+- **Coinbase:** its Market Data Terms, updated 2026-08-07, inspected: their section 2 limits the licence to the user's own or its entity's research and disallows an application for unrelated end users; their section 3 restricts distribution to third parties and derived works without Coinbase's express written consent, and uses in AI or machine-learning research, development, or operation likewise.
+
+The builder answered at 16:07 UTC: the pack helps but settles none of the three, as it says itself; what the builder asked for, each venue's terms and the countries it serves, is still missing for each; what would settle them is each exchange's written answer to the pack's five questions, which only the owner can send; and next, once the change that builds U5 had passed its gates, this change, reading the pack's new links once, without working around a block.
+
+On 2026-11-20 at 16:45 UTC the builder read the pack's three links not tried before, once each, through a page-reading agent. Bybit's Platform Terms PDF and its help article on restricted countries answered HTTP 503, and were not fetched again. Binance's UK-labelled list of prohibited countries, updated on 27 February 2024 and naming Nest Services Limited, trading as Binance, as the entity responsible, lists Canada, the Netherlands, the United States, Cuba, North Korea, Iran, Syria, and the Crimea region and the non-government-controlled areas of Ukraine, and any other place Binance designates; it names neither São Tomé and Príncipe nor Germany. The pages that failed on 2026-11-19, among them the Coinbase page the pack cites, were not fetched again.
+
+## Decision
+
+1. **Both messages are preserved word for word**, as owner decisions 45, a HISTORICAL source listed in the preserved-text manifest. They were taken by script from their user turns in the session record and kept byte for byte, with the space that ends each, so `git diff --check` reports those lines. The second's recorded turn begins with the client's reference to the attached file (`@"`, the file's path in the builder's container, `"`, and a space); that reference is left out, as the client's own, the round trip keeping the client's own prompts out, and as a local path, which the repository keeps out. The attached file is preserved beside the text, byte for byte, and its SHA-256 is listed in the manifest.
+2. **The first message is a question, answered; it changes nothing.** DEC-077 stands.
+3. **The pack is recorded as the owner's evidence under OQ-34**, in the [Stage 2 record](../traceability/stage-02-data-foundation.md)'s "Venue verification for the operator's country": what it reports, as its preparer's summary of the official pages and not their text, and the builder's reading of its new links. Binance, Bybit, and Coinbase stay NOT VERIFIED, and disabled, as the pack itself concludes (DEC-073, decision 3; [DEC-075](DEC-075-owner-operating-decisions-and-future-membership.md), decision 3). The pack's guidance, to keep apart a document's being found, the account's eligibility, lawful access to public data, permission to redistribute the data or use it with AI, and later authorization for others' accounts, to enable no venue from links alone, to read the remaining sources once without bypassing an access restriction, and to stay read-only, agrees with the existing rules and changes none.
+4. **What would settle each venue** is its written answer to the pack's five questions, which the owner may send; the builder contacts no exchange. If Coinbase is verified later, its Market Data Terms, as the pack reports them, need Coinbase's written consent before its data is used with AI or shown to others: recorded for the stages that would do either, and not verified here.
+5. **They are preserved by their own change, whose record names them:** the record of the change that builds U5 leaves them to the next record ([checkpoint B (U5) verification](../traceability/stage-02-checkpoint-b-u5-verification.md), Scope), and this change's Gate 3 reviews a copy made after both.
+
+## Alternatives considered
+
+- **Keep the client's reference, its path included.** Not chosen: it is the client's, not the owner's words, and it holds a local path, which the repository keeps out.
+- **A placeholder in the text block for the reference.** Not chosen: the text block holds the owner's words as received, byte for byte; a placeholder would be neither the owner's words nor the client's.
+- **Mark Bybit or Coinbase VERIFIED from the pack's summaries.** Not chosen: a summary is not the terms' text, the pack itself says not to, and neither summary says whether São Tomé and Príncipe is served.
+- **Read the pages that failed on 2026-11-19 again.** Not chosen: the owner asked that a failed page not be fetched again ([owner decisions 41](../handoffs/owner-decisions-41-answers-on-jurisdiction-operator-server-and-exchanges.md)), and the pack asks that no access restriction be bypassed.
+
+## Consequences
+
+- Owner decisions 45 and the pack are listed in the preserved-text manifest and the documentation index.
+- The Stage 2 record's venue verification and OQ-34 state the pack's evidence; the three venues stay NOT VERIFIED.
+- No requirement, rule, gate, or code changes; no venue is enabled, no exchange is contacted, and no server is approved.
