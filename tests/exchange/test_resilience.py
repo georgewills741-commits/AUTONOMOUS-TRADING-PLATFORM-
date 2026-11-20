@@ -7,6 +7,7 @@ from __future__ import annotations
 import asyncio
 
 import pytest
+
 from atp.contracts import ContractError, Outcome
 from atp.exchange import (
     Backoff,
