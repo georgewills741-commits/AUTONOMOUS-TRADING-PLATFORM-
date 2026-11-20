@@ -1,0 +1,63 @@
+{
+  "$defs": {
+    "Backoff": {
+      "additionalProperties": false,
+      "description": "How long to wait after failures in a row: `initial_ns` after the first, twice as long\nafter each further one, and never longer than `maximum_ns`, which is at least\n`initial_ns`.",
+      "properties": {
+        "initial_ns": {
+          "exclusiveMinimum": 0,
+          "maximum": 9223372036854775807,
+          "title": "Initial Ns",
+          "type": "integer"
+        },
+        "maximum_ns": {
+          "exclusiveMinimum": 0,
+          "maximum": 9223372036854775807,
+          "title": "Maximum Ns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "initial_ns",
+        "maximum_ns"
+      ],
+      "title": "Backoff",
+      "type": "object"
+    }
+  },
+  "$id": "atp.exchange.resilience-limits/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A venue connection's resilience limits, IMPLEMENTATION CHOICE values given with its\nadapter: the backoff between failed attempts; how many failures in a row open the circuit,\nand how long it stays open before a trial; and how long a stream may stay silent, heartbeat\nanswers included, before its feed is stale.",
+  "properties": {
+    "backoff": {
+      "$ref": "#/$defs/Backoff"
+    },
+    "failure_threshold": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Failure Threshold",
+      "type": "integer"
+    },
+    "heartbeat_timeout_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Heartbeat Timeout Ns",
+      "type": "integer"
+    },
+    "open_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Open Ns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "backoff",
+    "failure_threshold",
+    "open_ns",
+    "heartbeat_timeout_ns"
+  ],
+  "title": "ResilienceLimits",
+  "type": "object"
+}
