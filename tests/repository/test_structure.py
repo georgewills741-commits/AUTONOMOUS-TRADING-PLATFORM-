@@ -37,6 +37,15 @@
 - Outside `atp.contracts`, input is validated only with a contract's `from_python` or
   `from_json`, which raise errors with redacted details; Pydantic's methods that validate
   without that redaction, or skip validation, are not called there (TEC-004, SEC-005).
+- CCXT (TEC-005) is imported only in `atp.exchange`, SYS-01's package (EXA-004, EXA-011), also
+  through `importlib`, and is never given a credential there: none of CCXT's credential names
+  (`CCXT_CREDENTIALS`) is a keyword argument, a key of a dict literal, an assigned attribute or
+  item, or `setattr`'s name (EXA-007, as DEC-073's decision 3 applies it; the Stage 2 plan's U4
+  and D1).
+- Nothing in `src/` turns TLS verification off (the Stage 2 plan's U4): no switch of
+  `TLS_SWITCHES` is given `False` or `0` as a keyword argument, a key of a dict literal, an
+  assigned attribute or item, or through `setattr`, and no name of `TLS_OFF_NAMES` is used, as a
+  name, an attribute, an imported name, or a string.
 
 Each scanner is also run on planted samples in a temporary copy, so a scanner that stopped
 finding anything would fail.
@@ -64,9 +73,36 @@ ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "marketdata": frozenset({"contracts"}),
     "measurement": frozenset(),
     "health": frozenset({"contracts", "marketdata"}),
+    "exchange": frozenset({"contracts", "marketdata"}),
 }
 # The one module that creates validated market data (MKD-008, MKD-011).
 VALIDATED_CREATOR = "atp.marketdata._validation"
+# The package that alone may import CCXT (TEC-005; EXA-004, EXA-011).
+CCXT_OWNER = "atp.exchange"
+# The names CCXT reads a venue credential from (its `requiredCredentials`).
+CCXT_CREDENTIALS = frozenset(
+    {
+        "apiKey",
+        "secret",
+        "password",
+        "uid",
+        "login",
+        "twofa",
+        "privateKey",
+        "walletAddress",
+        "token",
+    }
+)
+# Arguments, options, and attributes that turn TLS verification off when given False or 0
+# (requests' and CCXT's `verify`, aiohttp's `ssl` and `verify_ssl`, the ssl module's
+# `check_hostname`, `verify_mode`, and `cert_reqs`).
+TLS_SWITCHES = frozenset(
+    {"verify", "ssl", "verify_ssl", "check_hostname", "verify_mode", "cert_reqs"}
+)
+# Names that only turn TLS verification off.
+TLS_OFF_NAMES = frozenset(
+    {"CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY"}
+)
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
 # The decimal module's context functions and objects, found when reached through `decimal`
@@ -938,6 +974,113 @@ def raw_validation_findings(source_root: Path) -> list[str]:
     return findings
 
 
+def _in_package(module: str, package: str) -> bool:
+    return module == package or module.startswith(f"{package}.")
+
+
+def ccxt_findings(source_root: Path) -> list[str]:
+    """Imports of CCXT outside `atp.exchange`."""
+    findings: list[str] = []
+    for path in _python_files(source_root / "atp"):
+        module = _module_of(path, source_root)
+        if _in_package(module, CCXT_OWNER):
+            continue
+        tree = _parse(path)
+        for imported, _ in _imported_modules(tree, module, path.name == "__init__.py"):
+            if imported == "ccxt" or imported.startswith("ccxt."):
+                findings.append(f"{module}: imports {imported}")
+    return findings
+
+
+def _assigned(node: ast.AST) -> list[tuple[ast.expr, ast.expr | None]]:
+    """The targets an assignment binds, each with the value bound."""
+    if isinstance(node, ast.Assign):
+        return [(target, node.value) for target in node.targets]
+    if isinstance(node, ast.AnnAssign | ast.AugAssign):
+        return [(node.target, node.value)]
+    return []
+
+
+def _given(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
+    """The names a node gives a value to, each with the value: a keyword argument, a key of a
+    dict literal, `setattr`'s name, and an assigned attribute or item."""
+    given: list[tuple[object, ast.expr | None]] = []
+    if isinstance(node, ast.keyword):
+        given.append((node.arg, node.value))
+    elif isinstance(node, ast.Dict):
+        given.extend(
+            (key.value, value)
+            for key, value in zip(node.keys, node.values, strict=True)
+            if isinstance(key, ast.Constant)
+        )
+    elif (
+        isinstance(node, ast.Call)
+        and _called_name(node) == "setattr"
+        and len(node.args) == 3
+        and isinstance(node.args[1], ast.Constant)
+    ):
+        given.append((node.args[1].value, node.args[2]))
+    for target, value in _assigned(node):
+        if isinstance(target, ast.Attribute):
+            given.append((target.attr, value))
+        elif isinstance(target, ast.Subscript) and isinstance(
+            target.slice, ast.Constant
+        ):
+            given.append((target.slice.value, value))
+    return given
+
+
+def credential_findings(source_root: Path) -> list[str]:
+    """In `atp.exchange`, each place that gives a value to one of CCXT's credential names."""
+    findings: list[str] = []
+    for path in _python_files(source_root / "atp"):
+        if not _in_package(_module_of(path, source_root), CCXT_OWNER):
+            continue
+        for node in ast.walk(_parse(path)):
+            where = f"{path.relative_to(source_root)}:{getattr(node, 'lineno', 0)}"
+            findings.extend(
+                f"{where}: the credential {name}"
+                for name, _ in _given(node)
+                if name in CCXT_CREDENTIALS
+            )
+    return findings
+
+
+def _off(value: ast.expr | None) -> bool:
+    """Whether a value is `False` or `0`."""
+    return (
+        isinstance(value, ast.Constant)
+        and type(value.value) in (bool, int)
+        and value.value == 0
+    )
+
+
+def tls_findings(source_root: Path) -> list[str]:
+    """Each place in `src/` that turns TLS verification off."""
+    findings: list[str] = []
+    for path in _python_files(source_root):
+        for node in ast.walk(_parse(path)):
+            where = f"{path.relative_to(source_root)}:{getattr(node, 'lineno', 0)}"
+            findings.extend(
+                f"{where}: {name} turned off"
+                for name, value in _given(node)
+                if name in TLS_SWITCHES and _off(value)
+            )
+            if isinstance(node, ast.Name):
+                named: object = node.id
+            elif isinstance(node, ast.Attribute):
+                named = node.attr
+            elif isinstance(node, ast.alias):
+                named = node.name
+            elif isinstance(node, ast.Constant):
+                named = node.value
+            else:
+                continue
+            if named in TLS_OFF_NAMES:
+                findings.append(f"{where}: {named}")
+    return findings
+
+
 @pytest.mark.req("ARCH-010", "TEC-003")
 def test_amounts_are_built_only_in_atp_numeric() -> None:
     assert decimal_findings(SOURCE_ROOT) == []
@@ -982,12 +1125,26 @@ def test_outcome_private_members_are_read_only_inside_contracts() -> None:
     assert private_outcome_findings([SOURCE_ROOT, TESTS_ROOT], private_names) == []
 
 
+@pytest.mark.req("TEC-005", "EXA-004", "EXA-011")
+def test_ccxt_is_imported_only_in_atp_exchange() -> None:
+    assert ccxt_findings(SOURCE_ROOT) == []
+
+
+@pytest.mark.req("TEC-005", "EXA-007")
+def test_ccxt_is_never_given_a_credential() -> None:
+    assert credential_findings(SOURCE_ROOT) == []
+
+
+def test_nothing_turns_tls_verification_off() -> None:
+    assert tls_findings(SOURCE_ROOT) == []
+
+
 @pytest.fixture
 def bare_source(tmp_path: Path) -> Path:
     """A source tree with only the packages' `__init__` files: a sample planted there is the
     only code the scanners read, so one list entry is tried at a time, quickly."""
     root = tmp_path / "bare"
-    for package in ("atp", "atp/numeric", "atp/contracts"):
+    for package in ("atp", "atp/numeric", "atp/contracts", "atp/exchange"):
         (root / package).mkdir(parents=True, exist_ok=True)
         (root / package / "__init__.py").write_text("", encoding="utf-8")
     return root
@@ -1104,6 +1261,35 @@ LIST_SAMPLES = [
         ("pydantic", f"import pydantic\nx = pydantic.{name}\n")
         for name in ("validate_call", "TypeAdapter", "create_model")
     ),
+    *(
+        ("credentials", f"def f(e):\n    return e.configure({name}='x')\n")
+        for name in (
+            "apiKey",
+            "secret",
+            "password",
+            "uid",
+            "login",
+            "twofa",
+            "privateKey",
+            "walletAddress",
+            "token",
+        )
+    ),
+    *(
+        ("tls", f"def f(c):\n    return c.connect({name}=False)\n")
+        for name in (
+            "verify",
+            "ssl",
+            "verify_ssl",
+            "check_hostname",
+            "verify_mode",
+            "cert_reqs",
+        )
+    ),
+    *(
+        ("tls", f"import ssl\nx = getattr(ssl, '{name}')\n")
+        for name in ("CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY")
+    ),
 ]
 # Each scanner, and the package a sample is planted in: amounts may be built in atp.numeric,
 # and Pydantic may be used in atp.contracts, so their samples go to the other one.
@@ -1111,6 +1297,8 @@ LIST_SCANNERS = {
     "rounding": (rounding_findings, "numeric"),
     "decimal": (decimal_findings, "contracts"),
     "pydantic": (pydantic_findings, "numeric"),
+    "credentials": (credential_findings, "exchange"),
+    "tls": (tls_findings, "numeric"),
 }
 
 
@@ -1570,3 +1758,99 @@ def test_a_copy_with_update_is_found(copy_of_source: Path) -> None:
         planted, encoding="utf-8"
     )
     assert len(raw_validation_findings(copy_of_source)) == 1
+
+
+@pytest.mark.parametrize(
+    "planted",
+    [
+        "import ccxt\n",
+        "import ccxt.async_support as exchanges\n",
+        "from ccxt import okx\n",
+        "from ccxt.pro import okx\n",
+        "import importlib\nm = importlib.import_module('ccxt')\n",
+    ],
+)
+def test_the_ccxt_scanner_finds_planted_samples(
+    copy_of_source: Path, planted: str
+) -> None:
+    (copy_of_source / "atp" / "marketdata" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert len(ccxt_findings(copy_of_source)) == 1
+
+
+def test_ccxt_inside_atp_exchange_is_not_a_finding(copy_of_source: Path) -> None:
+    planted = "import ccxt\nfrom ccxt.pro import okx\n"
+    (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert ccxt_findings(copy_of_source) == []
+
+
+@pytest.mark.parametrize(
+    "planted",
+    [
+        "def f(e):\n    return e.configure(apiKey='x')\n",
+        "x = {'secret': 'y'}\n",
+        "def f(e):\n    e.password = 'y'\n",
+        "def f(e):\n    e.uid: str = 'y'\n",
+        "def f(c):\n    c['login'] = 'y'\n",
+        "def f(e):\n    setattr(e, 'privateKey', 'y')\n",
+    ],
+)
+def test_the_credential_scanner_finds_planted_samples(
+    copy_of_source: Path, planted: str
+) -> None:
+    (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert len(credential_findings(copy_of_source)) == 1
+
+
+def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
+    copy_of_source: Path,
+) -> None:
+    planted = "x = {'password': 'y'}\n"
+    (copy_of_source / "atp" / "config" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert credential_findings(copy_of_source) == []
+
+
+@pytest.mark.parametrize(
+    "planted",
+    [
+        "def f(c):\n    return c.get(verify=False)\n",
+        "def f(c):\n    return c.get(ssl=0)\n",
+        "x = {'verify': False}\n",
+        "def f(context):\n    context.check_hostname = False\n",
+        "def f(options):\n    options['verify_ssl'] = False\n",
+        "def f(e):\n    setattr(e, 'verify', False)\n",
+        "import ssl\nx = ssl.CERT_NONE\n",
+        "from ssl import CERT_NONE\n",
+        "import ssl\nc = ssl._create_unverified_context()\n",
+        "import os\nos.environ['PYTHONHTTPSVERIFY'] = '0'\n",
+    ],
+)
+def test_the_tls_scanner_finds_planted_samples(
+    copy_of_source: Path, planted: str
+) -> None:
+    (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert tls_findings(copy_of_source)
+
+
+def test_tls_verification_left_on_is_not_a_finding(copy_of_source: Path) -> None:
+    planted = (
+        "def f(c, context):\n"
+        "    c.get(verify=True)\n"
+        "    c.get(ssl=None)\n"
+        "    c.get(ssl=context)\n"
+        "    context.check_hostname = True\n"
+        "    return {'verify': True, 'name': 'CERT_NONE is never used'}\n"
+    )
+    (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert tls_findings(copy_of_source) == []
