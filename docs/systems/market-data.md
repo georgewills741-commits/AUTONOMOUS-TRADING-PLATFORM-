@@ -1,6 +1,6 @@
 # Market Data Infrastructure
 
-> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10; Part 3: P3§425–P3§427
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — partly implemented, in Stage 2 (the [roadmap](../roadmap/roadmap.md)'s feature-status table) · **System:** SYS-02 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION ("Market-data ingestion", "Validation", "Normalization", "Storage") · **Sources:** §10; Part 3: P3§425–P3§427
 
 Canonical definition of market-data ingestion, validation, normalization, and quality.
 
@@ -44,7 +44,7 @@ MKD-012 keeps MKD-006: each stream's freshness limit is the platform-wide hard l
 - **Owns:** raw, validated, normalized, and stored market data (MKD-003).
 - **Consumes:** raw data from the [Exchange Adapter Layer](exchange-adapters.md).
 - **Used by:** Quantitative Engine, Opportunity Detection Engine, trading systems, Backtesting (historical data, §33).
-- **Not yet specified in Part 1:** storage technology and retention, data schemas, latency targets, failure behavior when data is degraded (the DATA DEGRADED health state exists in §74 but is not defined), tests. Since specified: storage and retention (MKD-007, TEC-006, TEC-012; DEC-009); DATA DEGRADED as a component condition of platform health (HLT-011); freshness states and data quality before decisions (MKD-012); path-specific latency budgets, measured rather than fixed (PERF-008 to PERF-012). Still open: data schemas, the exact failure behavior per stream, and tests, specified when DATA FOUNDATION is planned (ARCH-025).
+- **Not yet specified in Part 1:** storage technology and retention, data schemas, latency targets, failure behavior when data is degraded (the DATA DEGRADED health state exists in §74 but is not defined), tests. Since specified: storage and retention (MKD-007, TEC-006, TEC-012; DEC-009); DATA DEGRADED as a component condition of platform health (HLT-011); freshness states and data quality before decisions (MKD-012); path-specific latency budgets, measured rather than fixed (PERF-008 to PERF-012). Specified since DATA FOUNDATION was planned ([Stage 2 plan](../roadmap/stage-02-data-foundation-plan.md)): the data schemas, as the market-data contracts and their committed schemas (Stage 2's U2), and the failure behavior per stream, as validation, quarantine, and freshness states (Stage 2's U5), each with its tests ([Stage 2 record](../traceability/stage-02-data-foundation.md); ARCH-025).
 
 ## Findings
 

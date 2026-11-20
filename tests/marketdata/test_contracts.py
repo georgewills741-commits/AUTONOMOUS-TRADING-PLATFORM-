@@ -409,3 +409,51 @@ def test_the_quarantine_causes_are_those_of_mkd_013() -> None:
         "outlier",
         "clock-problem",
     ]
+
+
+@pytest.mark.req("MKD-009", "MKD-013")
+@pytest.mark.parametrize(
+    ("changes", "error"),
+    [
+        ({"stream": "venue-status"}, "market_for_stream"),
+        ({"market": None}, "market_for_stream"),
+        ({"market": {**SPOT, "venue": "other"}}, "market_venue"),
+    ],
+)
+def test_a_quarantine_record_names_its_market_as_its_stream_needs(
+    changes: dict[str, object], error: str
+) -> None:
+    data = {**VALID[QuarantineRecord], **changes}
+    with pytest.raises(ContractError) as refused:
+        QuarantineRecord.from_json(json.dumps(data))
+    assert _types(refused) == [error]
+
+
+@pytest.mark.req("MKD-009", "MKD-013")
+def test_a_quarantine_record_of_a_market_s_stream_names_its_market() -> None:
+    data = dict(VALID[QuarantineRecord])
+    del data["market"]
+    with pytest.raises(ContractError) as refused:
+        QuarantineRecord.from_json(json.dumps(data))
+    assert _types(refused) == ["market_for_stream"]
+
+
+@pytest.mark.req("MKD-009")
+def test_a_quarantine_record_of_a_venue_s_status_names_no_market() -> None:
+    data = {**VALID[QuarantineRecord], "stream": "venue-status"}
+    del data["market"]
+    assert QuarantineRecord.from_json(json.dumps(data)).market is None
+
+
+@pytest.mark.req("MKD-009")
+@pytest.mark.parametrize(
+    "changes",
+    [{"market": {**SPOT, "venue": "Not A Venue"}}, {"venue": "Not A Venue"}],
+)
+def test_a_quarantine_record_s_refused_field_is_reported_alone(
+    changes: dict[str, object],
+) -> None:
+    data = {**VALID[QuarantineRecord], **changes}
+    with pytest.raises(ContractError) as refused:
+        QuarantineRecord.from_json(json.dumps(data))
+    assert _types(refused) == ["string_pattern_mismatch"]

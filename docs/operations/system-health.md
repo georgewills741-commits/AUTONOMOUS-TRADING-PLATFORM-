@@ -1,6 +1,6 @@
 # System Health, Failure Handling and Controlled Degradation
 
-> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — not implemented · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91; Part 3: P3§428, P3§487–P3§488, P3§504, P3§518
+> **Status:** DOCUMENTED (Handoff Parts 1, 2, and 3) — partly implemented: its clock-drift detection, in Stage 2 (the [roadmap](../roadmap/roadmap.md)'s feature-status table) · **System:** SYS-29 · **Category:** operations · **Roadmap stage:** CORE TRADING FOUNDATION; hardened in OPERATIONALIZATION ([DEC-016](../decisions/DEC-016-roadmap-stage-placement.md)) · **Sources:** §74, §90, §91; Part 3: P3§428, P3§487–P3§488, P3§504, P3§518
 
 Canonical definition of the platform health states, the failures the platform must expect, and how it degrades safely.
 
@@ -43,7 +43,7 @@ New requirements from [Handoff Part 2](../handoffs/part-2-consolidated-additiona
 
 - **HLT-013** Clock-drift detection · SYSTEM REQUIREMENT · P2§51 — Time is critical to market data, orders, fills, funding, arbitrage, latency, reconciliation, and backtesting. The system should detect meaningful clock drift.
 
-What the platform does when drift is detected (for example marking data degraded) is specified when DATA FOUNDATION is planned; P2§51 requires detection only.
+What the platform does when drift is detected is the Stage 2 plan's D3 ([DEC-073](../decisions/DEC-073-stage-2-plan-approved-with-changes.md)): a drifting venue clock gives its data the quarantine cause "clock problems" (MKD-013), a drifting local clock marks cross-system delays unreliable, and both raise DATA DEGRADED for this system's health state, which CORE TRADING FOUNDATION builds; the detection and that response are built in Stage 2's U5 (`atp.health`; [Stage 2 record](../traceability/stage-02-data-foundation.md)). P2§51 requires detection only.
 
 ## Handoff Part 3 applied (2026-09-30)
 
