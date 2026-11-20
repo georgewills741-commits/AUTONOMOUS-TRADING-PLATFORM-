@@ -5,8 +5,9 @@ Every item an adapter gives is checked in this order, and the first check it fai
 with that cause and its evidence; a quarantined item is never passed on (MKD-009):
 
 1. CLOCK_PROBLEM: its venue's clock is drifting, as SYS-29's clock monitor finds (D3).
-2. INVALID_TIMESTAMP: its event time is ahead of its local receipt by more than the limit, or a
-   bar opened, or a closed bar ended, that far after its receipt.
+2. INVALID_TIMESTAMP: it was received after the time it is checked at, so its age cannot be
+   known; or its event time is ahead of its local receipt by more than the limit, or a bar
+   opened, or a closed bar ended, that far after its receipt.
 3. MISSING_FIELD: a ticker gives no price at all; a trading market's metadata lacks its price or
    quantity increment (ARCH-011 needs both).
 4. IMPOSSIBLE_PRICE, for impossible values: a price, increment, or contract size not above zero;
@@ -331,7 +332,9 @@ class MarketDataValidator:
         limits = self._limits
         if venue_of(item) in drifting_venues:
             return QuarantineCause.CLOCK_PROBLEM
-        if _timestamp_invalid(item, limits.max_event_ahead_ns):
+        if item.receive_time_ns > now_ns or _timestamp_invalid(
+            item, limits.max_event_ahead_ns
+        ):
             return QuarantineCause.INVALID_TIMESTAMP
         if _missing(item):
             return QuarantineCause.MISSING_FIELD

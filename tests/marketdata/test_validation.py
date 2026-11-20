@@ -263,6 +263,8 @@ def test_a_drifting_venue_s_data_is_quarantined_for_its_clock() -> None:
     [
         (lambda: trade(event=NOW + AHEAD + 1), QuarantineCause.INVALID_TIMESTAMP),
         (lambda: trade(event=NOW + AHEAD), None),
+        # Received after the time it is checked at: its age cannot be known.
+        (lambda: trade(event=None, receive=NOW + 1), QuarantineCause.INVALID_TIMESTAMP),
         (
             lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD + 1, closed=False),
             QuarantineCause.INVALID_TIMESTAMP,

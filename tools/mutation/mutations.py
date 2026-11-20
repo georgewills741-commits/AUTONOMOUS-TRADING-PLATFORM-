@@ -4598,6 +4598,13 @@ MUTATIONS: list[Mutation] = [
         "                        and False",
         TESTS,
     ),
+    Mutation(
+        "S2-U5 an item received after its check accepted",
+        "src/atp/marketdata/_validation.py",
+        "        if item.receive_time_ns > now_ns or _timestamp_invalid(",
+        "        if _timestamp_invalid(",
+        TESTS,
+    ),
     # Carried from checkpoint A: J-28 (the quarantine record's market), J-32 (a reliable delay).
     Mutation(
         "S2-U2 a quarantine record's market not checked against its stream",
