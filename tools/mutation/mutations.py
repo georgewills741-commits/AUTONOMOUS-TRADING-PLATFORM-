@@ -5060,8 +5060,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 an accepted request not ending the refusals in a row",
         _U4_RATELIMIT,
-        "is the first in a row.\"\"\"\n        self._refusals = 0\n",
-        "is the first in a row.\"\"\"\n",
+        'is the first in a row."""\n        self._refusals = 0\n',
+        'is the first in a row."""\n',
         TESTS,
     ),
     Mutation(
@@ -5675,7 +5675,11 @@ MUTATIONS: list[Mutation] = [
             "    {"
             + ", ".join(
                 f'"{off}"'
-                for off in ("CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY")
+                for off in (
+                    "CERT_NONE",
+                    "_create_unverified_context",
+                    "PYTHONHTTPSVERIFY",
+                )
                 if off != name
             )
             + "}\n",
