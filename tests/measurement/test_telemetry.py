@@ -118,3 +118,26 @@ def test_the_buckets_rise_from_one_microsecond_and_set_no_target() -> None:
     assert BUCKETS_NS[0] == 1_000
     assert BUCKETS_NS[-1] == 50_000_000_000
     assert list(BUCKETS_NS) == sorted(set(BUCKETS_NS))
+
+
+@pytest.mark.req("TEC-010", "PERF-010")
+def test_a_delay_on_a_reliable_clock_is_exported_as_reliable() -> None:
+    reader = InMemoryMetricReader()
+    provider = MeterProvider(metric_readers=[reader])
+    try:
+        exporter = TelemetryExporter(provider.get_meter("atp.measurement.test"))
+        recorder = Recorder(2, clock=StoppedClock(), clock_reliable=lambda: True)
+        recorder.delay(RECEIVE, event_time_ns=0, receive_time_ns=3_000)
+        # Well below zero; the test above holds the boundary, -1.
+        recorder.delay(RECEIVE, event_time_ns=5_000_000, receive_time_ns=0)
+        exporter.export(recorder.drain())
+        points = _points(reader)
+    finally:
+        provider.shutdown()
+
+    delay = _histogram(points, "atp.delay")
+    assert (delay.count, delay.sum) == (1, 3_000)
+    assert dict(delay.attributes or {})["atp.reliable"] is True
+    negative = _number(points, "atp.delay.negative")
+    assert negative.value == 1
+    assert dict(negative.attributes or {})["atp.reliable"] is True

@@ -427,10 +427,12 @@ class QualityAssessment(Contract):
 
 class QuarantineRecord(Contract):
     """An item held back from consumers (MKD-009, MKD-013): the item's evidence identifier, its
-    venue, market, and stream, the cause, and the version of the rule that found it."""
+    venue, its market, of that venue, given exactly when its stream is not the venue's status,
+    its stream, the cause, and the version of the rule that found it."""
 
     contract_id = "atp.marketdata.quarantine-record"
-    contract_version = ContractVersion(1, 0)
+    # 2.0 narrows 1.0, which paired any market, or none, with any stream (J-28).
+    contract_version = ContractVersion(2, 0)
 
     evidence_id: str = Field(pattern=EVIDENCE_ID_PATTERN)
     venue: str = Field(pattern=VENUE_PATTERN)
@@ -439,6 +441,25 @@ class QuarantineRecord(Contract):
     cause: QuarantineCause
     quarantined_time_ns: Nanoseconds
     rule_version: str = Field(pattern=VERSION_PATTERN)
+
+    @field_validator("stream")
+    @classmethod
+    def _check_market(cls, stream: Stream, info: ValidationInfo) -> Stream:
+        # A refused market or venue is absent from the data: its own refusal is reported.
+        if "market" not in info.data:
+            return stream
+        market = info.data["market"]
+        if (market is None) != (stream is Stream.VENUE_STATUS):
+            raise PydanticCustomError(
+                "market_for_stream",
+                "a record names its market exactly when its stream is not the venue's status",
+            )
+        venue = info.data.get("venue")
+        if market is not None and venue is not None and market.venue != venue:
+            raise PydanticCustomError(
+                "market_venue", "a record's market is of the record's venue"
+            )
+        return stream
 
 
 class UntranslatableInput(Contract):

@@ -30,6 +30,10 @@
   it names (`from atp import contracts`), and so is an attribute path on the root
   (`atp.contracts.Outcome` after `import atp`).
 - An outcome's private members are read only inside `atp.contracts` (ARCH-042).
+- Validated market data is created only in `atp.marketdata._validation` (MKD-008, MKD-011;
+  the Stage 2 plan's U5): elsewhere, no call of `Validated` under any name it is imported as,
+  no `__new__` given it, no class built on it, and no use of the validator's private creator
+  token, `_CREATOR`.
 - Outside `atp.contracts`, input is validated only with a contract's `from_python` or
   `from_json`, which raise errors with redacted details; Pydantic's methods that validate
   without that redaction, or skip validation, are not called there (TEC-004, SEC-005).
@@ -59,7 +63,10 @@ ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "cli": frozenset({"config"}),
     "marketdata": frozenset({"contracts"}),
     "measurement": frozenset(),
+    "health": frozenset({"contracts", "marketdata"}),
 }
+# The one module that creates validated market data (MKD-008, MKD-011).
+VALIDATED_CREATOR = "atp.marketdata._validation"
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
 # The decimal module's context functions and objects, found when reached through `decimal`
@@ -854,6 +861,60 @@ def private_outcome_findings(
     return findings
 
 
+def _names_validated(node: ast.AST, names: set[str]) -> bool:
+    """Whether `node` names `Validated`: by one of `names`, or as an attribute."""
+    return (isinstance(node, ast.Name) and node.id in names) or (
+        isinstance(node, ast.Attribute) and node.attr == "Validated"
+    )
+
+
+def validated_findings(source_root: Path) -> list[str]:
+    """Where validated market data could be created outside `atp.marketdata._validation`: a
+    call of `Validated` under any name it is imported as, a `__new__` given it, a class built
+    on it, and any use of the validator's private creator token, `_CREATOR` (a name, an
+    attribute, an import, or a string given to `getattr` and its kin)."""
+    findings: list[str] = []
+    for path in _python_files(source_root):
+        if _module_of(path, source_root) == VALIDATED_CREATOR:
+            continue
+        tree = _parse(path)
+        names = _typing_names(tree, "Validated")
+        for node in ast.walk(tree):
+            where = f"{path.relative_to(source_root)}:{getattr(node, 'lineno', 0)}"
+            if isinstance(node, ast.Call) and _names_validated(node.func, names):
+                findings.append(f"{where}: Validated(...)")
+            elif (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "__new__"
+                and any(_names_validated(argument, names) for argument in node.args)
+            ):
+                findings.append(f"{where}: __new__(Validated)")
+            elif isinstance(node, ast.ClassDef) and any(
+                _names_validated(base, names) for base in node.bases
+            ):
+                findings.append(f"{where}: a class built on Validated")
+            elif (
+                (isinstance(node, ast.Name) and node.id == "_CREATOR")
+                or (isinstance(node, ast.Attribute) and node.attr == "_CREATOR")
+                or (
+                    isinstance(node, ast.ImportFrom)
+                    and any(alias.name == "_CREATOR" for alias in node.names)
+                )
+                or (
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Name)
+                    and node.func.id in {"getattr", "setattr", "hasattr", "delattr"}
+                    and any(
+                        isinstance(argument, ast.Constant) and argument.value == "_CREATOR"
+                        for argument in node.args[1:2]
+                    )
+                )
+            ):
+                findings.append(f"{where}: _CREATOR")
+    return findings
+
+
 def raw_validation_findings(source_root: Path) -> list[str]:
     """Calls of Pydantic's methods that validate without redaction, or skip validation, outside
     `atp.contracts` (including the deprecated version 1 names and `copy(update=…)`)."""
@@ -898,6 +959,11 @@ def test_imports_between_modules_point_one_way() -> None:
 
 def test_input_is_validated_only_through_the_redacting_methods() -> None:
     assert raw_validation_findings(SOURCE_ROOT) == []
+
+
+@pytest.mark.req("MKD-008", "MKD-011")
+def test_only_the_market_data_system_creates_validated_data() -> None:
+    assert validated_findings(SOURCE_ROOT) == []
 
 
 @pytest.mark.req("TEC-008")
@@ -1461,6 +1527,40 @@ def test_the_raw_validation_scanner_finds_planted_samples(
         planted, encoding="utf-8"
     )
     assert len(raw_validation_findings(copy_of_source)) == 1
+
+
+@pytest.mark.parametrize(
+    "planted",
+    [
+        "from atp.marketdata import Validated\n\nx = Validated(1, 2, creator=3)\n",
+        "from atp.marketdata import Validated as V\n\nx = V(1, 2, creator=3)\n",
+        "import atp.marketdata\n\nx = atp.marketdata.Validated(1, 2, creator=3)\n",
+        "from atp.marketdata import Validated\n\nx = object.__new__(Validated)\n",
+        "from atp.marketdata import Validated\n\nclass Mine(Validated):\n    pass\n",
+        "from atp.marketdata._validation import _CREATOR\n",
+        "x = _CREATOR\n",
+        "import atp.marketdata._validation as v\n\nx = v._CREATOR\n",
+        "import atp.marketdata._validation as v\n\nx = getattr(v, '_CREATOR')\n",
+    ],
+)
+def test_the_validated_data_scanner_finds_planted_samples(
+    copy_of_source: Path, planted: str
+) -> None:
+    (copy_of_source / "atp" / "numeric" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert len(validated_findings(copy_of_source)) == 1
+
+
+def test_a_type_use_of_validated_data_is_not_a_finding(copy_of_source: Path) -> None:
+    planted = (
+        "from atp.marketdata import Validated\n\n"
+        "def f(v: Validated[object]) -> bool:\n    return isinstance(v, Validated)\n"
+    )
+    (copy_of_source / "atp" / "numeric" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert validated_findings(copy_of_source) == []
 
 
 def test_a_copy_with_update_is_found(copy_of_source: Path) -> None:
