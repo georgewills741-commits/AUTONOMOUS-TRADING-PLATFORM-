@@ -392,6 +392,45 @@ def test_a_region_refusal_ends_the_stream_and_no_other_route_is_tried() -> None:
 
 
 @pytest.mark.req("EXA-015")
+def test_a_venue_is_available_once_a_message_arrives() -> None:
+    clock = FakeClock()
+    health = VenueHealth(LIMITS)
+    seen: list[tuple[VenueStatus, UnavailableCause | None]] = []
+    attempts: list[Outcome[Connection, RequestFailure]] = [
+        Outcome.success(FakeConnection(clock, b"one", ConnectionClosed)),
+        REGION_REFUSED,
+    ]
+
+    async def connect() -> Outcome[Connection, RequestFailure]:
+        seen.append(health.status(clock.now))
+        return attempts.pop(0)
+
+    async def deliver(message: bytes) -> None:
+        seen.append(health.status(clock.now))
+
+    asyncio.run(
+        asyncio.wait_for(
+            maintain_connection(
+                connect,
+                deliver,
+                lambda event: None,
+                health=health,
+                limits=LIMITS,
+                now_ns=clock,
+                sleep_ns=clock.sleep,
+            ),
+            5,
+        )
+    )
+    # Unknown when it connects; available at its first message, and still after one drop.
+    assert seen == [
+        (VenueStatus.UNKNOWN, None),
+        (VenueStatus.AVAILABLE, None),
+        (VenueStatus.AVAILABLE, None),
+    ]
+
+
+@pytest.mark.req("EXA-015")
 def test_the_connection_is_closed_when_delivery_fails() -> None:
     clock = FakeClock()
     connection = FakeConnection(clock, b"one")

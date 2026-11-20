@@ -1827,6 +1827,7 @@ def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
         "def f(options):\n    options['verify_ssl'] = False\n",
         "def f(e):\n    setattr(e, 'verify', False)\n",
         "import ssl\nx = ssl.CERT_NONE\n",
+        "x = CERT_NONE\n",
         "from ssl import CERT_NONE\n",
         "import ssl\nc = ssl._create_unverified_context()\n",
         "import os\nos.environ['PYTHONHTTPSVERIFY'] = '0'\n",
