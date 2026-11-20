@@ -42,12 +42,15 @@ def failure(outcome: Outcome[bytes, RequestFailure]) -> RequestFailure:
 @pytest.mark.parametrize("status", [200, 201, 204, 299])
 def test_a_complete_2xx_answer_is_a_success_with_its_body(status: int) -> None:
     outcome = request_outcome(Answered(status, b"[]"))
-    assert outcome.fold(
-        on_success=lambda body: body,
-        on_failure=lambda _: None,
-        on_timeout=lambda: None,
-        on_unknown=lambda: None,
-    ) == b"[]"
+    assert (
+        outcome.fold(
+            on_success=lambda body: body,
+            on_failure=lambda _: None,
+            on_timeout=lambda: None,
+            on_unknown=lambda: None,
+        )
+        == b"[]"
+    )
 
 
 @pytest.mark.req("EXA-014")

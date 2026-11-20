@@ -9,7 +9,13 @@ from collections.abc import Awaitable, Callable
 import pytest
 
 from atp.contracts import Outcome
-from atp.exchange import FeedEvent, RequestFailure, ServerTime, Translation, VenueAdapter
+from atp.exchange import (
+    FeedEvent,
+    RequestFailure,
+    ServerTime,
+    Translation,
+    VenueAdapter,
+)
 from atp.marketdata import (
     BookSnapshot,
     FundingRate,
@@ -41,10 +47,14 @@ class SampleAdapter:
     async def markets(self) -> Outcome[Translation[MarketMetadata], RequestFailure]:
         return REFUSED
 
-    async def ticker(self, market: MarketRef) -> Outcome[Translation[Ticker], RequestFailure]:
+    async def ticker(
+        self, market: MarketRef
+    ) -> Outcome[Translation[Ticker], RequestFailure]:
         return REFUSED
 
-    async def trades(self, market: MarketRef) -> Outcome[Translation[Trade], RequestFailure]:
+    async def trades(
+        self, market: MarketRef
+    ) -> Outcome[Translation[Trade], RequestFailure]:
         return REFUSED
 
     async def book(
@@ -90,7 +100,11 @@ def test_a_translation_without_untranslatable_input_has_none() -> None:
 
 def test_a_server_time_keeps_its_three_times() -> None:
     time = ServerTime("sample", NOW, NOW - 2, NOW + 3)
-    assert (time.venue_time_ns, time.sent_ns, time.received_ns) == (NOW, NOW - 2, NOW + 3)
+    assert (time.venue_time_ns, time.sent_ns, time.received_ns) == (
+        NOW,
+        NOW - 2,
+        NOW + 3,
+    )
     # The venue's clock may be anywhere: it is what the clock monitor compares.
     assert ServerTime("sample", 0, NOW, NOW).venue_time_ns == 0
 

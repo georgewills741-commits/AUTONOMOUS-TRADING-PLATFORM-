@@ -11,7 +11,9 @@ from pydantic import ValidationError
 from atp.exchange import Decoded, JsonNumber, decode_json, untranslatable
 from atp.marketdata import Lineage, Stream, UntranslatableCause
 
-LINEAGE = Lineage(source="venue answer", adapter="atp.exchange.sample", adapter_version="1.0")
+LINEAGE = Lineage(
+    source="venue answer", adapter="atp.exchange.sample", adapter_version="1.0"
+)
 
 
 def decoded(content: bytes, max_bytes: int = 1024) -> object:
@@ -23,7 +25,13 @@ def decoded(content: bytes, max_bytes: int = 1024) -> object:
 @pytest.mark.req("EXA-013")
 def test_each_number_keeps_the_venue_s_text() -> None:
     value = decoded(b'{"price": 0.1000, "size": 3, "e": 1.5e-7, "n": -0, "s": "2.50"}')
-    assert value == {"price": "0.1000", "size": "3", "e": "1.5e-7", "n": "-0", "s": "2.50"}
+    assert value == {
+        "price": "0.1000",
+        "size": "3",
+        "e": "1.5e-7",
+        "n": "-0",
+        "s": "2.50",
+    }
     assert isinstance(value, dict)
     for name in ("price", "size", "e", "n"):
         assert type(value[name]) is JsonNumber

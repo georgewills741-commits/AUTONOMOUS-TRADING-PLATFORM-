@@ -45,13 +45,21 @@ class FakeClock:
 
 def limiter(*limits: tuple[str, int, int]) -> RateLimiter:
     return RateLimiter(
-        [RateLimit(name=name, capacity=c, window_ns=w) for name, c, w in limits], BACKOFF
+        [RateLimit(name=name, capacity=c, window_ns=w) for name, c, w in limits],
+        BACKOFF,
     )
 
 
 @pytest.mark.req("EXA-014")
 def test_the_backoff_doubles_up_to_its_maximum() -> None:
-    assert [BACKOFF.delay_ns(n) for n in range(1, 7)] == [100, 200, 400, 800, 1_000, 1_000]
+    assert [BACKOFF.delay_ns(n) for n in range(1, 7)] == [
+        100,
+        200,
+        400,
+        800,
+        1_000,
+        1_000,
+    ]
     assert BACKOFF.delay_ns(10**9) == 1_000
     assert Backoff(initial_ns=300, maximum_ns=500).delay_ns(2) == 500
     assert Backoff(initial_ns=5, maximum_ns=5).delay_ns(3) == 5
@@ -197,7 +205,9 @@ def test_no_request_goes_over_a_limit_under_concurrency() -> None:
 
         await asyncio.gather(*(request() for _ in range(10)))
 
-    run_queue(lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body)
+    run_queue(
+        lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body
+    )
     assert len(admitted) == 10
     for start in admitted:
         assert sum(start <= time < start + 1_000 for time in admitted) <= 3
@@ -224,7 +234,9 @@ def test_waiting_requests_are_admitted_in_priority_order() -> None:
             request("normal 2", Priority.NORMAL),
         )
 
-    run_queue(lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body)
+    run_queue(
+        lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body
+    )
     assert order == ["high", "normal 1", "normal 2", "low"]
 
 
@@ -260,7 +272,9 @@ def test_a_later_request_starts_the_queue_again() -> None:
         await queue.admit({"rest": 1}, Priority.NORMAL)
         admitted.append(clock())
 
-    run_queue(lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body)
+    run_queue(
+        lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body
+    )
     assert admitted == [1_000, 2_000]
 
 

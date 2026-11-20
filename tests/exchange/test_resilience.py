@@ -79,7 +79,9 @@ def test_a_success_ends_a_run_of_failures() -> None:
     assert circuit.state(2) is CircuitState.OPEN
 
 
-@pytest.mark.parametrize(("threshold", "open_ns"), [(0, 1), (True, 1), (1, 0), (1, 1.5)])
+@pytest.mark.parametrize(
+    ("threshold", "open_ns"), [(0, 1), (True, 1), (1, 0), (1, 1.5)]
+)
 def test_a_circuit_s_limits_are_whole_numbers_above_zero(
     threshold: object, open_ns: object
 ) -> None:
@@ -103,7 +105,10 @@ def test_a_venue_is_unknown_until_an_outcome_then_available_after_a_success() ->
     [
         (Outcome.timeout(), UnavailableCause.TIMEOUT),
         (Outcome.unknown(), UnavailableCause.VENUE_ERROR),
-        (refusal(UnavailableCause.CONNECTION_FAILED), UnavailableCause.CONNECTION_FAILED),
+        (
+            refusal(UnavailableCause.CONNECTION_FAILED),
+            UnavailableCause.CONNECTION_FAILED,
+        ),
     ],
 )
 def test_failures_in_a_row_make_the_venue_unavailable_with_their_cause(
@@ -152,10 +157,16 @@ def test_a_region_refusal_makes_the_venue_unavailable_for_good() -> None:
     health.record(Outcome.success(b""), 0)
     health.record(refusal(UnavailableCause.REGION_REFUSED), 1)
     assert health.region_refused
-    assert health.status(1) == (VenueStatus.UNAVAILABLE, UnavailableCause.REGION_REFUSED)
+    assert health.status(1) == (
+        VenueStatus.UNAVAILABLE,
+        UnavailableCause.REGION_REFUSED,
+    )
     assert not health.allows(10**12)
     health.record(Outcome.success(b""), 2)
-    assert health.status(2) == (VenueStatus.UNAVAILABLE, UnavailableCause.REGION_REFUSED)
+    assert health.status(2) == (
+        VenueStatus.UNAVAILABLE,
+        UnavailableCause.REGION_REFUSED,
+    )
     assert not health.allows(10**12)
 
 
@@ -191,7 +202,9 @@ class FakeClock:
 class FakeConnection:
     """Gives its script in order: a message, None for a silence, or a drop."""
 
-    def __init__(self, clock: FakeClock, *script: bytes | None | type[ConnectionClosed]):
+    def __init__(
+        self, clock: FakeClock, *script: bytes | None | type[ConnectionClosed]
+    ):
         self.clock = clock
         self.script = list(script)
         self.closed = False
@@ -294,7 +307,13 @@ def test_a_missed_heartbeat_marks_the_feed_stale_and_the_stream_reconnects() -> 
         Outcome.success(FakeConnection(clock, ConnectionClosed)),
         REGION_REFUSED,
     )
-    assert events[:5] == ["connect at 1000", "connected", "one", "stale", "connect at 1600"]
+    assert events[:5] == [
+        "connect at 1000",
+        "connected",
+        "one",
+        "stale",
+        "connect at 1600",
+    ]
     assert silent.closed
     assert health.region_refused
 
@@ -321,7 +340,9 @@ def test_failed_connections_back_off_and_open_the_circuit() -> None:
 
 
 @pytest.mark.req("EXA-015")
-def test_connections_that_go_stale_or_drop_before_any_message_open_the_circuit() -> None:
+def test_connections_that_go_stale_or_drop_before_any_message_open_the_circuit() -> (
+    None
+):
     clock = FakeClock()
     events, _, _ = run(
         clock,
