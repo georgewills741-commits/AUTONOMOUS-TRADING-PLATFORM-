@@ -220,8 +220,10 @@ async def maintain_connection(
     connect (`connect` opens the connection and subscribes), deliver each message, and, after a
     drop or a silence longer than the heartbeat timeout, which marks the feed stale, close the
     connection and connect again, after the backoff of the failures in a row. A connection is
-    opened only when the venue's health allows it; each attempt's outcome, a stale feed (a
-    timeout), and a drop (a connection that failed) are recorded in it."""
+    opened only when the venue's health allows it. A failed attempt, a stale feed (a timeout),
+    and a drop (a connection that failed) are failures, recorded in it; a connection counts as
+    a success, and ends the run of failures, only when its first message arrives, so a venue
+    whose connections open but deliver nothing still backs off and opens its circuit."""
     failures = 0
     while True:
         now = now_ns()
@@ -233,9 +235,6 @@ async def maintain_connection(
             await sleep_ns(wait if wait > 0 else limits.backoff.initial_ns)
             continue
         outcome = await connect()
-        health.record(outcome, now_ns())
-        if health.region_refused:
-            return
         connection = outcome.fold(
             on_success=lambda opened: opened,
             on_failure=lambda _: None,
@@ -243,11 +242,14 @@ async def maintain_connection(
             on_unknown=lambda: None,
         )
         if connection is None:
+            health.record(outcome, now_ns())
+            if health.region_refused:
+                return
             failures += 1
             await sleep_ns(limits.backoff.delay_ns(failures))
             continue
-        failures = 0
         report(FeedEvent.CONNECTED)
+        delivered = False
         try:
             while True:
                 message = await connection.receive(limits.heartbeat_timeout_ns)
@@ -255,6 +257,10 @@ async def maintain_connection(
                     report(FeedEvent.STALE)
                     health.record(Outcome.timeout(), now_ns())
                     break
+                if not delivered:
+                    delivered = True
+                    failures = 0
+                    health.record(Outcome.success(None), now_ns())
                 await deliver(message)
         except ConnectionClosed:
             report(FeedEvent.DROPPED)
