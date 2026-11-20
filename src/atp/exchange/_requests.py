@@ -85,7 +85,7 @@ class RequestFailure:
     retry_after_ns: int | None = None
 
     def __post_init__(self) -> None:
-        if not isinstance(self.cause, UnavailableCause):
+        if type(self.cause) is not UnavailableCause:
             msg = "a failure's cause is an UnavailableCause"
             raise TypeError(msg)
         if self.cause is UnavailableCause.TIMEOUT:

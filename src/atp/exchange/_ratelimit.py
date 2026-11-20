@@ -114,7 +114,9 @@ class RateLimiter:
             used = self._used[name]
             while used and used[0][0] + window <= now_ns:
                 used.popleft()
-            excess = sum(taken for _, taken in used) + weight - self._limits[name].capacity
+            excess = (
+                sum(taken for _, taken in used) + weight - self._limits[name].capacity
+            )
             for time, taken in used:
                 if excess <= 0:
                     break
@@ -164,9 +166,7 @@ class RequestQueue:
         self._limiter = limiter
         self._now_ns = now_ns
         self._sleep_ns = sleep_ns
-        self._waiting: list[
-            tuple[int, int, asyncio.Future[None], dict[str, int]]
-        ] = []
+        self._waiting: list[tuple[int, int, asyncio.Future[None], dict[str, int]]] = []
         self._arrivals = itertools.count()
         self._runner: asyncio.Task[None] | None = None
 

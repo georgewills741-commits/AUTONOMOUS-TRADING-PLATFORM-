@@ -180,7 +180,7 @@ class VenueHealth:
         return self._status, None
 
 
-class ConnectionClosed(Exception):  # noqa: N818 - what a stream reports, not a mistake of ours
+class ConnectionClosed(Exception):
     """A stream's connection was closed or dropped."""
 
 

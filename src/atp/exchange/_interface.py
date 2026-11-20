@@ -96,7 +96,9 @@ class VenueAdapter(Protocol):
         """A market's ticker."""
         ...
 
-    async def trades(self, market: MarketRef) -> Outcome[Translation[Trade], RequestFailure]:
+    async def trades(
+        self, market: MarketRef
+    ) -> Outcome[Translation[Trade], RequestFailure]:
         """A market's recent trades."""
         ...
 
