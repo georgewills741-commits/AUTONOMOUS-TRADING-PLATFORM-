@@ -6,7 +6,7 @@
 
 ## Context
 
-During Gate 3's run 1 of the first increment of Stage 2's checkpoint B, the owner sent two messages ([owner decisions 44](../handoffs/owner-decisions-44-questions-on-where-the-work-continues-and-access-to-the-server.md)). The client delivered each as a user turn of its own, of origin human, so each is the owner's.
+Before and during Gate 3's run 1 of the first increment of Stage 2's checkpoint B, the owner sent two messages ([owner decisions 44](../handoffs/owner-decisions-44-questions-on-where-the-work-continues-and-access-to-the-server.md)). The client delivered each as a user turn of its own, of origin human, so each is the owner's.
 
 The first, queued at 11:06 UTC while the builder worked and delivered at 11:35 UTC, asks whether a server is rented for a period of data collection and the work then comes back here, or whether the building continues there. The builder answered at 11:36 UTC:
 
