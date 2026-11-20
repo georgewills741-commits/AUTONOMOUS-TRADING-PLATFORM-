@@ -201,9 +201,9 @@ class RequestQueue:
                     admitted.set_result(None)
                     continue
                 await self._sleep_ns(wait)
-        except Exception as error:
-            # The clock or the wait failed: each request waiting is given the failure, so
-            # none waits for an admission that would never come.
+        except Exception as error:  # noqa: BLE001
+            # The clock or the wait, given by the caller, failed, whatever the failure: each
+            # request waiting is given it, so none waits for an admission that would never come.
             waiting, self._waiting = self._waiting, []
             for _, _, admitted, _ in waiting:
                 if not admitted.done():
