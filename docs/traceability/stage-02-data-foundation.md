@@ -13,7 +13,7 @@
 | Systems affected | SYS-01, SYS-02, SYS-03 with the Fee and Slippage Engines, SYS-04, SYS-05, SYS-29's drift detection, and the cross-cutting modules of the plan's D4 |
 | Files | Each checkpoint's verification record, "Scope": [checkpoint A verification](stage-02-checkpoint-a-verification.md) |
 | Implementation status | Checkpoint A built: U1, the readiness check, the dependencies and their review, and the venue verification; U2, SYS-02's contracts and Stage 2's settings; U3, the measurement framework (below); checkpoint B, in increments: its first, U5, the validation, freshness, quality, and quarantine of market data and the detection of clock drift (below) |
-| Test status | 1,551 tests, all passing, with every other check of the developer guide, on the tree of checkpoint B's first increment ([checkpoint B (U5) verification](stage-02-checkpoint-b-u5-verification.md), "Checks"), and 1,432 on checkpoint A's ([checkpoint A verification](stage-02-checkpoint-a-verification.md), "Checks"); before U2 and U3, every Stage 1 check passed on the new lockfile, 1,108 tests among them (2026-11-17, 23:50 UTC) |
+| Test status | 1,552 tests, all passing, with every other check of the developer guide, on the tree of checkpoint B's first increment ([checkpoint B (U5) verification](stage-02-checkpoint-b-u5-verification.md), "Checks"), and 1,432 on checkpoint A's ([checkpoint A verification](stage-02-checkpoint-a-verification.md), "Checks"); before U2 and U3, every Stage 1 check passed on the new lockfile, 1,108 tests among them (2026-11-17, 23:50 UTC) |
 | Verification 1, 2, 3 | Per checkpoint, in its verification record |
 | Security status | No credential is used or held; the database's password appears only as the name of a declared secret (SEC-005); no venue endpoint has been contacted (venue verification below) |
 | Performance status | No baseline exists; none is claimed. U3's framework measures and sets no target (V-45, V-46) |
@@ -246,7 +246,7 @@ Checkpoint B is built in increments, each through the three gates and committed 
 
 **The items carried from checkpoint A**, closed: J-28, the quarantine record names its market exactly when its stream is not the venue's status, a market of the record's venue: its contract's version 2.0, a narrowing ([contract conventions](../architecture/contracts.md)), version 1.0's schema kept; J-32, the exporter's test of a delay measured on a reliable clock, exported as reliable, beside a delay well below zero, with the mutation entry that makes the reliability label constant.
 
-**Tests:** 68 of validation, freshness, and quality (`tests/marketdata/test_validation.py`), 15 of the limits (`tests/marketdata/test_limits.py`), and 17 of clock drift (`tests/health/test_clock.py`); 7 of the quarantine record's market rule (J-28) and 1 of the exporter (J-32); and 11 of the structure test: the rule that only `atp.marketdata._validation` creates validated data, with its planted samples.
+**Tests:** 69 of validation, freshness, and quality (`tests/marketdata/test_validation.py`), 15 of the limits (`tests/marketdata/test_limits.py`), and 17 of clock drift (`tests/health/test_clock.py`); 7 of the quarantine record's market rule (J-28) and 1 of the exporter (J-32); and 11 of the structure test: the rule that only `atp.marketdata._validation` creates validated data, with its planted samples.
 
 ## Checkpoint B: builder details (U5)
 
