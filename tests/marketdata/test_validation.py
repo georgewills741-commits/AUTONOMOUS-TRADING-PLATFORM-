@@ -433,7 +433,8 @@ def test_an_update_behind_its_own_previous_number_is_not_applied() -> None:
     validator = MarketDataValidator(LIMITS)
     assert check(snapshot(), validator) is None
     # Its previous number is the book's, but its own numbers are already held.
-    assert check(update(5, 8, previous=10), validator) is QuarantineCause.DUPLICATE_EVENT
+    held = update(5, 8, previous=10)
+    assert check(held, validator) is QuarantineCause.DUPLICATE_EVENT
     # The book stays at 10: a keep-alive naming it as its previous number is applied.
     assert check(update(10, 10, previous=10), validator) is None
     assert check(update(11, 11, previous=10), validator) is None
@@ -751,7 +752,9 @@ def test_nothing_quarantined_or_stale_is_eligible(
     for item in _items(pairs, repeats=True):
         result = validator.validate(item, now_ns=NOW, drifting_venues=frozenset())
         if isinstance(result, Validated):
-            assert result.eligible is (NOW - result.item.event_time_ns <= STALE)
+            event = result.item.event_time_ns
+            assert event is not None
+            assert result.eligible is (NOW - event <= STALE)
         else:
             assert isinstance(result, QuarantineRecord)
 
