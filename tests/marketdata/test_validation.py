@@ -116,8 +116,9 @@ def trade(
     venue: str = "example",
     event: int | None = NOW,
     receive: int = NOW,
+    kind: str = "spot",
 ) -> Trade:
-    fields = common(Stream.TRADES, market_json(venue), event, receive)
+    fields = common(Stream.TRADES, market_json(venue, kind), event, receive)
     return Trade.from_json(json.dumps({**fields, "price": price, "quantity": quantity}))
 
 
@@ -188,6 +189,7 @@ def bar(
     open_time: int = NOW - 60 * SECOND,
     closed: bool = True,
     event: int | None = NOW,
+    quote_volume: str | None = None,
 ) -> OhlcvBar:
     fields = common(Stream.OHLCV, market_json(), event, NOW)
     fields |= {
@@ -200,6 +202,8 @@ def bar(
         "interval_seconds": 60,
         "closed": closed,
     }
+    if quote_volume is not None:
+        fields["quote_volume"] = quote_volume
     return OhlcvBar.from_json(json.dumps(fields))
 
 
@@ -260,13 +264,15 @@ def test_a_drifting_venue_s_data_is_quarantined_for_its_clock() -> None:
         (lambda: trade(event=NOW + AHEAD + 1), QuarantineCause.INVALID_TIMESTAMP),
         (lambda: trade(event=NOW + AHEAD), None),
         (
-            lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD + 1),
+            lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD + 1, closed=False),
             QuarantineCause.INVALID_TIMESTAMP,
         ),
+        (lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD, closed=False), None),
         (
             lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND),
             QuarantineCause.INVALID_TIMESTAMP,
         ),
+        (lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD - 60 * SECOND), None),
         (
             lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND, closed=False),
             None,
@@ -302,17 +308,23 @@ def test_an_item_missing_what_its_use_needs_is_quarantined() -> None:
         lambda: snapshot(bids=levels(("101", "1")), asks=levels(("101", "1"))),
         lambda: snapshot(bids=levels(("99", "1"), ("100", "1"))),
         lambda: snapshot(asks=levels(("102", "1"), ("101", "1"))),
+        lambda: snapshot(bids=levels(("100", "1"), ("100", "1"))),
+        lambda: snapshot(asks=levels(("101", "1"), ("101", "1"))),
         lambda: snapshot(bids=levels(("100", "0"))),
         lambda: snapshot(asks=levels(("0", "1"))),
         lambda: update(bids=levels(("100", "-1"))),
         lambda: update(bids=levels(("0", "1"))),
-        lambda: bar("100", "99", "98", "100"),
+        lambda: bar("100", "99.5", "98", "99"),
         lambda: bar("100", "101", "99", "102"),
         lambda: bar("100", "101", "100.5", "101"),
+        lambda: bar("101", "102", "100.5", "100"),
         lambda: bar("100", "101", "99", "100", volume="-1"),
+        lambda: bar("100", "101", "99", "100", quote_volume="-1"),
         lambda: bar("0", "101", "99", "100"),
         lambda: metadata(price_increment="0"),
+        lambda: metadata(quantity_increment="0"),
         lambda: metadata(minimum_quantity="-1"),
+        lambda: metadata(minimum_notional="-1"),
         lambda: metadata(contract_size="0"),
     ],
 )
@@ -325,6 +337,7 @@ def test_an_impossible_value_is_quarantined(make: Callable[[], MarketItem]) -> N
     "make",
     [
         lambda: update(bids=levels(("100", "0"))),
+        lambda: update(bids=levels(("99", "1"), ("100", "1"))),
         lambda: snapshot(bids=[], asks=[]),
         lambda: bar("100", "101", "99", "100", volume="0"),
         lambda: metadata(minimum_quantity="0", minimum_notional="0"),
@@ -343,8 +356,11 @@ def test_a_duplicate_is_quarantined_and_memory_is_bounded() -> None:
     first = trade()
     assert check(first, validator) is None
     assert check(first, validator) is QuarantineCause.DUPLICATE_EVENT
-    for _ in range(LIMITS.duplicate_memory):
+    for _ in range(LIMITS.duplicate_memory - 1):
         assert check(trade(), validator) is None
+    # The memory is full, and still holds the first identifier.
+    assert check(first, validator) is QuarantineCause.DUPLICATE_EVENT
+    assert check(trade(), validator) is None
     # The oldest identifier was forgotten: the item is no longer known as a duplicate.
     assert check(first, validator) is None
 
@@ -368,8 +384,9 @@ def test_book_sequences_follow_their_snapshot_and_a_gap_waits_for_a_fresh_one() 
     )  # no change, as some venues send
     assert check(update(first=15, last=16), validator) is QuarantineCause.SEQUENCE_GAP
     assert validator.needs_snapshot(SPOT)
-    # Broken: even a continuous update waits for the fresh snapshot.
+    # Broken: even a continuous update waits for the fresh snapshot, whatever its number.
     assert check(update(first=14, last=14), validator) is QuarantineCause.SEQUENCE_GAP
+    assert check(update(first=0, last=0), validator) is QuarantineCause.SEQUENCE_GAP
     assert check(snapshot(sequence=20), validator) is None
     assert (
         check(update(previous=19, last=21), validator) is QuarantineCause.SEQUENCE_GAP
@@ -377,6 +394,9 @@ def test_book_sequences_follow_their_snapshot_and_a_gap_waits_for_a_fresh_one() 
     assert check(snapshot(sequence=30), validator) is None
     assert check(update(first=31), validator) is None
     assert check(update(first=32, last=32), validator) is None
+    # An update without a number of its own cannot be placed in a numbered book.
+    assert check(update(), validator) is QuarantineCause.SEQUENCE_GAP
+    assert validator.needs_snapshot(SPOT)
 
 
 @pytest.mark.req("MKD-004")
@@ -417,6 +437,15 @@ def test_an_outlier_beyond_the_run_s_last_starts_a_new_run() -> None:
 
 
 @pytest.mark.req("MKD-008", "MKD-013")
+def test_an_earlier_price_never_replaces_a_later_reference() -> None:
+    validator = MarketDataValidator(LIMITS)
+    assert check(trade("100"), validator) is None
+    assert check(trade("105", event=NOW - 1), validator) is None
+    # Compared with 100, the reference, not with 105, which describes an earlier time.
+    assert check(trade("115"), validator) is QuarantineCause.OUTLIER
+
+
+@pytest.mark.req("MKD-008", "MKD-013")
 def test_a_price_that_is_not_an_outlier_ends_the_run() -> None:
     validator = MarketDataValidator(LIMITS)
     assert check(trade("100"), validator) is None
@@ -449,10 +478,30 @@ def test_a_price_unlike_every_other_venue_s_is_inconsistent() -> None:
     assert check(trade("105", venue="three"), validator) is None  # exactly the limit
     # A price no longer valid itself is not compared: it is not eligible for use anyway.
     assert check(trade("200", venue="four", event=NOW - STALE - 1), validator) is None
-    # One other venue is not enough to compare against.
+    # One other venue is not enough to compare against, and a venue is not compared with itself.
     lone = MarketDataValidator(LIMITS)
     assert check(trade("100", venue="one"), lone) is None
     assert check(trade("200", venue="two"), lone) is None
+    assert check(trade("106", venue="one"), lone) is None
+    # Within the limit of one other venue's price: consistent.
+    near = MarketDataValidator(LIMITS)
+    assert check(trade("100", venue="one"), near) is None
+    assert check(trade("104", venue="two"), near) is None
+    assert check(trade("106", venue="three"), near) is None
+    # A venue's earlier price never replaces its later one.
+    later = MarketDataValidator(LIMITS)
+    assert check(trade("100", venue="one"), later) is None
+    assert check(trade("90", venue="two"), later) is None
+    assert check(trade("104", venue="one", event=NOW - 1), later) is None
+    assert (
+        check(trade("108", venue="three"), later)
+        is QuarantineCause.EXCHANGE_INCONSISTENCY
+    )
+    # Another instrument of the same assets is another market.
+    other = MarketDataValidator(LIMITS)
+    assert check(trade("100", venue="one"), other) is None
+    assert check(trade("100", venue="two"), other) is None
+    assert check(trade("110", venue="three", kind="perpetual"), other) is None
     # Another venue's price that is no longer valid is not compared.
     aged = MarketDataValidator(LIMITS)
     for venue in ("one", "two"):

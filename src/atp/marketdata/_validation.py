@@ -12,14 +12,17 @@ with that cause and its evidence; a quarantined item is never passed on (MKD-009
 4. IMPOSSIBLE_PRICE, for impossible values: a price, increment, or contract size not above zero;
    a quantity, volume, or minimum below zero; a trade, or a level of a book snapshot, of zero
    quantity; a ticker or snapshot whose best bid is not below its best ask; a snapshot's bids
-   not strictly falling or asks not strictly rising; a bar whose high is below its open, close,
-   or low, or whose low is above its open or close. A funding rate may be below zero.
+   not strictly falling or asks not strictly rising; a bar whose high is below its open or
+   close, or whose low is above either, and so also one whose high is below its low. The levels
+   of a book update, which lists only what changed, may come in any order, and a funding rate
+   may be below zero.
 5. DUPLICATE_EVENT: its evidence identifier is among the last ones seen; a book update whose
    sequence numbers the market's book already holds is a duplicate too.
 6. SEQUENCE_GAP: a book update that does not follow the market's last snapshot or update, by the
    venue's sequence numbers; the book then stays broken, every update a gap, until a fresh
-   snapshot (`needs_snapshot`). An update before any snapshot is a gap. Where the venue's
-   snapshot gives no sequence number, its updates cannot be checked, and are not.
+   snapshot (`needs_snapshot`). An update before any snapshot is a gap, and so is one without
+   a sequence number of its own in a book whose snapshot has one. Where the venue's snapshot
+   gives no sequence number, its updates cannot be checked, and are not.
 7. OUTLIER: its price differs from its market's and stream's reference price, the accepted one
    that describes the latest time, by more than the outlier limit. Outliers in a row form a run,
    and an outlier beyond the limit of the run's last starts a new run; a price that is not an
@@ -221,7 +224,7 @@ def _impossible(item: MarketItem) -> bool:
             item.quote_volume is not None and item.quote_volume < 0
         ):
             return True
-        return item.high < max(item.open, item.close, item.low) or item.low > min(
+        return item.high < max(item.open, item.close) or item.low > min(
             item.open, item.close
         )
     if isinstance(item, MarketMetadata):
@@ -371,8 +374,7 @@ class MarketDataValidator:
     def _check_sequence(self, update: BookUpdate) -> QuarantineCause | None:
         state = self._chains.get(update.market)
         if state is None or state == _BROKEN:
-            self._chains[update.market] = _BROKEN
-            return QuarantineCause.SEQUENCE_GAP
+            return self._gap(update.market)
         if state == _UNSEQUENCED:
             return None
         last = (
@@ -380,22 +382,23 @@ class MarketDataValidator:
             if update.last_sequence is not None
             else update.first_sequence
         )
-        if update.previous_sequence is not None:
-            if update.previous_sequence == state:
-                return None
-            if last is not None and last <= state:
-                return QuarantineCause.DUPLICATE_EVENT
-            self._chains[update.market] = _BROKEN
-            return QuarantineCause.SEQUENCE_GAP
         if last is None:
+            return self._gap(update.market)
+        if update.previous_sequence is not None and update.previous_sequence == state:
             return None
-        first = update.first_sequence if update.first_sequence is not None else last
         if last <= state:
             return QuarantineCause.DUPLICATE_EVENT
+        if update.previous_sequence is not None:
+            return self._gap(update.market)
+        first = update.first_sequence if update.first_sequence is not None else last
         if first > state + 1:
-            self._chains[update.market] = _BROKEN
-            return QuarantineCause.SEQUENCE_GAP
+            return self._gap(update.market)
         return None
+
+    def _gap(self, market: MarketRef) -> QuarantineCause:
+        """Break `market`'s book: every update is a gap until a fresh snapshot."""
+        self._chains[market] = _BROKEN
+        return QuarantineCause.SEQUENCE_GAP
 
     def _accept_book(self, item: MarketItem) -> None:
         if isinstance(item, BookSnapshot):

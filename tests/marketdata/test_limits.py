@@ -79,3 +79,17 @@ def test_a_deviation_limit_is_a_fraction_above_zero(field: str, fraction: str) -
 )
 def test_a_count_or_duration_out_of_range_is_refused(field: str, value: int) -> None:
     assert _types({**VALID, field: value})
+
+
+@pytest.mark.req("MKD-006")
+@pytest.mark.parametrize("field", ["stale_after_ns", "invalid_after_ns"])
+def test_a_stream_limit_of_zero_is_refused_alone(field: str) -> None:
+    limits = {
+        "stream": "ticker",
+        "stale_after_ns": SECOND,
+        "invalid_after_ns": 2 * SECOND,
+        field: 0,
+    }
+    with pytest.raises(ContractError) as refused:
+        StreamLimits.from_json(json.dumps(limits))
+    assert [detail.type for detail in refused.value.details] == ["greater_than"]

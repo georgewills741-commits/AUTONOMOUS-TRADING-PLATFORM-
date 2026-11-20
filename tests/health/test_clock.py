@@ -45,6 +45,15 @@ def test_a_server_time_shows_drift_only_beyond_the_round_trip_s_doubt() -> None:
     assert not doubtful.within(LIMIT)
     assert server("one", 0).within(LIMIT)
     assert not server("one", LIMIT).within(LIMIT)
+    # The boundaries: exactly the limit is not beyond it.
+    assert ClockSample("one", NOW - LIMIT, NOW - LIMIT, NOW).within(LIMIT)
+    assert ClockSample("one", NOW + LIMIT, NOW, NOW).within(LIMIT)
+    assert not ClockSample("one", NOW + LIMIT, NOW, NOW).ahead_by_more_than(LIMIT)
+    exactly_behind = ClockSample("one", NOW - ROUND_TRIP - LIMIT, NOW - ROUND_TRIP, NOW)
+    assert not exactly_behind.behind_by_more_than(LIMIT)
+    assert ClockSample(
+        "one", NOW - ROUND_TRIP - LIMIT - 1, NOW - ROUND_TRIP, NOW
+    ).behind_by_more_than(LIMIT)
 
 
 @pytest.mark.req("HLT-013", "HLT-014")
@@ -71,6 +80,9 @@ def test_without_a_recent_sample_the_local_clock_is_undetermined() -> None:
         LocalClock.UNDETERMINED,
         frozenset(),
     )
+    # A sample exactly the age limit old still counts.
+    edge = verdict(server("one", 10 * SECOND, received=NOW - 60 * SECOND))
+    assert edge.drifting_venues == frozenset({"one"})
 
 
 @pytest.mark.req("HLT-013", "HLT-014")
@@ -130,6 +142,15 @@ def test_an_event_time_never_hides_a_server_time_s_finding() -> None:
 
 
 @pytest.mark.req("HLT-013", "HLT-014")
+def test_a_venue_drifting_by_one_sample_is_not_in_time_by_another() -> None:
+    result = verdict(server("one", 0), ClockSample("one", NOW + SECOND, None, NOW))
+    assert (result.local_clock, result.drifting_venues) == (
+        LocalClock.UNDETERMINED,
+        frozenset({"one"}),
+    )
+
+
+@pytest.mark.req("HLT-013", "HLT-014")
 def test_event_times_show_a_drift_but_never_a_clock_in_time() -> None:
     unknown = verdict(ClockSample("one", NOW, None, NOW), server("two", SECOND))
     assert (unknown.local_clock, unknown.drifting_venues) == (
@@ -179,3 +200,5 @@ def test_the_limits_need_two_venues_to_find_the_local_clock_drifting() -> None:
         ClockLimits(drift_limit_ns=LIMIT, sample_max_age_ns=SECOND, minimum_venues=1)
     with pytest.raises(ValidationError):
         ClockLimits(drift_limit_ns=0, sample_max_age_ns=SECOND, minimum_venues=2)
+    with pytest.raises(ValidationError):
+        ClockLimits(drift_limit_ns=LIMIT, sample_max_age_ns=0, minimum_venues=2)
