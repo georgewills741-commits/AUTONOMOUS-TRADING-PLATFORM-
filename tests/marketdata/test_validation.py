@@ -687,7 +687,7 @@ def test_an_injected_venue_drift_quarantines_that_venue_s_data() -> None:
 
 
 # Properties: deduplication idempotent, ordering stable, quality repeatable, and nothing
-# quarantined or stale reaches a consumer as eligible.
+# quarantined, or stale when validated, is eligible.
 
 _PAIRS = st.lists(
     st.tuples(
@@ -795,7 +795,10 @@ def test_a_quarantine_record_is_timed_by_its_check() -> None:
 def test_a_bar_is_checked_by_its_close() -> None:
     validator = MarketDataValidator(LIMITS)
     assert check(bar("100", "100", "100", "100"), validator) is None
-    assert check(bar("150", "150", "150", "150"), validator) is QuarantineCause.OUTLIER
+    # Its close within the limit, its open and high beyond it: accepted.
+    assert check(bar("150", "150", "99", "101"), validator) is None
+    # Its close beyond the limit, its open and low within it: an outlier.
+    assert check(bar("100", "150", "100", "150"), validator) is QuarantineCause.OUTLIER
 
 
 @pytest.mark.req("MKD-004")

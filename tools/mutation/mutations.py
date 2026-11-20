@@ -4670,6 +4670,13 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U5 a bar checked by its open",
+        "src/atp/marketdata/_validation.py",
+        "    if isinstance(item, OhlcvBar):\n        return item.close",
+        "    if isinstance(item, OhlcvBar):\n        return item.open",
+        TESTS,
+    ),
+    Mutation(
         "S2-U2 a quarantine record's market not checked against its stream",
         "src/atp/marketdata/_contracts.py",
         "        if (market is None) != (stream is Stream.VENUE_STATUS):",
