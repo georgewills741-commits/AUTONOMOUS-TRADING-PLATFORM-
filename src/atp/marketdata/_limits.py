@@ -57,8 +57,8 @@ class ValidationLimits(Contract):
     - `duplicate_memory`: how many evidence identifiers are remembered to find duplicates; the
       oldest is forgotten first.
     - `outlier_limit`: the fraction by which a price may differ from its market's reference
-      price before it is an outlier; `outlier_confirmations`: how many quarantined outliers in a
-      row, each within that fraction of the next, make the next one the new reference.
+      price before it is an outlier; `outlier_confirmations`: how many outliers in a row a run
+      holds before the next outlier within that fraction of each of them is accepted.
     - `inconsistency_limit`: the fraction by which a price may differ from every other venue's
       price for the same market before it is inconsistent; `minimum_other_venues`: how many
       other venues' valid prices the comparison needs.
