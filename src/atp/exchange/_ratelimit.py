@@ -5,11 +5,13 @@ the whole venue or one endpoint, is a `RateLimit` with a name: at most so much w
 window, a sliding one. A request names the limits it counts against, with its weight in each,
 and is sent only when every one of them has room (`RateLimiter`), so no request goes over a
 limit, also when many wait at once: `RequestQueue` admits waiting requests one at a time, in
-priority order, and records each request's weight as it admits it. A rate-limit refusal pauses
-the venue for its backoff, or longer when the venue asks for longer, the pause doubling with
-each refusal in a row until a request is accepted. Reads are retried by `retry_read`, after a
-backoff, only where a retry may change the outcome; a retry rule for financial actions, which
-must never be repeated by a retry, comes with them in CORE TRADING FOUNDATION (EXE-008).
+priority order, and records each request's weight as it admits it; should it fail, each
+request waiting is given its failure, so none waits for good. A rate-limit refusal pauses the
+venue for its backoff, or longer when the venue asks for longer, the pause doubling with each
+refusal in a row until a request is accepted. Reads are retried by `retry_read`, after a
+backoff, or the wait the venue asked for when that is longer, only where a retry may change
+the outcome; a retry rule for financial actions, which must never be repeated by a retry,
+comes with them in CORE TRADING FOUNDATION (EXE-008).
 
 Times are a monotonic clock's whole nanoseconds; the clock and the wait are given by the code
 that runs the path, so that tests run without waiting.
@@ -184,20 +186,28 @@ class RequestQueue:
         await admitted
 
     async def _admit_waiting(self) -> None:
-        while self._waiting:
-            _, _, admitted, costs = self._waiting[0]
-            if admitted.done():
-                # Its caller stopped waiting.
-                heapq.heappop(self._waiting)
-                continue
-            now = self._now_ns()
-            wait = self._limiter.wait_ns(costs, now)
-            if wait == 0:
-                heapq.heappop(self._waiting)
-                self._limiter.take(costs, now)
-                admitted.set_result(None)
-                continue
-            await self._sleep_ns(wait)
+        try:
+            while self._waiting:
+                _, _, admitted, costs = self._waiting[0]
+                if admitted.done():
+                    # Its caller stopped waiting.
+                    heapq.heappop(self._waiting)
+                    continue
+                now = self._now_ns()
+                wait = self._limiter.wait_ns(costs, now)
+                if wait == 0:
+                    heapq.heappop(self._waiting)
+                    self._limiter.take(costs, now)
+                    admitted.set_result(None)
+                    continue
+                await self._sleep_ns(wait)
+        except Exception as error:
+            # The clock or the wait failed: each request waiting is given the failure, so
+            # none waits for an admission that would never come.
+            waiting, self._waiting = self._waiting, []
+            for _, _, admitted, _ in waiting:
+                if not admitted.done():
+                    admitted.set_exception(error)
 
 
 _RETRIED: Final = frozenset(
@@ -214,9 +224,9 @@ async def retry_read[T](
     backoff: Backoff,
     sleep_ns: Callable[[int], Awaitable[None]],
 ) -> Outcome[T, RequestFailure]:
-    """Send a read, and send it again, after the backoff of the attempts so far, while its
-    outcome is a TIMEOUT, an UNKNOWN, or a failure in `_RETRIED`, at most `attempts` times in
-    all; the last outcome is returned."""
+    """Send a read, and send it again, after the backoff of the attempts so far or the wait
+    the venue asked for, whichever is longer, while its outcome is a TIMEOUT, an UNKNOWN, or a
+    failure in `_RETRIED`, at most `attempts` times in all; the last outcome is returned."""
     if type(attempts) is not int or attempts < 1:
         msg = "a read is sent once or more"
         raise ValueError(msg)
@@ -231,5 +241,12 @@ async def retry_read[T](
         )
         if not retried or attempt == attempts:
             return outcome
-        await sleep_ns(backoff.delay_ns(attempt))
+        asked = outcome.fold(
+            on_success=lambda _: None,
+            on_failure=lambda failure: failure.retry_after_ns,
+            on_timeout=lambda: None,
+            on_unknown=lambda: None,
+        )
+        delay = backoff.delay_ns(attempt)
+        await sleep_ns(delay if asked is None else max(delay, asked))
         attempt += 1

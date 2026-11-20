@@ -1,8 +1,9 @@
 """Connection resilience (EXA-015, EXA-007; the Stage 2 plan's U4).
 
 A venue's connections keep their health in a `VenueHealth`: a `CircuitBreaker` stops requests to
-a venue that keeps failing, then lets one trial through, whose success closes it again; a
-region refusal makes the venue unavailable for good, and no other route is tried (EXA-007). The
+a venue that keeps failing, then lets one trial through, whose success closes it again, and a
+trial never ends the venue's use, whatever its outcome or none; a region refusal makes the
+venue unavailable for good, and no other route is tried (EXA-007). The
 venue's state is U2's `VenueStatus`, with its `UnavailableCause`: states of their own, not the
 platform's. `maintain_connection` keeps a stream connected: it reconnects after a drop, and
 after a missed heartbeat, which marks the feed stale, with a backoff between failed attempts.
@@ -53,8 +54,10 @@ class CircuitState(enum.Enum):
 class CircuitBreaker:
     """Stops requests to a venue that keeps failing: `threshold` failures in a row open the
     circuit, which refuses every request for `open_ns`; then one trial request is let through,
-    and while it runs the circuit is half-open and refuses the others; the trial's success
-    closes the circuit, and its failure opens it again."""
+    and while it runs the circuit is half-open and refuses the others. The trial's success
+    closes the circuit, and its failure opens it again; a trial that ends as neither, or whose
+    outcome is not recorded within `open_ns` (its caller may have stopped), lets another
+    request be the trial."""
 
     def __init__(self, threshold: int, open_ns: int) -> None:
         if type(threshold) is not int or threshold < 1:
@@ -67,65 +70,76 @@ class CircuitBreaker:
         self._open_ns = open_ns
         self._failures = 0
         self._opened_ns: int | None = None
-        self._trial = False
+        self._trial_ns: int | None = None
+
+    def _trial_runs(self, now_ns: int) -> bool:
+        return self._trial_ns is not None and now_ns - self._trial_ns < self._open_ns
 
     def state(self, now_ns: int) -> CircuitState:
         """The state now."""
-        if self._trial:
-            return CircuitState.HALF_OPEN
         if self._opened_ns is None:
             return CircuitState.CLOSED
+        if self._trial_runs(now_ns):
+            return CircuitState.HALF_OPEN
         return CircuitState.OPEN
 
     def allows(self, now_ns: int) -> bool:
-        """Whether a request may be sent now; the first allowed once the circuit has been open
-        for `open_ns` is its trial."""
-        if self._trial:
-            return False
+        """Whether a request may be sent now; while the circuit is open, the first allowed is
+        its trial."""
         if self._opened_ns is None:
             return True
-        if now_ns - self._opened_ns < self._open_ns:
+        if self._trial_runs(now_ns):
             return False
-        self._trial = True
+        if self._trial_ns is None and now_ns - self._opened_ns < self._open_ns:
+            return False
+        self._trial_ns = now_ns
         return True
 
     def opens_ns(self, now_ns: int) -> int:
-        """How long until a trial may be sent: zero when the circuit is closed or its open time
-        is over."""
+        """How long until a trial may be let through: zero when the circuit is closed, or when
+        a trial may be let through now."""
         if self._opened_ns is None:
             return 0
-        return max(0, self._opened_ns + self._open_ns - now_ns)
+        start = self._opened_ns if self._trial_ns is None else self._trial_ns
+        return max(0, start + self._open_ns - now_ns)
 
     def succeeded(self) -> None:
         """A request succeeded: the circuit closes."""
         self._failures = 0
         self._opened_ns = None
-        self._trial = False
+        self._trial_ns = None
 
     def failed(self, now_ns: int) -> None:
         """A request failed: a trial's failure opens the circuit again, and so does the
         failure that makes `threshold` in a row."""
-        if self._trial:
-            self._trial = False
+        if self._trial_ns is not None:
+            self._trial_ns = None
             self._opened_ns = now_ns
             return
         self._failures += 1
         if self._opened_ns is None and self._failures >= self._threshold:
             self._opened_ns = now_ns
 
+    def refused(self) -> None:
+        """A request ended as neither a success nor a failure: a trial so ended lets another
+        request be the trial, and a run of failures is left as it was."""
+        self._trial_ns = None
+
 
 class VenueHealth:
-    """A venue's state as its connections observe it: UNKNOWN until an outcome is recorded;
-    AVAILABLE after a success; UNAVAILABLE while the circuit is not closed, with the cause of
-    the last failure, and while a rate-limit refusal is the last outcome, with RATE_LIMITED; and
-    UNAVAILABLE with REGION_REFUSED for good once the venue refuses the region, after which no
-    request is allowed and no other route is tried (EXA-007). A timeout, an UNKNOWN, and a
-    connection that failed count as failures toward the circuit; a venue's refusal of one
-    request, as it was sent, does not."""
+    """A venue's state as its connections observe it: UNAVAILABLE with REGION_REFUSED for good
+    once the venue refuses the region, after which no request is allowed and no other route is
+    tried (EXA-007); otherwise UNAVAILABLE with RATE_LIMITED while a rate-limit refusal is the
+    last outcome recorded, and UNAVAILABLE with the cause of the last failure while the circuit
+    is not closed; otherwise AVAILABLE once a request has succeeded, and UNKNOWN before. A
+    timeout, an UNKNOWN, and a connection that failed are failures of the venue, counted toward
+    the circuit; a rate-limit refusal and a venue's refusal of one request, as it was sent, are
+    neither a success nor a failure of the venue."""
 
     def __init__(self, limits: ResilienceLimits) -> None:
         self._circuit = CircuitBreaker(limits.failure_threshold, limits.open_ns)
         self._region_refused = False
+        self._rate_limited = False
         self._status = VenueStatus.UNKNOWN
         self._cause: UnavailableCause | None = None
 
@@ -139,7 +153,8 @@ class VenueHealth:
         return not self._region_refused and self._circuit.allows(now_ns)
 
     def wait_ns(self, now_ns: int) -> int:
-        """How long until the circuit lets a trial through."""
+        """How long until the circuit lets a trial through: above zero whenever `allows`
+        refuses a request, unless the venue refused the region."""
         return self._circuit.opens_ns(now_ns)
 
     def record(self, outcome: Outcome[object, RequestFailure], now_ns: int) -> None:
@@ -148,19 +163,23 @@ class VenueHealth:
         def failure(cause: UnavailableCause) -> None:
             self._circuit.failed(now_ns)
             self._cause = cause
+            self._rate_limited = False
 
         def refused(error: RequestFailure) -> None:
             if error.cause is UnavailableCause.REGION_REFUSED:
                 self._region_refused = True
-            elif error.cause is UnavailableCause.RATE_LIMITED:
-                self._cause = UnavailableCause.RATE_LIMITED
             elif error.cause is UnavailableCause.CONNECTION_FAILED:
                 failure(UnavailableCause.CONNECTION_FAILED)
+            else:
+                # The venue answered, refusing the request for its rate limit or as it was
+                # sent (VENUE_ERROR): neither a success nor a failure of the venue.
+                self._circuit.refused()
+                self._rate_limited = error.cause is UnavailableCause.RATE_LIMITED
 
         def succeeded(_: object) -> None:
             self._circuit.succeeded()
             self._status = VenueStatus.AVAILABLE
-            self._cause = None
+            self._rate_limited = False
 
         outcome.fold(
             on_success=succeeded,
@@ -173,10 +192,10 @@ class VenueHealth:
         """The venue's state now, and why it is unavailable when it is."""
         if self._region_refused:
             return VenueStatus.UNAVAILABLE, UnavailableCause.REGION_REFUSED
+        if self._rate_limited:
+            return VenueStatus.UNAVAILABLE, UnavailableCause.RATE_LIMITED
         if self._circuit.state(now_ns) is not CircuitState.CLOSED:
             return VenueStatus.UNAVAILABLE, self._cause
-        if self._cause is UnavailableCause.RATE_LIMITED:
-            return VenueStatus.UNAVAILABLE, UnavailableCause.RATE_LIMITED
         return self._status, None
 
 
@@ -231,8 +250,7 @@ async def maintain_connection(
             if health.region_refused:
                 return
             # The circuit is open, or its trial runs elsewhere.
-            wait = health.wait_ns(now)
-            await sleep_ns(wait if wait > 0 else limits.backoff.initial_ns)
+            await sleep_ns(health.wait_ns(now))
             continue
         outcome = await connect()
         connection = outcome.fold(

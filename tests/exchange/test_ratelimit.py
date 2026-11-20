@@ -278,6 +278,35 @@ def test_a_later_request_starts_the_queue_again() -> None:
     assert admitted == [1_000, 2_000]
 
 
+def test_a_failure_of_the_queue_is_given_to_every_waiting_request() -> None:
+    failures: list[str] = []
+    admitted: list[int] = []
+    rate = limiter(("rest", 1, 100))
+
+    async def body(queue: RequestQueue, clock: FakeClock) -> None:
+        rate.take({"rest": 1}, clock())
+
+        async def request() -> None:
+            try:
+                await queue.admit({"rest": 1}, Priority.NORMAL)
+            except ValueError as error:
+                failures.append(str(error))
+
+        # The clock goes back: the queue cannot admit, and no request waits for good.
+        clock.now -= 1
+        await asyncio.gather(request(), request())
+        # The clock right again, the queue admits again.
+        clock.now += 101
+        await queue.admit({"rest": 1}, Priority.NORMAL)
+        admitted.append(clock())
+
+    run_queue(
+        lambda clock: RequestQueue(rate, now_ns=clock, sleep_ns=clock.sleep), body
+    )
+    assert failures == ["a monotonic clock never goes back"] * 2
+    assert admitted == [1_100]
+
+
 def test_the_queue_checks_costs_before_waiting() -> None:
     async def body(queue: RequestQueue, clock: FakeClock) -> None:
         with pytest.raises(ValueError, match="no limit is named"):
@@ -336,6 +365,23 @@ def test_a_read_is_retried_with_backoff_while_a_retry_may_help() -> None:
     assert result(asyncio.run(main())) == "data"
     assert sent == [1, 2, 3, 4, 5]
     assert clock.waits == [100, 200, 400, 800]
+
+
+@pytest.mark.req("EXA-014")
+def test_a_retry_waits_as_long_as_the_venue_asks_when_that_is_longer() -> None:
+    send, sent = scripted(
+        Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 429, 5_000)),
+        Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 429, 50)),
+        Outcome.success("data"),
+    )
+    clock = FakeClock()
+
+    async def main() -> Outcome[str, RequestFailure]:
+        return await retry_read(send, attempts=3, backoff=BACKOFF, sleep_ns=clock.sleep)
+
+    assert result(asyncio.run(main())) == "data"
+    assert sent == [1, 2, 3]
+    assert clock.waits == [5_000, 200]
 
 
 @pytest.mark.req("EXA-007", "EXA-014")
