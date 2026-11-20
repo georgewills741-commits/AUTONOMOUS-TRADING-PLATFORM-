@@ -320,7 +320,7 @@ def test_an_item_missing_what_its_use_needs_is_quarantined() -> None:
         lambda: bar("101", "102", "100.5", "100"),
         lambda: bar("100", "101", "99", "100", volume="-1"),
         lambda: bar("100", "101", "99", "100", quote_volume="-1"),
-        lambda: bar("0", "101", "99", "100"),
+        lambda: bar("0", "0", "0", "0"),
         lambda: metadata(price_increment="0"),
         lambda: metadata(quantity_increment="0"),
         lambda: metadata(minimum_quantity="-1"),
@@ -348,6 +348,24 @@ def test_a_possible_value_is_not_quarantined(make: Callable[[], MarketItem]) -> 
     validator = MarketDataValidator(LIMITS)
     assert check(snapshot(sequence=None), validator) is None
     assert check(make(), validator) is None
+
+
+@pytest.mark.req("MKD-003", "MKD-013")
+def test_the_checks_run_in_their_order_and_the_first_failed_names_the_cause() -> None:
+    impossible_and_late = trade(price="0", event=NOW + AHEAD + 1)
+    assert check(impossible_and_late, drifting=frozenset({"example"})) is (
+        QuarantineCause.CLOCK_PROBLEM
+    )
+    assert check(impossible_and_late) is QuarantineCause.INVALID_TIMESTAMP
+    assert check(metadata(price_increment=None, quantity_increment="0")) is (
+        QuarantineCause.MISSING_FIELD
+    )
+    validator = MarketDataValidator(LIMITS)
+    seen = trade("100")
+    assert check(seen, validator) is None
+    assert check(trade("150"), validator) is QuarantineCause.OUTLIER
+    # Seen before, and an outlier no longer: the duplicate is named first.
+    assert check(seen, validator) is QuarantineCause.DUPLICATE_EVENT
 
 
 @pytest.mark.req("MKD-004", "MKD-013")

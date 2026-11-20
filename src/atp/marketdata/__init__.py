@@ -1,6 +1,7 @@
 """SYS-02 Market-Data Infrastructure: the canonical market-data contracts and evidence identifiers.
 
-Requirements: ARCH-025, EXA-013, MKD-005, MKD-010, HLT-014. The contracts are the canonical
+Requirements: ARCH-025, EXA-013, MKD-001, MKD-003, MKD-004, MKD-005, MKD-006, MKD-008, MKD-009,
+MKD-010, MKD-011, MKD-012, MKD-013, HLT-014. The contracts are the canonical
 objects adapters (SYS-01, `atp.exchange`) translate venue data into (EXA-013), defined before the
 adapters (ARCH-025); each item carries an evidence identifier (MKD-005), its lineage (MKD-010),
 and its event and receipt times, kept exact to the venue's resolution (HLT-014). The conventions

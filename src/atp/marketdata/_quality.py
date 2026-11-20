@@ -6,8 +6,6 @@ Its quality score, from 0 to 100, follows deterministically from its freshness a
 the venue gave its time, under the version of the rule written here. Each stream's freshness
 from its latest validated item is `StreamFreshness`, beside the validation that makes items
 validated.
-
-Requirements: MKD-006, MKD-008, MKD-012.
 """
 
 from __future__ import annotations

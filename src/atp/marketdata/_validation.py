@@ -46,8 +46,6 @@ Out-of-order data (MKD-004) is still checked and assessed, but an item never rep
 reference or latest price that describes a later time, and a book update out of the venue's
 sequence is a duplicate or a gap. A market's book is checked in the order its adapter gives it,
 as its venue's procedure has it (U4): a snapshot, then the updates that follow it.
-
-Requirements: MKD-003, MKD-004, MKD-006, MKD-008, MKD-009, MKD-011, MKD-012, MKD-013.
 """
 
 from __future__ import annotations

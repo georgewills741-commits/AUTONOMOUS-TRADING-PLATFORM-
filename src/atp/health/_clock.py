@@ -18,8 +18,6 @@ UNDETERMINED: delays are not reliable, and each drifting venue's data is quarant
 found raises DATA DEGRADED for SYS-29's health state (CORE); alerts come with SYS-28 (SR-14).
 Where no drift is found, nothing is quarantined or degraded, even when the local clock is
 UNDETERMINED for want of a sample.
-
-Requirements: HLT-013, HLT-014.
 """
 
 from __future__ import annotations

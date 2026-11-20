@@ -2,10 +2,9 @@
 
 Each is an IMPLEMENTATION CHOICE value, set from the first live measurements and given to the
 validator by the code that runs the market-data path; none has a default here. They mark data in
-Stage 2 only, and are never presented as V-17, the freshness hard limits that policy sets in CORE
-(MKD-006).
-
-Requirements: MKD-006, MKD-012.
+Stage 2 only, and are never presented as V-17, each stream's freshness limit, a HARD LIMIT that
+the owner sets in policy once CORE TRADING FOUNDATION builds the Policy System (MKD-006; the
+plan's D2).
 """
 
 from __future__ import annotations

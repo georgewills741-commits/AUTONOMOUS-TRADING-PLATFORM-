@@ -962,7 +962,7 @@ def test_input_is_validated_only_through_the_redacting_methods() -> None:
     assert raw_validation_findings(SOURCE_ROOT) == []
 
 
-@pytest.mark.req("MKD-008", "MKD-011")
+@pytest.mark.req("MKD-001", "MKD-008", "MKD-011")
 def test_only_the_market_data_system_creates_validated_data() -> None:
     assert validated_findings(SOURCE_ROOT) == []
 
