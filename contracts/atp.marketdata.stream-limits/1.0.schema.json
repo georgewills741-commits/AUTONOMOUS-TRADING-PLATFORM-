@@ -1,0 +1,46 @@
+{
+  "$defs": {
+    "Stream": {
+      "description": "A kind of market data, as an adapter receives it.",
+      "enum": [
+        "markets",
+        "ticker",
+        "trades",
+        "book",
+        "ohlcv",
+        "funding",
+        "venue-status"
+      ],
+      "title": "Stream",
+      "type": "string"
+    }
+  },
+  "$id": "atp.marketdata.stream-limits/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A stream's freshness limits (MKD-006, MKD-012): an item older than `stale_after_ns` is\nSTALE, and one older than `invalid_after_ns`, which is later, is INVALID.",
+  "properties": {
+    "invalid_after_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Invalid After Ns",
+      "type": "integer"
+    },
+    "stale_after_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Stale After Ns",
+      "type": "integer"
+    },
+    "stream": {
+      "$ref": "#/$defs/Stream"
+    }
+  },
+  "required": [
+    "stream",
+    "stale_after_ns",
+    "invalid_after_ns"
+  ],
+  "title": "StreamLimits",
+  "type": "object"
+}

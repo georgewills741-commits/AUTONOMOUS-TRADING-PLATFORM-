@@ -71,7 +71,12 @@ Fields = dict[str, object]
 
 
 def market_json(venue: str = "example", kind: str = "spot") -> Fields:
-    fields: Fields = {"venue": venue, "base": "BTC", "quote": "USDT", "instrument_type": kind}
+    fields: Fields = {
+        "venue": venue,
+        "base": "BTC",
+        "quote": "USDT",
+        "instrument_type": kind,
+    }
     if kind == "perpetual":
         fields["settle"] = "USDT"
     return fields
@@ -91,10 +96,14 @@ def stamp(event: int | None = NOW, receive: int = NOW) -> Fields:
     return fields
 
 
-def common(stream: Stream, at: Fields | None, event: int | None, receive: int) -> Fields:
+def common(
+    stream: Stream, at: Fields | None, event: int | None, receive: int
+) -> Fields:
     ref = None if at is None else MarketRef.from_json(json.dumps(at))
     venue = ref.venue if ref is not None else "example"
-    key = evidence_id(venue=venue, stream=stream, market=ref, venue_key=str(next(_keys)))
+    key = evidence_id(
+        venue=venue, stream=stream, market=ref, venue_key=str(next(_keys))
+    )
     fields: Fields = {"evidence_id": key, "lineage": LINEAGE, **stamp(event, receive)}
     if at is not None:
         fields["market"] = at
@@ -112,7 +121,9 @@ def trade(
     return Trade.from_json(json.dumps({**fields, "price": price, "quantity": quantity}))
 
 
-def ticker(bid: str | None, ask: str | None, last: str | None, bid_size: str | None = None) -> Ticker:
+def ticker(
+    bid: str | None, ask: str | None, last: str | None, bid_size: str | None = None
+) -> Ticker:
     fields = common(Stream.TICKER, market_json(), NOW, NOW)
     prices = {"bid": bid, "ask": ask, "last": last, "bid_size": bid_size}
     fields |= {name: value for name, value in prices.items() if value is not None}
@@ -137,8 +148,12 @@ def snapshot(
     sequence: int | None = 10,
 ) -> BookSnapshot:
     fields = common(Stream.BOOK, market_json(), NOW, NOW)
-    fields["bids"] = _levels(levels(("100", "1"), ("99", "1")) if bids is None else bids)
-    fields["asks"] = _levels(levels(("101", "1"), ("102", "1")) if asks is None else asks)
+    fields["bids"] = _levels(
+        levels(("100", "1"), ("99", "1")) if bids is None else bids
+    )
+    fields["asks"] = _levels(
+        levels(("101", "1"), ("102", "1")) if asks is None else asks
+    )
     if sequence is not None:
         fields["sequence"] = sequence
     return BookSnapshot.from_json(json.dumps(fields))
@@ -151,8 +166,15 @@ def update(
     bids: list[list[str]] | None = None,
 ) -> BookUpdate:
     fields = common(Stream.BOOK, market_json(), NOW, NOW)
-    fields |= {"bids": _levels(levels(("100", "2")) if bids is None else bids), "asks": []}
-    sequences = {"first_sequence": first, "last_sequence": last, "previous_sequence": previous}
+    fields |= {
+        "bids": _levels(levels(("100", "2")) if bids is None else bids),
+        "asks": [],
+    }
+    sequences = {
+        "first_sequence": first,
+        "last_sequence": last,
+        "previous_sequence": previous,
+    }
     fields |= {name: value for name, value in sequences.items() if value is not None}
     return BookUpdate.from_json(json.dumps(fields))
 
@@ -196,7 +218,9 @@ def funding(rate: str) -> FundingRate:
 
 def venue_state() -> VenueState:
     fields = common(Stream.VENUE_STATUS, None, NOW, NOW)
-    return VenueState.from_json(json.dumps({**fields, "venue": "example", "status": "available"}))
+    return VenueState.from_json(
+        json.dumps({**fields, "venue": "example", "status": "available"})
+    )
 
 
 def check(
@@ -211,7 +235,9 @@ def check(
 
 
 def validated(item: MarketItem) -> Validated[MarketItem]:
-    result = MarketDataValidator(LIMITS).validate(item, now_ns=NOW, drifting_venues=frozenset())
+    result = MarketDataValidator(LIMITS).validate(
+        item, now_ns=NOW, drifting_venues=frozenset()
+    )
     assert isinstance(result, Validated)
     return result
 
@@ -221,7 +247,9 @@ def validated(item: MarketItem) -> Validated[MarketItem]:
 
 @pytest.mark.req("MKD-009", "MKD-013", "HLT-013")
 def test_a_drifting_venue_s_data_is_quarantined_for_its_clock() -> None:
-    assert check(trade(), drifting=frozenset({"example"})) is QuarantineCause.CLOCK_PROBLEM
+    assert (
+        check(trade(), drifting=frozenset({"example"})) is QuarantineCause.CLOCK_PROBLEM
+    )
     assert check(trade(), drifting=frozenset({"other"})) is None
 
 
@@ -231,9 +259,18 @@ def test_a_drifting_venue_s_data_is_quarantined_for_its_clock() -> None:
     [
         (lambda: trade(event=NOW + AHEAD + 1), QuarantineCause.INVALID_TIMESTAMP),
         (lambda: trade(event=NOW + AHEAD), None),
-        (lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD + 1), QuarantineCause.INVALID_TIMESTAMP),
-        (lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND), QuarantineCause.INVALID_TIMESTAMP),
-        (lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND, closed=False), None),
+        (
+            lambda: bar("1", "1", "1", "1", open_time=NOW + AHEAD + 1),
+            QuarantineCause.INVALID_TIMESTAMP,
+        ),
+        (
+            lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND),
+            QuarantineCause.INVALID_TIMESTAMP,
+        ),
+        (
+            lambda: bar("1", "1", "1", "1", open_time=NOW - 30 * SECOND, closed=False),
+            None,
+        ),
     ],
 )
 def test_an_invalid_timestamp_is_quarantined(
@@ -322,14 +359,21 @@ def test_book_sequences_follow_their_snapshot_and_a_gap_waits_for_a_fresh_one() 
     assert check(update(first=8, last=10), validator) is QuarantineCause.DUPLICATE_EVENT
     assert check(update(first=9, last=12), validator) is None
     assert check(update(previous=12, last=13), validator) is None
-    assert check(update(previous=12, last=13), validator) is QuarantineCause.DUPLICATE_EVENT
-    assert check(update(previous=13, last=13), validator) is None  # no change, as some venues send
+    assert (
+        check(update(previous=12, last=13), validator)
+        is QuarantineCause.DUPLICATE_EVENT
+    )
+    assert (
+        check(update(previous=13, last=13), validator) is None
+    )  # no change, as some venues send
     assert check(update(first=15, last=16), validator) is QuarantineCause.SEQUENCE_GAP
     assert validator.needs_snapshot(SPOT)
     # Broken: even a continuous update waits for the fresh snapshot.
     assert check(update(first=14, last=14), validator) is QuarantineCause.SEQUENCE_GAP
     assert check(snapshot(sequence=20), validator) is None
-    assert check(update(previous=19, last=21), validator) is QuarantineCause.SEQUENCE_GAP
+    assert (
+        check(update(previous=19, last=21), validator) is QuarantineCause.SEQUENCE_GAP
+    )
     assert check(snapshot(sequence=30), validator) is None
     assert check(update(first=31), validator) is None
     assert check(update(first=32, last=32), validator) is None
@@ -350,7 +394,9 @@ def test_an_outlier_is_quarantined_until_the_move_is_confirmed() -> None:
     assert check(trade("100"), validator) is None
     assert check(trade("110"), validator) is None  # exactly the limit: not beyond it
     assert check(trade("121.1"), validator) is QuarantineCause.OUTLIER
-    assert check(trade("150"), validator) is QuarantineCause.OUTLIER  # not near 121.1: restarts
+    assert (
+        check(trade("150"), validator) is QuarantineCause.OUTLIER
+    )  # not near 121.1: restarts
     assert check(trade("151"), validator) is QuarantineCause.OUTLIER
     # Two outliers in a row agree: the next that agrees is accepted and is the reference.
     assert check(trade("152"), validator) is None
@@ -362,7 +408,9 @@ def test_an_outlier_beyond_the_run_s_last_starts_a_new_run() -> None:
     validator = MarketDataValidator(LIMITS)
     assert check(trade("50"), validator) is None
     assert check(trade("100"), validator) is QuarantineCause.OUTLIER
-    assert check(trade("115"), validator) is QuarantineCause.OUTLIER  # beyond 100: a new run
+    assert (
+        check(trade("115"), validator) is QuarantineCause.OUTLIER
+    )  # beyond 100: a new run
     # Within both earlier outliers, but the new run holds one: not yet confirmed.
     assert check(trade("107"), validator) is QuarantineCause.OUTLIER
     assert check(trade("108"), validator) is None
@@ -386,7 +434,7 @@ def test_an_outlier_run_keeps_only_what_a_confirmation_needs() -> None:
     for price in ("150", "160", "170", "180", "190"):
         assert check(trade(price), validator) is QuarantineCause.OUTLIER
     run = validator._references[(SPOT, Stream.TRADES)].outliers  # noqa: SLF001
-    assert list(run) == [Decimal("180"), Decimal("190")]
+    assert list(run) == [Decimal(180), Decimal(190)]
 
 
 @pytest.mark.req("MKD-008", "MKD-013")
@@ -394,7 +442,10 @@ def test_a_price_unlike_every_other_venue_s_is_inconsistent() -> None:
     validator = MarketDataValidator(LIMITS)
     assert check(trade("100", venue="one"), validator) is None
     assert check(trade("100", venue="two"), validator) is None
-    assert check(trade("106", venue="three"), validator) is QuarantineCause.EXCHANGE_INCONSISTENCY
+    assert (
+        check(trade("106", venue="three"), validator)
+        is QuarantineCause.EXCHANGE_INCONSISTENCY
+    )
     assert check(trade("105", venue="three"), validator) is None  # exactly the limit
     # A price no longer valid itself is not compared: it is not eligible for use anyway.
     assert check(trade("200", venue="four", event=NOW - STALE - 1), validator) is None
@@ -423,7 +474,9 @@ def test_a_price_unlike_every_other_venue_s_is_inconsistent() -> None:
         (INVALID + 1, Freshness.INVALID),
     ],
 )
-def test_freshness_moves_from_valid_to_stale_to_invalid(age: int, state: Freshness) -> None:
+def test_freshness_moves_from_valid_to_stale_to_invalid(
+    age: int, state: Freshness
+) -> None:
     assert freshness(age, LIMITS.for_stream(Stream.TRADES)) is state
     result = validated(trade(event=NOW - age))
     assert result.assessment.freshness is state
@@ -433,8 +486,16 @@ def test_freshness_moves_from_valid_to_stale_to_invalid(age: int, state: Freshne
 
 @pytest.mark.req("MKD-008", "MKD-012")
 def test_the_quality_score_follows_its_rule() -> None:
-    assert [quality_score(state, venue_timed=True) for state in Freshness] == [100, 50, 0]
-    assert [quality_score(state, venue_timed=False) for state in Freshness] == [90, 40, 0]
+    assert [quality_score(state, venue_timed=True) for state in Freshness] == [
+        100,
+        50,
+        0,
+    ]
+    assert [quality_score(state, venue_timed=False) for state in Freshness] == [
+        90,
+        40,
+        0,
+    ]
     unstamped = assess(trade(event=None, receive=NOW - STALE - 1), NOW, LIMITS)
     assert (unstamped.freshness, unstamped.score) == (Freshness.STALE, 40)
     assert unstamped.rule_version == QUALITY_RULE_VERSION
@@ -451,8 +512,13 @@ def test_a_closed_bar_is_as_old_as_its_end() -> None:
         Freshness.STALE,
         50,
     )
-    still_open = bar("1", "1", "1", "1", event=None, open_time=NOW - 30 * SECOND, closed=False)
-    assert (assess(still_open, NOW, LIMITS).age_ns, assess(still_open, NOW, LIMITS).score) == (
+    still_open = bar(
+        "1", "1", "1", "1", event=None, open_time=NOW - 30 * SECOND, closed=False
+    )
+    assert (
+        assess(still_open, NOW, LIMITS).age_ns,
+        assess(still_open, NOW, LIMITS).score,
+    ) == (
         0,
         90,
     )
@@ -465,8 +531,14 @@ def test_a_stream_s_freshness_follows_its_latest_item() -> None:
     streams.observe(validated(trade(event=NOW)))
     streams.observe(validated(trade(event=NOW - INVALID)))  # older: changes nothing
     assert streams.state("example", Stream.TRADES, SPOT, NOW + STALE) is Freshness.VALID
-    assert streams.state("example", Stream.TRADES, SPOT, NOW + STALE + 1) is Freshness.STALE
-    assert streams.state("example", Stream.TRADES, SPOT, NOW + INVALID + 1) is Freshness.INVALID
+    assert (
+        streams.state("example", Stream.TRADES, SPOT, NOW + STALE + 1)
+        is Freshness.STALE
+    )
+    assert (
+        streams.state("example", Stream.TRADES, SPOT, NOW + INVALID + 1)
+        is Freshness.INVALID
+    )
     assert streams.state("example", Stream.TICKER, SPOT, NOW) is Freshness.INVALID
 
 
@@ -490,7 +562,9 @@ def test_only_the_validator_creates_validated_data_and_none_changes() -> None:
 @pytest.mark.req("MKD-009", "MKD-013")
 def test_a_quarantine_record_keeps_the_item_s_evidence() -> None:
     item = trade(price="0")
-    record = MarketDataValidator(LIMITS).validate(item, now_ns=NOW, drifting_venues=frozenset())
+    record = MarketDataValidator(LIMITS).validate(
+        item, now_ns=NOW, drifting_venues=frozenset()
+    )
     assert isinstance(record, QuarantineRecord)
     assert (record.evidence_id, record.venue, record.market, record.stream) == (
         item.evidence_id,
@@ -498,7 +572,10 @@ def test_a_quarantine_record_keeps_the_item_s_evidence() -> None:
         SPOT,
         Stream.TRADES,
     )
-    assert (record.quarantined_time_ns, record.rule_version) == (NOW, VALIDATION_RULE_VERSION)
+    assert (record.quarantined_time_ns, record.rule_version) == (
+        NOW,
+        VALIDATION_RULE_VERSION,
+    )
     held = MarketDataValidator(LIMITS).validate(
         venue_state(), now_ns=NOW, drifting_venues=frozenset({"example"})
     )
@@ -512,13 +589,18 @@ def test_a_quarantine_record_keeps_the_item_s_evidence() -> None:
 @pytest.mark.req("HLT-013", "MKD-013")
 def test_an_injected_venue_drift_quarantines_that_venue_s_data() -> None:
     monitor = ClockMonitor(
-        ClockLimits(drift_limit_ns=50_000_000, sample_max_age_ns=60 * SECOND, minimum_venues=2)
+        ClockLimits(
+            drift_limit_ns=50_000_000, sample_max_age_ns=60 * SECOND, minimum_venues=2
+        )
     )
     monitor.observe(ClockSample("example", NOW + SECOND, NOW - 1_000_000, NOW))
     monitor.observe(ClockSample("other", NOW, NOW - 1_000_000, NOW))
     verdict = monitor.verdict(NOW)
     assert verdict.drifting_venues == frozenset({"example"})
-    assert check(trade(), drifting=verdict.drifting_venues) is QuarantineCause.CLOCK_PROBLEM
+    assert (
+        check(trade(), drifting=verdict.drifting_venues)
+        is QuarantineCause.CLOCK_PROBLEM
+    )
     assert check(trade(venue="other"), drifting=verdict.drifting_venues) is None
 
 
@@ -572,14 +654,18 @@ def test_ordering_is_one_order_for_the_same_items(
 
 @pytest.mark.req("MKD-008", "MKD-012")
 @given(_PAIRS)
-def test_the_quality_assessment_is_repeatable(pairs: list[tuple[int, int, bool]]) -> None:
+def test_the_quality_assessment_is_repeatable(
+    pairs: list[tuple[int, int, bool]],
+) -> None:
     for item in _items(pairs, repeats=False):
         assert assess(item, NOW, LIMITS) == assess(item, NOW, LIMITS)
 
 
 @pytest.mark.req("MKD-009", "MKD-012")
 @given(_PAIRS)
-def test_nothing_quarantined_or_stale_is_eligible(pairs: list[tuple[int, int, bool]]) -> None:
+def test_nothing_quarantined_or_stale_is_eligible(
+    pairs: list[tuple[int, int, bool]],
+) -> None:
     validator = MarketDataValidator(LIMITS)
     for item in _items(pairs, repeats=True):
         result = validator.validate(item, now_ns=NOW, drifting_venues=frozenset())

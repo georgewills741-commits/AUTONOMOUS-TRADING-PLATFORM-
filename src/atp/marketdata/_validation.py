@@ -142,7 +142,9 @@ class Validated(Generic[_Item_co]):
 
 # The state of a market's book chain: the last sequence number applied (0 or more), or one of:
 _BROKEN: Final = -1  # a gap was found: every update is a gap until a fresh snapshot
-_UNSEQUENCED: Final = -2  # the last snapshot gave no sequence number: updates are not checked
+_UNSEQUENCED: Final = (
+    -2
+)  # the last snapshot gave no sequence number: updates are not checked
 
 _CanonicalKey = tuple[str, str, InstrumentType, str | None, Stream]
 
@@ -171,7 +173,9 @@ def _confirms(run: deque[Decimal], price: Decimal, limit: Decimal) -> bool:
     """Whether `price`, an outlier, confirms the run of outliers before it: the run is full and
     `price` is within `limit` of each one in it. If not, `price` joins the run, or starts a new
     one when it is beyond `limit` of the run's last."""
-    if len(run) == run.maxlen and not any(_beyond(price, earlier, limit) for earlier in run):
+    if len(run) == run.maxlen and not any(
+        _beyond(price, earlier, limit) for earlier in run
+    ):
         return True
     if run and _beyond(price, run[-1], limit):
         run.clear()
@@ -195,7 +199,9 @@ def _checked_price(item: MarketItem) -> Decimal | None:
     return None
 
 
-def _levels_impossible(levels: tuple[BookLevel, ...], *, falling: bool, snapshot: bool) -> bool:
+def _levels_impossible(
+    levels: tuple[BookLevel, ...], *, falling: bool, snapshot: bool
+) -> bool:
     for level in levels:
         if level.price <= 0 or level.quantity < 0 or (snapshot and level.quantity == 0):
             return True
@@ -212,17 +218,21 @@ def _impossible(item: MarketItem) -> bool:
     if isinstance(item, Trade):
         return item.price <= 0 or item.quantity <= 0
     if isinstance(item, Ticker):
-        prices = [price for price in (item.bid, item.ask, item.last) if price is not None]
+        prices = [
+            price for price in (item.bid, item.ask, item.last) if price is not None
+        ]
         sizes = [size for size in (item.bid_size, item.ask_size) if size is not None]
         if any(price <= 0 for price in prices) or any(size < 0 for size in sizes):
             return True
         return item.bid is not None and item.ask is not None and item.bid >= item.ask
     if isinstance(item, BookSnapshot):
-        if _levels_impossible(item.bids, falling=True, snapshot=True) or _levels_impossible(
-            item.asks, falling=False, snapshot=True
-        ):
+        if _levels_impossible(
+            item.bids, falling=True, snapshot=True
+        ) or _levels_impossible(item.asks, falling=False, snapshot=True):
             return True
-        return bool(item.bids and item.asks and item.bids[0].price >= item.asks[0].price)
+        return bool(
+            item.bids and item.asks and item.bids[0].price >= item.asks[0].price
+        )
     if isinstance(item, BookUpdate):
         return _levels_impossible(
             item.bids, falling=True, snapshot=False
@@ -230,7 +240,9 @@ def _impossible(item: MarketItem) -> bool:
     if isinstance(item, OhlcvBar):
         if min(item.open, item.high, item.low, item.close) <= 0:
             return True
-        if item.base_volume < 0 or (item.quote_volume is not None and item.quote_volume < 0):
+        if item.base_volume < 0 or (
+            item.quote_volume is not None and item.quote_volume < 0
+        ):
             return True
         return item.high < max(item.open, item.close, item.low) or item.low > min(
             item.open, item.close
@@ -267,7 +279,11 @@ def _sequence_key(item: MarketItem) -> int:
     if isinstance(item, BookSnapshot) and item.sequence is not None:
         return item.sequence
     if isinstance(item, BookUpdate):
-        for sequence in (item.first_sequence, item.last_sequence, item.previous_sequence):
+        for sequence in (
+            item.first_sequence,
+            item.last_sequence,
+            item.previous_sequence,
+        ):
             if sequence is not None:
                 return sequence
     return -1
@@ -290,7 +306,8 @@ def in_order(items: list[MarketItem]) -> list[MarketItem]:
     market's book is not put in this order: its adapter gives a snapshot, then the updates that
     follow it, in its venue's sequence."""
     return sorted(
-        items, key=lambda item: (item_time_ns(item), _sequence_key(item), item.evidence_id)
+        items,
+        key=lambda item: (item_time_ns(item), _sequence_key(item), item.evidence_id),
     )
 
 
@@ -381,7 +398,11 @@ class MarketDataValidator:
             return QuarantineCause.SEQUENCE_GAP
         if state == _UNSEQUENCED:
             return None
-        last = update.last_sequence if update.last_sequence is not None else update.first_sequence
+        last = (
+            update.last_sequence
+            if update.last_sequence is not None
+            else update.first_sequence
+        )
         if update.previous_sequence is not None:
             if update.previous_sequence == state:
                 return None
@@ -404,13 +425,24 @@ class MarketDataValidator:
             self._chains[item.market] = (
                 item.sequence if item.sequence is not None else _UNSEQUENCED
             )
-        elif isinstance(item, BookUpdate) and self._chains.get(item.market, _BROKEN) >= 0:
-            last = item.last_sequence if item.last_sequence is not None else item.first_sequence
+        elif (
+            isinstance(item, BookUpdate) and self._chains.get(item.market, _BROKEN) >= 0
+        ):
+            last = (
+                item.last_sequence
+                if item.last_sequence is not None
+                else item.first_sequence
+            )
             if last is not None:
                 self._chains[item.market] = last
 
     def _inconsistent(
-        self, item: MarketItem, market: MarketRef, stream: Stream, price: Decimal, now_ns: int
+        self,
+        item: MarketItem,
+        market: MarketRef,
+        stream: Stream,
+        price: Decimal,
+        now_ns: int,
     ) -> bool:
         limits = self._limits
         stream_limits = limits.for_stream(stream)

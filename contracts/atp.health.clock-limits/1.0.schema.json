@@ -1,0 +1,33 @@
+{
+  "$id": "atp.health.clock-limits/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The limits of drift detection, IMPLEMENTATION CHOICE values set from the first live\nmeasurements (D3): the drift limit; how old a sample may be and still count; and how many\nvenues must agree before the local clock is found drifting.",
+  "properties": {
+    "drift_limit_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Drift Limit Ns",
+      "type": "integer"
+    },
+    "minimum_venues": {
+      "maximum": 9223372036854775807,
+      "minimum": 2,
+      "title": "Minimum Venues",
+      "type": "integer"
+    },
+    "sample_max_age_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Sample Max Age Ns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "drift_limit_ns",
+    "sample_max_age_ns",
+    "minimum_venues"
+  ],
+  "title": "ClockLimits",
+  "type": "object"
+}

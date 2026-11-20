@@ -21,7 +21,11 @@ from atp.marketdata._limits import StreamLimits, ValidationLimits
 QUALITY_RULE_VERSION: Final = "1.0"
 """The version of the quality score's rule below; a change to the rule is a new version."""
 
-_FRESHNESS_SCORE: Final = {Freshness.VALID: 100, Freshness.STALE: 50, Freshness.INVALID: 0}
+_FRESHNESS_SCORE: Final = {
+    Freshness.VALID: 100,
+    Freshness.STALE: 50,
+    Freshness.INVALID: 0,
+}
 _NO_VENUE_TIME_PENALTY: Final = 10
 
 
@@ -50,7 +54,9 @@ def quality_score(state: Freshness, *, venue_timed: bool) -> int:
     return max(score, 0)
 
 
-def assess(item: MarketItem, now_ns: int, limits: ValidationLimits) -> QualityAssessment:
+def assess(
+    item: MarketItem, now_ns: int, limits: ValidationLimits
+) -> QualityAssessment:
     """The quality assessment of `item` at `now_ns`."""
     age = age_ns(item, now_ns)
     state = freshness(age, limits.for_stream(stream_of(item)))
@@ -62,4 +68,3 @@ def assess(item: MarketItem, now_ns: int, limits: ValidationLimits) -> QualityAs
         score=quality_score(state, venue_timed=venue_time_ns(item) is not None),
         rule_version=QUALITY_RULE_VERSION,
     )
-

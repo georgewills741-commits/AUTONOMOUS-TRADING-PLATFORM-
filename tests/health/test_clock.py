@@ -11,10 +11,14 @@ SECOND = 1_000_000_000
 NOW = 1_763_600_000 * SECOND
 LIMIT = 50_000_000
 ROUND_TRIP = 2_000_000
-LIMITS = ClockLimits(drift_limit_ns=LIMIT, sample_max_age_ns=60 * SECOND, minimum_venues=2)
+LIMITS = ClockLimits(
+    drift_limit_ns=LIMIT, sample_max_age_ns=60 * SECOND, minimum_venues=2
+)
 
 
-def server(venue: str, offset: int, received: int = NOW, round_trip: int = ROUND_TRIP) -> ClockSample:
+def server(
+    venue: str, offset: int, received: int = NOW, round_trip: int = ROUND_TRIP
+) -> ClockSample:
     """A server-time sample whose venue clock is `offset` ahead of the local one, read at the
     middle of the request."""
     sent = received - round_trip
@@ -56,11 +60,17 @@ def test_an_event_time_shows_a_venue_ahead_but_never_one_behind() -> None:
 @pytest.mark.req("HLT-013")
 def test_without_a_recent_sample_the_local_clock_is_undetermined() -> None:
     result = verdict()
-    assert (result.local_clock, result.drifting_venues) == (LocalClock.UNDETERMINED, frozenset())
+    assert (result.local_clock, result.drifting_venues) == (
+        LocalClock.UNDETERMINED,
+        frozenset(),
+    )
     assert not result.data_degraded
     assert not result.delays_reliable
     old = verdict(server("one", 10 * SECOND, received=NOW - 61 * SECOND))
-    assert (old.local_clock, old.drifting_venues) == (LocalClock.UNDETERMINED, frozenset())
+    assert (old.local_clock, old.drifting_venues) == (
+        LocalClock.UNDETERMINED,
+        frozenset(),
+    )
 
 
 @pytest.mark.req("HLT-013", "HLT-014")
@@ -83,7 +93,10 @@ def test_one_venue_drifting_among_venues_in_time_is_that_venue_s_drift() -> None
 @pytest.mark.req("HLT-013")
 def test_every_venue_drifting_the_same_way_is_the_local_clock_s_drift() -> None:
     result = verdict(server("one", SECOND), server("two", 2 * SECOND))
-    assert (result.local_clock, result.drifting_venues) == (LocalClock.DRIFTING, frozenset())
+    assert (result.local_clock, result.drifting_venues) == (
+        LocalClock.DRIFTING,
+        frozenset(),
+    )
     assert result.data_degraded
     assert not result.delays_reliable
     behind = verdict(server("one", -SECOND), server("two", -SECOND))
@@ -124,9 +137,13 @@ def test_event_times_show_a_drift_but_never_a_clock_in_time() -> None:
         frozenset({"two"}),
     )
     ahead = verdict(
-        ClockSample("one", NOW + SECOND, None, NOW), ClockSample("two", NOW + SECOND, None, NOW)
+        ClockSample("one", NOW + SECOND, None, NOW),
+        ClockSample("two", NOW + SECOND, None, NOW),
     )
-    assert (ahead.local_clock, ahead.drifting_venues) == (LocalClock.DRIFTING, frozenset())
+    assert (ahead.local_clock, ahead.drifting_venues) == (
+        LocalClock.DRIFTING,
+        frozenset(),
+    )
 
 
 @pytest.mark.req("HLT-013")

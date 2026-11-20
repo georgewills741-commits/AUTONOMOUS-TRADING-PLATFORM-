@@ -62,7 +62,10 @@ class ClockSample:
     received_ns: int
 
     def __post_init__(self) -> None:
-        if type(self.venue) is not str or re.fullmatch(VENUE_PATTERN, self.venue) is None:
+        if (
+            type(self.venue) is not str
+            or re.fullmatch(VENUE_PATTERN, self.venue) is None
+        ):
             msg = "a clock sample names a venue"
             raise ValueError(msg)
         times = [self.venue_time_ns, self.received_ns]
@@ -146,12 +149,17 @@ class ClockMonitor:
             for sample in self._latest.values()
             if now_ns - sample.received_ns <= limits.sample_max_age_ns
         ]
-        ahead = frozenset(sample.venue for sample in recent if sample.ahead_by_more_than(limit))
+        ahead = frozenset(
+            sample.venue for sample in recent if sample.ahead_by_more_than(limit)
+        )
         behind = frozenset(
             sample.venue for sample in recent if sample.behind_by_more_than(limit)
         )
         drifting = ahead | behind
-        in_time = frozenset(sample.venue for sample in recent if sample.within(limit)) - drifting
+        in_time = (
+            frozenset(sample.venue for sample in recent if sample.within(limit))
+            - drifting
+        )
         if in_time:
             return ClockVerdict(now_ns, drifting, LocalClock.IN_SYNC)
         one_direction = not ahead or not behind

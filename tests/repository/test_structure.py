@@ -906,7 +906,8 @@ def validated_findings(source_root: Path) -> list[str]:
                     and isinstance(node.func, ast.Name)
                     and node.func.id in {"getattr", "setattr", "hasattr", "delattr"}
                     and any(
-                        isinstance(argument, ast.Constant) and argument.value == "_CREATOR"
+                        isinstance(argument, ast.Constant)
+                        and argument.value == "_CREATOR"
                         for argument in node.args[1:2]
                     )
                 )

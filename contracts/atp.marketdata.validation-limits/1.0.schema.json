@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    },
+    "Stream": {
+      "description": "A kind of market data, as an adapter receives it.",
+      "enum": [
+        "markets",
+        "ticker",
+        "trades",
+        "book",
+        "ohlcv",
+        "funding",
+        "venue-status"
+      ],
+      "title": "Stream",
+      "type": "string"
+    },
+    "StreamLimits": {
+      "additionalProperties": false,
+      "description": "A stream's freshness limits (MKD-006, MKD-012): an item older than `stale_after_ns` is\nSTALE, and one older than `invalid_after_ns`, which is later, is INVALID.",
+      "properties": {
+        "invalid_after_ns": {
+          "exclusiveMinimum": 0,
+          "maximum": 9223372036854775807,
+          "title": "Invalid After Ns",
+          "type": "integer"
+        },
+        "stale_after_ns": {
+          "exclusiveMinimum": 0,
+          "maximum": 9223372036854775807,
+          "title": "Stale After Ns",
+          "type": "integer"
+        },
+        "stream": {
+          "$ref": "#/$defs/Stream"
+        }
+      },
+      "required": [
+        "stream",
+        "stale_after_ns",
+        "invalid_after_ns"
+      ],
+      "title": "StreamLimits",
+      "type": "object"
+    }
+  },
+  "$id": "atp.marketdata.validation-limits/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The limits of the market-data checks (MKD-008, MKD-012, MKD-013), one set per process.\n\n- `streams`: each stream's freshness limits, every stream exactly once.\n- `max_event_ahead_ns`: how far a venue's event time may be ahead of its local receipt\n  before the time is invalid.\n- `duplicate_memory`: how many evidence identifiers are remembered to find duplicates; the\n  oldest is forgotten first.\n- `outlier_limit`: the fraction by which a price may differ from its market's reference\n  price before it is an outlier; `outlier_confirmations`: how many quarantined outliers in a\n  row, each within that fraction of the next, make the next one the new reference.\n- `inconsistency_limit`: the fraction by which a price may differ from every other venue's\n  price for the same market before it is inconsistent; `minimum_other_venues`: how many\n  other venues' valid prices the comparison needs.",
+  "properties": {
+    "duplicate_memory": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Duplicate Memory",
+      "type": "integer"
+    },
+    "inconsistency_limit": {
+      "$ref": "#/$defs/Amount"
+    },
+    "max_event_ahead_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Max Event Ahead Ns",
+      "type": "integer"
+    },
+    "minimum_other_venues": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "title": "Minimum Other Venues",
+      "type": "integer"
+    },
+    "outlier_confirmations": {
+      "maximum": 9223372036854775807,
+      "minimum": 1,
+      "title": "Outlier Confirmations",
+      "type": "integer"
+    },
+    "outlier_limit": {
+      "$ref": "#/$defs/Amount"
+    },
+    "streams": {
+      "items": {
+        "$ref": "#/$defs/StreamLimits"
+      },
+      "title": "Streams",
+      "type": "array"
+    }
+  },
+  "required": [
+    "streams",
+    "max_event_ahead_ns",
+    "duplicate_memory",
+    "outlier_limit",
+    "outlier_confirmations",
+    "inconsistency_limit",
+    "minimum_other_venues"
+  ],
+  "title": "ValidationLimits",
+  "type": "object"
+}

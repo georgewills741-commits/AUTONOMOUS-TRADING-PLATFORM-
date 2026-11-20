@@ -46,7 +46,12 @@ from atp.marketdata._contracts import (
 from atp.marketdata._evidence import EVIDENCE_FORM, evidence_id
 from atp.marketdata._items import MarketItem
 from atp.marketdata._limits import StreamLimits, ValidationLimits
-from atp.marketdata._quality import QUALITY_RULE_VERSION, assess, freshness, quality_score
+from atp.marketdata._quality import (
+    QUALITY_RULE_VERSION,
+    assess,
+    freshness,
+    quality_score,
+)
 from atp.marketdata._validation import (
     VALIDATION_RULE_VERSION,
     MarketDataValidator,

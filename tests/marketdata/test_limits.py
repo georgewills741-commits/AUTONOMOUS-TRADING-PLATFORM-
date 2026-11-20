@@ -42,14 +42,22 @@ def test_the_limits_are_read_and_each_stream_s_found() -> None:
 def test_a_stream_turns_invalid_only_after_it_turns_stale(invalid: int) -> None:
     with pytest.raises(ContractError) as refused:
         StreamLimits.from_json(
-            json.dumps({"stream": "ticker", "stale_after_ns": SECOND, "invalid_after_ns": invalid})
+            json.dumps(
+                {
+                    "stream": "ticker",
+                    "stale_after_ns": SECOND,
+                    "invalid_after_ns": invalid,
+                }
+            )
         )
     assert [detail.type for detail in refused.value.details] == ["limit_order"]
 
 
 @pytest.mark.req("MKD-006")
 @pytest.mark.parametrize("streams", [STREAMS[1:], [*STREAMS, STREAMS[0]]])
-def test_every_stream_has_its_limits_each_once(streams: list[dict[str, object]]) -> None:
+def test_every_stream_has_its_limits_each_once(
+    streams: list[dict[str, object]],
+) -> None:
     assert _types({**VALID, "streams": streams}) == ["streams_incomplete"]
 
 

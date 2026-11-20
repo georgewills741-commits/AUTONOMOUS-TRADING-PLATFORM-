@@ -77,7 +77,9 @@ class ValidationLimits(Contract):
 
     @field_validator("streams")
     @classmethod
-    def _check_streams(cls, streams: tuple[StreamLimits, ...]) -> tuple[StreamLimits, ...]:
+    def _check_streams(
+        cls, streams: tuple[StreamLimits, ...]
+    ) -> tuple[StreamLimits, ...]:
         named = [limits.stream for limits in streams]
         if sorted(named, key=lambda stream: stream.value) != sorted(
             Stream, key=lambda stream: stream.value
