@@ -78,6 +78,14 @@ def test_a_backoff_s_longest_wait_is_at_least_its_first() -> None:
         Backoff(initial_ns=0, maximum_ns=9)
 
 
+def test_a_backoff_s_waits_are_64_bit_nanoseconds() -> None:
+    largest = 2**63 - 1
+    assert Backoff(initial_ns=largest, maximum_ns=largest).delay_ns(2) == largest
+    for initial, maximum in ((1, 2**63), (2**63, largest)):
+        with pytest.raises(ValidationError):
+            Backoff(initial_ns=initial, maximum_ns=maximum)
+
+
 @pytest.mark.req("EXA-014")
 def test_a_request_fits_while_its_window_has_room() -> None:
     rate = limiter(("rest", 3, 1_000))
@@ -177,6 +185,13 @@ def test_a_rate_limit_is_a_contract() -> None:
         RateLimit(name="rest", capacity=0, window_ns=1)
     with pytest.raises(ValidationError):
         RateLimit(name="rest", capacity=1, window_ns=0)
+    largest = 2**63 - 1
+    limit = RateLimit(name="rest", capacity=largest, window_ns=largest)
+    assert (limit.capacity, limit.window_ns) == (largest, largest)
+    with pytest.raises(ValidationError):
+        RateLimit(name="rest", capacity=2**63, window_ns=1)
+    with pytest.raises(ValidationError):
+        RateLimit(name="rest", capacity=1, window_ns=2**63)
 
 
 def run_queue(
@@ -477,3 +492,15 @@ def test_a_read_is_sent_once_or_more(attempts: object) -> None:
 
     with pytest.raises(ValueError, match="once or more"):
         asyncio.run(main())
+
+
+def test_a_read_of_one_attempt_is_sent_once() -> None:
+    send, sent = scripted(Outcome.timeout(), Outcome.success("late"))
+    clock = FakeClock()
+
+    async def main() -> Outcome[str, RequestFailure]:
+        return await retry_read(send, attempts=1, backoff=BACKOFF, sleep_ns=clock.sleep)
+
+    assert result(asyncio.run(main())) == "timeout"
+    assert sent == [1]
+    assert clock.waits == []

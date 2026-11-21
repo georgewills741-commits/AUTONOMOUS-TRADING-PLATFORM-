@@ -38,6 +38,12 @@ def test_each_number_keeps_the_venue_s_text() -> None:
     assert type(value["s"]) is str
 
 
+def test_a_json_number_holds_its_text_alone() -> None:
+    number = JsonNumber("0.1000")
+    with pytest.raises(AttributeError):
+        number.unit = "BTC"  # type: ignore[attr-defined]
+
+
 @pytest.mark.req("EXA-013")
 def test_a_long_number_is_not_rounded() -> None:
     text = "12345678901234567890.123456789012345678901234567890"

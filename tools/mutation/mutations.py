@@ -4793,6 +4793,13 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U4 a JSON number holding other attributes",
+        _U4_MESSAGES,
+        "    __slots__ = ()\n",
+        "",
+        TESTS,
+    ),
+    Mutation(
         "S2-U4 a JSON integer decoded as an int",
         _U4_MESSAGES,
         "            parse_int=JsonNumber,\n",
@@ -4962,6 +4969,27 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U4 a failure's status of 100 refused",
+        _U4_REQUESTS,
+        "            type(self.status) is not int or not 100 <= self.status <= 999\n",
+        "            type(self.status) is not int or not 100 < self.status <= 999\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a failure's status of 999 refused",
+        _U4_REQUESTS,
+        "            type(self.status) is not int or not 100 <= self.status <= 999\n",
+        "            type(self.status) is not int or not 100 <= self.status < 999\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 the largest wait a venue may ask for refused",
+        _U4_REQUESTS,
+        "        type(retry_after_ns) is not int or not 0 <= retry_after_ns <= _INT64_MAX\n",
+        "        type(retry_after_ns) is not int or not 0 <= retry_after_ns < _INT64_MAX\n",
+        TESTS,
+    ),
+    Mutation(
         "S2-U4 a backoff's longest wait below its first accepted",
         _U4_BACKOFF,
         "        if initial is not None and maximum < initial:\n",
@@ -4994,6 +5022,13 @@ MUTATIONS: list[Mutation] = [
         _U4_BACKOFF,
         "    initial_ns: int = Field(gt=0, le=_INT64_MAX)\n",
         "    initial_ns: int = Field(ge=0, le=_INT64_MAX)\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a backoff's wait beyond 64 bits accepted",
+        _U4_BACKOFF,
+        "_INT64_MAX: Final = 2**63 - 1\n",
+        "_INT64_MAX: Final = 2**63\n",
         TESTS,
     ),
     Mutation(
@@ -5116,6 +5151,13 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U4 a rate limit beyond 64 bits accepted",
+        _U4_RATELIMIT,
+        "_INT64_MAX: Final = 2**63 - 1\n",
+        "_INT64_MAX: Final = 2**63\n",
+        TESTS,
+    ),
+    Mutation(
         "S2-U4 waiting requests admitted out of priority",
         _U4_RATELIMIT,
         "_RANK: Final = {Priority.HIGH: 0, Priority.NORMAL: 1, Priority.LOW: 2}",
@@ -5235,6 +5277,13 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U4 a read of one attempt refused",
+        _U4_RATELIMIT,
+        "    if type(attempts) is not int or attempts < 1:\n",
+        "    if type(attempts) is not int or attempts <= 1:\n",
+        TESTS,
+    ),
+    Mutation(
         "S2-U4 a circuit's threshold not checked",
         _U4_RESILIENCE,
         "        if type(threshold) is not int or threshold < 1:\n",
@@ -5323,6 +5372,13 @@ MUTATIONS: list[Mutation] = [
         _U4_RESILIENCE,
         "    failure_threshold: int = Field(gt=0, le=_INT64_MAX)\n",
         "    failure_threshold: int = Field(ge=0, le=_INT64_MAX)\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 resilience limits beyond 64 bits accepted",
+        _U4_RESILIENCE,
+        "_INT64_MAX: Final = 2**63 - 1\n",
+        "_INT64_MAX: Final = 2**63\n",
         TESTS,
     ),
     Mutation(
@@ -5600,6 +5656,13 @@ MUTATIONS: list[Mutation] = [
         _U4_INTERFACE,
         "        if any(type(time) is not int or not 0 <= time <= _INT64_MAX for time in times):\n",
         "        if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a server time's largest time refused",
+        _U4_INTERFACE,
+        "        if any(type(time) is not int or not 0 <= time <= _INT64_MAX for time in times):\n",
+        "        if any(type(time) is not int or not 0 <= time < _INT64_MAX for time in times):\n",
         TESTS,
     ),
     Mutation(

@@ -121,6 +121,13 @@ def test_a_wait_of_zero_is_accepted() -> None:
     assert refused == RequestFailure(UnavailableCause.RATE_LIMITED, 429, 0)
 
 
+def test_a_wait_up_to_the_largest_64_bit_number_is_accepted() -> None:
+    largest = 2**63 - 1
+    assert Answered(429, b"", retry_after_ns=largest).retry_after_ns == largest
+    refused = RequestFailure(UnavailableCause.RATE_LIMITED, 429, largest)
+    assert refused.retry_after_ns == largest
+
+
 def test_a_timeout_is_never_a_failure() -> None:
     with pytest.raises(ValueError, match="outcome of its own"):
         RequestFailure(UnavailableCause.TIMEOUT)
@@ -131,3 +138,14 @@ def test_a_failure_s_cause_is_an_unavailable_cause() -> None:
         RequestFailure("rate-limited")  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="three digits"):
         RequestFailure(UnavailableCause.VENUE_ERROR, 42)
+
+
+@pytest.mark.parametrize("status", [100, 999])
+def test_a_failure_s_status_may_be_any_three_digits(status: int) -> None:
+    assert RequestFailure(UnavailableCause.VENUE_ERROR, status).status == status
+
+
+@pytest.mark.parametrize("status", [99, 1000, True, 400.0])
+def test_a_failure_s_status_has_three_digits(status: object) -> None:
+    with pytest.raises(ValueError, match="three digits"):
+        RequestFailure(UnavailableCause.VENUE_ERROR, status)  # type: ignore[arg-type]

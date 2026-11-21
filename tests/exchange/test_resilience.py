@@ -255,6 +255,10 @@ def test_resilience_limits_are_a_contract() -> None:
     for name in ("failure_threshold", "open_ns", "heartbeat_timeout_ns"):
         with pytest.raises(ContractError):
             ResilienceLimits.from_python({**good, name: 0})
+        largest = ResilienceLimits.from_python({**good, name: 2**63 - 1})
+        assert getattr(largest, name) == 2**63 - 1
+        with pytest.raises(ContractError):
+            ResilienceLimits.from_python({**good, name: 2**63})
 
 
 class FakeClock:

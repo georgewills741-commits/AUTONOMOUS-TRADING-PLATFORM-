@@ -107,6 +107,8 @@ def test_a_server_time_keeps_its_three_times() -> None:
     )
     # The venue's clock may be anywhere: it is what the clock monitor compares.
     assert ServerTime("sample", 0, NOW, NOW).venue_time_ns == 0
+    largest = 2**63 - 1
+    assert ServerTime("sample", largest, largest, largest).received_ns == largest
 
 
 @pytest.mark.parametrize(
