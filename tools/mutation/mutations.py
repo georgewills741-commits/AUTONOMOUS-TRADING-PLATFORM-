@@ -5936,8 +5936,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 structure: an SSLContext's protocol keyword not read",
         _STRUCTURE,
-        '        given.arg == "protocol"\n',
-        '        given.arg == "protocols"\n',
+        '        *(given.value for given in node.keywords if given.arg == "protocol"),\n',
+        '        *(given.value for given in node.keywords if given.arg == "protocols"),\n',
         TESTS,
     ),
     Mutation(
