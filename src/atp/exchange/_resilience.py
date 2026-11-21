@@ -1,10 +1,10 @@
 """Connection resilience (EXA-015, EXA-007; the Stage 2 plan's U4).
 
 A venue's connections keep their health in a `VenueHealth`: a `CircuitBreaker` stops requests to
-a venue that keeps failing, then lets one trial through at a time, whose success closes it
-again; a trial the venue refuses, or whose outcome never comes, lets another through once it
-has run for the circuit's open time, so only a region refusal ends the venue's use for good,
-and no other route is tried (EXA-007). The
+a venue that keeps failing, then lets one trial through at a time, while each trial ends
+within the open time, whose success closes it again; a trial the venue refuses, or whose
+outcome never comes, lets another through once it has run for the circuit's open time, so only
+a region refusal ends the venue's use for good, and no other route is tried (EXA-007). The
 venue's state is U2's `VenueStatus`, with its `UnavailableCause`: states of their own, not the
 platform's. `maintain_connection` keeps a stream connected: it reconnects after a drop, and
 after a missed heartbeat, which marks the feed stale, with a backoff between failed attempts.
