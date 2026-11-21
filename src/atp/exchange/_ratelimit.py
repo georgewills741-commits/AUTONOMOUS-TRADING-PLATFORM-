@@ -157,7 +157,9 @@ class RateLimiter:
 
 class RequestQueue:
     """Admits a venue's waiting requests one at a time, in priority order, each when every
-    limit it counts against has room."""
+    limit it counts against has room. While it waits for the room of the request first in that
+    order, a request that arrives, even one of higher priority or on a limit with room, waits
+    until that wait ends."""
 
     def __init__(
         self,

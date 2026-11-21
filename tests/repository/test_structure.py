@@ -96,10 +96,10 @@ CCXT_CREDENTIALS = frozenset(
         "token",
     }
 )
-# Arguments, options, and attributes that turn TLS verification off when given False or 0
-# (requests' and CCXT's `verify`, CCXT's `validateServerSsl` and, in its asynchronous classes,
-# `ssl_context`, aiohttp's `ssl` and `verify_ssl`, the ssl module's `check_hostname`,
-# `verify_mode`, and `cert_reqs`).
+# Arguments, options, and attributes that turn TLS verification off when given a false value
+# other than None, or "NONE" (requests' and CCXT's `verify`, CCXT's `validateServerSsl` and, in
+# its asynchronous classes, `ssl_context`, aiohttp's `ssl` and `verify_ssl`, the ssl module's
+# `check_hostname`, `verify_mode`, and `cert_reqs`, and urllib3's `assert_hostname`).
 TLS_SWITCHES = frozenset(
     {
         "verify",
@@ -110,6 +110,7 @@ TLS_SWITCHES = frozenset(
         "check_hostname",
         "verify_mode",
         "cert_reqs",
+        "assert_hostname",
     }
 )
 # Names that turn TLS verification off: `_create_stdlib_context` is the ssl module's other name
@@ -1394,6 +1395,7 @@ LIST_SAMPLES = [
             "check_hostname",
             "verify_mode",
             "cert_reqs",
+            "assert_hostname",
         )
     ),
     *(
@@ -1746,6 +1748,7 @@ def test_a_float_conversion_is_found_inside_atp_numeric_too(
         ("config", "from atp import cli\n"),
         ("contracts", "import atp.cli\n"),
         ("numeric", "from atp.config import load_configuration\n"),
+        ("exchange", "from atp.health import ClockMonitor\n"),
         ("numeric", "import importlib\nm = importlib.import_module('atp.contracts')\n"),
         (
             "numeric",

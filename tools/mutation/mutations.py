@@ -67,6 +67,7 @@ _TLS_SWITCHES = (
     "check_hostname",
     "verify_mode",
     "cert_reqs",
+    "assert_hostname",
 )
 _TLS_OFF_NAMES = (
     "CERT_NONE",
@@ -5678,6 +5679,13 @@ MUTATIONS: list[Mutation] = [
         _STRUCTURE,
         '    "exchange": frozenset({"contracts", "marketdata"}),\n',
         "",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: atp.exchange allowed to import another package",
+        _STRUCTURE,
+        '    "exchange": frozenset({"contracts", "marketdata"}),\n',
+        '    "exchange": frozenset({"contracts", "marketdata", "health"}),\n',
         TESTS,
     ),
     Mutation(

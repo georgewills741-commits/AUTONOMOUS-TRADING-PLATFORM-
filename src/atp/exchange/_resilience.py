@@ -55,11 +55,11 @@ class CircuitState(enum.Enum):
 class CircuitBreaker:
     """Stops requests to a venue that keeps failing: `threshold` failures in a row open the
     circuit, which refuses every request for `open_ns`; then one trial request is let through,
-    and while it runs the circuit is half-open and refuses the others. A success closes the
-    circuit, and a failure while a trial runs opens it again; a trial that ends as neither,
-    refused by the venue or never reported (its caller may have stopped), lets another request
-    through once it has run for `open_ns`. Outcomes are not tied to requests: a success or a
-    failure recorded while a trial runs is taken as the trial's."""
+    and while it runs, for at most `open_ns`, the circuit is half-open and refuses the others.
+    A success closes the circuit, and a failure while a trial runs opens it again; a trial that
+    ends as neither, refused by the venue or never reported (its caller may have stopped), lets
+    another request through once it has run for `open_ns`. Outcomes are not tied to requests: a
+    success or a failure recorded while a trial runs is taken as the trial's."""
 
     def __init__(self, threshold: int, open_ns: int) -> None:
         if type(threshold) is not int or threshold < 1:
