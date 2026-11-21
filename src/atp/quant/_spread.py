@@ -6,14 +6,20 @@ from decimal import Decimal
 from itertools import takewhile
 from typing import Final
 
-from atp.marketdata import BookSnapshot, Ticker, Validated, item_time_ns
+from atp.marketdata import (
+    BookSnapshot,
+    Ticker,
+    Validated,
+    ValidationLimits,
+    item_time_ns,
+)
 from atp.numeric import Rounding, amount, divide
 from atp.quant._common import (
     CalculationRefused,
     RefusalCause,
     calculation_id,
     check_amount,
-    require_eligible,
+    require_current,
 )
 from atp.quant._contracts import DepthMetrics, SpreadMetrics
 
@@ -37,16 +43,21 @@ def _best(item: Ticker | BookSnapshot) -> tuple[Decimal | None, Decimal | None]:
 
 
 def spread_metrics(
-    data: Validated[Ticker | BookSnapshot], increment: Decimal
+    data: Validated[Ticker | BookSnapshot],
+    increment: Decimal,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
 ) -> SpreadMetrics:
     """The spread of a ticker's or a book snapshot's best bid and ask.
 
     The mid is (bid + ask) / 2 and the spread ask - bid, both exact; the relative spread is the
     spread divided by the mid, rounded up to a multiple of `increment` (`atp.numeric.divide`),
     so it is never understated. Data without a best bid or a best ask is refused
-    (MISSING_INPUT), as is data that was not VALID when assessed.
+    (MISSING_INPUT), as is data not VALID when validated or at `now_ns`, the time of use,
+    under `limits`.
     """
-    item = require_eligible(data, "ticker or book snapshot")
+    item = require_current(data, "ticker or book snapshot", now_ns, limits)
     bid, ask = _best(item)
     check_amount(increment, "increment")
     if bid is None or ask is None:
@@ -74,7 +85,13 @@ def spread_metrics(
     )
 
 
-def depth_metrics(data: Validated[BookSnapshot], band: Decimal) -> DepthMetrics:
+def depth_metrics(
+    data: Validated[BookSnapshot],
+    band: Decimal,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> DepthMetrics:
     """The depth a book snapshot shows within `band` of its mid, a fraction above zero and
     below one (0.01 is 1%).
 
@@ -82,9 +99,9 @@ def depth_metrics(data: Validated[BookSnapshot], band: Decimal) -> DepthMetrics:
     side counts its levels from the best while they are within its bound: their quantities, and
     the sum of each price times its quantity, both exact. A side is complete when a level beyond
     the bound follows. A snapshot without a bid or an ask is refused (MISSING_INPUT), as is one
-    that was not VALID when assessed.
+    not VALID when validated or at `now_ns`, the time of use, under `limits`.
     """
-    book = require_eligible(data, "book snapshot")
+    book = require_current(data, "book snapshot", now_ns, limits)
     if type(book) is not BookSnapshot:
         msg = "depth is computed from a book snapshot"
         raise TypeError(msg)

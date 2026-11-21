@@ -8,13 +8,19 @@ from decimal import Decimal
 from typing import Final
 
 from atp.config import VenueSettings
-from atp.marketdata import FundingRate, MarketRef, Validated, item_time_ns
+from atp.marketdata import (
+    FundingRate,
+    MarketRef,
+    Validated,
+    ValidationLimits,
+    item_time_ns,
+)
 from atp.quant._common import (
     CalculationRefused,
     RefusalCause,
     calculation_id,
     check_amount,
-    require_eligible,
+    require_current,
     unsigned,
 )
 from atp.quant._contracts import (
@@ -104,17 +110,22 @@ def estimate_fee(
 
 
 def estimate_funding(
-    data: Validated[FundingRate], side: PositionSide, notional: Decimal
+    data: Validated[FundingRate],
+    side: PositionSide,
+    notional: Decimal,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
 ) -> FundingEstimate:
     """The funding payment of a perpetual position of `notional`, in the quote asset, for one
     funding interval at a published funding rate.
 
     The payment is the notional times the rate, exactly. When the rate is above zero a long
     position pays it and a short one receives it, and the reverse when it is below, as perpetual
-    funding works; `cost` is what the position pays, below zero when it receives. A rate that
-    was not VALID when assessed is refused.
+    funding works; `cost` is what the position pays, below zero when it receives. A rate not
+    VALID when validated or at `now_ns`, the time of use, under `limits` is refused.
     """
-    item = require_eligible(data, "funding rate")
+    item = require_current(data, "funding rate", now_ns, limits)
     if type(item) is not FundingRate:
         msg = "funding is estimated from a funding rate"
         raise TypeError(msg)

@@ -12,11 +12,12 @@ a net result belongs to the True Net-Profit Engine (TNP-017). The definitions ar
 docs/systems/quantitative-engine.md.
 
 Market data reaches a calculation only as `atp.marketdata`'s `Validated` (SYS-03 consumes
-validated, normalized market data), and only if it was VALID when assessed (MKD-012). A
-calculation that has no result for its data (data not VALID, a missing price or fee schedule,
-too few bars, a gap, a definition that gives no value) raises `CalculationRefused`, with its
-`RefusalCause`, so its consumer reads the result as unknown, never as zero. Wrong arguments
-raise `TypeError` or `ValueError`.
+validated, normalized market data), and only if it was VALID when validated and is VALID again
+at the time of use, which each calculation is given with the freshness limits (`now_ns`,
+`limits`; MKD-012). A calculation that has no result for its data (data not VALID, a missing
+price or fee schedule, too few bars, a gap, a definition that gives no value) raises
+`CalculationRefused`, with its `RefusalCause`, so its consumer reads the result as unknown,
+never as zero. Wrong arguments raise `TypeError` or `ValueError`.
 
 Spreads, liquidity, fees, funding, and slippage are exact amounts (TEC-003); a quotient that
 must be rounded is rounded by `atp.numeric.divide`, in the direction that never understates a

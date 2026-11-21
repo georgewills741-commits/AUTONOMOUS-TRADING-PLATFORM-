@@ -6,14 +6,20 @@ from __future__ import annotations
 from decimal import Decimal
 from typing import Final
 
-from atp.marketdata import BookSnapshot, TakerSide, Validated, item_time_ns
+from atp.marketdata import (
+    BookSnapshot,
+    TakerSide,
+    Validated,
+    ValidationLimits,
+    item_time_ns,
+)
 from atp.numeric import Rounding, amount, divide
 from atp.quant._common import (
     CalculationRefused,
     RefusalCause,
     calculation_id,
     check_amount,
-    require_eligible,
+    require_current,
     unsigned,
 )
 from atp.quant._contracts import SlippageEstimate
@@ -29,6 +35,9 @@ def walk_book(
     quantity: Decimal,
     increment: Decimal,
     limit_price: Decimal | None = None,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
 ) -> SlippageEstimate:
     """Walk a taker order of `quantity`, in the base asset, through a book snapshot.
 
@@ -39,10 +48,10 @@ def walk_book(
     taker to a multiple of `increment` (`atp.numeric.divide`: up for a buy, down for a sell), so
     it is never better than the exact one, which is never better than the best price. Slippage
     against the best price and impact against the mid are exact. A side without levels is
-    refused (MISSING_INPUT), as is a snapshot that was not VALID when assessed; an order that
-    fills nothing has no average or worst price.
+    refused (MISSING_INPUT), as is a snapshot not VALID when validated or at `now_ns`, the time
+    of use, under `limits`; an order that fills nothing has no average or worst price.
     """
-    book = require_eligible(data, "book snapshot")
+    book = require_current(data, "book snapshot", now_ns, limits)
     if type(book) is not BookSnapshot:
         msg = "a size is walked through a book snapshot"
         raise TypeError(msg)

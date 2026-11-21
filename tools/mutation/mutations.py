@@ -6089,9 +6089,30 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
-        "S2-U7 market data not VALID when assessed used",
+        "S2-U7 market data not VALID when validated used",
         _U7_COMMON,
         "    if not data.eligible:\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 market data not VALID at the time of use used",
+        _U7_COMMON,
+        "    if assess(data.item, now_ns, limits).freshness is not Freshness.VALID:\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 a time of use that is not a whole number accepted",
+        _U7_COMMON,
+        "    if type(now_ns) is not int:\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 limits that are not ValidationLimits accepted",
+        _U7_COMMON,
+        "    if type(limits) is not ValidationLimits:\n",
         "    if False:\n",
         TESTS,
     ),
@@ -6371,7 +6392,7 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 indicators: the last bar's freshness not checked",
         _U7_INDICATORS,
-        '    require_eligible(given[-1], "last bar")\n',
+        '    require_current(given[-1], "last bar", now_ns, limits)\n',
         "",
         TESTS,
     ),
@@ -6399,8 +6420,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 SMA: every bar given averaged",
         _U7_INDICATORS,
-        "    series = _series(bars, period)[-period:]\n",
-        "    series = _series(bars, period)\n",
+        "    series = _series(bars, period, now_ns, limits)[-period:]\n",
+        "    series = _series(bars, period, now_ns, limits)\n",
         TESTS,
     ),
     Mutation(
@@ -6448,8 +6469,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 MACD: fewer bars than the signal needs",
         _U7_INDICATORS,
-        "    series = _series(bars, slow + signal - 1)\n",
-        "    series = _series(bars, slow)\n",
+        "    series = _series(bars, slow + signal - 1, now_ns, limits)\n",
+        "    series = _series(bars, slow, now_ns, limits)\n",
         TESTS,
     ),
     Mutation(
@@ -6469,8 +6490,8 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 volatility: a single return accepted",
         _U7_INDICATORS,
-        "    _check_period(period, minimum=2)\n    series = _ends(bars, period)\n",
-        "    _check_period(period, minimum=1)\n    series = _ends(bars, period)\n",
+        "    _check_period(period, minimum=2)\n    series = _ends(bars, period, now_ns, limits)\n",
+        "    _check_period(period, minimum=1)\n    series = _ends(bars, period, now_ns, limits)\n",
         TESTS,
     ),
     Mutation(

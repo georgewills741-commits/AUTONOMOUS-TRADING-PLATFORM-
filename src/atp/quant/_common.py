@@ -11,7 +11,14 @@ from collections.abc import Sequence
 from decimal import Decimal
 from typing import Final
 
-from atp.marketdata import EVIDENCE_ID_PATTERN, MarketItem, Validated
+from atp.marketdata import (
+    EVIDENCE_ID_PATTERN,
+    Freshness,
+    MarketItem,
+    Validated,
+    ValidationLimits,
+    assess,
+)
 
 CALCULATION_FORM: Final = "atp.calculation/1"
 """The name and version of the form a result's evidence identifier digests; a change to the form
@@ -22,7 +29,8 @@ class RefusalCause(enum.Enum):
     """Why a calculation has no result for the data it was given."""
 
     INELIGIBLE_INPUT = "ineligible-input"
-    """Market data that was not VALID when assessed (MKD-012)."""
+    """Market data that was not VALID when validated, or is not VALID at the time of use
+    (MKD-012)."""
     MISSING_INPUT = "missing-input"
     """A price, a side of a book, or a fee schedule the calculation needs is absent."""
     INSUFFICIENT_DATA = "insufficient-data"
@@ -43,17 +51,32 @@ class CalculationRefused(Exception):
         self.cause = cause
 
 
-def require_eligible[ItemT: MarketItem](data: Validated[ItemT], what: str) -> ItemT:
-    """The item of `data`, which must be validated market data that was VALID when assessed
-    (MKD-012): anything else that is not `Validated` raises `TypeError`, and data that was
-    not VALID is refused."""
+def require_current[ItemT: MarketItem](
+    data: Validated[ItemT], what: str, now_ns: int, limits: ValidationLimits
+) -> ItemT:
+    """The item of `data`, which must be validated market data that was VALID when it was
+    validated and is VALID again at `now_ns`, the time of use, under `limits` (MKD-012):
+    `eligible` keeps the assessment made when the item was validated, so the item is assessed
+    again here (`atp.marketdata.assess`). Anything that is not `Validated`, a time that is not
+    a whole number of nanoseconds, and limits that are not `ValidationLimits` raise
+    `TypeError`; data not VALID at either time is refused."""
     given: object = data  # typed code cannot pass anything else; other code can
     if type(given) is not Validated:
         msg = f"the {what} reaches a calculation only as atp.marketdata's Validated"
         raise TypeError(msg)
+    if type(now_ns) is not int:
+        msg = "the time of use is a whole number of nanoseconds"
+        raise TypeError(msg)
+    if type(limits) is not ValidationLimits:
+        msg = "the freshness limits are atp.marketdata's ValidationLimits"
+        raise TypeError(msg)
     if not data.eligible:
         raise CalculationRefused(
-            RefusalCause.INELIGIBLE_INPUT, f"the {what} was not VALID when assessed"
+            RefusalCause.INELIGIBLE_INPUT, f"the {what} was not VALID when validated"
+        )
+    if assess(data.item, now_ns, limits).freshness is not Freshness.VALID:
+        raise CalculationRefused(
+            RefusalCause.INELIGIBLE_INPUT, f"the {what} is not VALID at the time of use"
         )
     return data.item
 

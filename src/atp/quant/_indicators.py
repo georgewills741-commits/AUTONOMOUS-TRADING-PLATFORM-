@@ -12,8 +12,9 @@ inputs and parameters, never its value.
 Every indicator reads a series of `Validated` bars of one market and one interval, closed, in
 order, one per interval: anything else raises `TypeError` or `ValueError`. A series with bars
 missing between two of its bars is refused (GAP), as is one shorter than the indicator's periods
-need (INSUFFICIENT_DATA), and one whose last bar was not VALID when assessed (MKD-012); earlier
-bars are history, which is older than a freshness limit by nature. A value the definition does
+need (INSUFFICIENT_DATA), and one whose last bar was not VALID when validated or is not VALID
+at `now_ns`, the time of use, under `limits` (MKD-012); earlier bars are history, older than a
+freshness limit by nature. A value the definition does
 not give, or a float cannot hold, is refused (UNDEFINED).
 """
 
@@ -25,12 +26,12 @@ from decimal import Decimal
 from itertools import pairwise
 from typing import Final
 
-from atp.marketdata import OhlcvBar, Validated, bar_end_ns
+from atp.marketdata import OhlcvBar, Validated, ValidationLimits, bar_end_ns
 from atp.quant._common import (
     CalculationRefused,
     RefusalCause,
     calculation_id,
-    require_eligible,
+    require_current,
 )
 from atp.quant._contracts import Correlation, IndicatorKind, IndicatorValue
 
@@ -51,7 +52,12 @@ def _check_period(period: int, what: str = "period", minimum: int = 1) -> None:
         raise ValueError(msg)
 
 
-def _series(bars: Sequence[Validated[OhlcvBar]], needed: int) -> list[OhlcvBar]:
+def _series(
+    bars: Sequence[Validated[OhlcvBar]],
+    needed: int,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> list[OhlcvBar]:
     """The bars of `bars`, checked as the module's docstring says."""
     given = list(bars)
     items: list[OhlcvBar] = []
@@ -85,7 +91,7 @@ def _series(bars: Sequence[Validated[OhlcvBar]], needed: int) -> list[OhlcvBar]:
             RefusalCause.INSUFFICIENT_DATA,
             f"the indicator needs {needed} bars; {len(items)} were given",
         )
-    require_eligible(given[-1], "last bar")
+    require_current(given[-1], "last bar", now_ns, limits)
     return items
 
 
@@ -160,25 +166,43 @@ def _ema_series(values: Sequence[float], period: int) -> list[float]:
     return averages
 
 
-def sma(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def sma(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """The simple moving average of the last `period` closes."""
     _check_period(period)
-    series = _series(bars, period)[-period:]
+    series = _series(bars, period, now_ns, limits)[-period:]
     return _indicator(
         IndicatorKind.SMA, (period,), _sum(_closes(series)) / period, series
     )
 
 
-def ema(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def ema(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """The exponential moving average of the closes of all the bars given, at least `period`:
     started from the simple average of the first `period` (`_ema_series`)."""
     _check_period(period)
-    series = _series(bars, period)
+    series = _series(bars, period, now_ns, limits)
     value = _ema_series(_closes(series), period)[-1]
     return _indicator(IndicatorKind.EMA, (period,), value, series)
 
 
-def rsi(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def rsi(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """Wilder's relative strength index of all the bars given, at least `period` + 1.
 
     Each close's change from the one before is a gain or a loss. The first average gain and loss
@@ -187,7 +211,7 @@ def rsi(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
     refused (UNDEFINED) with neither a gain nor a loss.
     """
     _check_period(period)
-    series = _series(bars, period + 1)
+    series = _series(bars, period + 1, now_ns, limits)
     changes = [later - earlier for earlier, later in pairwise(_closes(series))]
     gains = [max(change, 0.0) for change in changes]
     losses = [max(-change, 0.0) for change in changes]
@@ -209,7 +233,13 @@ def rsi(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
 
 
 def macd(
-    bars: Sequence[Validated[OhlcvBar]], fast: int, slow: int, signal: int
+    bars: Sequence[Validated[OhlcvBar]],
+    fast: int,
+    slow: int,
+    signal: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
 ) -> tuple[IndicatorValue, IndicatorValue, IndicatorValue]:
     """Appel's MACD of all the bars given, at least `slow` + `signal` - 1: its line, the fast
     EMA of the closes less the slow one, from the first close the slow one has; its signal, the
@@ -220,7 +250,7 @@ def macd(
     if fast >= slow:
         msg = "the fast period is below the slow one"
         raise ValueError(msg)
-    series = _series(bars, slow + signal - 1)
+    series = _series(bars, slow + signal - 1, now_ns, limits)
     closes = _closes(series)
     fast_averages = _ema_series(closes, fast)[slow - fast :]
     slow_averages = _ema_series(closes, slow)
@@ -239,7 +269,13 @@ def macd(
     )
 
 
-def atr(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def atr(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """Wilder's average true range of all the bars given, at least `period` + 1.
 
     A bar's true range, from the second bar on, is the largest of its high less its low, and the
@@ -248,7 +284,7 @@ def atr(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
     period.
     """
     _check_period(period)
-    series = _series(bars, period + 1)
+    series = _series(bars, period + 1, now_ns, limits)
     ranges = []
     for earlier, bar in pairwise(series):
         high, low, close = _price(bar.high), _price(bar.low), _price(earlier.close)
@@ -259,24 +295,41 @@ def atr(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
     return _indicator(IndicatorKind.ATR, (period,), value, series)
 
 
-def _ends(bars: Sequence[Validated[OhlcvBar]], period: int) -> list[OhlcvBar]:
-    return _series(bars, period + 1)[-(period + 1) :]
+def _ends(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> list[OhlcvBar]:
+    return _series(bars, period + 1, now_ns, limits)[-(period + 1) :]
 
 
-def simple_return(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def simple_return(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """The return over the last `period` bars: the last close over the close `period` bars
     before it, less one."""
     _check_period(period)
-    series = _ends(bars, period)
+    series = _ends(bars, period, now_ns, limits)
     value = _price(series[-1].close) / _price(series[0].close) - 1.0
     return _indicator(IndicatorKind.SIMPLE_RETURN, (period,), value, series)
 
 
-def log_return(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def log_return(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """The logarithmic return over the last `period` bars: the natural logarithm of the last
     close over the close `period` bars before it."""
     _check_period(period)
-    series = _ends(bars, period)
+    series = _ends(bars, period, now_ns, limits)
     value = math.log(_price(series[-1].close) / _price(series[0].close))
     return _indicator(IndicatorKind.LOG_RETURN, (period,), value, series)
 
@@ -285,12 +338,18 @@ def _log_returns(series: Sequence[OhlcvBar]) -> list[float]:
     return [math.log(later / earlier) for earlier, later in pairwise(_closes(series))]
 
 
-def volatility(bars: Sequence[Validated[OhlcvBar]], period: int) -> IndicatorValue:
+def volatility(
+    bars: Sequence[Validated[OhlcvBar]],
+    period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
+) -> IndicatorValue:
     """The volatility of the last `period` one-bar log returns, at least two: their sample
     standard deviation, the square root of the sum of their squared distances from their mean
     over `period` - 1. It is per bar, not scaled to a year."""
     _check_period(period, minimum=2)
-    series = _ends(bars, period)
+    series = _ends(bars, period, now_ns, limits)
     returns = _log_returns(series)
     mean = _sum(returns) / period
     variance = _sum((value - mean) ** 2 for value in returns) / (period - 1)
@@ -301,6 +360,9 @@ def correlation(
     bars: Sequence[Validated[OhlcvBar]],
     other: Sequence[Validated[OhlcvBar]],
     period: int,
+    *,
+    now_ns: int,
+    limits: ValidationLimits,
 ) -> Correlation:
     """Pearson's correlation of two markets' last `period` one-bar log returns, at least two,
     over bars of one interval opening at the same times: the sum of the products of their
@@ -308,7 +370,8 @@ def correlation(
     squares. Returns that never vary give no correlation (UNDEFINED). A result a float's
     rounding puts just beyond -1 or 1 is that bound."""
     _check_period(period, minimum=2)
-    first, second = _ends(bars, period), _ends(other, period)
+    first = _ends(bars, period, now_ns, limits)
+    second = _ends(other, period, now_ns, limits)
     if any(
         a.open_time_ns != b.open_time_ns or a.interval_seconds != b.interval_seconds
         for a, b in zip(first, second, strict=True)
