@@ -44,6 +44,42 @@ _U4_BACKOFF = "src/atp/exchange/_backoff.py"
 _U4_RATELIMIT = "src/atp/exchange/_ratelimit.py"
 _U4_RESILIENCE = "src/atp/exchange/_resilience.py"
 _U4_INTERFACE = "src/atp/exchange/_interface.py"
+# The structure test's sets of names, in their order there: each entry that drops one is made
+# from these.
+_CCXT_CREDENTIALS = (
+    "apiKey",
+    "secret",
+    "password",
+    "uid",
+    "accountId",
+    "login",
+    "twofa",
+    "privateKey",
+    "walletAddress",
+    "token",
+)
+_TLS_SWITCHES = (
+    "verify",
+    "validateServerSsl",
+    "ssl_context",
+    "ssl",
+    "verify_ssl",
+    "check_hostname",
+    "verify_mode",
+    "cert_reqs",
+)
+_TLS_OFF_NAMES = (
+    "CERT_NONE",
+    "_create_unverified_context",
+    "_create_stdlib_context",
+    "PYTHONHTTPSVERIFY",
+)
+
+
+def _name_set(constant: str, names: tuple[str, ...], dropped: str = "") -> str:
+    """One of the structure test's sets of names as written there, without `dropped`."""
+    lines = "".join(f'        "{name}",\n' for name in names if name != dropped)
+    return f"{constant} = frozenset(\n    {{\n{lines}    }}\n)\n"
 
 MUTATIONS: list[Mutation] = [
     # Checkpoint A, check 11: the secret scanner.
@@ -5268,13 +5304,6 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
-        "S2-U4 a trial that ends as neither left running",
-        _U4_RESILIENCE,
-        'is left as it was."""\n        self._trial_ns = None\n',
-        'is left as it was."""\n',
-        TESTS,
-    ),
-    Mutation(
         "S2-U4 the circuit's wait counted from its opening only",
         _U4_RESILIENCE,
         "        return max(0, start + self._open_ns - now_ns)\n",
@@ -5324,10 +5353,10 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
-        "S2-U4 a refused trial left running",
+        "S2-U4 a refusal taken as a success of the venue",
         _U4_RESILIENCE,
-        "                self._circuit.refused()\n",
-        "                pass\n",
+        '                # circuit, and a trial it runs, are left as they are.\n',
+        '                # circuit, and a trial it runs, are left as they are.\n                self._circuit.succeeded()\n',
         TESTS,
     ),
     Mutation(
@@ -5354,8 +5383,15 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 a venue's refusal of one request counted toward the circuit",
         _U4_RESILIENCE,
-        "                self._circuit.refused()\n",
-        "                failure(error.cause)\n",
+        '                # circuit, and a trial it runs, are left as they are.\n',
+        '                # circuit, and a trial it runs, are left as they are.\n                self._circuit.failed(now_ns)\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a half-open circuit's venue reported available",
+        _U4_RESILIENCE,
+        '        if self._circuit.state(now_ns) is not CircuitState.CLOSED:\n',
+        '        if self._circuit.state(now_ns) is CircuitState.OPEN:\n',
         TESTS,
     ),
     Mutation(
@@ -5433,10 +5469,43 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 a connection's failed attempts not backed off",
         _U4_RESILIENCE,
-        "            failures += 1\n            await sleep_ns(limits.backoff.delay_ns(failures))\n"
-        "            continue\n",
-        "            failures = 1\n            await sleep_ns(limits.backoff.delay_ns(failures))\n"
-        "            continue\n",
+        '            failures += 1\n            asked = outcome.fold(\n',
+        '            failures = 1\n            asked = outcome.fold(\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a stream not waiting as long as the venue asks",
+        _U4_RESILIENCE,
+        '            await sleep_ns(delay if asked is None else max(delay, asked))\n            continue\n',
+        '            await sleep_ns(delay)\n            continue\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a stream waiting only as long as the venue asks",
+        _U4_RESILIENCE,
+        '            await sleep_ns(delay if asked is None else max(delay, asked))\n            continue\n',
+        '            await sleep_ns(delay if asked is None else asked)\n            continue\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a read retried though the venue asks for longer than its backoff allows",
+        _U4_RATELIMIT,
+        '        if asked is not None and asked > backoff.maximum_ns:\n            return outcome\n',
+        '        if False:\n            return outcome\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a read not retried when the venue asks for its backoff's longest wait",
+        _U4_RATELIMIT,
+        '        if asked is not None and asked > backoff.maximum_ns:\n',
+        '        if asked is not None and asked >= backoff.maximum_ns:\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 a wait of zero refused",
+        _U4_REQUESTS,
+        '        type(retry_after_ns) is not int or not 0 <= retry_after_ns <= _INT64_MAX\n',
+        '        type(retry_after_ns) is not int or not 0 < retry_after_ns <= _INT64_MAX\n',
         TESTS,
     ),
     Mutation(
@@ -5620,15 +5689,120 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 structure: an assignment not read",
         _STRUCTURE,
-        "    if isinstance(node, ast.Assign):\n        return [(target, node.value) for target in node.targets]\n",
-        "    if False:\n        return [(target, node.value) for target in node.targets]\n",
+        '    if isinstance(node, ast.Assign):\n        return [\n',
+        '    if False:\n        return [\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an unpacked target not read",
+        _STRUCTURE,
+        '    if isinstance(target, ast.Tuple | ast.List):\n',
+        '    if False:\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a list's unpacking not read",
+        _STRUCTURE,
+        '    if isinstance(target, ast.Tuple | ast.List):\n',
+        '    if isinstance(target, ast.Tuple):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a starred target not read",
+        _STRUCTURE,
+        '    if isinstance(target, ast.Starred):\n        return _unpacked(target.value, None)\n',
+        '    if False:\n        return _unpacked(target.value, None)\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an unpacking's values not paired",
+        _STRUCTURE,
+        '            values = list(value.elts)\n',
+        '            pass\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an unpacking of another length paired",
+        _STRUCTURE,
+        '        if isinstance(value, ast.Tuple | ast.List) and len(value.elts) == len(\n            target.elts\n        ):\n',
+        '        if isinstance(value, ast.Tuple | ast.List):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a list's values not paired",
+        _STRUCTURE,
+        '        if isinstance(value, ast.Tuple | ast.List) and len(value.elts) == len(\n',
+        '        if isinstance(value, ast.Tuple) and len(value.elts) == len(\n',
         TESTS,
     ),
     Mutation(
         "S2-U4 structure: an annotated assignment not read",
         _STRUCTURE,
-        "    if isinstance(node, ast.AnnAssign | ast.AugAssign):\n",
-        "    if False:\n",
+        '    if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):\n',
+        '    if isinstance(node, ast.AugAssign | ast.NamedExpr):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an augmented assignment not read",
+        _STRUCTURE,
+        '    if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):\n',
+        '    if isinstance(node, ast.AnnAssign | ast.NamedExpr):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a walrus not read",
+        _STRUCTURE,
+        '    if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):\n',
+        '    if isinstance(node, ast.AnnAssign | ast.AugAssign):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a parameter's default not read",
+        _STRUCTURE,
+        '    if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):\n        return []\n',
+        '    if True:\n        return []\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an async function's defaults not read",
+        _STRUCTURE,
+        '    if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):\n',
+        '    if not isinstance(node, ast.FunctionDef | ast.Lambda):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a lambda's defaults not read",
+        _STRUCTURE,
+        '    if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):\n',
+        '    if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a positional-only parameter's default not read",
+        _STRUCTURE,
+        '    positional = arguments.posonlyargs + arguments.args\n',
+        '    positional = arguments.args\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a keyword-only parameter's default not read",
+        _STRUCTURE,
+        '    pairs += zip(arguments.kwonlyargs, arguments.kw_defaults, strict=True)\n',
+        '',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: defaults not read for TLS",
+        _STRUCTURE,
+        '                *_defaults(node),\n',
+        '',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an assigned name not read for TLS",
+        _STRUCTURE,
+        '                    if isinstance(target, ast.Name)\n',
+        '                    if False\n',
         TESTS,
     ),
     Mutation(
@@ -5689,78 +5863,17 @@ MUTATIONS: list[Mutation] = [
     ),
     *(
         Mutation(
-            f"S2-U4 structure: the credential name {name} dropped",
+            f"S2-U4 structure: the {kind} {name} dropped",
             _STRUCTURE,
-            f'        "{name}",\n        "{following}",\n',
-            f'        "{following}",\n',
+            _name_set(constant, names),
+            _name_set(constant, names, name),
             TESTS,
         )
-        for name, following in (
-            ("apiKey", "secret"),
-            ("secret", "password"),
-            ("password", "uid"),
-            ("uid", "login"),
-            ("login", "twofa"),
-            ("twofa", "privateKey"),
-            ("privateKey", "walletAddress"),
-            ("walletAddress", "token"),
+        for kind, constant, names in (
+            ("credential name", "CCXT_CREDENTIALS", _CCXT_CREDENTIALS),
+            ("TLS switch", "TLS_SWITCHES", _TLS_SWITCHES),
+            ("name turning TLS off", "TLS_OFF_NAMES", _TLS_OFF_NAMES),
         )
-    ),
-    Mutation(
-        "S2-U4 structure: the credential name token dropped",
-        _STRUCTURE,
-        '        "walletAddress",\n        "token",\n    }\n)\n',
-        '        "walletAddress",\n    }\n)\n',
-        TESTS,
-    ),
-    *(
-        Mutation(
-            f"S2-U4 structure: the TLS switch {name} dropped",
-            _STRUCTURE,
-            '    {"verify", "ssl", "verify_ssl", "check_hostname", "verify_mode", "cert_reqs"}\n',
-            "    {"
-            + ", ".join(
-                f'"{switch}"'
-                for switch in (
-                    "verify",
-                    "ssl",
-                    "verify_ssl",
-                    "check_hostname",
-                    "verify_mode",
-                    "cert_reqs",
-                )
-                if switch != name
-            )
-            + "}\n",
-            TESTS,
-        )
-        for name in (
-            "verify",
-            "ssl",
-            "verify_ssl",
-            "check_hostname",
-            "verify_mode",
-            "cert_reqs",
-        )
-    ),
-    *(
-        Mutation(
-            f"S2-U4 structure: the name {name} dropped from those turning TLS off",
-            _STRUCTURE,
-            '    {"CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY"}\n',
-            "    {"
-            + ", ".join(
-                f'"{off}"'
-                for off in (
-                    "CERT_NONE",
-                    "_create_unverified_context",
-                    "PYTHONHTTPSVERIFY",
-                )
-                if off != name
-            )
-            + "}\n",
-            TESTS,
-        )
-        for name in ("CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY")
+        for name in names
     ),
 ]

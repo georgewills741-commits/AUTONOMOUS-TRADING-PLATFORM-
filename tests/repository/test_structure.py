@@ -1045,7 +1045,8 @@ def _assigned(node: ast.AST) -> list[tuple[ast.expr, ast.expr | None]]:
 
 
 def _defaults(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
-    """A function's parameters that have a default, each with its default."""
+    """A function's parameters with their defaults: each positional one that has a default,
+    and each keyword-only one, None the default of one without."""
     if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):
         return []
     arguments = node.args
