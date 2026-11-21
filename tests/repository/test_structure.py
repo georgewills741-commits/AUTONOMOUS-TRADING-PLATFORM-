@@ -1037,7 +1037,9 @@ def _assigned(node: ast.AST) -> list[tuple[ast.expr, ast.expr | None]]:
     """The targets an assignment binds, each with the value bound, unpackings and `:=`
     included."""
     if isinstance(node, ast.Assign):
-        return [pair for target in node.targets for pair in _unpacked(target, node.value)]
+        return [
+            pair for target in node.targets for pair in _unpacked(target, node.value)
+        ]
     if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):
         return _unpacked(node.target, node.value)
     return []
