@@ -1,9 +1,10 @@
 """Connection resilience (EXA-015, EXA-007; the Stage 2 plan's U4).
 
 A venue's connections keep their health in a `VenueHealth`: a `CircuitBreaker` stops requests to
-a venue that keeps failing, then lets one trial through, whose success closes it again, and a
-trial never ends the venue's use, whatever its outcome or none; a region refusal makes the
-venue unavailable for good, and no other route is tried (EXA-007). The
+a venue that keeps failing, then lets one trial through at a time, whose success closes it
+again; a trial the venue refuses, or whose outcome never comes, lets another through once it
+has run for the circuit's open time, so only a region refusal ends the venue's use for good,
+and no other route is tried (EXA-007). The
 venue's state is U2's `VenueStatus`, with its `UnavailableCause`: states of their own, not the
 platform's. `maintain_connection` keeps a stream connected: it reconnects after a drop, and
 after a missed heartbeat, which marks the feed stale, with a backoff between failed attempts.
@@ -54,10 +55,11 @@ class CircuitState(enum.Enum):
 class CircuitBreaker:
     """Stops requests to a venue that keeps failing: `threshold` failures in a row open the
     circuit, which refuses every request for `open_ns`; then one trial request is let through,
-    and while it runs the circuit is half-open and refuses the others. The trial's success
-    closes the circuit, and its failure opens it again; a trial that ends as neither, or whose
-    outcome is not recorded within `open_ns` (its caller may have stopped), lets another
-    request be the trial."""
+    and while it runs the circuit is half-open and refuses the others. A success closes the
+    circuit, and a failure while a trial runs opens it again; a trial that ends as neither,
+    refused by the venue or never reported (its caller may have stopped), lets another request
+    through once it has run for `open_ns`. Outcomes are not tied to requests: a success or a
+    failure recorded while a trial runs is taken as the trial's."""
 
     def __init__(self, threshold: int, open_ns: int) -> None:
         if type(threshold) is not int or threshold < 1:
@@ -120,11 +122,6 @@ class CircuitBreaker:
         if self._opened_ns is None and self._failures >= self._threshold:
             self._opened_ns = now_ns
 
-    def refused(self) -> None:
-        """A request ended as neither a success nor a failure: a trial so ended lets another
-        request be the trial, and a run of failures is left as it was."""
-        self._trial_ns = None
-
 
 class VenueHealth:
     """A venue's state as its connections observe it: UNAVAILABLE with REGION_REFUSED for good
@@ -172,8 +169,8 @@ class VenueHealth:
                 failure(UnavailableCause.CONNECTION_FAILED)
             else:
                 # The venue answered, refusing the request for its rate limit or as it was
-                # sent (VENUE_ERROR): neither a success nor a failure of the venue.
-                self._circuit.refused()
+                # sent (VENUE_ERROR): neither a success nor a failure of the venue, so the
+                # circuit, and a trial it runs, are left as they are.
                 self._rate_limited = error.cause is UnavailableCause.RATE_LIMITED
 
         def succeeded(_: object) -> None:
@@ -238,7 +235,8 @@ async def maintain_connection(
     """Keep a stream connected until the venue refuses the region, or the task is cancelled:
     connect (`connect` opens the connection and subscribes), deliver each message, and, after a
     drop or a silence longer than the heartbeat timeout, which marks the feed stale, close the
-    connection and connect again, after the backoff of the failures in a row. A connection is
+    connection and connect again, after the backoff of the failures in a row, or the wait the
+    venue asked for when it refused a connection and that is longer. A connection is
     opened only when the venue's health allows it. A failed attempt, a stale feed (a timeout),
     and a drop (a connection that failed) are failures, recorded in it; a connection counts as
     a success, and ends the run of failures, only when its first message arrives, so a venue
@@ -264,7 +262,14 @@ async def maintain_connection(
             if health.region_refused:
                 return
             failures += 1
-            await sleep_ns(limits.backoff.delay_ns(failures))
+            asked = outcome.fold(
+                on_success=lambda _: None,
+                on_failure=lambda failure: failure.retry_after_ns,
+                on_timeout=lambda: None,
+                on_unknown=lambda: None,
+            )
+            delay = limits.backoff.delay_ns(failures)
+            await sleep_ns(delay if asked is None else max(delay, asked))
             continue
         report(FeedEvent.CONNECTED)
         delivered = False

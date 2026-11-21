@@ -10,8 +10,9 @@ request waiting is given its failure, so none waits for good. A rate-limit refus
 venue for its backoff, or longer when the venue asks for longer, the pause doubling with each
 refusal in a row until a request is accepted. Reads are retried by `retry_read`, after a
 backoff, or the wait the venue asked for when that is longer, only where a retry may change
-the outcome; a retry rule for financial actions, which must never be repeated by a retry,
-comes with them in CORE TRADING FOUNDATION (EXE-008).
+the outcome, and not when the venue asks for longer than the backoff's longest wait; a retry
+rule for financial actions, which must never be repeated by a retry, comes with them in CORE
+TRADING FOUNDATION (EXE-008).
 
 Times are a monotonic clock's whole nanoseconds; the clock and the wait are given by the code
 that runs the path, so that tests run without waiting.
@@ -173,7 +174,8 @@ class RequestQueue:
         self._runner: asyncio.Task[None] | None = None
 
     async def admit(self, costs: Mapping[str, int], priority: Priority) -> None:
-        """Wait until the request may be sent; its weights are recorded as it is admitted."""
+        """Wait until the request may be sent; its weights are recorded as it is admitted,
+        and stay recorded if its caller then stops without sending it."""
         self._limiter.check(costs)
         loop = asyncio.get_running_loop()
         admitted: asyncio.Future[None] = loop.create_future()
@@ -226,7 +228,9 @@ async def retry_read[T](
 ) -> Outcome[T, RequestFailure]:
     """Send a read, and send it again, after the backoff of the attempts so far or the wait
     the venue asked for, whichever is longer, while its outcome is a TIMEOUT, an UNKNOWN, or a
-    failure in `_RETRIED`, at most `attempts` times in all; the last outcome is returned."""
+    failure in `_RETRIED`, at most `attempts` times in all; the last outcome is returned, at
+    once when the venue asks for a longer wait than the backoff's longest, its caller to
+    decide."""
     if type(attempts) is not int or attempts < 1:
         msg = "a read is sent once or more"
         raise ValueError(msg)
@@ -247,6 +251,8 @@ async def retry_read[T](
             on_timeout=lambda: None,
             on_unknown=lambda: None,
         )
+        if asked is not None and asked > backoff.maximum_ns:
+            return outcome
         delay = backoff.delay_ns(attempt)
         await sleep_ns(delay if asked is None else max(delay, asked))
         attempt += 1

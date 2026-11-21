@@ -115,6 +115,12 @@ def test_a_wait_asked_for_is_whole_nanoseconds_from_zero(wait: object) -> None:
         RequestFailure(UnavailableCause.RATE_LIMITED, 429, wait)  # type: ignore[arg-type]
 
 
+@pytest.mark.req("EXA-014")
+def test_a_wait_of_zero_is_accepted() -> None:
+    refused = failure(request_outcome(Answered(429, b"", retry_after_ns=0)))
+    assert refused == RequestFailure(UnavailableCause.RATE_LIMITED, 429, 0)
+
+
 def test_a_timeout_is_never_a_failure() -> None:
     with pytest.raises(ValueError, match="outcome of its own"):
         RequestFailure(UnavailableCause.TIMEOUT)

@@ -79,21 +79,6 @@ def test_a_success_ends_a_run_of_failures() -> None:
 
 
 @pytest.mark.req("EXA-015")
-def test_a_trial_that_ends_as_neither_lets_another_request_be_the_trial() -> None:
-    circuit = CircuitBreaker(1, 1_000)
-    circuit.failed(0)
-    assert circuit.allows(1_000)
-    circuit.refused()
-    assert circuit.state(1_000) is CircuitState.OPEN
-    assert circuit.opens_ns(1_000) == 0
-    assert circuit.allows(1_000)
-    assert circuit.state(1_000) is CircuitState.HALF_OPEN
-    assert not circuit.allows(1_001)
-    circuit.succeeded()
-    assert circuit.state(1_001) is CircuitState.CLOSED
-
-
-@pytest.mark.req("EXA-015")
 def test_a_trial_without_an_outcome_lets_another_through_after_the_open_time() -> None:
     circuit = CircuitBreaker(1, 1_000)
     circuit.failed(0)
@@ -113,15 +98,15 @@ def test_a_trial_without_an_outcome_lets_another_through_after_the_open_time() -
 
 @pytest.mark.req("EXA-015")
 def test_a_refusal_leaves_a_run_of_failures_as_it_was() -> None:
-    circuit = CircuitBreaker(2, 1_000)
-    circuit.failed(0)
-    circuit.refused()
-    assert circuit.state(1) is CircuitState.CLOSED
-    circuit.failed(1)
-    assert circuit.state(1) is CircuitState.OPEN
-    circuit.refused()
-    assert circuit.state(2) is CircuitState.OPEN
-    assert not circuit.allows(2)
+    health = VenueHealth(LIMITS)
+    health.record(Outcome.timeout(), 0)
+    health.record(refusal(UnavailableCause.VENUE_ERROR), 1)
+    health.record(Outcome.timeout(), 2)
+    health.record(refusal(UnavailableCause.RATE_LIMITED), 3)
+    assert health.allows(4)
+    health.record(Outcome.timeout(), 4)
+    assert not health.allows(5)
+    assert health.status(5) == (VenueStatus.UNAVAILABLE, UnavailableCause.TIMEOUT)
 
 
 @pytest.mark.parametrize(
@@ -210,20 +195,33 @@ def test_a_venue_is_rate_limited_while_that_is_its_last_outcome() -> None:
         (UnavailableCause.RATE_LIMITED, UnavailableCause.RATE_LIMITED),
     ],
 )
-def test_a_trial_the_venue_refuses_does_not_stop_the_venue_for_good(
+def test_a_refusal_lets_no_second_trial_through_while_one_runs(
     cause: UnavailableCause, shown: UnavailableCause
 ) -> None:
     health = VenueHealth(LIMITS)
     for now in (0, 1, 2):
         health.record(Outcome.timeout(), now)
     assert health.allows(10_002)
+    # A refusal, of the trial or of a request sent before the circuit opened.
     health.record(refusal(cause), 10_003)
     assert health.status(10_003) == (VenueStatus.UNAVAILABLE, shown)
-    # Another request is the trial, and its success makes the venue available.
-    assert health.allows(10_004)
     assert not health.allows(10_004)
-    health.record(Outcome.success(b""), 10_005)
-    assert health.status(10_005) == (VenueStatus.AVAILABLE, None)
+    assert health.wait_ns(10_004) == 9_998
+    # Once the trial has run for the open time, another request is the trial.
+    assert not health.allows(20_001)
+    assert health.allows(20_002)
+    health.record(Outcome.success(b""), 20_003)
+    assert health.status(20_003) == (VenueStatus.AVAILABLE, None)
+
+
+@pytest.mark.req("EXA-015")
+def test_a_venue_is_unavailable_while_its_trial_runs() -> None:
+    health = VenueHealth(LIMITS)
+    health.record(Outcome.success(b""), 0)
+    for now in (1, 2, 3):
+        health.record(Outcome.timeout(), now)
+    assert health.allows(10_003)
+    assert health.status(10_003) == (VenueStatus.UNAVAILABLE, UnavailableCause.TIMEOUT)
 
 
 @pytest.mark.req("EXA-007", "EXA-015")
@@ -442,7 +440,7 @@ def test_connections_that_go_stale_or_drop_before_any_message_open_the_circuit()
 
 
 @pytest.mark.req("EXA-015")
-def test_a_trial_connection_the_venue_refuses_is_followed_by_another_trial() -> None:
+def test_a_trial_connection_the_venue_refuses_runs_out_its_time() -> None:
     clock = FakeClock()
     refused: Outcome[Connection, RequestFailure] = Outcome.failure(
         RequestFailure(UnavailableCause.VENUE_ERROR, 400)
@@ -457,19 +455,35 @@ def test_a_trial_connection_the_venue_refuses_is_followed_by_another_trial() -> 
         REGION_REFUSED,
     )
     # The third failure opens the circuit at 1,300; its trial, at 11,300, is refused, and the
-    # next attempt, after the backoff, is the trial again.
+    # next trial is let through once that one has run for the open time, at 21,300.
     assert events == [
         "connect at 1000",
         "connect at 1100",
         "connect at 1300",
         "connect at 11300",
-        "connect at 12100",
+        "connect at 21300",
         "connected",
         "one",
         "dropped",
-        "connect at 12200",
+        "connect at 21400",
     ]
-    assert clock.waits == [100, 200, 400, 9_600, 800, 100]
+    assert clock.waits == [100, 200, 400, 9_600, 800, 9_200, 100]
+
+
+@pytest.mark.req("EXA-014", "EXA-015")
+@pytest.mark.parametrize(
+    ("asked", "wait"), [(50_000, 50_000), (50, 100), (None, 100)]
+)
+def test_a_stream_waits_as_long_as_the_venue_asks_after_refusing_a_connection(
+    asked: int | None, wait: int
+) -> None:
+    clock = FakeClock()
+    limited: Outcome[Connection, RequestFailure] = Outcome.failure(
+        RequestFailure(UnavailableCause.RATE_LIMITED, 429, asked)
+    )
+    events, _, _ = run(clock, limited, REGION_REFUSED)
+    assert events == ["connect at 1000", f"connect at {1_000 + wait}"]
+    assert clock.waits == [wait]
 
 
 @pytest.mark.req("EXA-015")

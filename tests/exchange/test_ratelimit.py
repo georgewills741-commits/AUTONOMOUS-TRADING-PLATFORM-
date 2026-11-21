@@ -394,7 +394,7 @@ def test_a_read_is_retried_with_backoff_while_a_retry_may_help() -> None:
 @pytest.mark.req("EXA-014")
 def test_a_retry_waits_as_long_as_the_venue_asks_when_that_is_longer() -> None:
     send, sent = scripted(
-        Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 429, 5_000)),
+        Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 429, 700)),
         Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 429, 50)),
         Outcome.success("data"),
     )
@@ -405,7 +405,26 @@ def test_a_retry_waits_as_long_as_the_venue_asks_when_that_is_longer() -> None:
 
     assert result(asyncio.run(main())) == "data"
     assert sent == [1, 2, 3]
-    assert clock.waits == [5_000, 200]
+    assert clock.waits == [700, 200]
+
+
+@pytest.mark.req("EXA-014")
+@pytest.mark.parametrize(("asked", "sent_times"), [(1_001, [1]), (1_000, [1, 2])])
+def test_a_read_is_not_retried_when_the_venue_asks_for_longer_than_its_backoff_allows(
+    asked: int, sent_times: list[int]
+) -> None:
+    send, sent = scripted(
+        Outcome.failure(RequestFailure(UnavailableCause.RATE_LIMITED, 418, asked)),
+        Outcome.success("data"),
+    )
+    clock = FakeClock()
+
+    async def main() -> Outcome[str, RequestFailure]:
+        return await retry_read(send, attempts=3, backoff=BACKOFF, sleep_ns=clock.sleep)
+
+    assert result(asyncio.run(main())) == ("rate-limited" if asked > 1_000 else "data")
+    assert sent == sent_times
+    assert clock.waits == ([] if asked > 1_000 else [asked])
 
 
 @pytest.mark.req("EXA-007", "EXA-014")
