@@ -40,12 +40,13 @@
 - CCXT (TEC-005) is imported only in `atp.exchange`, SYS-01's package (EXA-004, EXA-011), also
   through `importlib`, and is never given a credential there: none of CCXT's credential names
   (`CCXT_CREDENTIALS`) is a keyword argument, a key of a dict literal, an assigned attribute or
-  item, or `setattr`'s name (EXA-007, as DEC-073's decision 3 applies it; the Stage 2 plan's U4
-  and D1).
+  item, also one assigned by unpacking, or `setattr`'s name (EXA-007, as DEC-073's decision 3
+  applies it; the Stage 2 plan's U4 and D1).
 - Nothing in `src/` turns TLS verification off (the Stage 2 plan's U4): no switch of
   `TLS_SWITCHES` is given `False` or `0` as a keyword argument, a key of a dict literal, an
-  assigned attribute or item, or through `setattr`, and no name of `TLS_OFF_NAMES` is used, as a
-  name, an attribute, an imported name, or a string.
+  assigned name, attribute, or item, also by unpacking or `:=`, a parameter's default, or
+  through `setattr`, and no name of `TLS_OFF_NAMES` is used, as a name, an attribute, an
+  imported name, or a string.
 
 Each scanner is also run on planted samples in a temporary copy, so a scanner that stopped
 finding anything would fail.
@@ -86,6 +87,7 @@ CCXT_CREDENTIALS = frozenset(
         "secret",
         "password",
         "uid",
+        "accountId",
         "login",
         "twofa",
         "privateKey",
@@ -94,14 +96,30 @@ CCXT_CREDENTIALS = frozenset(
     }
 )
 # Arguments, options, and attributes that turn TLS verification off when given False or 0
-# (requests' and CCXT's `verify`, aiohttp's `ssl` and `verify_ssl`, the ssl module's
-# `check_hostname`, `verify_mode`, and `cert_reqs`).
+# (requests' and CCXT's `verify`, CCXT's `validateServerSsl` and, in its asynchronous classes,
+# `ssl_context`, aiohttp's `ssl` and `verify_ssl`, the ssl module's `check_hostname`,
+# `verify_mode`, and `cert_reqs`).
 TLS_SWITCHES = frozenset(
-    {"verify", "ssl", "verify_ssl", "check_hostname", "verify_mode", "cert_reqs"}
+    {
+        "verify",
+        "validateServerSsl",
+        "ssl_context",
+        "ssl",
+        "verify_ssl",
+        "check_hostname",
+        "verify_mode",
+        "cert_reqs",
+    }
 )
-# Names that only turn TLS verification off.
+# Names that only turn TLS verification off (`_create_stdlib_context` is the ssl module's other
+# name for `_create_unverified_context`).
 TLS_OFF_NAMES = frozenset(
-    {"CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY"}
+    {
+        "CERT_NONE",
+        "_create_unverified_context",
+        "_create_stdlib_context",
+        "PYTHONHTTPSVERIFY",
+    }
 )
 
 FLOAT_CONVERSIONS = frozenset({"from_float", "create_decimal_from_float"})
@@ -992,13 +1010,60 @@ def ccxt_findings(source_root: Path) -> list[str]:
     return findings
 
 
+def _unpacked(
+    target: ast.expr, value: ast.expr | None
+) -> list[tuple[ast.expr, ast.expr | None]]:
+    """A target with the value it binds; an unpacking's targets, each with its element of a
+    tuple or list of the same length, else with no known value."""
+    if isinstance(target, ast.Starred):
+        return _unpacked(target.value, None)
+    if isinstance(target, ast.Tuple | ast.List):
+        values: list[ast.expr | None] = [None] * len(target.elts)
+        if (
+            isinstance(value, ast.Tuple | ast.List)
+            and len(value.elts) == len(target.elts)
+            and not any(isinstance(e, ast.Starred) for e in target.elts + value.elts)
+        ):
+            values = list(value.elts)
+        return [
+            pair
+            for element, element_value in zip(target.elts, values, strict=True)
+            for pair in _unpacked(element, element_value)
+        ]
+    return [(target, value)]
+
+
 def _assigned(node: ast.AST) -> list[tuple[ast.expr, ast.expr | None]]:
-    """The targets an assignment binds, each with the value bound."""
+    """The targets an assignment binds, each with the value bound, unpackings and `:=`
+    included."""
     if isinstance(node, ast.Assign):
-        return [(target, node.value) for target in node.targets]
-    if isinstance(node, ast.AnnAssign | ast.AugAssign):
-        return [(node.target, node.value)]
+        return [pair for target in node.targets for pair in _unpacked(target, node.value)]
+    if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):
+        return _unpacked(node.target, node.value)
     return []
+
+
+def _defaults(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
+    """A function's parameters that have a default, each with its default."""
+    if not isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.Lambda):
+        return []
+    arguments = node.args
+    positional = arguments.posonlyargs + arguments.args
+    pairs = list(
+        zip(
+            positional[len(positional) - len(arguments.defaults) :],
+            arguments.defaults,
+            strict=True,
+        )
+    )
+    pairs += [
+        (argument, default)
+        for argument, default in zip(
+            arguments.kwonlyargs, arguments.kw_defaults, strict=True
+        )
+        if default is not None
+    ]
+    return [(argument.arg, default) for argument, default in pairs]
 
 
 def _given(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
@@ -1061,9 +1126,18 @@ def tls_findings(source_root: Path) -> list[str]:
     for path in _python_files(source_root):
         for node in ast.walk(_parse(path)):
             where = f"{path.relative_to(source_root)}:{getattr(node, 'lineno', 0)}"
+            given = [
+                *_given(node),
+                *_defaults(node),
+                *(
+                    (target.id, value)
+                    for target, value in _assigned(node)
+                    if isinstance(target, ast.Name)
+                ),
+            ]
             findings.extend(
                 f"{where}: {name} turned off"
-                for name, value in _given(node)
+                for name, value in given
                 if name in TLS_SWITCHES and _off(value)
             )
             if isinstance(node, ast.Name):
@@ -1268,6 +1342,7 @@ LIST_SAMPLES = [
             "secret",
             "password",
             "uid",
+            "accountId",
             "login",
             "twofa",
             "privateKey",
@@ -1279,6 +1354,8 @@ LIST_SAMPLES = [
         ("tls", f"def f(c):\n    return c.connect({name}=False)\n")
         for name in (
             "verify",
+            "validateServerSsl",
+            "ssl_context",
             "ssl",
             "verify_ssl",
             "check_hostname",
@@ -1288,7 +1365,12 @@ LIST_SAMPLES = [
     ),
     *(
         ("tls", f"import ssl\nx = getattr(ssl, '{name}')\n")
-        for name in ("CERT_NONE", "_create_unverified_context", "PYTHONHTTPSVERIFY")
+        for name in (
+            "CERT_NONE",
+            "_create_unverified_context",
+            "_create_stdlib_context",
+            "PYTHONHTTPSVERIFY",
+        )
     ),
 ]
 # Each scanner, and the package a sample is planted in: amounts may be built in atp.numeric,
@@ -1796,6 +1878,10 @@ def test_ccxt_inside_atp_exchange_is_not_a_finding(copy_of_source: Path) -> None
         "def f(e):\n    e.uid: str = 'y'\n",
         "def f(c):\n    c['login'] = 'y'\n",
         "def f(e):\n    setattr(e, 'privateKey', 'y')\n",
+        "def f(e, k):\n    e.apiKey, e.timeout = k, 5\n",
+        "def f(e, k):\n    [e.secret] = [k]\n",
+        "def f(e, k):\n    *e.accountId, e.timeout = k\n",
+        "def f(e, k):\n    (e.timeout, (e.walletAddress, e.verbose)) = (5, k)\n",
     ],
 )
 def test_the_credential_scanner_finds_planted_samples(
@@ -1805,6 +1891,22 @@ def test_the_credential_scanner_finds_planted_samples(
         planted, encoding="utf-8"
     )
     assert len(credential_findings(copy_of_source)) == 1
+
+
+def test_other_names_given_in_atp_exchange_are_not_findings(
+    copy_of_source: Path,
+) -> None:
+    planted = (
+        "def f(e, k):\n"
+        "    e.timeout, e.rateLimit = 5, k\n"
+        "    [e.verbose] = [False]\n"
+        "    apiKey = k\n"
+        "    return e.configure(timeout=5)\n"
+    )
+    (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
+        planted, encoding="utf-8"
+    )
+    assert credential_findings(copy_of_source) == []
 
 
 def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
@@ -1831,6 +1933,18 @@ def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
         "from ssl import CERT_NONE\n",
         "import ssl\nc = ssl._create_unverified_context()\n",
         "import os\nos.environ['PYTHONHTTPSVERIFY'] = '0'\n",
+        "x = {'validateServerSsl': False}\n",
+        "def f(e):\n    e.ssl_context = False\n",
+        "import ssl\nc = ssl._create_stdlib_context()\n",
+        "def f(c):\n    c.verify, c.timeout = False, 5\n",
+        "def f(c):\n    [c.timeout, c.verify] = [5, 0]\n",
+        "def f(c):\n    verify = False\n    return c.get(verify=verify)\n",
+        "def f(c):\n    ssl: bool = False\n    return c.get(ssl=ssl)\n",
+        "def f(c):\n    return c.get(x=(verify := False))\n",
+        "def f(c, url, verify=False):\n    return c.get(url, verify=verify)\n",
+        "def f(c, /, ssl=0):\n    return c.get(ssl=ssl)\n",
+        "async def f(c, *, check_hostname=False):\n    return c\n",
+        "g = lambda c, verify_ssl=False: c\n",
     ],
 )
 def test_the_tls_scanner_finds_planted_samples(
@@ -1844,11 +1958,14 @@ def test_the_tls_scanner_finds_planted_samples(
 
 def test_tls_verification_left_on_is_not_a_finding(copy_of_source: Path) -> None:
     planted = (
-        "def f(c, context):\n"
+        "def f(c, context, verify=True, *, ssl_context=None):\n"
         "    c.get(verify=True)\n"
         "    c.get(ssl=None)\n"
         "    c.get(ssl=context)\n"
         "    context.check_hostname = True\n"
+        "    c.verify, c.timeout = True, 0\n"
+        "    timeout = False\n"
+        "    validateServerSsl = context\n"
         "    return {'verify': True, 'name': 'CERT_NONE is never used'}\n"
     )
     (copy_of_source / "atp" / "exchange" / "planted.py").write_text(
