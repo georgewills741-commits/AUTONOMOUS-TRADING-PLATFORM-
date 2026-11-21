@@ -40,8 +40,8 @@
 - CCXT (TEC-005) is imported only in `atp.exchange`, SYS-01's package (EXA-004, EXA-011), also
   through `importlib`, and is never given a credential there: none of CCXT's credential names
   (`CCXT_CREDENTIALS`) is a keyword argument, a key of a dict literal, an assigned attribute or
-  item, also one assigned by unpacking, or `setattr`'s name (EXA-007, as DEC-073's decision 3
-  applies it; the Stage 2 plan's U4 and D1).
+  item, also one assigned by unpacking or as a `for`, `with`, or comprehension target, or
+  `setattr`'s name (EXA-007, as DEC-073's decision 3 applies it; the Stage 2 plan's U4 and D1).
 - Nothing in `src/` turns TLS verification off (the Stage 2 plan's U4): no switch of
   `TLS_SWITCHES` is given a value that turns it off (a false constant other than `None`, or
   `"NONE"`) as a keyword argument, a key of a dict literal, an assigned name, attribute, or
@@ -1036,14 +1036,23 @@ def _unpacked(
 
 
 def _assigned(node: ast.AST) -> list[tuple[ast.expr, ast.expr | None]]:
-    """The targets an assignment binds, each with the value bound, unpackings and `:=`
-    included."""
+    """The targets a node binds, each with the value bound: an assignment's, unpackings and
+    `:=` included, and a `for`, `with`, or comprehension target's, whose value is not known."""
     if isinstance(node, ast.Assign):
         return [
             pair for target in node.targets for pair in _unpacked(target, node.value)
         ]
     if isinstance(node, ast.AnnAssign | ast.AugAssign | ast.NamedExpr):
         return _unpacked(node.target, node.value)
+    if isinstance(node, ast.For | ast.AsyncFor | ast.comprehension):
+        return _unpacked(node.target, None)
+    if isinstance(node, ast.With | ast.AsyncWith):
+        return [
+            pair
+            for item in node.items
+            if item.optional_vars is not None
+            for pair in _unpacked(item.optional_vars, None)
+        ]
     return []
 
 
@@ -1068,7 +1077,8 @@ def _defaults(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
 
 def _given(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
     """The names a node gives a value to, each with the value: a keyword argument, a key of a
-    dict literal, `setattr`'s name, and an assigned attribute or item, by unpacking too."""
+    dict literal, `setattr`'s name, and an assigned attribute or item, by unpacking or as a
+    `for`, `with`, or comprehension target too."""
     given: list[tuple[object, ast.expr | None]] = []
     if isinstance(node, ast.keyword):
         given.append((node.arg, node.value))
@@ -1907,6 +1917,11 @@ def test_ccxt_inside_atp_exchange_is_not_a_finding(copy_of_source: Path) -> None
         "def f(e, k):\n    *e.accountId, e.timeout = k\n",
         "def f(e, k):\n    e.token += k\n",
         "def f(e, k):\n    (e.timeout, (e.walletAddress, e.verbose)) = (5, k)\n",
+        "def f(e, keys):\n    for e.apiKey in keys:\n        pass\n",
+        "async def f(e, keys):\n    async for e.password in keys:\n        pass\n",
+        "def f(e, k):\n    with k() as e.secret:\n        pass\n",
+        "async def f(e, k):\n    async with k() as (e.login, e.timeout):\n        pass\n",
+        "def f(e, keys):\n    return [None for e.uid in keys]\n",
     ],
 )
 def test_the_credential_scanner_finds_planted_samples(

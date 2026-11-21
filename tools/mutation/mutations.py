@@ -5857,6 +5857,20 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U4 structure: a for or comprehension target not read",
+        _STRUCTURE,
+        "    if isinstance(node, ast.For | ast.AsyncFor | ast.comprehension):\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a with target not read",
+        _STRUCTURE,
+        "    if isinstance(node, ast.With | ast.AsyncWith):\n",
+        "    if False:\n",
+        TESTS,
+    ),
+    Mutation(
         "S2-U4 structure: defaults not read for TLS",
         _STRUCTURE,
         "                *_defaults(node),\n",
