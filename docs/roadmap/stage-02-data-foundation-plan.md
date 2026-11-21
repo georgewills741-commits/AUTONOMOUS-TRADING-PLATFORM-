@@ -262,6 +262,8 @@ The owner decided them on 2026-11-17 ([DEC-073](../decisions/DEC-073-stage-2-pla
 | D | U8 regime; U9 opportunity detection | C |
 | E | U10 the process and baselines; U11 closure | A to D (U10's runs: D2's environment) |
 
+**Order changed** on 2026-11-21 by [DEC-080](../decisions/DEC-080-checkpoint-c-before-the-venue-adapters.md), at the owner's request: checkpoint C (U7, then U6) is built before checkpoint B's venue adapters, which follow once a venue is verified and a server approved; checkpoint B stays open until they pass their gates.
+
 Each checkpoint: work → three gates → commit → push (DEC-032); a failed gate stops the sequence until fixed and re-verified (master execution constitution §19). Uncommitted work is backed up as [DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md) (decision 4), [DEC-064](../decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md) (decision 2), and [DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md) provide; convergence is classified from this plan's approval (DEC-057, decision 3). On approval, the feature-status table gets one row per feature of U2 to U10.
 
 ## 12. Risks and limits
