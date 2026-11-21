@@ -45,7 +45,7 @@ from atp.marketdata._contracts import (
     VenueStatus,
 )
 from atp.marketdata._evidence import EVIDENCE_FORM, evidence_id
-from atp.marketdata._items import MarketItem
+from atp.marketdata._items import MarketItem, bar_end_ns, item_time_ns
 from atp.marketdata._limits import StreamLimits, ValidationLimits
 from atp.marketdata._quality import (
     QUALITY_RULE_VERSION,
@@ -101,9 +101,11 @@ __all__ = [
     "VenueState",
     "VenueStatus",
     "assess",
+    "bar_end_ns",
     "deduplicate",
     "evidence_id",
     "freshness",
     "in_order",
+    "item_time_ns",
     "quality_score",
 ]

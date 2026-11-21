@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    },
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    }
+  },
+  "$id": "atp.quant.depth/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The liquidity a book snapshot shows within a band around its mid, the band a fraction of\nthe mid (0.01 is 1%): the quantity, in the base asset, and its value, in the quote asset, of\nthe bids at or above the mid less the band, and of the asks at or below the mid plus the\nband. A side is complete when the snapshot shows one of its levels beyond the band, so it\nshows all that side's depth within the band; otherwise that depth is at least what it\nshows.",
+  "properties": {
+    "ask_bound": {
+      "$ref": "#/$defs/Amount"
+    },
+    "ask_complete": {
+      "title": "Ask Complete",
+      "type": "boolean"
+    },
+    "ask_notional": {
+      "$ref": "#/$defs/Amount"
+    },
+    "ask_quantity": {
+      "$ref": "#/$defs/Amount"
+    },
+    "band": {
+      "$ref": "#/$defs/Amount"
+    },
+    "bid_bound": {
+      "$ref": "#/$defs/Amount"
+    },
+    "bid_complete": {
+      "title": "Bid Complete",
+      "type": "boolean"
+    },
+    "bid_notional": {
+      "$ref": "#/$defs/Amount"
+    },
+    "bid_quantity": {
+      "$ref": "#/$defs/Amount"
+    },
+    "calculation_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Calculation Version",
+      "type": "string"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "inputs": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "mid": {
+      "$ref": "#/$defs/Amount"
+    },
+    "time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Time Ns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "market",
+    "band",
+    "mid",
+    "bid_bound",
+    "ask_bound",
+    "bid_quantity",
+    "bid_notional",
+    "bid_complete",
+    "ask_quantity",
+    "ask_notional",
+    "ask_complete",
+    "time_ns",
+    "inputs",
+    "calculation_version",
+    "evidence_id"
+  ],
+  "title": "DepthMetrics",
+  "type": "object"
+}

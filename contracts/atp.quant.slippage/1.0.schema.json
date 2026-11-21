@@ -1,0 +1,211 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    },
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    },
+    "TakerSide": {
+      "description": "The side of the taker, the order that crossed the book, in a trade.",
+      "enum": [
+        "buy",
+        "sell"
+      ],
+      "title": "TakerSide",
+      "type": "string"
+    }
+  },
+  "$id": "atp.quant.slippage/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The Slippage Engine's estimate for a taker order of `quantity`, in the base asset, walked\nthrough one side of a book snapshot, best level first: the asks for a buy, the bids for a\nsell, up to `limit_price` where one is given, as for a limit order that takes liquidity.\n\nIt gives how much fills (`filled`, `complete` when all of it), the levels it reaches, the\nbest price and the worst it reaches, the value filled (`notional`, in the quote asset), and\nthe average price, rounded against the taker to a multiple of `increment`: up for a buy,\ndown for a sell. `slippage` is what the walk costs beyond the best price, and `impact` what\nit costs beyond the mid, which also counts half the spread; both are exact, in the quote\nasset, and never below zero. Without a level on the other side there is no mid, and no\nimpact.",
+  "properties": {
+    "average_price": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "best": {
+      "$ref": "#/$defs/Amount"
+    },
+    "calculation_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Calculation Version",
+      "type": "string"
+    },
+    "complete": {
+      "title": "Complete",
+      "type": "boolean"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "filled": {
+      "$ref": "#/$defs/Amount"
+    },
+    "impact": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "increment": {
+      "$ref": "#/$defs/Amount"
+    },
+    "inputs": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "levels": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Levels",
+      "type": "integer"
+    },
+    "limit_price": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "mid": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "notional": {
+      "$ref": "#/$defs/Amount"
+    },
+    "quantity": {
+      "$ref": "#/$defs/Amount"
+    },
+    "side": {
+      "$ref": "#/$defs/TakerSide"
+    },
+    "slippage": {
+      "$ref": "#/$defs/Amount"
+    },
+    "time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Time Ns",
+      "type": "integer"
+    },
+    "worst": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Amount"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "market",
+    "side",
+    "quantity",
+    "limit_price",
+    "filled",
+    "complete",
+    "levels",
+    "best",
+    "worst",
+    "notional",
+    "average_price",
+    "increment",
+    "slippage",
+    "mid",
+    "impact",
+    "time_ns",
+    "inputs",
+    "calculation_version",
+    "evidence_id"
+  ],
+  "title": "SlippageEstimate",
+  "type": "object"
+}

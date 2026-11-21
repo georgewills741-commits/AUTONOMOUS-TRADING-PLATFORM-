@@ -1,0 +1,127 @@
+{
+  "$defs": {
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    }
+  },
+  "$id": "atp.quant.correlation/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "The correlation of two markets' one-bar log returns over `period` returns of closed bars\nof one interval ending at the same time: Pearson's coefficient, a float from -1 to 1.",
+  "properties": {
+    "calculation_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Calculation Version",
+      "type": "string"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "inputs": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 2,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "interval_seconds": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Interval Seconds",
+      "type": "integer"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "other": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "period": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Period",
+      "type": "integer"
+    },
+    "time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Time Ns",
+      "type": "integer"
+    },
+    "value": {
+      "maximum": 1,
+      "minimum": -1,
+      "title": "Value",
+      "type": "number"
+    }
+  },
+  "required": [
+    "market",
+    "other",
+    "interval_seconds",
+    "period",
+    "value",
+    "time_ns",
+    "inputs",
+    "calculation_version",
+    "evidence_id"
+  ],
+  "title": "Correlation",
+  "type": "object"
+}

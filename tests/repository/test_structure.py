@@ -19,7 +19,10 @@
   division, remainder, or `divmod` (also a decimal context's `divide_int`) outside the modules
   in `INTEGER_DIVISION_ALLOWED` (`atp.numeric._rounding`, and `atp.measurement._statistics`,
   which finds a percentile's rank). Only the modules in
-  `FLOAT_ALLOWED` are exempt; none is.
+  `FLOAT_ALLOWED` are exempt: `atp.quant._indicators`, whose indicators TEC-003 allows in
+  floats (the Stage 2 plan's D5).
+- No float reaches an amount (D5): a module in `FLOAT_ALLOWED` imports nothing from
+  `atp.numeric`, which alone builds and rounds amounts, under any name or path.
 - Outside `atp.contracts`, Pydantic is used only through the names in `PYDANTIC_ALLOWED`: no
   model that is not a contract, no Pydantic dataclass, `create_model`, `validate_call`,
   `TypeAdapter`, or `pydantic_core` (N2; the contract conventions).
@@ -76,6 +79,7 @@ ALLOWED_IMPORTS: dict[str, frozenset[str]] = {
     "measurement": frozenset(),
     "health": frozenset({"contracts", "marketdata"}),
     "exchange": frozenset({"contracts", "marketdata"}),
+    "quant": frozenset({"config", "contracts", "marketdata", "numeric"}),
 }
 # The one module that creates validated market data (MKD-008, MKD-011).
 VALIDATED_CREATOR = "atp.marketdata._validation"
@@ -188,8 +192,10 @@ INTEGER_DIVISION_ALLOWED = frozenset(
 )
 FLOAT_CONVERTERS = frozenset({"float", "complex"})
 # Modules allowed to use floats and float rounding (TEC-003: indicators, signals, research).
-# A module that needs it gets its entry here deliberately; none does in Stage 1.
-FLOAT_ALLOWED: frozenset[str] = frozenset()
+# A module that needs it gets its entry here deliberately, by a reviewed change, and builds no
+# amount (`float_isolation_findings`): the Quantitative Engine's indicators (the Stage 2 plan's
+# U7 and D5).
+FLOAT_ALLOWED: frozenset[str] = frozenset({"atp.quant._indicators"})
 TEXT_OF_A_VALUE = frozenset({"str", "repr", "format", "ascii"})
 AMOUNT_BUILDERS = frozenset({"amount", "amount_from_toml"})
 PYDANTIC_MODELS = frozenset({"BaseModel", "RootModel"})
@@ -696,7 +702,7 @@ def rounding_findings(source_root: Path) -> list[str]:
     `floordiv` and `mod` (also their dunder names), and a decimal context's `divide_int`
     truncate toward zero on a `Decimal` without signalling; only `atp.numeric._rounding` uses
     `divmod`, exactly. Only the modules in `FLOAT_ALLOWED` may use floats (TEC-003 allows them
-    for indicators, signals, and research); none does in Stage 1.
+    for indicators, signals, and research): the Quantitative Engine's indicators.
     """
     findings: list[str] = []
     for path in _python_files(source_root):
@@ -882,6 +888,23 @@ def import_findings(source_root: Path) -> list[str]:
             elif target != owner and any(name.startswith("_") for name in names):
                 # `from atp.numeric import _context` reaches a private module or name too.
                 findings.append(f"{module}: imports a private name from {imported}")
+    return findings
+
+
+def float_isolation_findings(source_root: Path) -> list[str]:
+    """Imports of `atp.numeric` by a module allowed to use floats (the Stage 2 plan's D5: no
+    float reaches an amount): only `atp.numeric` builds and rounds amounts, so a module that
+    cannot reach it cannot make one from a float. Every form the import scanner reads counts:
+    `import`, `from`, relative imports, a path on the package root, and `importlib`."""
+    findings: list[str] = []
+    for path in _python_files(source_root / "atp"):
+        module = _module_of(path, source_root)
+        if module not in FLOAT_ALLOWED:
+            continue
+        tree = _parse(path)
+        for imported, _ in _imported_modules(tree, module, path.name == "__init__.py"):
+            if imported.split(".")[:2] == ["atp", "numeric"]:
+                findings.append(f"{module}: a float module imports {imported}")
     return findings
 
 
@@ -1207,6 +1230,16 @@ def test_no_pydantic_validation_outside_the_contract_kernel() -> None:
 @pytest.mark.req("TEC-008")
 def test_imports_between_modules_point_one_way() -> None:
     assert import_findings(SOURCE_ROOT) == []
+
+
+@pytest.mark.req("TEC-003", "ARCH-010")
+def test_no_float_module_builds_an_amount() -> None:
+    assert FLOAT_ALLOWED == {"atp.quant._indicators"}
+    assert all(
+        (SOURCE_ROOT / Path(*module.split("."))).with_suffix(".py").is_file()
+        for module in FLOAT_ALLOWED
+    )
+    assert float_isolation_findings(SOURCE_ROOT) == []
 
 
 def test_input_is_validated_only_through_the_redacting_methods() -> None:
@@ -1749,6 +1782,7 @@ def test_a_float_conversion_is_found_inside_atp_numeric_too(
         ("contracts", "import atp.cli\n"),
         ("numeric", "from atp.config import load_configuration\n"),
         ("exchange", "from atp.health import ClockMonitor\n"),
+        ("quant", "from atp.exchange import RateLimit\n"),
         ("numeric", "import importlib\nm = importlib.import_module('atp.contracts')\n"),
         (
             "numeric",
@@ -1790,6 +1824,27 @@ def test_a_relative_import_is_resolved(copy_of_source: Path) -> None:
         planted, encoding="utf-8"
     )
     assert len(import_findings(copy_of_source)) == 1
+
+
+@pytest.mark.parametrize(
+    "planted",
+    [
+        "from atp.numeric import amount\n",
+        "import atp.numeric\n",
+        "from atp import numeric\n",
+        "from .. import numeric\n",
+        "from ..numeric import divide\n",
+        "import atp\nx = atp.numeric.amount\n",
+        "import importlib\nm = importlib.import_module('atp.numeric')\n",
+    ],
+)
+def test_the_float_isolation_scanner_finds_planted_samples(
+    copy_of_source: Path, planted: str
+) -> None:
+    module = copy_of_source / "atp" / "quant" / "_indicators.py"
+    assert float_isolation_findings(copy_of_source) == []
+    module.write_text(module.read_text(encoding="utf-8") + planted, encoding="utf-8")
+    assert float_isolation_findings(copy_of_source)
 
 
 @pytest.mark.parametrize(

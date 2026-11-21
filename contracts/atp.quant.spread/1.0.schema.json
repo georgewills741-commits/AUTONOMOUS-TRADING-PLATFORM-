@@ -1,0 +1,131 @@
+{
+  "$defs": {
+    "Amount": {
+      "description": "A decimal amount written as a string. A JSON number is refused. At most 34 significant digits; no NaN or infinity.",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "type": "string"
+    },
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    }
+  },
+  "$id": "atp.quant.spread/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A market's best bid and ask, from a ticker or a book snapshot, their mid, the spread, and\nthe spread relative to the mid, rounded up to a multiple of `increment`, so never\nunderstated.",
+  "properties": {
+    "ask": {
+      "$ref": "#/$defs/Amount"
+    },
+    "bid": {
+      "$ref": "#/$defs/Amount"
+    },
+    "calculation_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Calculation Version",
+      "type": "string"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "increment": {
+      "$ref": "#/$defs/Amount"
+    },
+    "inputs": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "mid": {
+      "$ref": "#/$defs/Amount"
+    },
+    "relative_spread": {
+      "$ref": "#/$defs/Amount"
+    },
+    "spread": {
+      "$ref": "#/$defs/Amount"
+    },
+    "time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Time Ns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "market",
+    "bid",
+    "ask",
+    "mid",
+    "spread",
+    "relative_spread",
+    "increment",
+    "time_ns",
+    "inputs",
+    "calculation_version",
+    "evidence_id"
+  ],
+  "title": "SpreadMetrics",
+  "type": "object"
+}

@@ -6,8 +6,9 @@ ARCH-018 (the precision is V-40 of the values register).
 The rules are in docs/architecture/numerical-policy.md.
 
 Call `configure_decimal_context()` once at process start. Build every amount with `amount()`,
-never with `Decimal(...)` outside this package; round only with `quantize()`, which names its
-direction. Any other operation whose exact result does not fit the precision raises.
+never with `Decimal(...)` outside this package; round only with `quantize()`, and divide to a
+rounded quotient only with `divide()`, both of which name their direction. Any other operation
+whose exact result does not fit the precision raises.
 """
 
 from atp.numeric._amount import (
@@ -24,7 +25,7 @@ from atp.numeric._context import (
     configure_decimal_context,
     decimal_context_is_configured,
 )
-from atp.numeric._rounding import Rounding, quantize
+from atp.numeric._rounding import Rounding, divide, quantize
 
 __all__ = [
     "AMOUNT_PATTERN",
@@ -38,5 +39,6 @@ __all__ = [
     "amount_from_toml",
     "configure_decimal_context",
     "decimal_context_is_configured",
+    "divide",
     "quantize",
 ]

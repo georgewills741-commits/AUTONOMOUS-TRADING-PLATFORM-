@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "IndicatorKind": {
+      "description": "An indicator this engine computes; its definition is the function of the same name.",
+      "enum": [
+        "sma",
+        "ema",
+        "rsi",
+        "macd-line",
+        "macd-signal",
+        "macd-histogram",
+        "atr",
+        "simple-return",
+        "log-return",
+        "volatility"
+      ],
+      "title": "IndicatorKind",
+      "type": "string"
+    },
+    "InstrumentType": {
+      "description": "An instrument type of PLT-011.",
+      "enum": [
+        "spot",
+        "perpetual",
+        "margin"
+      ],
+      "title": "InstrumentType",
+      "type": "string"
+    },
+    "MarketRef": {
+      "additionalProperties": false,
+      "description": "A market: its venue, its base and quote assets, its instrument type, and, for a perpetual,\nthe asset it settles in. A margin market trades its spot market's book.",
+      "properties": {
+        "base": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Base",
+          "type": "string"
+        },
+        "instrument_type": {
+          "$ref": "#/$defs/InstrumentType"
+        },
+        "quote": {
+          "pattern": "^[A-Z0-9]{1,32}$",
+          "title": "Quote",
+          "type": "string"
+        },
+        "settle": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9]{1,32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Settle"
+        },
+        "venue": {
+          "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$",
+          "title": "Venue",
+          "type": "string"
+        }
+      },
+      "required": [
+        "venue",
+        "base",
+        "quote",
+        "instrument_type"
+      ],
+      "title": "MarketRef",
+      "type": "object"
+    }
+  },
+  "$id": "atp.quant.indicator/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "An indicator of a market's closed bars of one interval: its kind, its periods, and its\nvalue, a float (TEC-003; the Stage 2 plan's D5), at the end of the last bar it reads.",
+  "properties": {
+    "calculation_version": {
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$",
+      "title": "Calculation Version",
+      "type": "string"
+    },
+    "evidence_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "indicator": {
+      "$ref": "#/$defs/IndicatorKind"
+    },
+    "inputs": {
+      "items": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "interval_seconds": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Interval Seconds",
+      "type": "integer"
+    },
+    "market": {
+      "$ref": "#/$defs/MarketRef"
+    },
+    "periods": {
+      "items": {
+        "exclusiveMinimum": 0,
+        "maximum": 9223372036854775807,
+        "type": "integer"
+      },
+      "minItems": 1,
+      "title": "Periods",
+      "type": "array"
+    },
+    "time_ns": {
+      "maximum": 9223372036854775807,
+      "minimum": 0,
+      "title": "Time Ns",
+      "type": "integer"
+    },
+    "value": {
+      "title": "Value",
+      "type": "number"
+    }
+  },
+  "required": [
+    "market",
+    "interval_seconds",
+    "indicator",
+    "periods",
+    "value",
+    "time_ns",
+    "inputs",
+    "calculation_version",
+    "evidence_id"
+  ],
+  "title": "IndicatorValue",
+  "type": "object"
+}

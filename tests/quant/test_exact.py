@@ -1,0 +1,579 @@
+"""The Quantitative Engine's exact calculations: spread, depth, the Fee Engine, and the Slippage
+Engine (the Stage 2 plan's U7), with hand-worked values from their definitions."""
+
+from __future__ import annotations
+
+import hashlib
+import itertools
+import json
+from collections.abc import Callable
+from decimal import Decimal
+
+import pytest
+from hypothesis import given
+from hypothesis import strategies as st
+
+from atp.config import VenueSettings
+from atp.marketdata import (
+    BookSnapshot,
+    FundingRate,
+    MarketDataValidator,
+    MarketItem,
+    MarketRef,
+    QuarantineRecord,
+    Stream,
+    StreamLimits,
+    TakerSide,
+    Ticker,
+    Validated,
+    ValidationLimits,
+    evidence_id,
+)
+from atp.numeric import amount
+from atp.quant import (
+    CALCULATION_FORM,
+    CalculationRefused,
+    DepthMetrics,
+    FeeEstimate,
+    FundingEstimate,
+    LiquidityRole,
+    PositionSide,
+    RefusalCause,
+    SlippageEstimate,
+    SpreadMetrics,
+    calculation_id,
+    depth_metrics,
+    estimate_fee,
+    estimate_funding,
+    spread_metrics,
+    walk_book,
+)
+
+SECOND = 1_000_000_000
+NOW = 1_763_600_000 * SECOND
+LIMITS = ValidationLimits(
+    streams=tuple(
+        StreamLimits(stream=stream, stale_after_ns=SECOND, invalid_after_ns=10 * SECOND)
+        for stream in Stream
+    ),
+    max_event_ahead_ns=100_000_000,
+    duplicate_memory=4,
+    outlier_limit=Decimal(100),
+    outlier_confirmations=2,
+    inconsistency_limit=Decimal(100),
+    minimum_other_venues=2,
+)
+LINEAGE = {
+    "source": "wss://example/ws",
+    "adapter": "atp.exchange.example",
+    "adapter_version": "1.0",
+}
+_keys = itertools.count()
+Fields = dict[str, object]
+
+
+def market_json(kind: str = "spot", venue: str = "example") -> Fields:
+    fields: Fields = {
+        "venue": venue,
+        "base": "BTC",
+        "quote": "USDT",
+        "instrument_type": kind,
+    }
+    if kind == "perpetual":
+        fields["settle"] = "USDT"
+    return fields
+
+
+def market(kind: str = "spot", venue: str = "example") -> MarketRef:
+    return MarketRef.from_json(json.dumps(market_json(kind, venue)))
+
+
+def common(stream: Stream, kind: str = "spot") -> Fields:
+    key = evidence_id(
+        venue="example", stream=stream, market=market(kind), venue_key=str(next(_keys))
+    )
+    return {
+        "market": market_json(kind),
+        "evidence_id": key,
+        "lineage": LINEAGE,
+        "event_time_ns": NOW,
+        "event_time_resolution": "nanosecond",
+        "receive_time_ns": NOW,
+    }
+
+
+def validated[T: MarketItem](item: T, now: int = NOW) -> Validated[T]:
+    result = MarketDataValidator(LIMITS).validate(
+        item, now_ns=now, drifting_venues=frozenset()
+    )
+    assert not isinstance(result, QuarantineRecord), result
+    return result
+
+
+def ticker(bid: str | None, ask: str | None) -> Ticker:
+    fields = common(Stream.TICKER)
+    for name, value in (("bid", bid), ("ask", ask)):
+        if value is not None:
+            fields |= {name: value, f"{name}_size": "1"}
+    return Ticker.from_json(json.dumps(fields))
+
+
+def book(
+    bids: list[tuple[str, str]] | None = None,
+    asks: list[tuple[str, str]] | None = None,
+) -> BookSnapshot:
+    fields = common(Stream.BOOK)
+    sides = {
+        "bids": [("100", "1"), ("99.5", "2"), ("98", "5")] if bids is None else bids,
+        "asks": [("101", "1"), ("102", "2"), ("105", "5")] if asks is None else asks,
+    }
+    for name, levels in sides.items():
+        fields[name] = [{"price": price, "quantity": size} for price, size in levels]
+    return BookSnapshot.from_json(json.dumps(fields))
+
+
+def funding(rate: str) -> FundingRate:
+    fields = common(Stream.FUNDING, "perpetual")
+    fields |= {
+        "rate": rate,
+        "funding_time_ns": NOW + 3600 * SECOND,
+        "interval_seconds": 28800,
+    }
+    return FundingRate.from_json(json.dumps(fields))
+
+
+def venue(maker: str = "0.001", taker: str = "0.002") -> VenueSettings:
+    return VenueSettings.from_json(
+        json.dumps(
+            {
+                "venue": "example",
+                "instrument_types": ["spot", "perpetual"],
+                "fees": [
+                    {
+                        "instrument_type": "spot",
+                        "maker": maker,
+                        "taker": taker,
+                        "source": "https://example.test/fees",
+                        "as_of": "2026-11-01",
+                    }
+                ],
+            }
+        )
+    )
+
+
+# Spread and depth.
+
+
+@pytest.mark.req("QNT-001", "QNT-002", "QNT-003", "TEC-003")
+def test_the_spread_of_a_ticker_is_exact_and_its_relative_spread_rounded_up() -> None:
+    data = validated(ticker("100", "101"))
+    result = spread_metrics(data, amount("0.0001"))
+    assert (result.bid, result.ask) == (amount("100"), amount("101"))
+    assert str(result.mid) == "100.5"
+    assert str(result.spread) == "1"
+    # 1 / 100.5 = 0.00995024..., rounded up to a multiple of 0.0001.
+    assert str(result.relative_spread) == "0.0100"
+    assert result.inputs == (data.item.evidence_id,)
+    assert result.time_ns == NOW
+
+
+def test_the_spread_of_a_book_snapshot_reads_its_best_levels() -> None:
+    result = spread_metrics(validated(book()), amount("0.00001"))
+    assert (str(result.bid), str(result.ask), str(result.mid)) == (
+        "100",
+        "101",
+        "100.5",
+    )
+    # 1 / 100.5 = 0.0099502..., up to 0.00996.
+    assert str(result.relative_spread) == "0.00996"
+
+
+@pytest.mark.parametrize(("bid", "ask"), [(None, "101"), ("100", None)])
+def test_a_spread_without_both_sides_is_refused(
+    bid: str | None, ask: str | None
+) -> None:
+    with pytest.raises(CalculationRefused) as refused:
+        spread_metrics(validated(ticker(bid, ask)), amount("0.0001"))
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+
+
+@pytest.mark.req("QNT-002")
+def test_depth_within_a_band_counts_the_levels_inside_it() -> None:
+    # The mid 100.5; the bounds 100.5 × 0.99 = 99.495 and 100.5 × 1.01 = 101.505, each
+    # within the band.
+    snapshot = book(
+        bids=[("100", "1"), ("99.495", "2"), ("98", "5")],
+        asks=[("101", "1"), ("101.505", "2"), ("103", "5")],
+    )
+    result = depth_metrics(validated(snapshot), amount("0.01"))
+    assert (str(result.bid_bound), str(result.ask_bound)) == ("99.495", "101.505")
+    assert (result.bid_quantity, result.bid_notional) == (
+        amount("3"),
+        amount("298.990"),
+    )
+    assert (result.ask_quantity, result.ask_notional) == (
+        amount("3"),
+        amount("304.010"),
+    )
+    assert result.bid_complete and result.ask_complete
+    assert result.mid == amount("100.5") and result.band == amount("0.01")
+
+
+def test_depth_is_incomplete_when_the_snapshot_ends_inside_the_band() -> None:
+    data = validated(book(bids=[("100", "1")], asks=[("101", "1"), ("101.5", "2")]))
+    result = depth_metrics(data, amount("0.01"))
+    assert not result.bid_complete and not result.ask_complete
+    assert (result.bid_quantity, result.ask_quantity) == (amount("1"), amount("3"))
+
+
+@pytest.mark.parametrize("band", ["0", "1", "-0.01", "1.5"])
+def test_a_band_outside_zero_and_one_is_refused(band: str) -> None:
+    with pytest.raises(ValueError, match="band"):
+        depth_metrics(validated(book()), amount(band))
+
+
+def test_depth_without_both_sides_is_refused() -> None:
+    with pytest.raises(CalculationRefused) as refused:
+        depth_metrics(validated(book(asks=[])), amount("0.01"))
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+
+
+# The Slippage Engine.
+
+
+@pytest.mark.req("QNT-006", "QNT-007")
+def test_a_buy_walks_the_asks_best_first() -> None:
+    data = validated(book())
+    result = walk_book(data, TakerSide.BUY, amount("2.5"), amount("0.01"))
+    # 1 at 101 and 1.5 at 102: 254 for 2.5, an average of 101.6.
+    assert (result.filled, result.notional) == (amount("2.5"), amount("254"))
+    assert result.complete and result.levels == 2
+    assert (result.best, result.worst) == (amount("101"), amount("102"))
+    assert str(result.average_price) == "101.60"
+    # Beyond the best: 254 - 2.5 × 101 = 1.5; beyond the mid: 254 - 2.5 × 100.5 = 2.75.
+    assert (result.slippage, result.impact) == (amount("1.5"), amount("2.75"))
+    assert result.mid == amount("100.5")
+
+
+def test_a_sell_walks_the_bids_and_rounds_its_average_down() -> None:
+    result = walk_book(validated(book()), TakerSide.SELL, amount("3"), amount("0.01"))
+    # 1 at 100 and 2 at 99.5: 299 for 3, an average of 99.666..., down to 99.66.
+    assert (result.filled, result.notional) == (amount("3"), amount("299.0"))
+    assert str(result.average_price) == "99.66"
+    # 3 × 100 - 299 = 1; 3 × 100.5 - 299 = 2.5.
+    assert (result.slippage, result.impact) == (amount("1.0"), amount("2.5"))
+
+
+def test_a_buy_rounds_its_average_up() -> None:
+    data = validated(book(asks=[("101", "1"), ("102", "2")]))
+    result = walk_book(data, TakerSide.BUY, amount("3"), amount("0.01"))
+    # 101 + 204 = 305 for 3: 101.666..., up to 101.67.
+    assert str(result.average_price) == "101.67"
+
+
+def test_an_order_larger_than_the_book_fills_what_the_book_shows() -> None:
+    result = walk_book(validated(book()), TakerSide.BUY, amount("10"), amount("0.01"))
+    assert (result.filled, result.notional) == (amount("8"), amount("830"))
+    assert not result.complete and result.levels == 3
+    assert result.worst == amount("105")
+    assert str(result.average_price) == "103.75"
+
+
+def test_a_limit_price_stops_the_walk() -> None:
+    data = validated(book())
+    result = walk_book(data, TakerSide.BUY, amount("5"), amount("0.01"), amount("102"))
+    assert (result.filled, result.levels, result.complete) == (amount("3"), 2, False)
+    assert result.limit_price == amount("102")
+    nothing = walk_book(
+        data, TakerSide.SELL, amount("1"), amount("0.01"), amount("100.5")
+    )
+    assert (nothing.filled, nothing.levels, nothing.notional) == (
+        amount("0"),
+        0,
+        amount("0"),
+    )
+    assert nothing.average_price is None and nothing.worst is None
+    assert nothing.impact is not None
+    for value in (nothing.slippage, nothing.impact):
+        assert value == 0 and not value.is_signed()
+
+
+def test_a_book_without_the_other_side_has_no_mid_and_no_impact() -> None:
+    result = walk_book(
+        validated(book(bids=[])), TakerSide.BUY, amount("1"), amount("0.01")
+    )
+    assert result.mid is None and result.impact is None
+    assert result.slippage == amount("0")
+
+
+@pytest.mark.parametrize("side", [TakerSide.BUY, TakerSide.SELL])
+def test_walking_an_empty_side_is_refused(side: TakerSide) -> None:
+    empty = book(bids=[]) if side is TakerSide.SELL else book(asks=[])
+    with pytest.raises(CalculationRefused) as refused:
+        walk_book(validated(empty), side, amount("1"), amount("0.01"))
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+
+
+@pytest.mark.parametrize(
+    ("quantity", "limit"), [("0", None), ("-1", None), ("1", "0"), ("1", "-5")]
+)
+def test_a_quantity_or_limit_not_above_zero_is_refused(
+    quantity: str, limit: str | None
+) -> None:
+    with pytest.raises(ValueError, match="above zero"):
+        walk_book(
+            validated(book()),
+            TakerSide.BUY,
+            amount(quantity),
+            amount("0.01"),
+            None if limit is None else amount(limit),
+        )
+
+
+PRICES = st.integers(min_value=1, max_value=10**6)
+SIZES = st.integers(min_value=1, max_value=10**4)
+
+
+@st.composite
+def books(draw: st.DrawFn) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    best_bid = draw(PRICES)
+    bid_steps = draw(st.lists(PRICES, max_size=5))
+    ask_steps = draw(st.lists(PRICES, min_size=1, max_size=6))
+    bids, price = [], best_bid
+    for step in [0, *bid_steps]:
+        price -= step
+        if price <= 0:
+            break
+        bids.append((f"{price}.00", f"{draw(SIZES)}.000"))
+    asks, price = [], best_bid
+    for step in ask_steps:
+        price += step
+        asks.append((f"{price}.00", f"{draw(SIZES)}.000"))
+    return bids, asks
+
+
+@given(books(), st.sampled_from(TakerSide), SIZES, st.sampled_from(["0.01", "1", "7"]))
+@pytest.mark.req("QNT-006", "TEC-003")
+def test_a_walked_taker_price_is_never_better_than_the_best(
+    sides: tuple[list[tuple[str, str]], list[tuple[str, str]]],
+    side: TakerSide,
+    quantity: int,
+    increment: str,
+) -> None:
+    bids, asks = sides
+    if side is TakerSide.SELL and not bids:
+        return
+    data = validated(book(bids=bids, asks=asks))
+    result = walk_book(data, side, amount(quantity), amount(increment))
+    levels = data.item.asks if side is TakerSide.BUY else data.item.bids
+    assert result.average_price is not None
+    if side is TakerSide.BUY:
+        assert result.average_price >= result.best
+    else:
+        assert result.average_price <= result.best
+    assert result.filled <= amount(quantity)
+    assert result.complete == (result.filled == amount(quantity))
+    assert result.slippage >= 0
+    if result.impact is not None:
+        assert result.impact >= result.slippage
+    # Exact: the value filled is the sum of each level's price times what was taken there.
+    taken, total = amount(quantity), amount(0)
+    for level in levels:
+        part = min(level.quantity, taken)
+        total += part * level.price
+        taken -= part
+    assert result.notional == total
+    # Repeatable: the same walk gives the same result and the same identifier.
+    assert walk_book(data, side, amount(quantity), amount(increment)) == result
+
+
+# The Fee Engine.
+
+
+@pytest.mark.req("QNT-005", "QNT-007")
+def test_a_fee_is_the_notional_times_the_schedule_s_rate() -> None:
+    settings = venue()
+    taker = estimate_fee(settings, market(), LiquidityRole.TAKER, amount("1000"))
+    maker = estimate_fee(settings, market(), LiquidityRole.MAKER, amount("1000"))
+    assert (str(taker.fee), str(maker.fee)) == ("2.000", "1.000")
+    assert (taker.rate, maker.rate) == (amount("0.002"), amount("0.001"))
+    assert taker.tier == "base"
+    assert taker.schedule == settings.fees[0]
+    assert taker.schedule.source == "https://example.test/fees"
+    assert taker.schedule.as_of == "2026-11-01"
+    assert taker.inputs == ()
+
+
+def test_a_maker_rebate_is_a_fee_below_zero() -> None:
+    result = estimate_fee(
+        venue(maker="-0.0001"), market(), LiquidityRole.MAKER, amount("1000")
+    )
+    assert str(result.fee) == "-0.1000"
+    zero = estimate_fee(
+        venue(maker="-0.0001"), market(), LiquidityRole.MAKER, amount("0")
+    )
+    assert str(zero.fee) == "0.0000"
+
+
+def test_a_fee_names_the_results_its_notional_came_from() -> None:
+    walk = walk_book(validated(book()), TakerSide.BUY, amount("1"), amount("0.01"))
+    result = estimate_fee(
+        venue(), market(), LiquidityRole.TAKER, walk.notional, (walk.evidence_id,)
+    )
+    assert result.inputs == (walk.evidence_id,)
+    with pytest.raises(ValueError, match="evidence identifier"):
+        estimate_fee(venue(), market(), LiquidityRole.TAKER, walk.notional, ("x",))
+
+
+def test_a_fee_without_a_schedule_is_refused_never_zero() -> None:
+    with pytest.raises(CalculationRefused) as refused:
+        estimate_fee(venue(), market("perpetual"), LiquidityRole.TAKER, amount("1"))
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+
+
+def test_a_fee_for_another_venue_s_market_or_a_negative_notional_is_refused() -> None:
+    with pytest.raises(ValueError, match="not of the venue"):
+        estimate_fee(venue(), market(venue="other"), LiquidityRole.TAKER, amount("1"))
+    with pytest.raises(ValueError, match="zero or above"):
+        estimate_fee(venue(), market(), LiquidityRole.TAKER, amount("-1"))
+
+
+@given(
+    st.decimals(min_value=0, max_value=10**9, places=4, allow_nan=False),
+    st.decimals(min_value=0, max_value=10**9, places=4, allow_nan=False),
+    st.sampled_from(LiquidityRole),
+)
+@pytest.mark.req("QNT-005")
+def test_fees_grow_with_notional(
+    first: Decimal, second: Decimal, role: LiquidityRole
+) -> None:
+    low, high = sorted((first, second))
+    settings = venue()
+    fee_low = estimate_fee(settings, market(), role, amount(low)).fee
+    fee_high = estimate_fee(settings, market(), role, amount(high)).fee
+    assert fee_low <= fee_high
+
+
+@pytest.mark.req("QNT-005")
+@pytest.mark.parametrize(
+    ("rate", "side", "cost"),
+    [
+        ("0.0001", PositionSide.LONG, "1.0000"),
+        ("0.0001", PositionSide.SHORT, "-1.0000"),
+        ("-0.0002", PositionSide.LONG, "-2.0000"),
+        ("-0.0002", PositionSide.SHORT, "2.0000"),
+        ("0", PositionSide.SHORT, "0"),
+    ],
+)
+def test_funding_is_paid_by_the_side_the_rate_names(
+    rate: str, side: PositionSide, cost: str
+) -> None:
+    data = validated(funding(rate))
+    result = estimate_funding(data, side, amount("10000"))
+    assert str(result.cost) == cost
+    assert result.rate == amount(rate)
+    assert (result.funding_time_ns, result.interval_seconds) == (
+        NOW + 3600 * SECOND,
+        28800,
+    )
+    assert result.inputs == (data.item.evidence_id,)
+
+
+# Inputs, refusals, and identifiers.
+
+
+@pytest.mark.req("MKD-012")
+def test_market_data_that_was_not_valid_when_assessed_is_refused() -> None:
+    stale = validated(book(), now=NOW + 5 * SECOND)
+    assert not stale.eligible
+    calls: list[Callable[[], object]] = [
+        lambda: spread_metrics(
+            validated(ticker("1", "2"), now=NOW + 5 * SECOND), amount("1")
+        ),
+        lambda: depth_metrics(stale, amount("0.01")),
+        lambda: walk_book(stale, TakerSide.BUY, amount("1"), amount("0.01")),
+        lambda: estimate_funding(
+            validated(funding("0.0001"), now=NOW + 5 * SECOND),
+            PositionSide.LONG,
+            amount("1"),
+        ),
+    ]
+    for call in calls:
+        with pytest.raises(CalculationRefused) as refused:
+            call()
+        assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+
+
+def test_market_data_that_was_not_validated_is_refused() -> None:
+    with pytest.raises(TypeError, match="Validated"):
+        spread_metrics(ticker("1", "2"), amount("1"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="Validated"):
+        walk_book(book(), TakerSide.BUY, amount("1"), amount("1"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError):
+        depth_metrics(validated(ticker("1", "2")), amount("0.01"))  # type: ignore[arg-type]
+
+
+def test_parameters_that_are_not_finite_amounts_are_refused() -> None:
+    data = validated(book())
+    with pytest.raises(ValueError, match="band is finite"):
+        depth_metrics(data, Decimal("NaN"))
+    with pytest.raises(ValueError, match="quantity is finite"):
+        walk_book(data, TakerSide.BUY, Decimal("Infinity"), amount("0.01"))
+    with pytest.raises(ValueError, match="notional is finite"):
+        estimate_fee(venue(), market(), LiquidityRole.TAKER, Decimal("Infinity"))
+    with pytest.raises(TypeError, match="band is an amount"):
+        depth_metrics(data, 0.01)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="increment is an amount"):
+        spread_metrics(validated(ticker("1", "2")), 0.01)  # type: ignore[arg-type]
+
+
+@pytest.mark.req("MKD-005", "MKD-010")
+def test_a_result_s_identifier_digests_its_calculation_parameters_and_inputs() -> None:
+    data = validated(ticker("100", "101"))
+    result = spread_metrics(data, amount("0.0001"))
+    form = json.dumps(
+        [
+            CALCULATION_FORM,
+            "atp.quant.spread",
+            "1.0",
+            [["increment", "0.0001"]],
+            [data.item.evidence_id],
+        ],
+        ensure_ascii=True,
+        separators=(",", ":"),
+    )
+    assert result.evidence_id == hashlib.sha256(form.encode("ascii")).hexdigest()
+    assert result.calculation_version == "1.0"
+    # The same calculation of the same input gets the same identifier; another increment,
+    # another one.
+    assert spread_metrics(data, amount("0.0001")).evidence_id == result.evidence_id
+    assert spread_metrics(data, amount("0.001")).evidence_id != result.evidence_id
+
+
+def test_an_identifier_s_inputs_are_evidence_identifiers() -> None:
+    with pytest.raises(ValueError, match="evidence identifier"):
+        calculation_id("atp.quant.spread", "1.0", [], ["not-an-identifier"])
+    assert calculation_id("a", "1.0", [], []) != calculation_id("b", "1.0", [], [])
+
+
+@pytest.mark.req("ARCH-025", "MKD-005")
+def test_each_result_survives_its_written_form() -> None:
+    walked = walk_book(validated(book()), TakerSide.BUY, amount("2.5"), amount("0.01"))
+    results = [
+        spread_metrics(validated(ticker("100", "101")), amount("0.0001")),
+        depth_metrics(validated(book()), amount("0.01")),
+        walked,
+        estimate_fee(venue(), market(), LiquidityRole.TAKER, walked.notional),
+        estimate_funding(validated(funding("0.0001")), PositionSide.LONG, amount("1")),
+    ]
+    kinds = (
+        SpreadMetrics,
+        DepthMetrics,
+        SlippageEstimate,
+        FeeEstimate,
+        FundingEstimate,
+    )
+    assert [type(result) for result in results] == list(kinds)
+    for result in results:
+        assert type(result).from_json(result.to_json()) == result
