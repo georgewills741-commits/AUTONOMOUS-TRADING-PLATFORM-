@@ -1013,16 +1013,15 @@ def ccxt_findings(source_root: Path) -> list[str]:
 def _unpacked(
     target: ast.expr, value: ast.expr | None
 ) -> list[tuple[ast.expr, ast.expr | None]]:
-    """A target with the value it binds; an unpacking's targets, each with its element of a
-    tuple or list of the same length, else with no known value."""
+    """A target with the value it binds; an unpacking's targets, each with its element, by
+    position, of a tuple or list of the same length, which is the element it binds whenever
+    the code runs, else with no known value."""
     if isinstance(target, ast.Starred):
         return _unpacked(target.value, None)
     if isinstance(target, ast.Tuple | ast.List):
         values: list[ast.expr | None] = [None] * len(target.elts)
-        if (
-            isinstance(value, ast.Tuple | ast.List)
-            and len(value.elts) == len(target.elts)
-            and not any(isinstance(e, ast.Starred) for e in target.elts + value.elts)
+        if isinstance(value, ast.Tuple | ast.List) and len(value.elts) == len(
+            target.elts
         ):
             values = list(value.elts)
         return [
@@ -1944,7 +1943,8 @@ def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
         "def f(c):\n    ssl: bool = False\n    return c.get(ssl=ssl)\n",
         "def f(c):\n    return c.get(x=(verify := False))\n",
         "def f(c, url, verify=False):\n    return c.get(url, verify=verify)\n",
-        "def f(c, /, ssl=0):\n    return c.get(ssl=ssl)\n",
+        "def f(c, ssl=0, /):\n    return c.get(ssl=ssl)\n",
+        "def f(c, a):\n    *a.rest, c.verify = 0, False\n",
         "async def f(c, *, check_hostname=False):\n    return c\n",
         "g = lambda c, verify_ssl=False: c\n",
     ],
@@ -1966,6 +1966,7 @@ def test_tls_verification_left_on_is_not_a_finding(copy_of_source: Path) -> None
         "    c.get(ssl=context)\n"
         "    context.check_hostname = True\n"
         "    c.verify, c.timeout = True, 0\n"
+        "    c.verify, c.timeout = False, 5, 6\n"
         "    timeout = False\n"
         "    validateServerSsl = context\n"
         "    return {'verify': True, 'name': 'CERT_NONE is never used'}\n"
