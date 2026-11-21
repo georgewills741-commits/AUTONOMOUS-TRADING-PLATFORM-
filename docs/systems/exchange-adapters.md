@@ -1,6 +1,6 @@
 # Exchange Adapter Layer
 
-> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — not implemented · **System:** SYS-01 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION · **Sources:** §42 (also §02 item 16)
+> **Status:** DOCUMENTED (Handoff Parts 1 and 2) — partly implemented: its parts that need no venue's data, in Stage 2 (the [roadmap](../roadmap/roadmap.md)'s feature-status table) · **System:** SYS-01 · **Category:** shared infrastructure · **Roadmap stage:** DATA FOUNDATION · **Sources:** §42 (also §02 item 16)
 
 Canonical definition of how the platform connects to trading venues.
 
@@ -41,7 +41,7 @@ P2§44 names Binance, OKX, and Coinbase; the initial venues also include Bybit a
 
 - **Owns:** all venue-specific behavior (EXA-003). No other system talks to a venue directly (EXA-004).
 - **Used by:** Market Data (raw data, §10), Execution Engine (orders, §02 item 16), Recovery and Reconciliation (balances, positions, open orders, fills, §71). Full list: [dependency map](../architecture/dependency-map.md).
-- **Not yet specified in Part 1:** the standardized interface itself, per-venue failure behavior, credential handling (see [security](../security/security-architecture.md)), tests.
+- **Not yet specified in Part 1:** the standardized interface itself, per-venue failure behavior, credential handling (see [security](../security/security-architecture.md)), tests. Specified since DATA FOUNDATION was planned ([Stage 2 plan](../roadmap/stage-02-data-foundation-plan.md)): the standardized interface, and the failure behavior every venue shares, as each request's outcome, rate-limit management, and connection resilience, each with its tests (Stage 2's U4, its parts that need no venue's data, in `atp.exchange`; [Stage 2 record](../traceability/stage-02-data-foundation.md)); each venue's own failure behavior comes with its adapter. No credential is handled in Stage 2, and the structure test checks that none is given to CCXT.
 
 ## Findings
 

@@ -1,0 +1,26 @@
+{
+  "$id": "atp.exchange.backoff/1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "How long to wait after failures in a row: `initial_ns` after the first, twice as long\nafter each further one, and never longer than `maximum_ns`, which is at least\n`initial_ns`.",
+  "properties": {
+    "initial_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Initial Ns",
+      "type": "integer"
+    },
+    "maximum_ns": {
+      "exclusiveMinimum": 0,
+      "maximum": 9223372036854775807,
+      "title": "Maximum Ns",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "initial_ns",
+    "maximum_ns"
+  ],
+  "title": "Backoff",
+  "type": "object"
+}
