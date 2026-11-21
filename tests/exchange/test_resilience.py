@@ -471,9 +471,7 @@ def test_a_trial_connection_the_venue_refuses_runs_out_its_time() -> None:
 
 
 @pytest.mark.req("EXA-014", "EXA-015")
-@pytest.mark.parametrize(
-    ("asked", "wait"), [(50_000, 50_000), (50, 100), (None, 100)]
-)
+@pytest.mark.parametrize(("asked", "wait"), [(50_000, 50_000), (50, 100), (None, 100)])
 def test_a_stream_waits_as_long_as_the_venue_asks_after_refusing_a_connection(
     asked: int | None, wait: int
 ) -> None:
