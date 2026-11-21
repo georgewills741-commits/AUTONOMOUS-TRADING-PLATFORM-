@@ -1057,19 +1057,14 @@ def _defaults(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
             strict=True,
         )
     )
-    pairs += [
-        (argument, default)
-        for argument, default in zip(
-            arguments.kwonlyargs, arguments.kw_defaults, strict=True
-        )
-        if default is not None
-    ]
+    # A keyword-only parameter without a default has None as its default here.
+    pairs += zip(arguments.kwonlyargs, arguments.kw_defaults, strict=True)
     return [(argument.arg, default) for argument, default in pairs]
 
 
 def _given(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
     """The names a node gives a value to, each with the value: a keyword argument, a key of a
-    dict literal, `setattr`'s name, and an assigned attribute or item."""
+    dict literal, `setattr`'s name, and an assigned attribute or item, by unpacking too."""
     given: list[tuple[object, ast.expr | None]] = []
     if isinstance(node, ast.keyword):
         given.append((node.arg, node.value))
@@ -1882,6 +1877,7 @@ def test_ccxt_inside_atp_exchange_is_not_a_finding(copy_of_source: Path) -> None
         "def f(e, k):\n    e.apiKey, e.timeout = k, 5\n",
         "def f(e, k):\n    [e.secret] = [k]\n",
         "def f(e, k):\n    *e.accountId, e.timeout = k\n",
+        "def f(e, k):\n    e.token += k\n",
         "def f(e, k):\n    (e.timeout, (e.walletAddress, e.verbose)) = (5, k)\n",
     ],
 )
