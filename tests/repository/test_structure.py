@@ -43,10 +43,11 @@
   item, also one assigned by unpacking, or `setattr`'s name (EXA-007, as DEC-073's decision 3
   applies it; the Stage 2 plan's U4 and D1).
 - Nothing in `src/` turns TLS verification off (the Stage 2 plan's U4): no switch of
-  `TLS_SWITCHES` is given `False` or `0` as a keyword argument, a key of a dict literal, an
-  assigned name, attribute, or item, also by unpacking or `:=`, a parameter's default, or
-  through `setattr`, and no name of `TLS_OFF_NAMES` is used, as a name, an attribute, an
-  imported name, or a string.
+  `TLS_SWITCHES` is given a value that turns it off (a false constant other than `None`, or
+  `"NONE"`) as a keyword argument, a key of a dict literal, an assigned name, attribute, or
+  item, also by unpacking or `:=`, a parameter's default, or through `setattr`; no name of
+  `TLS_OFF_NAMES` is used, as a name, an attribute, an imported name, or a string; and no
+  `SSLContext` is made with no protocol, or one other than `PROTOCOL_TLS_CLIENT`.
 
 Each scanner is also run on planted samples in a temporary copy, so a scanner that stopped
 finding anything would fail.
@@ -111,14 +112,16 @@ TLS_SWITCHES = frozenset(
         "cert_reqs",
     }
 )
-# Names that only turn TLS verification off (`_create_stdlib_context` is the ssl module's other
-# name for `_create_unverified_context`).
+# Names that turn TLS verification off: `_create_stdlib_context` is the ssl module's other name
+# for `_create_unverified_context`, and `CLIENT_AUTH`, the purpose of a server's context, gives
+# a context that verifies no certificate when a client uses it (`src/` serves nothing over TLS).
 TLS_OFF_NAMES = frozenset(
     {
         "CERT_NONE",
         "_create_unverified_context",
         "_create_stdlib_context",
         "PYTHONHTTPSVERIFY",
+        "CLIENT_AUTH",
     }
 )
 
@@ -1109,12 +1112,33 @@ def credential_findings(source_root: Path) -> list[str]:
 
 
 def _off(value: ast.expr | None) -> bool:
-    """Whether a value is `False` or `0`."""
+    """Whether a value turns a TLS switch off: a constant that is false but not `None`, such as
+    `False`, `0`, or `""` (requests reads any false `verify` but `None` as off), or `"NONE"`,
+    which urllib3 reads as `CERT_NONE`."""
     return (
         isinstance(value, ast.Constant)
-        and type(value.value) in (bool, int)
-        and value.value == 0
+        and value.value is not None
+        and (not value.value or value.value == "NONE")
     )
+
+
+def _client_protocol(value: ast.expr) -> bool:
+    """Whether a value names the ssl module's `PROTOCOL_TLS_CLIENT`."""
+    if isinstance(value, ast.Attribute):
+        return value.attr == "PROTOCOL_TLS_CLIENT"
+    return isinstance(value, ast.Name) and value.id == "PROTOCOL_TLS_CLIENT"
+
+
+def _unverified_context(node: ast.AST) -> bool:
+    """Whether a node makes an `SSLContext` with no protocol, or one other than
+    `PROTOCOL_TLS_CLIENT`: such a context verifies no certificate."""
+    if not isinstance(node, ast.Call) or _called_name(node) != "SSLContext":
+        return False
+    protocols = [
+        *node.args[:1],
+        *(given.value for given in node.keywords if given.arg == "protocol"),
+    ]
+    return not protocols or not _client_protocol(protocols[0])
 
 
 def tls_findings(source_root: Path) -> list[str]:
@@ -1137,6 +1161,8 @@ def tls_findings(source_root: Path) -> list[str]:
                 for name, value in given
                 if name in TLS_SWITCHES and _off(value)
             )
+            if _unverified_context(node):
+                findings.append(f"{where}: SSLContext without PROTOCOL_TLS_CLIENT")
             if isinstance(node, ast.Name):
                 named: object = node.id
             elif isinstance(node, ast.Attribute):
@@ -1367,6 +1393,7 @@ LIST_SAMPLES = [
             "_create_unverified_context",
             "_create_stdlib_context",
             "PYTHONHTTPSVERIFY",
+            "CLIENT_AUTH",
         )
     ),
 ]
@@ -1944,6 +1971,13 @@ def test_a_credential_name_outside_atp_exchange_is_not_a_finding(
         "def f(c, a):\n    *a.rest, c.verify = 0, False\n",
         "async def f(c, *, check_hostname=False):\n    return c\n",
         "g = lambda c, verify_ssl=False: c\n",
+        "def f(c):\n    return c.get(verify='')\n",
+        "def f(c):\n    return c.get(check_hostname=0.0)\n",
+        "import urllib3\np = urllib3.PoolManager(cert_reqs='NONE')\n",
+        "import ssl\nc = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)\n",
+        "import ssl\nc = ssl.SSLContext()\n",
+        "import ssl\nc = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)\n",
+        "from ssl import SSLContext\nc = SSLContext(protocol=2)\n",
     ],
 )
 def test_the_tls_scanner_finds_planted_samples(
@@ -1966,6 +2000,9 @@ def test_tls_verification_left_on_is_not_a_finding(copy_of_source: Path) -> None
         "    c.verify, c.timeout = False, 5, 6\n"
         "    timeout = False\n"
         "    validateServerSsl = context\n"
+        "    ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)\n"
+        "    SSLContext(protocol=PROTOCOL_TLS_CLIENT)\n"
+        "    c.get(verify='ca-bundle.pem', cert_reqs='CERT_REQUIRED')\n"
         "    return {'verify': True, 'name': 'CERT_NONE is never used'}\n"
     )
     (copy_of_source / "atp" / "exchange" / "planted.py").write_text(

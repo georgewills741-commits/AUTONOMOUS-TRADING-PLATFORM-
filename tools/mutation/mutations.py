@@ -73,6 +73,7 @@ _TLS_OFF_NAMES = (
     "_create_unverified_context",
     "_create_stdlib_context",
     "PYTHONHTTPSVERIFY",
+    "CLIENT_AUTH",
 )
 
 
@@ -5872,15 +5873,36 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U4 structure: TLS switched off by a 0 not found",
         _STRUCTURE,
-        "        and type(value.value) in (bool, int)\n",
-        "        and type(value.value) in (bool,)\n",
+        '        and (not value.value or value.value == "NONE")\n',
+        '        and (value.value is False or value.value == "NONE")\n',
         TESTS,
     ),
     Mutation(
         "S2-U4 structure: TLS left on found",
         _STRUCTURE,
-        "        and type(value.value) in (bool, int)\n        and value.value == 0\n",
-        "        and type(value.value) in (bool, int)\n",
+        '        and (not value.value or value.value == "NONE")\n',
+        "        and True\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: TLS switched off by an empty string not found",
+        _STRUCTURE,
+        '        and (not value.value or value.value == "NONE")\n',
+        '        and (value.value in (False, 0) or value.value == "NONE")\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: urllib3's NONE not found",
+        _STRUCTURE,
+        '        and (not value.value or value.value == "NONE")\n',
+        "        and (not value.value or False)\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a switch given None found",
+        _STRUCTURE,
+        "        and value.value is not None\n",
+        "",
         TESTS,
     ),
     Mutation(
@@ -5888,6 +5910,48 @@ MUTATIONS: list[Mutation] = [
         _STRUCTURE,
         "                if name in TLS_SWITCHES and _off(value)\n",
         "                if name in TLS_SWITCHES\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an SSLContext without the client protocol not found",
+        _STRUCTURE,
+        "            if _unverified_context(node):\n",
+        "            if False:\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an SSLContext not looked for",
+        _STRUCTURE,
+        '    if not isinstance(node, ast.Call) or _called_name(node) != "SSLContext":\n',
+        '    if not isinstance(node, ast.Call) or _called_name(node) != "SSLContexts":\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an SSLContext without a protocol not found",
+        _STRUCTURE,
+        "    return not protocols or not _client_protocol(protocols[0])\n",
+        "    return bool(protocols) and not _client_protocol(protocols[0])\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: an SSLContext's protocol keyword not read",
+        _STRUCTURE,
+        '        given.arg == "protocol"\n',
+        '        given.arg == "protocols"\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a client's SSLContext by attribute found",
+        _STRUCTURE,
+        '        return value.attr == "PROTOCOL_TLS_CLIENT"\n',
+        "        return False\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U4 structure: a client's SSLContext by name found",
+        _STRUCTURE,
+        '    return isinstance(value, ast.Name) and value.id == "PROTOCOL_TLS_CLIENT"\n',
+        "    return False\n",
         TESTS,
     ),
     Mutation(
