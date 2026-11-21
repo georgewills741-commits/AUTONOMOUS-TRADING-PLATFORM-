@@ -1050,7 +1050,7 @@ def _defaults(node: ast.AST) -> list[tuple[object, ast.expr | None]]:
         return []
     arguments = node.args
     positional = arguments.posonlyargs + arguments.args
-    pairs = list(
+    pairs: list[tuple[ast.arg, ast.expr | None]] = list(
         zip(
             positional[len(positional) - len(arguments.defaults) :],
             arguments.defaults,
