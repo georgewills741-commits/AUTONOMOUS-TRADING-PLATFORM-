@@ -29,8 +29,8 @@ class RefusalCause(enum.Enum):
     """Why a calculation has no result for the data it was given."""
 
     INELIGIBLE_INPUT = "ineligible-input"
-    """Market data that was not VALID when validated, or is not VALID at the time of use
-    (MKD-012)."""
+    """Market data that was not VALID when validated, or is not VALID at the time of use, or
+    a time of use before the data was validated (MKD-012)."""
     MISSING_INPUT = "missing-input"
     """A price, a side of a book, or a fee schedule the calculation needs is absent."""
     INSUFFICIENT_DATA = "insufficient-data"
@@ -51,15 +51,17 @@ class CalculationRefused(Exception):
         self.cause = cause
 
 
-def require_current[ItemT: MarketItem](
-    data: Validated[ItemT], what: str, now_ns: int, limits: ValidationLimits
+def require_validated[ItemT: MarketItem](
+    data: Validated[ItemT], what: str, now_ns: int
 ) -> ItemT:
     """The item of `data`, which must be validated market data that was VALID when it was
-    validated and is VALID again at `now_ns`, the time of use, under `limits` (MKD-012):
-    `eligible` keeps the assessment made when the item was validated, so the item is assessed
-    again here (`atp.marketdata.assess`). Anything that is not `Validated`, a time that is not
-    a whole number of nanoseconds, and limits that are not `ValidationLimits` raise
-    `TypeError`; data not VALID at either time is refused."""
+    validated (MKD-012), and validated no later than `now_ns`, the time of use: before its
+    validation nothing shows the item VALID, and its age at a time before it would read as zero
+    (`atp.marketdata.age_ns`). This is the check of history, such as a series' earlier bars,
+    older than a freshness limit by nature; `require_current` checks data used as current.
+    Anything that is not `Validated`, and a time that is not a whole number of nanoseconds,
+    raise `TypeError`; data not VALID when validated, or validated after the time of use, is
+    refused."""
     given: object = data  # typed code cannot pass anything else; other code can
     if type(given) is not Validated:
         msg = f"the {what} reaches a calculation only as atp.marketdata's Validated"
@@ -67,18 +69,35 @@ def require_current[ItemT: MarketItem](
     if type(now_ns) is not int:
         msg = "the time of use is a whole number of nanoseconds"
         raise TypeError(msg)
-    if type(limits) is not ValidationLimits:
-        msg = "the freshness limits are atp.marketdata's ValidationLimits"
-        raise TypeError(msg)
     if not data.eligible:
         raise CalculationRefused(
             RefusalCause.INELIGIBLE_INPUT, f"the {what} was not VALID when validated"
         )
-    if assess(data.item, now_ns, limits).freshness is not Freshness.VALID:
+    if now_ns < data.assessment.assessed_time_ns:
+        raise CalculationRefused(
+            RefusalCause.INELIGIBLE_INPUT,
+            f"the time of use is before the {what} was validated",
+        )
+    return data.item
+
+
+def require_current[ItemT: MarketItem](
+    data: Validated[ItemT], what: str, now_ns: int, limits: ValidationLimits
+) -> ItemT:
+    """The item of `data`, which must pass `require_validated` and be VALID again at `now_ns`,
+    the time of use, under `limits` (MKD-012): `eligible` keeps the assessment made when the
+    item was validated, so the item is assessed again here (`atp.marketdata.assess`). Limits
+    that are not `ValidationLimits` raise `TypeError`; data not VALID at the time of use is
+    refused."""
+    if type(limits) is not ValidationLimits:
+        msg = "the freshness limits are atp.marketdata's ValidationLimits"
+        raise TypeError(msg)
+    item = require_validated(data, what, now_ns)
+    if assess(item, now_ns, limits).freshness is not Freshness.VALID:
         raise CalculationRefused(
             RefusalCause.INELIGIBLE_INPUT, f"the {what} is not VALID at the time of use"
         )
-    return data.item
+    return item
 
 
 def check_amount(value: Decimal, what: str) -> None:

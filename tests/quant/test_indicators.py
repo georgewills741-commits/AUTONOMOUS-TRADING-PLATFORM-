@@ -78,7 +78,9 @@ def _market_json(base: str) -> dict[str, str]:
     }
 
 
-def _bar(prices: Ohlc, index: int, base: str, closed: bool) -> OhlcvBar:
+def _bar(
+    prices: Ohlc, index: int, base: str, closed: bool, interval: int = INTERVAL
+) -> OhlcvBar:
     market = MarketRef.from_json(json.dumps(_market_json(base)))
     key = evidence_id(
         venue="example", stream=Stream.OHLCV, market=market, venue_key=str(next(_keys))
@@ -86,7 +88,7 @@ def _bar(prices: Ohlc, index: int, base: str, closed: bool) -> OhlcvBar:
     opened = START + index * INTERVAL * SECOND
     fields = {
         "market": _market_json(base),
-        "interval_seconds": INTERVAL,
+        "interval_seconds": interval,
         "open_time_ns": opened,
         "open": prices[0],
         "high": prices[1],
@@ -94,7 +96,7 @@ def _bar(prices: Ohlc, index: int, base: str, closed: bool) -> OhlcvBar:
         "close": prices[3],
         "base_volume": "1",
         "closed": closed,
-        "receive_time_ns": opened + INTERVAL * SECOND,
+        "receive_time_ns": opened + interval * SECOND,
         "evidence_id": key,
         "lineage": LINEAGE,
     }
@@ -283,15 +285,45 @@ def test_correlation_needs_returns_that_vary_and_aligned_bars() -> None:
 
 
 @pytest.mark.req("MKD-012")
-def test_only_the_last_bar_must_have_been_valid_when_assessed() -> None:
+def test_every_bar_must_have_been_valid_when_validated() -> None:
     bars = series(_closes(1, 2, 3))
     old = MarketDataValidator(LIMITS).validate(
         bars[0].item, now_ns=START + 3600 * SECOND, drifting_venues=frozenset()
     )
     assert isinstance(old, Validated) and not old.eligible
-    assert sma([old, *bars[1:]], 3, now_ns=USE, limits=LIMITS).value == 2.0
-    with pytest.raises(CalculationRefused) as refused:
+    with pytest.raises(CalculationRefused, match="the bar was not VALID") as refused:
+        sma([old, *bars[1:]], 3, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+    with pytest.raises(CalculationRefused, match="last bar was not VALID") as refused:
         sma(series(_closes(1, 2, 3), late=True), 3, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+
+
+@pytest.mark.req("MKD-012")
+def test_earlier_bars_are_history_not_assessed_again() -> None:
+    # Twelve bars, the last validated when it closed, 720 seconds after the first opened; at
+    # that time the first bar, which closed 660 seconds earlier, is past the stale limit.
+    bars = series(_closes(*range(1, 13)))
+    assert sma(bars, 12, now_ns=START + 720 * SECOND, limits=LIMITS).value == 6.5
+
+
+@pytest.mark.req("MKD-012")
+def test_a_time_of_use_before_a_bar_was_validated_is_refused() -> None:
+    bars = series(_closes(1, 2, 3))  # validated 60, 120, and 180 seconds after START
+    with pytest.raises(
+        CalculationRefused, match="before the last bar was validated"
+    ) as refused:
+        sma(bars, 3, now_ns=START + 179 * SECOND, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+    assert sma(bars, 3, now_ns=START + 180 * SECOND, limits=LIMITS).value == 2.0
+    again = MarketDataValidator(LIMITS).validate(
+        bars[0].item, now_ns=START + 200 * SECOND, drifting_venues=frozenset()
+    )
+    assert isinstance(again, Validated) and again.eligible
+    with pytest.raises(
+        CalculationRefused, match="before the bar was validated"
+    ) as refused:
+        sma([again, *bars[1:]], 3, now_ns=START + 190 * SECOND, limits=LIMITS)
     assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
 
 
@@ -330,6 +362,19 @@ def test_bars_out_of_order_mixed_or_open_are_wrong_arguments() -> None:
         sma(bars, 2.0, now_ns=USE, limits=LIMITS)  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="at least 1"):
         sma(bars, 0, now_ns=USE, limits=LIMITS)
+
+
+def test_bars_of_another_interval_are_wrong_arguments() -> None:
+    # A bar of twice the interval, opened one of its own intervals after the bar before it, so
+    # that only the check of the interval stops it.
+    odd = MarketDataValidator(LIMITS).validate(
+        _bar(("3", "3", "3", "3"), 3, "BTC", closed=True, interval=2 * INTERVAL),
+        now_ns=START + 5 * INTERVAL * SECOND,
+        drifting_venues=frozenset(),
+    )
+    assert isinstance(odd, Validated) and odd.eligible
+    with pytest.raises(ValueError, match="one market and one interval"):
+        sma([*series(_closes(1, 2)), odd], 2, now_ns=USE, limits=LIMITS)
 
 
 @pytest.mark.parametrize(

@@ -607,6 +607,49 @@ def test_market_data_no_longer_valid_at_the_time_of_use_is_refused() -> None:
     assert result.filled == amount("1")
 
 
+@pytest.mark.req("MKD-012")
+def test_a_time_of_use_before_the_validation_is_refused() -> None:
+    later = NOW + SECOND  # VALID when validated, and at the validation's own time
+    calls: list[Callable[[Validated[BookSnapshot]], object]] = [
+        lambda data: depth_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS),
+        lambda data: walk_book(
+            data, TakerSide.BUY, amount("1"), amount("0.01"), now_ns=NOW, limits=LIMITS
+        ),
+        lambda data: spread_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS),
+    ]
+    for call in calls:
+        with pytest.raises(
+            CalculationRefused, match="before the .* was validated"
+        ) as refused:
+            call(validated(book(), now=later))
+        assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+    with pytest.raises(
+        CalculationRefused, match="before the .* was validated"
+    ) as refused:
+        spread_metrics(
+            validated(ticker("1", "2"), now=later),
+            amount("1"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+    with pytest.raises(
+        CalculationRefused, match="before the .* was validated"
+    ) as refused:
+        estimate_funding(
+            validated(funding("0.0001"), now=later),
+            PositionSide.LONG,
+            amount("1"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+    data = validated(book(), now=later)
+    assert depth_metrics(data, amount("0.01"), now_ns=later, limits=LIMITS).inputs == (
+        data.item.evidence_id,
+    )
+
+
 def test_the_time_of_use_and_the_limits_are_checked() -> None:
     data = validated(book())
     with pytest.raises(TypeError, match="whole number of nanoseconds"):
@@ -630,6 +673,54 @@ def test_market_data_that_was_not_validated_is_refused() -> None:
     snapshot_wanted: Validated[BookSnapshot] = validated(ticker("1", "2"))  # type: ignore[arg-type]
     with pytest.raises(TypeError):
         depth_metrics(snapshot_wanted, amount("0.01"), now_ns=NOW, limits=LIMITS)
+
+
+def test_a_side_a_role_a_venue_or_a_market_of_another_type_is_refused() -> None:
+    data = validated(book())
+    with pytest.raises(TypeError, match="TakerSide"):
+        walk_book(
+            data,
+            "buy",  # type: ignore[arg-type]
+            amount("1"),
+            amount("0.01"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    with pytest.raises(TypeError, match="PositionSide"):
+        estimate_funding(
+            validated(funding("0.0001")),
+            "long",  # type: ignore[arg-type]
+            amount("1"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    with pytest.raises(TypeError, match="LiquidityRole"):
+        estimate_fee(venue(), market(), "taker", amount("1"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="a venue's settings"):
+        estimate_fee(None, market(), LiquidityRole.TAKER, amount("1"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="a venue's settings"):
+        estimate_fee(venue(), None, LiquidityRole.TAKER, amount("1"))  # type: ignore[arg-type]
+
+
+def test_market_data_of_another_kind_is_refused() -> None:
+    ticker_wanted: Validated[BookSnapshot] = validated(ticker("1", "2"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="book snapshot"):
+        walk_book(
+            ticker_wanted,
+            TakerSide.BUY,
+            amount("1"),
+            amount("0.01"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    book_wanted: Validated[FundingRate] = validated(book())  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="funding rate"):
+        estimate_funding(
+            book_wanted, PositionSide.LONG, amount("1"), now_ns=NOW, limits=LIMITS
+        )
+    funding_wanted: Validated[Ticker] = validated(funding("0.0001"))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="ticker or a book snapshot"):
+        spread_metrics(funding_wanted, amount("0.01"), now_ns=NOW, limits=LIMITS)
 
 
 def test_parameters_that_are_not_finite_amounts_are_refused() -> None:

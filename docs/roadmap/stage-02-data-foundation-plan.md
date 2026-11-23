@@ -68,7 +68,7 @@ Below, once each: the 67 requirements whose registry default stage is DATA FOUND
 | MKD-012 | Freshness and quality per data type; Stage 2's consumers take eligible data only | DIRECTIONAL TRADING: strategy-specific thresholds; CORE: decision eligibility in risk |
 | QNT-002 | Indicators, volatility, spread, returns, correlation, liquidity metrics, fee and slippage estimates | CORE: drawdown, exposure, sizing, risk/reward; CORE, ARBITRAGE: arbitrage economics (True Net-Profit Engine) |
 | QNT-005 | Venue, instrument, maker or taker, schedule and tier as D8 provides, funding rates | CORE: the account's actual tier and rates; ARBITRAGE: transfer costs |
-| QNT-006 | Depth, size, liquidity, volatility, spread, execution type, market impact | DIRECTIONAL TRADING and CORE: historical execution behaviour |
+| QNT-006 | Depth, size, liquidity, volatility, spread, execution type, market impact; at U7, volatility given beside the estimate, not folded in, pending the owner's answer to [OQ-37](../open-questions/register.md) | DIRECTIONAL TRADING and CORE: historical execution behaviour |
 | RGM-008 | No regime is inferred; UNKNOWN reaches consumers as UNKNOWN | CORE, DIRECTIONAL TRADING: the responses (no trade, wait, reduced exposure, validation) |
 | OPP-002, OPP-007 | Scanning and detection across venues, assets, pairs, liquidity, volatility, funding, regimes, anomalies, events, observed cross-venue prices | DIRECTIONAL TRADING: directional and strategy conditions and opportunities; ARBITRAGE: cross-exchange and triangular arbitrage, triangular routes scanned once SYS-19 discovers them (TAR-002, TAR-003) |
 | OPP-005, OPP-018 | Universe → data → quant → scanning → filtering → candidates, continuously | CORE: economics, risk, capital, execution eligibility; DIRECTIONAL TRADING: strategies; AI INTELLIGENCE: AI when justified |
@@ -262,7 +262,7 @@ The owner decided them on 2026-11-17 ([DEC-073](../decisions/DEC-073-stage-2-pla
 | D | U8 regime; U9 opportunity detection | C |
 | E | U10 the process and baselines; U11 closure | A to D (U10's runs: D2's environment) |
 
-**Order changed** on 2026-11-21 by [DEC-080](../decisions/DEC-080-checkpoint-c-before-the-venue-adapters.md), at the owner's request: checkpoint C (U7, then U6) is built before checkpoint B's venue adapters, which follow once a venue is verified and a server approved; checkpoint B stays open until they pass their gates.
+**Order changed** on 2026-11-21 by [DEC-080](../decisions/DEC-080-checkpoint-c-before-the-venue-adapters.md), the builder's choice under the owner's delegation ([owner decisions 47](../handoffs/owner-decisions-47-choice-of-the-next-work-delegated.md)): checkpoint C (U7, then U6) is built before checkpoint B's venue adapters, which follow once a venue is verified and a server approved; checkpoint B stays open until they pass their gates.
 
 Each checkpoint: work → three gates → commit → push (DEC-032); a failed gate stops the sequence until fixed and re-verified (master execution constitution §19). Uncommitted work is backed up as [DEC-057](../decisions/DEC-057-progress-continuity-no-loss-and-recovery.md) (decision 4), [DEC-064](../decisions/DEC-064-retired-branches-kept-and-backup-commits-skip-checks.md) (decision 2), and [DEC-071](../decisions/DEC-071-one-reusable-backup-branch.md) provide; convergence is classified from this plan's approval (DEC-057, decision 3). On approval, the feature-status table gets one row per feature of U2 to U10.
 

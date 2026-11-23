@@ -2,9 +2,10 @@
 indicators; the Stage 2 plan's U7 and D5).
 
 This is the one module of the engine that computes in floats, and it builds no amount: it
-imports nothing from `atp.numeric`, which alone builds amounts (the structure test), and
-`atp.numeric.amount` and every amount field of a contract refuse a float. A bar's prices become
-floats here, each the float nearest its exact value; sums are taken with `math.fsum`, rounded
+reaches the platform only through the names the structure test lists for it, none of which
+builds one, so never `atp.numeric`, which alone builds amounts; and `atp.numeric.amount` and
+every amount field of a contract refuse a float. A bar's prices become floats as they are read
+(`_price`), each the float nearest its exact value; sums are taken with `math.fsum`, rounded
 once. The results are the same for the same bars on the same platform; across platforms the
 last digits can differ (the Stage 2 plan's risks), so a result's evidence identifier digests its
 inputs and parameters, never its value.
@@ -12,10 +13,11 @@ inputs and parameters, never its value.
 Every indicator reads a series of `Validated` bars of one market and one interval, closed, in
 order, one per interval: anything else raises `TypeError` or `ValueError`. A series with bars
 missing between two of its bars is refused (GAP), as is one shorter than the indicator's periods
-need (INSUFFICIENT_DATA), and one whose last bar was not VALID when validated or is not VALID
-at `now_ns`, the time of use, under `limits` (MKD-012); earlier bars are history, older than a
-freshness limit by nature. A value the definition does
-not give, or a float cannot hold, is refused (UNDEFINED).
+need (INSUFFICIENT_DATA). Every bar must have been VALID when validated, no later than `now_ns`,
+the time of use, and the last must be VALID again at `now_ns` under `limits` (MKD-012); a series
+that is not is refused (INELIGIBLE_INPUT). Earlier bars are history, older than a freshness
+limit by nature, so only the last is assessed again. A value the definition does not give, or a
+float cannot hold, is refused (UNDEFINED).
 """
 
 from __future__ import annotations
@@ -32,6 +34,7 @@ from atp.quant._common import (
     RefusalCause,
     calculation_id,
     require_current,
+    require_validated,
 )
 from atp.quant._contracts import Correlation, IndicatorKind, IndicatorValue
 
@@ -91,6 +94,8 @@ def _series(
             RefusalCause.INSUFFICIENT_DATA,
             f"the indicator needs {needed} bars; {len(items)} were given",
         )
+    for data in given[:-1]:
+        require_validated(data, "bar", now_ns)
     require_current(given[-1], "last bar", now_ns, limits)
     return items
 

@@ -21,8 +21,17 @@
   which finds a percentile's rank). Only the modules in
   `FLOAT_ALLOWED` are exempt: `atp.quant._indicators`, whose indicators TEC-003 allows in
   floats (the Stage 2 plan's D5).
-- No float reaches an amount (D5): a module in `FLOAT_ALLOWED` imports nothing from
-  `atp.numeric`, which alone builds and rounds amounts, under any name or path.
+- No float reaches an amount (D5): a module in `FLOAT_ALLOWED` imports only what
+  `FLOAT_MODULE_IMPORTS` and `FLOAT_NAME_IMPORTS` list, by name, in every form an import takes,
+  so it reaches neither `atp.numeric`, which alone builds and rounds amounts, nor a module
+  through which it could, nor a contract that holds an amount. Of the platform's names it
+  imports, it calls only those in `FLOAT_CALLABLE`, reads only the members of `FLOAT_ENUMS`, and
+  names the others only as types. It names no dunder and no builtin of `FLOAT_DYNAMIC`, which
+  reach an object by a name computed at run time, and reads no contract method that builds or
+  copies a contract (`from_json`, `from_python`, Pydantic's `model_*`). The other rules apply
+  to it as to any module, but for N4's: it builds no `Decimal`. What no scanner sees, a value
+  computed in floats combined with an amount it reads (through `int()`, say), is caught in
+  review: such a module turns each amount it reads into a float at once.
 - Outside `atp.contracts`, Pydantic is used only through the names in `PYDANTIC_ALLOWED`: no
   model that is not a contract, no Pydantic dataclass, `create_model`, `validate_call`,
   `TypeAdapter`, or `pydantic_core` (N2; the contract conventions).
@@ -196,6 +205,52 @@ FLOAT_CONVERTERS = frozenset({"float", "complex"})
 # amount (`float_isolation_findings`): the Quantitative Engine's indicators (the Stage 2 plan's
 # U7 and D5).
 FLOAT_ALLOWED: frozenset[str] = frozenset({"atp.quant._indicators"})
+# What a module in `FLOAT_ALLOWED` may import, and nothing else (D5): whole modules, and names
+# from modules. A name is added here by a reviewed change.
+FLOAT_MODULE_IMPORTS = frozenset({"math"})
+FLOAT_NAME_IMPORTS: dict[str, frozenset[str]] = {
+    "__future__": frozenset({"annotations"}),
+    "collections.abc": frozenset({"Iterable", "Sequence"}),
+    "decimal": frozenset({"Decimal"}),
+    "itertools": frozenset({"pairwise"}),
+    "typing": frozenset({"Final"}),
+    "atp.marketdata": frozenset(
+        {"OhlcvBar", "Validated", "ValidationLimits", "bar_end_ns"}
+    ),
+    "atp.quant._common": frozenset(
+        {
+            "CalculationRefused",
+            "RefusalCause",
+            "calculation_id",
+            "require_current",
+            "require_validated",
+        }
+    ),
+    "atp.quant._contracts": frozenset(
+        {"Correlation", "IndicatorKind", "IndicatorValue"}
+    ),
+}
+# Of the platform's names such a module imports: those it may call, the shared refusal and
+# checks and the results it builds, which hold no amount; the enumerations whose members it may
+# read. It names the others only as types.
+FLOAT_CALLABLE = frozenset(
+    {
+        "CalculationRefused",
+        "Correlation",
+        "IndicatorValue",
+        "bar_end_ns",
+        "calculation_id",
+        "require_current",
+        "require_validated",
+    }
+)
+FLOAT_ENUMS = frozenset({"IndicatorKind", "RefusalCause"})
+# Builtins that reach a module or an object by a name computed at run time, as dunders do.
+FLOAT_DYNAMIC = frozenset(
+    {"compile", "eval", "exec", "getattr", "globals", "locals", "vars"}
+)
+# A contract's methods that build a contract; Pydantic's, which also copy one, are `model_*`.
+CONTRACT_BUILDERS = frozenset({"from_json", "from_python"})
 TEXT_OF_A_VALUE = frozenset({"str", "repr", "format", "ascii"})
 AMOUNT_BUILDERS = frozenset({"amount", "amount_from_toml"})
 PYDANTIC_MODELS = frozenset({"BaseModel", "RootModel"})
@@ -891,20 +946,115 @@ def import_findings(source_root: Path) -> list[str]:
     return findings
 
 
+def _named_only_as_a_type(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
+    """Whether a name is used only as a type: either side of an `is` or `is not` comparison,
+    the class argument of `isinstance` or `issubclass` (also in a tuple), or inside an
+    annotation, but not inside a call or a lambda there."""
+    parent = parents.get(node)
+    if isinstance(parent, ast.Compare) and all(
+        isinstance(op, ast.Is | ast.IsNot) for op in parent.ops
+    ):
+        return True
+    item = parent if isinstance(parent, ast.Tuple) else node
+    check = parents.get(item)
+    if (
+        isinstance(check, ast.Call)
+        and isinstance(check.func, ast.Name)
+        and check.func.id in {"isinstance", "issubclass"}
+        and check.args[1:] == [item]
+    ):
+        return True
+    child = node
+    while (parent := parents.get(child)) is not None and not isinstance(
+        parent, ast.Call | ast.Lambda
+    ):
+        if (
+            (isinstance(parent, ast.arg) and child is parent.annotation)
+            or (
+                isinstance(parent, ast.FunctionDef | ast.AsyncFunctionDef)
+                and child is parent.returns
+            )
+            or (isinstance(parent, ast.AnnAssign) and child is parent.annotation)
+        ):
+            return True
+        child = parent
+    return False
+
+
 def float_isolation_findings(source_root: Path) -> list[str]:
-    """Imports of `atp.numeric` by a module allowed to use floats (the Stage 2 plan's D5: no
-    float reaches an amount): only `atp.numeric` builds and rounds amounts, so a module that
-    cannot reach it cannot make one from a float. Every form the import scanner reads counts:
-    `import`, `from`, relative imports, a path on the package root, and `importlib`."""
+    """Where a module allowed to use floats could make an amount (the Stage 2 plan's D5: no
+    float reaches an amount).
+
+    It imports only what `FLOAT_MODULE_IMPORTS` and `FLOAT_NAME_IMPORTS` list, in every form the
+    import scanner reads (`import`, `from`, relative imports, a path on the package root,
+    `importlib`): so it reaches neither `atp.numeric`, which alone builds and rounds amounts,
+    nor a module through which it could (another of the platform's, `sys`, `importlib`), nor a
+    contract that holds an amount. Of the platform's names it imports, under any name it
+    imports them as, it calls only those in `FLOAT_CALLABLE`, reads only the members of those
+    in `FLOAT_ENUMS` (names in capitals), and uses the others only as types. It names no
+    dunder, as a name or an attribute, and no builtin of `FLOAT_DYNAMIC`, and it reads no
+    method that builds or copies a contract (`CONTRACT_BUILDERS`, Pydantic's `model_*`), on a
+    class or on an instance.
+    """
+    platform = {
+        name
+        for imported, names in FLOAT_NAME_IMPORTS.items()
+        if imported.split(".")[0] == "atp"
+        for name in names
+    }
     findings: list[str] = []
     for path in _python_files(source_root / "atp"):
         module = _module_of(path, source_root)
         if module not in FLOAT_ALLOWED:
             continue
         tree = _parse(path)
-        for imported, _ in _imported_modules(tree, module, path.name == "__init__.py"):
-            if imported.split(".")[:2] == ["atp", "numeric"]:
-                findings.append(f"{module}: a float module imports {imported}")
+        parents = _parents(tree)
+        for imported, names in _imported_modules(
+            tree, module, path.name == "__init__.py"
+        ):
+            refused = set(names) - FLOAT_NAME_IMPORTS.get(imported, frozenset())
+            if refused:
+                findings.append(
+                    f"{module}: imports {', '.join(sorted(refused))} from {imported}"
+                )
+            elif not names and imported not in FLOAT_MODULE_IMPORTS:
+                findings.append(f"{module}: imports {imported}")
+        local = {
+            alias.asname or alias.name: alias.name
+            for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom)
+            for alias in node.names
+            if alias.name in platform
+        }
+        for node in ast.walk(tree):
+            where = f"{path.relative_to(source_root)}:{getattr(node, 'lineno', 0)}"
+            word = (
+                node.id
+                if isinstance(node, ast.Name)
+                else node.attr
+                if isinstance(node, ast.Attribute)
+                else ""
+            )
+            if word in FLOAT_DYNAMIC or (word.startswith("__") and word.endswith("__")):
+                findings.append(f"{where}: {word}")
+            if isinstance(node, ast.Attribute) and (
+                node.attr in CONTRACT_BUILDERS or node.attr.startswith("model_")
+            ):
+                findings.append(f"{where}: {node.attr}")
+            if not isinstance(node, ast.Name) or node.id not in local:
+                continue
+            name = local[node.id]
+            parent = parents.get(node)
+            if isinstance(parent, ast.Call) and parent.func is node:
+                if name not in FLOAT_CALLABLE:
+                    findings.append(f"{where}: calls {name}")
+            elif isinstance(parent, ast.Attribute):
+                if name not in FLOAT_ENUMS or not parent.attr.isupper():
+                    findings.append(f"{where}: reads {name}.{parent.attr}")
+            elif name not in FLOAT_CALLABLE | FLOAT_ENUMS and not _named_only_as_a_type(
+                node, parents
+            ):
+                findings.append(f"{where}: uses {name} as a value")
     return findings
 
 
@@ -1239,6 +1389,12 @@ def test_no_float_module_builds_an_amount() -> None:
         (SOURCE_ROOT / Path(*module.split("."))).with_suffix(".py").is_file()
         for module in FLOAT_ALLOWED
     )
+    assert FLOAT_CALLABLE | FLOAT_ENUMS <= {
+        name
+        for module, names in FLOAT_NAME_IMPORTS.items()
+        if module.startswith("atp.")
+        for name in names
+    }
     assert float_isolation_findings(SOURCE_ROOT) == []
 
 
@@ -1836,6 +1992,35 @@ def test_a_relative_import_is_resolved(copy_of_source: Path) -> None:
         "from ..numeric import divide\n",
         "import atp\nx = atp.numeric.amount\n",
         "import importlib\nm = importlib.import_module('atp.numeric')\n",
+        # Through another of the platform's modules, or a module that reaches any.
+        "from atp.quant._spread import amount as _a\nX = _a(int(2.5 * 100))\n",
+        "from atp.quant import _slippage\nx = _slippage.divide\n",
+        "import atp.quant._slippage\nx = atp.quant._slippage.divide\n",
+        "import atp.quant\nx = atp.quant._spread.amount(3)\n",
+        "import sys\nx = sys.modules['atp.numeric'].amount(int(1.5))\n",
+        "from . import _common\n",
+        "import itertools\n",
+        "from atp.marketdata import *\n",
+        "from atp.quant._common import unsigned\n",
+        # A contract that holds an amount, built from a float's text.
+        "import json\nfrom atp.quant._contracts import DepthMetrics\n"
+        "x = DepthMetrics.from_json(json.dumps({'band': repr(0.1)}))\n",
+        "def f(d):\n    return d.item.from_json(repr(0.1))\n",
+        "def f(d):\n    return d.item.model_copy()\n",
+        # The platform's names used beyond their list.
+        "x = OhlcvBar(open=0.1)\n",
+        "from atp.marketdata import OhlcvBar as Bar\nx = Bar(open=0.1)\n",
+        "x = OhlcvBar.model_fields\n",
+        "x = OhlcvBar.CLOSE\n",
+        "x = IndicatorKind._missing_\n",
+        "x = [OhlcvBar]\n",
+        "def f(x: list[g(OhlcvBar)]) -> None:\n    return None\n",
+        # An object reached by a name computed at run time.
+        "x = bar_end_ns.__globals__\n",
+        "x = __import__('atp.numeric')\n",
+        "x = getattr(RefusalCause, 'mro')\n",
+        "x = vars(math)\n",
+        "x = eval('1')\n",
     ],
 )
 def test_the_float_isolation_scanner_finds_planted_samples(
@@ -1845,6 +2030,21 @@ def test_the_float_isolation_scanner_finds_planted_samples(
     assert float_isolation_findings(copy_of_source) == []
     module.write_text(module.read_text(encoding="utf-8") + planted, encoding="utf-8")
     assert float_isolation_findings(copy_of_source)
+
+
+def test_a_float_module_s_allowed_uses_are_not_findings(copy_of_source: Path) -> None:
+    planted = (
+        "from ._common import calculation_id as digest\n"
+        "from atp.marketdata import OhlcvBar as Bar\n"
+        "def f(x: Bar, y: Sequence[Validated[Bar]]) -> Bar | None:\n"
+        "    z: list[Bar] = []\n"
+        "    if isinstance(x, (Bar, Validated)) or type(x) is Bar or z:\n"
+        "        raise CalculationRefused(RefusalCause.UNDEFINED, digest('a', '1', [], []))\n"
+        "    return None\n"
+    )
+    module = copy_of_source / "atp" / "quant" / "_indicators.py"
+    module.write_text(module.read_text(encoding="utf-8") + planted, encoding="utf-8")
+    assert float_isolation_findings(copy_of_source) == []
 
 
 @pytest.mark.parametrize(
