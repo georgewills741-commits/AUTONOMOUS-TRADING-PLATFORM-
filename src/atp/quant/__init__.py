@@ -1,8 +1,8 @@
 """SYS-03 Quantitative Engine: the platform's deterministic calculations, with the Fee Engine and
 the Slippage Engine.
 
-Requirements: QNT-001 to QNT-007 (Stage 2's parts: the Stage 2 plan, section 3), TEC-003, MKD-005,
-MKD-010, MKD-012. No calculation asks an LLM or any AI (QNT-001, QNT-003). The engine computes
+Requirements: QNT-001, QNT-002, QNT-003, QNT-004, QNT-005, QNT-006, QNT-007 (Stage 2's parts: the
+Stage 2 plan, section 3), TEC-003, MKD-005, MKD-010, MKD-012. No calculation asks an LLM or any AI (QNT-001, QNT-003). The engine computes
 primitive metrics only (QNT-004): spreads, and the liquidity a book shows around its mid
 (`spread_metrics`, `depth_metrics`); the Fee Engine's fees at a venue's published schedule and
 funding payments (`estimate_fee`, `estimate_funding`); the Slippage Engine's walk of a taker

@@ -14,6 +14,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from atp.config import VenueSettings
+from atp.contracts import Contract
 from atp.marketdata import (
     BookSnapshot,
     FundingRate,
@@ -685,6 +686,29 @@ def test_an_identifier_s_inputs_are_evidence_identifiers() -> None:
     with pytest.raises(ValueError, match="evidence identifier"):
         calculation_id("atp.quant.spread", "1.0", [], ["not-an-identifier"])
     assert calculation_id("a", "1.0", [], []) != calculation_id("b", "1.0", [], [])
+
+
+@pytest.mark.req("QNT-004")
+def test_no_result_combines_costs_into_a_net_figure() -> None:
+    # Primitive metrics only: combining fees, slippage, and funding into a net result is the
+    # True Net-Profit Engine's (TNP-017), so no result holds a net, total, or profit figure.
+    import atp.quant
+
+    results = [
+        value
+        for value in vars(atp.quant).values()
+        if isinstance(value, type)
+        and value.__module__ == "atp.quant._contracts"
+        and issubclass(value, Contract)
+    ]
+    assert len(results) == 7
+    for result in results:
+        for name in result.model_fields:
+            words = set(name.split("_"))
+            assert not words & {"net", "total", "profit", "pnl"}, (
+                result.__name__,
+                name,
+            )
 
 
 @pytest.mark.req("ARCH-025", "MKD-005")
