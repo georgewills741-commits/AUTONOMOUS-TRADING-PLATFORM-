@@ -2003,8 +2003,10 @@ def test_a_relative_import_is_resolved(copy_of_source: Path) -> None:
         "from atp.marketdata import *\n",
         "from atp.quant._common import unsigned\n",
         # A contract that holds an amount, built from a float's text.
-        "import json\nfrom atp.quant._contracts import DepthMetrics\n"
-        "x = DepthMetrics.from_json(json.dumps({'band': repr(0.1)}))\n",
+        (
+            "import json\nfrom atp.quant._contracts import DepthMetrics\n"
+            "x = DepthMetrics.from_json(json.dumps({'band': repr(0.1)}))\n"
+        ),
         "def f(d):\n    return d.item.from_json(repr(0.1))\n",
         "def f(d):\n    return d.item.model_copy()\n",
         # The platform's names used beyond their list.
