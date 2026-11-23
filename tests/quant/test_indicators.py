@@ -170,6 +170,13 @@ def test_wilder_s_rsi() -> None:
     assert rsi(
         series(_closes(10, 11, 10, 12, 11)), 2, now_ns=USE, limits=LIMITS
     ).value == pytest.approx(50.0)
+    # Period 3, where Wilder's smoothing weighs the average by 2 / 3: changes +1, -1, +2,
+    # -1, +2; first averages, gain 3 / 3 = 1, loss 1 / 3; then gain (1 * 2 + 0) / 3 = 2 / 3,
+    # loss (1 / 3 * 2 + 1) / 3 = 5 / 9; then gain (2 / 3 * 2 + 2) / 3 = 10 / 9, loss
+    # (5 / 9 * 2 + 0) / 3 = 10 / 27; RS = 3, RSI = 100 - 100 / 4 = 75.
+    assert rsi(
+        series(_closes(10, 11, 10, 12, 11, 13)), 3, now_ns=USE, limits=LIMITS
+    ).value == pytest.approx(75.0, rel=1e-12)
     # No loss at all: 100.
     assert rsi(series(_closes(1, 2, 3)), 2, now_ns=USE, limits=LIMITS).value == 100.0
 
@@ -362,6 +369,82 @@ def test_bars_out_of_order_mixed_or_open_are_wrong_arguments() -> None:
         sma(bars, 2.0, now_ns=USE, limits=LIMITS)  # type: ignore[arg-type]
     with pytest.raises(ValueError, match="at least 1"):
         sma(bars, 0, now_ns=USE, limits=LIMITS)
+
+
+def test_a_first_bar_of_another_market_or_interval_is_a_wrong_argument() -> None:
+    bars = series(_closes(1, 2, 3))
+    first = series(_closes(1, 2, 3), base="ETH")[0]
+    with pytest.raises(ValueError, match="one market and one interval"):
+        sma([first, *bars[1:]], 2, now_ns=USE, limits=LIMITS)
+    odd = MarketDataValidator(LIMITS).validate(
+        _bar(("1", "1", "1", "1"), -1, "BTC", closed=True, interval=2 * INTERVAL),
+        now_ns=START + INTERVAL * SECOND,
+        drifting_venues=frozenset(),
+    )
+    assert isinstance(odd, Validated) and odd.eligible
+    with pytest.raises(ValueError, match="one market and one interval"):
+        sma([odd, *bars[1:]], 2, now_ns=USE, limits=LIMITS)
+
+
+def test_the_bar_before_the_last_must_have_been_valid_when_validated() -> None:
+    bars = series(_closes(1, 2, 3))
+    old = MarketDataValidator(LIMITS).validate(
+        bars[1].item, now_ns=START + 3600 * SECOND, drifting_venues=frozenset()
+    )
+    assert isinstance(old, Validated) and not old.eligible
+    with pytest.raises(CalculationRefused, match="the bar was not VALID") as refused:
+        sma([bars[0], old, bars[2]], 3, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.INELIGIBLE_INPUT
+
+
+def test_prices_below_one_are_read() -> None:
+    assert sma(
+        series(["0.5", "0.25", "0.75"]), 3, now_ns=USE, limits=LIMITS
+    ).value == pytest.approx(0.5)
+
+
+def test_the_rsi_needs_one_bar_more_than_its_period() -> None:
+    with pytest.raises(CalculationRefused) as refused:
+        rsi(series(_closes(1, 2, 3)), 3, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.INSUFFICIENT_DATA
+
+
+@pytest.mark.parametrize(
+    ("name", "minimum"),
+    [
+        ("sma", 1),
+        ("ema", 1),
+        ("rsi", 1),
+        ("atr", 1),
+        ("simple_return", 1),
+        ("log_return", 1),
+        ("volatility", 2),
+        ("correlation", 2),
+        ("macd fast", 1),
+        ("macd slow", 1),
+        ("macd signal", 1),
+    ],
+)
+def test_each_indicator_checks_its_periods(name: str, minimum: int) -> None:
+    bars = series(_closes(1, 2, 3, 5, 4, 6, 7))
+    other = series(_closes(2, 3, 5, 4, 6, 7, 9), base="ETH")
+    calls: dict[str, Callable[[int], object]] = {
+        "sma": lambda p: sma(bars, p, now_ns=USE, limits=LIMITS),
+        "ema": lambda p: ema(bars, p, now_ns=USE, limits=LIMITS),
+        "rsi": lambda p: rsi(bars, p, now_ns=USE, limits=LIMITS),
+        "atr": lambda p: atr(bars, p, now_ns=USE, limits=LIMITS),
+        "simple_return": lambda p: simple_return(bars, p, now_ns=USE, limits=LIMITS),
+        "log_return": lambda p: log_return(bars, p, now_ns=USE, limits=LIMITS),
+        "volatility": lambda p: volatility(bars, p, now_ns=USE, limits=LIMITS),
+        "correlation": lambda p: correlation(bars, other, p, now_ns=USE, limits=LIMITS),
+        "macd fast": lambda p: macd(bars, p, 3, 2, now_ns=USE, limits=LIMITS),
+        "macd slow": lambda p: macd(bars, 1, p, 2, now_ns=USE, limits=LIMITS),
+        "macd signal": lambda p: macd(bars, 1, 3, p, now_ns=USE, limits=LIMITS),
+    }
+    with pytest.raises(ValueError, match=f"at least {minimum}"):
+        calls[name](minimum - 1)
+    with pytest.raises(TypeError, match="whole number"):
+        calls[name](float(minimum))  # type: ignore[arg-type]
 
 
 def test_bars_of_another_interval_are_wrong_arguments() -> None:

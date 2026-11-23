@@ -307,6 +307,33 @@ def test_an_order_larger_than_the_book_fills_what_the_book_shows() -> None:
     assert str(result.average_price) == "103.75"
 
 
+def test_an_order_left_with_less_than_one_unit_unfilled_is_incomplete() -> None:
+    result = walk_book(
+        validated(book()),
+        TakerSide.BUY,
+        amount("8.5"),
+        amount("0.01"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert result.filled == amount("8")
+    assert not result.complete
+
+
+def test_a_limit_price_below_one_is_a_limit() -> None:
+    result = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("1"),
+        amount("0.01"),
+        amount("0.5"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert result.filled == amount("1")
+    assert result.complete
+
+
 def test_a_limit_price_stops_the_walk() -> None:
     data = validated(book())
     result = walk_book(
@@ -725,6 +752,25 @@ def test_market_data_of_another_kind_is_refused() -> None:
 
 def test_parameters_that_are_not_finite_amounts_are_refused() -> None:
     data = validated(book())
+    with pytest.raises(TypeError, match="increment is an amount"):
+        walk_book(data, TakerSide.BUY, amount("1"), 0.01, now_ns=NOW, limits=LIMITS)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="limit price is an amount"):
+        walk_book(
+            data,
+            TakerSide.BUY,
+            amount("1"),
+            amount("0.01"),
+            200.0,  # type: ignore[arg-type]
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    rate = validated(funding("0.0001"))
+    with pytest.raises(TypeError, match="notional is an amount"):
+        estimate_funding(rate, PositionSide.LONG, 1.0, now_ns=NOW, limits=LIMITS)  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="zero or above"):
+        estimate_funding(
+            rate, PositionSide.LONG, amount("-1"), now_ns=NOW, limits=LIMITS
+        )
     with pytest.raises(ValueError, match="band is finite"):
         depth_metrics(data, Decimal("NaN"), now_ns=NOW, limits=LIMITS)
     with pytest.raises(ValueError, match="quantity is finite"):
@@ -881,6 +927,9 @@ def test_the_walk_funding_and_depth_identifiers_digest_their_parameters() -> Non
         walk(TakerSide.BUY, "1", "0.01", "200"),
     ):
         assert other != first
+    assert walk(TakerSide.BUY, "1", "0.01", "300") != walk(
+        TakerSide.BUY, "1", "0.01", "200"
+    )
     rate = validated(funding("0.0001"))
 
     def fund(side: PositionSide, notional: str) -> str:
@@ -894,6 +943,23 @@ def test_the_walk_funding_and_depth_identifiers_digest_their_parameters() -> Non
         depth_metrics(data, amount("0.02"), now_ns=NOW, limits=LIMITS).evidence_id
         != depth_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS).evidence_id
     )
+
+
+def test_a_parameter_s_text_is_digested_in_ascii() -> None:
+    form = json.dumps(
+        [CALCULATION_FORM, "c", "1.0", [["name", "\u00e9"]], []],
+        ensure_ascii=True,
+        separators=(",", ":"),
+    )
+    assert calculation_id("c", "1.0", [("name", "\u00e9")], []) == (
+        hashlib.sha256(form.encode("ascii")).hexdigest()
+    )
+
+
+def test_a_refusal_states_its_cause_and_detail() -> None:
+    refused = CalculationRefused(RefusalCause.GAP, "two bars apart")
+    assert refused.cause is RefusalCause.GAP
+    assert str(refused) == "gap: two bars apart"
 
 
 def test_an_identifier_s_inputs_are_evidence_identifiers() -> None:
