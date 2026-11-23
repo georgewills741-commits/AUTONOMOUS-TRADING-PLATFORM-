@@ -773,6 +773,129 @@ def test_a_result_s_identifier_digests_its_calculation_parameters_and_inputs() -
     )
 
 
+def settings_with(
+    venue_name: str = "example", schedules: list[tuple[str, ...]] | None = None
+) -> VenueSettings:
+    """A venue's settings with fee schedules: instrument type, maker, taker, source, date."""
+    given = schedules or [SCHEDULE]
+    return VenueSettings.from_json(
+        json.dumps(
+            {
+                "venue": venue_name,
+                "instrument_types": sorted({kind for kind, *_ in given}),
+                "fees": [
+                    {
+                        "instrument_type": kind,
+                        "maker": maker,
+                        "taker": taker,
+                        "source": source,
+                        "as_of": as_of,
+                    }
+                    for kind, maker, taker, source, as_of in given
+                ],
+            }
+        )
+    )
+
+
+SCHEDULE = ("spot", "0.002", "0.002", "https://example.test/fees", "2026-11-01")
+
+
+@pytest.mark.req("MKD-005", "MKD-010")
+def test_a_fee_s_identifier_digests_each_of_its_parameters() -> None:
+    # Each estimate differs from the first in one parameter alone; the maker and taker rates
+    # are equal, so that the role alone differs between a maker's fee and a taker's.
+    eth = MarketRef.from_json(json.dumps(market_json() | {"base": "ETH"}))
+    first = estimate_fee(settings_with(), market(), LiquidityRole.TAKER, amount("100"))
+    others = {
+        "role": estimate_fee(
+            settings_with(), market(), LiquidityRole.MAKER, amount("100")
+        ),
+        "notional": estimate_fee(
+            settings_with(), market(), LiquidityRole.TAKER, amount("200")
+        ),
+        "venue": estimate_fee(
+            settings_with("other"),
+            market(venue="other"),
+            LiquidityRole.TAKER,
+            amount("100"),
+        ),
+        "market": estimate_fee(
+            settings_with(), eth, LiquidityRole.TAKER, amount("100")
+        ),
+        "instrument type": estimate_fee(
+            settings_with(schedules=[SCHEDULE, ("margin", *SCHEDULE[1:])]),
+            market("margin"),
+            LiquidityRole.TAKER,
+            amount("100"),
+        ),
+        "rate": estimate_fee(
+            settings_with(schedules=[("spot", "0.003", "0.003", *SCHEDULE[3:])]),
+            market(),
+            LiquidityRole.TAKER,
+            amount("100"),
+        ),
+        "source": estimate_fee(
+            settings_with(
+                schedules=[(*SCHEDULE[:3], "https://example.test/x", "2026-11-01")]
+            ),
+            market(),
+            LiquidityRole.TAKER,
+            amount("100"),
+        ),
+        "date": estimate_fee(
+            settings_with(schedules=[(*SCHEDULE[:4], "2026-11-02")]),
+            market(),
+            LiquidityRole.TAKER,
+            amount("100"),
+        ),
+    }
+    again = estimate_fee(settings_with(), market(), LiquidityRole.TAKER, amount("100"))
+    assert again.evidence_id == first.evidence_id
+    for name, other in others.items():
+        assert other.evidence_id != first.evidence_id, name
+
+
+@pytest.mark.req("MKD-005", "MKD-010")
+def test_the_walk_funding_and_depth_identifiers_digest_their_parameters() -> None:
+    data = validated(book())
+
+    def walk(side: TakerSide, quantity: str, increment: str, limit: str | None) -> str:
+        price = None if limit is None else amount(limit)
+        return walk_book(
+            data,
+            side,
+            amount(quantity),
+            amount(increment),
+            price,
+            now_ns=NOW,
+            limits=LIMITS,
+        ).evidence_id
+
+    first = walk(TakerSide.BUY, "1", "0.01", None)
+    assert walk(TakerSide.BUY, "1", "0.01", None) == first
+    for other in (
+        walk(TakerSide.SELL, "1", "0.01", None),
+        walk(TakerSide.BUY, "2", "0.01", None),
+        walk(TakerSide.BUY, "1", "0.001", None),
+        walk(TakerSide.BUY, "1", "0.01", "200"),
+    ):
+        assert other != first
+    rate = validated(funding("0.0001"))
+
+    def fund(side: PositionSide, notional: str) -> str:
+        return estimate_funding(
+            rate, side, amount(notional), now_ns=NOW, limits=LIMITS
+        ).evidence_id
+
+    assert fund(PositionSide.SHORT, "100") != fund(PositionSide.LONG, "100")
+    assert fund(PositionSide.LONG, "200") != fund(PositionSide.LONG, "100")
+    assert (
+        depth_metrics(data, amount("0.02"), now_ns=NOW, limits=LIMITS).evidence_id
+        != depth_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS).evidence_id
+    )
+
+
 def test_an_identifier_s_inputs_are_evidence_identifiers() -> None:
     with pytest.raises(ValueError, match="evidence identifier"):
         calculation_id("atp.quant.spread", "1.0", [], ["not-an-identifier"])

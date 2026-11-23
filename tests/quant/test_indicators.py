@@ -402,6 +402,18 @@ def test_values_beyond_what_a_float_holds_are_refused(
     assert refused.value.cause is RefusalCause.UNDEFINED
 
 
+def test_a_correlation_rounded_below_minus_one_is_minus_one() -> None:
+    # In floats, these returns' correlation comes to -1.0000000000000002 (Gate 3's F-09).
+    pair = correlation(
+        series(["671", "758", "632", "667"], base="BTC"),
+        series(["319530352", "282856024", "339248206", "321446576"], base="ETH"),
+        3,
+        now_ns=USE,
+        limits=LIMITS,
+    )
+    assert pair.value == -1.0
+
+
 def test_a_correlation_rounded_beyond_one_is_one() -> None:
     # In floats, these returns' correlation with themselves comes to 1.0000000000000002.
     prices = ["914", "427", "96", "761"]
