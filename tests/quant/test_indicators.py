@@ -802,6 +802,20 @@ def test_a_correlation_with_one_series_that_never_varies_is_refused(
     assert refused.value.cause is RefusalCause.UNDEFINED
 
 
+@pytest.mark.parametrize("ratio", ["7", "1.5"])
+def test_returns_that_never_vary_have_no_correlation_whatever_their_mean(
+    ratio: str,
+) -> None:
+    # Closes that each rise by one ratio have five equal returns, whose mean, their sum over
+    # five, is not that return in floats, so that their spread about it is not zero.
+    closes = [str(Decimal(ratio) ** power) for power in range(6)]
+    steady, other = series(closes), series(["1", "3", "2", "5", "4", "7"], base="ETH")
+    for first, second in ((steady, other), (other, steady)):
+        with pytest.raises(CalculationRefused) as refused:
+            correlation(first, second, 5, now_ns=USE, limits=LIMITS)
+        assert refused.value.cause is RefusalCause.UNDEFINED
+
+
 def test_a_correlation_s_time_is_the_end_of_its_last_bars() -> None:
     btc, eth = series(_closes(1, 2, 3)), series(_closes(3, 5, 4), base="ETH")
     pair = correlation(btc, eth, 2, now_ns=USE, limits=LIMITS)

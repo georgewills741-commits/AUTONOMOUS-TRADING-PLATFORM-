@@ -356,6 +356,13 @@ def log_return(
     return _indicator(IndicatorKind.LOG_RETURN, (period,), value, series)
 
 
+def _never_vary(values: Sequence[float]) -> bool:
+    """Whether `values` are all equal. Their spread about their mean does not tell: the mean of
+    equal floats, their sum over their count, can differ from them in its last digit, which
+    gives them a spread."""
+    return all(value == values[0] for value in values)
+
+
 def _log_returns(series: Sequence[OhlcvBar]) -> list[float]:
     return [_log_ratio(later, earlier) for earlier, later in pairwise(_closes(series))]
 
@@ -405,7 +412,7 @@ def correlation(
     covariance = _sum((a - x_mean) * (b - y_mean) for a, b in zip(x, y, strict=True))
     x_spread = _sum((a - x_mean) ** 2 for a in x)
     y_spread = _sum((b - y_mean) ** 2 for b in y)
-    if x_spread == 0 or y_spread == 0:
+    if _never_vary(x) or _never_vary(y):
         raise CalculationRefused(
             RefusalCause.UNDEFINED, "returns that never vary have no correlation"
         )

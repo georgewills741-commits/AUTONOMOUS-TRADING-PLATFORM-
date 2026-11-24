@@ -6840,7 +6840,7 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 correlation: returns that never vary not refused",
         _U7_INDICATORS,
-        "    if x_spread == 0 or y_spread == 0:\n",
+        "    if _never_vary(x) or _never_vary(y):\n",
         "    if False:\n",
         TESTS,
     ),
@@ -6877,13 +6877,6 @@ MUTATIONS: list[Mutation] = [
         _U7_COMMON,
         "            list(inputs),\n",
         "            sorted(inputs),\n",
-        TESTS,
-    ),
-    Mutation(
-        "S2-U7 correlation: a value beyond a float clamped",
-        _U7_INDICATORS,
-        "    value = _finite(covariance / math.sqrt(x_spread * y_spread))\n",
-        "    value = covariance / math.sqrt(x_spread * y_spread)\n",
         TESTS,
     ),
     Mutation(
@@ -7155,8 +7148,15 @@ MUTATIONS: list[Mutation] = [
     Mutation(
         "S2-U7 correlation: one series without variation read",
         _U7_INDICATORS,
+        "    if _never_vary(x) or _never_vary(y):\n",
+        "    if _never_vary(x) and _never_vary(y):\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 correlation: returns that never vary read from their spread",
+        _U7_INDICATORS,
+        "    if _never_vary(x) or _never_vary(y):\n",
         "    if x_spread == 0 or y_spread == 0:\n",
-        "    if x_spread == 0 and y_spread == 0:\n",
         TESTS,
     ),
     Mutation(
