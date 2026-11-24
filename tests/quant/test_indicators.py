@@ -10,6 +10,7 @@ import math
 import sys
 from collections.abc import Callable, Sequence
 from decimal import Decimal
+from functools import partial
 
 import pytest
 from hypothesis import given
@@ -644,12 +645,69 @@ def test_every_indicator_gives_a_finite_value_or_a_refusal(
         ),
     ]
     for call in calls:
-        try:
-            result = call()
-        except CalculationRefused:
-            continue
-        results = result if isinstance(result, tuple) else (result,)
-        assert all(math.isfinite(item.value) for item in results)
+        _gives_a_finite_value_or_a_refusal(call, closes)
+
+
+# The ends of the range in which a float holds a price at full precision, and values between
+# them: the ratio of two of them is within a float's normal range, above it, or below it.
+EDGES = ("2.2250738585072014e-308", "1e-200", "1", "1e200", "1.7976931348623157e308")
+
+
+def test_every_indicator_of_closes_at_a_float_s_limits_gives_a_finite_value_or_a_refusal() -> (
+    None
+):
+    # Gate 3's F-21, whose case the property test seldom draws: every four closes taken from
+    # EDGES, at every period their bars allow, with a correlation against closes whose returns
+    # differ in sign, in either order.
+    other = series(["1", "2", "1", "1"], base="ETH")
+    for closes in itertools.product(EDGES, repeat=4):
+        bars = series(list(closes))
+        cases: list[tuple[Callable[..., object], tuple[object, ...]]] = [
+            *((sma, (bars, period)) for period in range(1, 5)),
+            *((ema, (bars, period)) for period in range(1, 5)),
+            *((rsi, (bars, period)) for period in range(1, 4)),
+            *((atr, (bars, period)) for period in range(1, 4)),
+            *((simple_return, (bars, period)) for period in range(1, 4)),
+            *((log_return, (bars, period)) for period in range(1, 4)),
+            *((volatility, (bars, period)) for period in range(2, 4)),
+            *((correlation, (bars, other, period)) for period in range(2, 4)),
+            *((correlation, (other, bars, period)) for period in range(2, 4)),
+            *(
+                (macd, (bars, fast, slow, signal))
+                for slow in range(2, 5)
+                for fast in range(1, slow)
+                for signal in range(1, 6 - slow)
+            ),
+        ]
+        for function, arguments in cases:
+            named = [
+                argument
+                if isinstance(argument, int)
+                else "bars"
+                if argument is bars
+                else "other"
+                for argument in arguments
+            ]
+            _gives_a_finite_value_or_a_refusal(
+                partial(function, *arguments, now_ns=USE, limits=LIMITS),
+                f"{function.__name__}{named} of the closes {closes}",
+            )
+
+
+def _gives_a_finite_value_or_a_refusal(
+    call: Callable[[], object], case: object
+) -> None:
+    """Check that `call` gives finite values or is refused, and raises nothing else; a failure
+    names `case`."""
+    try:
+        result = call()
+    except CalculationRefused:
+        return
+    except Exception as error:
+        error.add_note(f"the case: {case}")
+        raise
+    results = result if isinstance(result, tuple) else (result,)
+    assert all(math.isfinite(item.value) for item in results), case
 
 
 class _Forged(Validated[OhlcvBar]):  # type: ignore[misc]
