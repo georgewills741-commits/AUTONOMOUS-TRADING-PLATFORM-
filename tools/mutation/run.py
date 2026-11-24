@@ -11,7 +11,11 @@ every N-th mutation from the K-th (counting from 0), so that N runs on N clones 
 For each mutation the runner checks that its text occurs exactly once (else SKIPPED), writes
 it, checks that a Python file still compiles and a TOML file still parses (else INVALID: such a
 file would fail every check and look caught; another file, such as a document, is not checked),
-runs the mutation's check in the clone, and restores the file.
+runs the mutation's check in the clone, and restores the file. The checks write no compiled
+bytecode (`PYTHONDONTWRITEBYTECODE`): Python, and pytest for the test modules it rewrites, reuse a
+compiled file while its source's modification time, to the second, and size are unchanged, so a
+mutation written within a second of the one before it, with the same size, could otherwise run
+that one's code, and read as killed by it.
 KILLED means the check failed, SURVIVED that it passed, TIMEOUT that it ran past the time
 limit. Last, the unmutated clone must pass every check the mutations used. The exit status is
 0 only when every mutation is KILLED and that run passes.
@@ -20,6 +24,7 @@ limit. Last, the unmutated clone must pass every check the mutations used. The e
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -52,6 +57,7 @@ def _check(clone: Path, check: str) -> str:
         result = subprocess.run(  # noqa: S603 - fixed arguments, no shell
             [_uv(), "run", "--locked", *CHECKS[check]],
             cwd=clone,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
             capture_output=True,
             text=True,
             timeout=_TIME_LIMIT,
