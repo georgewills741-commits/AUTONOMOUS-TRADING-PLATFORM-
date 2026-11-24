@@ -52,14 +52,17 @@ def spread_metrics(
     """The spread of a ticker's or a book snapshot's best bid and ask.
 
     The mid is (bid + ask) / 2 and the spread ask - bid, both exact; the relative spread is the
-    spread divided by the mid, rounded up to a multiple of `increment` (`atp.numeric.divide`),
-    so it is never understated. Data without a best bid or a best ask is refused
-    (MISSING_INPUT), as is data not VALID when validated or at `now_ns`, the time of use,
-    under `limits`.
+    spread divided by the mid, rounded up to a multiple of `increment`, above zero
+    (`atp.numeric.divide`), so it is never understated. Data without a best bid or a best ask
+    is refused (MISSING_INPUT), as is data not VALID when validated or at `now_ns`, the time of
+    use, under `limits`.
     """
     item = require_current(data, "ticker or book snapshot", now_ns, limits)
     bid, ask = _best(item)
     check_amount(increment, "increment")
+    if increment <= 0:
+        msg = "the increment is above zero"
+        raise ValueError(msg)
     if bid is None or ask is None:
         raise CalculationRefused(
             RefusalCause.MISSING_INPUT, "a spread needs a best bid and a best ask"

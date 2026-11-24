@@ -2002,6 +2002,7 @@ def test_a_relative_import_is_resolved(copy_of_source: Path) -> None:
         "import itertools\n",
         "from atp.marketdata import *\n",
         "from atp.quant._common import unsigned\n",
+        "from atp.quant._spread import amount\n",
         # A contract that holds an amount, built from a float's text.
         (
             "import json\nfrom atp.quant._contracts import DepthMetrics\n"

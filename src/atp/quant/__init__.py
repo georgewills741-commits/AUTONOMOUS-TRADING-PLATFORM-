@@ -24,8 +24,9 @@ Spreads, liquidity, fees, funding, and slippage are exact amounts (TEC-003); a q
 must be rounded is rounded by `atp.numeric.divide`, in the direction that never understates a
 cost. Indicators are floats (TEC-003 allows them for indicators; the Stage 2 plan's D5), made
 only in `_indicators`, which builds no amount. Each result is a contract that carries the time
-it describes, its inputs' evidence identifiers, the version of its calculation, and its own
-evidence identifier (`calculation_id`; MKD-005, MKD-010).
+it describes (for a fee, its schedule's date, `schedule.as_of`), its inputs' evidence
+identifiers, the version of its calculation, and its own evidence identifier (`calculation_id`;
+MKD-005, MKD-010).
 """
 
 from atp.quant._common import (

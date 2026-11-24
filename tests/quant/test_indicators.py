@@ -3,6 +3,7 @@ against values worked by hand from their definitions."""
 
 from __future__ import annotations
 
+import hashlib
 import itertools
 import json
 import math
@@ -10,6 +11,8 @@ from collections.abc import Callable, Sequence
 from decimal import Decimal
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from atp.marketdata import (
     MarketDataValidator,
@@ -23,6 +26,7 @@ from atp.marketdata import (
     evidence_id,
 )
 from atp.quant import (
+    CALCULATION_FORM,
     INDICATOR_VERSION,
     CalculationRefused,
     Correlation,
@@ -115,10 +119,10 @@ def series(
     `late` validates the last bar when it is no longer VALID."""
     validator = MarketDataValidator(LIMITS)
     result: list[Validated[OhlcvBar]] = []
-    for index, given in enumerate(prices):
+    for index, price in enumerate(prices):
         if index == skip:
             continue
-        ohlc = (given, given, given, given) if isinstance(given, str) else given
+        ohlc = (price, price, price, price) if isinstance(price, str) else price
         last = index == len(prices) - 1
         item = _bar(ohlc, index, base, closed=closed_last or not last)
         now = (
@@ -445,6 +449,8 @@ def test_each_indicator_checks_its_periods(name: str, minimum: int) -> None:
         calls[name](minimum - 1)
     with pytest.raises(TypeError, match="whole number"):
         calls[name](float(minimum))  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="whole number"):
+        calls[name](True)
 
 
 def test_bars_of_another_interval_are_wrong_arguments() -> None:
@@ -528,3 +534,208 @@ def test_an_indicator_is_repeatable_and_survives_its_written_form() -> None:
         limits=LIMITS,
     )
     assert Correlation.from_json(pair.to_json()) == pair
+
+
+# Gate 3's run 3: the limits of floats (F-14 and F-15) and the rules no test covered (F-15, F-19).
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "log return down",
+        "log return up",
+        "volatility down",
+        "volatility up",
+        "correlation down",
+        "correlation up",
+    ],
+)
+def test_a_ratio_of_closes_beyond_what_a_float_holds_is_refused(name: str) -> None:
+    # 1e-200 over 1e200 is below the smallest float and reads as zero, whose logarithm Python
+    # refuses with ValueError; 1e200 over 1e-200 is above the largest and reads as infinite,
+    # which makes the result infinite or not a number: each is refused (UNDEFINED).
+    down, up = ["1", "1e200", "1e-200"], ["1", "1e-200", "1e200"]
+    other = series(_closes(1, 2, 1), base="ETH")
+    calls: dict[str, Callable[[], object]] = {
+        "log return down": lambda: log_return(
+            series(down[1:]), 1, now_ns=USE, limits=LIMITS
+        ),
+        "log return up": lambda: log_return(
+            series(up[1:]), 1, now_ns=USE, limits=LIMITS
+        ),
+        "volatility down": lambda: volatility(
+            series(down), 2, now_ns=USE, limits=LIMITS
+        ),
+        "volatility up": lambda: volatility(series(up), 2, now_ns=USE, limits=LIMITS),
+        "correlation down": lambda: correlation(
+            series(down), other, 2, now_ns=USE, limits=LIMITS
+        ),
+        "correlation up": lambda: correlation(
+            series(up), other, 2, now_ns=USE, limits=LIMITS
+        ),
+    }
+    with pytest.raises(CalculationRefused) as refused:
+        calls[name]()
+    assert refused.value.cause is RefusalCause.UNDEFINED
+
+
+def test_a_true_range_reaches_down_from_the_close_before() -> None:
+    # A bar that opens below the close before it: max(15 - 14, |15 - 20|, |14 - 20|) = 6, the
+    # distance of its low from that close.
+    bars = series(["20", ("15", "15", "14", "14.5")])
+    assert atr(bars, 1, now_ns=USE, limits=LIMITS).value == pytest.approx(6.0)
+
+
+def test_a_correlation_s_identifier_digests_the_order_of_its_series() -> None:
+    # The two orders give one value for the same markets, named the other way round; the
+    # inputs are digested in their order, so the identifiers differ.
+    btc, eth = series(_closes(1, 2, 3)), series(_closes(3, 5, 4), base="ETH")
+    forward = correlation(btc, eth, 2, now_ns=USE, limits=LIMITS)
+    backward = correlation(eth, btc, 2, now_ns=USE, limits=LIMITS)
+    assert forward.value == pytest.approx(backward.value)
+    assert (forward.market, forward.other) == (backward.other, backward.market)
+    assert forward.evidence_id != backward.evidence_id
+
+
+def test_a_sum_is_rounded_once() -> None:
+    # These closes' sum rounded once (`math.fsum`) is 134086961822059250; Python's own `sum`,
+    # whose compensation is not exact, gives 134086961822059230.
+    closes = ["4.216507376378148e-19", "3.1896766332234296e16", "1.0219019548982494e17"]
+    value = sma(series(closes), 3, now_ns=USE, limits=LIMITS).value
+    assert value == math.fsum(float(close) for close in closes) / 3
+
+
+# Closes across the float range: the largest and smallest normal floats, subnormal ones, and
+# values beyond both, which a float holds as infinite or zero.
+CLOSES = st.builds(
+    "{}e{}".format,
+    st.sampled_from(["1", "1.7976931348623157", "2.2250738585072014", "4.9", "5"]),
+    st.sampled_from([-330, -320, -308, -300, -200, -16, 0, 16, 200, 300, 307, 308]),
+)
+
+
+@given(st.lists(CLOSES, min_size=3, max_size=6), st.data())
+def test_every_indicator_gives_a_finite_value_or_a_refusal(
+    closes: list[str], data: st.DataObject
+) -> None:
+    # Gate 3's F-14: an indicator raised ValueError on validated bars; no exception but a
+    # refusal leaves an indicator, and no value it gives is infinite or not a number.
+    others = data.draw(st.lists(CLOSES, min_size=len(closes), max_size=len(closes)))
+    bars, other = series(closes), series(others, base="ETH")
+    last = len(bars) - 1
+    calls: list[Callable[[], object]] = [
+        lambda: sma(bars, 2, now_ns=USE, limits=LIMITS),
+        lambda: ema(bars, 2, now_ns=USE, limits=LIMITS),
+        lambda: rsi(bars, 2, now_ns=USE, limits=LIMITS),
+        lambda: macd(bars, 1, 2, 2, now_ns=USE, limits=LIMITS),
+        lambda: atr(bars, 2, now_ns=USE, limits=LIMITS),
+        lambda: simple_return(bars, last, now_ns=USE, limits=LIMITS),
+        lambda: log_return(bars, last, now_ns=USE, limits=LIMITS),
+        lambda: volatility(bars, 2, now_ns=USE, limits=LIMITS),
+        lambda: correlation(bars, other, 2, now_ns=USE, limits=LIMITS),
+    ]
+    for call in calls:
+        try:
+            result = call()
+        except CalculationRefused:
+            continue
+        results = result if isinstance(result, tuple) else (result,)
+        assert all(math.isfinite(item.value) for item in results)
+
+
+class _Forged(Validated[OhlcvBar]):  # type: ignore[misc]
+    """A bar passed off as validated: a subclass that skips the validator's check."""
+
+    def __post_init__(self, creator: object) -> None:
+        pass
+
+
+def test_a_bar_passed_off_as_validated_is_refused() -> None:
+    bars = series(_closes(1, 2))
+    forged = _Forged(bars[0].item, bars[0].assessment, creator=None)
+    with pytest.raises(TypeError, match="validated by atp.marketdata"):
+        sma([forged, bars[1]], 2, now_ns=USE, limits=LIMITS)
+
+
+def test_an_indicator_s_and_a_correlation_s_identifiers_have_their_form() -> None:
+    def digest(calculation: str, parameters: list[list[str]], inputs: list[str]) -> str:
+        form = json.dumps(
+            [CALCULATION_FORM, calculation, "1.0", parameters, inputs],
+            ensure_ascii=True,
+            separators=(",", ":"),
+        )
+        return hashlib.sha256(form.encode("ascii")).hexdigest()
+
+    btc, eth = series(_closes(1, 2, 3)), series(_closes(3, 5, 4), base="ETH")
+    average = sma(btc, 2, now_ns=USE, limits=LIMITS)
+    assert average.evidence_id == digest(
+        "atp.quant.indicator",
+        [["indicator", "sma"], ["periods", "2"]],
+        [bar.item.evidence_id for bar in btc[-2:]],
+    )
+    pair = correlation(btc, eth, 2, now_ns=USE, limits=LIMITS)
+    assert pair.evidence_id == digest(
+        "atp.quant.correlation",
+        [["period", "2"]],
+        [bar.item.evidence_id for bar in (*btc, *eth)],
+    )
+
+
+def test_a_close_beyond_what_a_float_holds_is_refused_not_read_as_infinite() -> None:
+    # Read as infinite, it would give an RSI of 100: a gain, and no loss.
+    with pytest.raises(CalculationRefused) as refused:
+        rsi(series(["1", "1e400"]), 1, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.UNDEFINED
+
+
+@pytest.mark.parametrize(
+    "name", ["atr", "simple_return", "log_return", "volatility", "correlation"]
+)
+def test_an_indicator_of_changes_needs_one_bar_more_than_its_period(name: str) -> None:
+    bars, other = series(_closes(1, 2, 4)), series(_closes(2, 3, 5), base="ETH")
+    calls: dict[str, Callable[[], object]] = {
+        "atr": lambda: atr(bars, 3, now_ns=USE, limits=LIMITS),
+        "simple_return": lambda: simple_return(bars, 3, now_ns=USE, limits=LIMITS),
+        "log_return": lambda: log_return(bars, 3, now_ns=USE, limits=LIMITS),
+        "volatility": lambda: volatility(bars, 3, now_ns=USE, limits=LIMITS),
+        "correlation": lambda: correlation(bars, other, 3, now_ns=USE, limits=LIMITS),
+    }
+    with pytest.raises(
+        CalculationRefused, match="needs 4 bars; 3 were given"
+    ) as refused:
+        calls[name]()
+    assert refused.value.cause is RefusalCause.INSUFFICIENT_DATA
+
+
+def test_wilder_s_average_true_range_over_three_bars() -> None:
+    # True ranges from the second bar: max(3, 2, 1) = 3; max(2, 1, 1) = 2; max(4, 4, 0) = 4;
+    # max(1, 0, 1) = 1; max(6, 0, 6) = 6. Period 3: the first average (3 + 2 + 4) / 3 = 3,
+    # then (3 × 2 + 1) / 3 = 7/3, and (7/3 × 2 + 6) / 3 = 32/9.
+    bars = series(
+        [
+            ("10", "10", "10", "10"),
+            ("10", "12", "9", "11"),
+            ("11", "12", "10", "12"),
+            ("12", "16", "12", "15"),
+            ("15", "15", "14", "14"),
+            ("14", "14", "8", "9"),
+        ]
+    )
+    assert atr(bars, 3, now_ns=USE, limits=LIMITS).value == pytest.approx(32 / 9)
+
+
+@pytest.mark.parametrize("flat_first", [True, False])
+def test_a_correlation_with_one_series_that_never_varies_is_refused(
+    flat_first: bool,
+) -> None:
+    varying, flat = series(_closes(1, 2, 3)), series(_closes(5, 5, 5), base="ETH")
+    first, second = (flat, varying) if flat_first else (varying, flat)
+    with pytest.raises(CalculationRefused) as refused:
+        correlation(first, second, 2, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.UNDEFINED
+
+
+def test_a_correlation_s_time_is_the_end_of_its_last_bars() -> None:
+    btc, eth = series(_closes(1, 2, 3)), series(_closes(3, 5, 4), base="ETH")
+    pair = correlation(btc, eth, 2, now_ns=USE, limits=LIMITS)
+    assert pair.time_ns == START + 3 * INTERVAL * SECOND

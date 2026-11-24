@@ -186,3 +186,12 @@ def test_a_step_beyond_the_precision_raises_instead_of_rounding() -> None:
     assert len(divisor.as_tuple().digits) == PRECISION
     with pytest.raises(decimal.Inexact):
         divide(amount("1"), divisor, amount("0.7"), Rounding.TOWARD_ZERO)
+
+
+def test_a_positive_value_rounded_to_zero_is_an_unsigned_zero() -> None:
+    # The class search of Gate 3's run 3 (F-15): a zero result never reads -0.
+    for result in (
+        quantize(amount("0.4"), amount("1"), Rounding.TOWARD_ZERO),
+        divide(amount("1"), amount("3"), amount("1"), Rounding.TOWARD_ZERO),
+    ):
+        assert result == 0 and not result.is_signed()

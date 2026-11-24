@@ -30,7 +30,7 @@ from atp.marketdata import (
     ValidationLimits,
     evidence_id,
 )
-from atp.numeric import amount
+from atp.numeric import Rounding, amount, divide
 from atp.quant import (
     CALCULATION_FORM,
     CalculationRefused,
@@ -518,6 +518,10 @@ def test_a_fee_names_the_results_its_notional_came_from() -> None:
         venue(), market(), LiquidityRole.TAKER, walk.notional, (walk.evidence_id,)
     )
     assert result.inputs == (walk.evidence_id,)
+    listed = estimate_fee(
+        venue(), market(), LiquidityRole.TAKER, walk.notional, [walk.evidence_id]
+    )
+    assert listed.inputs == (walk.evidence_id,)
     with pytest.raises(ValueError, match="evidence identifier"):
         estimate_fee(venue(), market(), LiquidityRole.TAKER, walk.notional, ("x",))
 
@@ -681,6 +685,8 @@ def test_the_time_of_use_and_the_limits_are_checked() -> None:
     data = validated(book())
     with pytest.raises(TypeError, match="whole number of nanoseconds"):
         depth_metrics(data, amount("0.01"), now_ns=float(NOW), limits=LIMITS)  # type: ignore[arg-type]
+    with pytest.raises(TypeError, match="whole number of nanoseconds"):
+        depth_metrics(data, amount("0.01"), now_ns=True, limits=LIMITS)
     with pytest.raises(TypeError, match="ValidationLimits"):
         depth_metrics(data, amount("0.01"), now_ns=NOW, limits=None)  # type: ignore[arg-type]
 
@@ -748,6 +754,8 @@ def test_market_data_of_another_kind_is_refused() -> None:
     funding_wanted: Validated[Ticker] = validated(funding("0.0001"))  # type: ignore[arg-type]
     with pytest.raises(TypeError, match="ticker or a book snapshot"):
         spread_metrics(funding_wanted, amount("0.01"), now_ns=NOW, limits=LIMITS)
+    with pytest.raises(TypeError, match="depth is computed from a book snapshot"):
+        depth_metrics(ticker_wanted, amount("0.01"), now_ns=NOW, limits=LIMITS)
 
 
 def test_parameters_that_are_not_finite_amounts_are_refused() -> None:
@@ -965,6 +973,12 @@ def test_a_refusal_states_its_cause_and_detail() -> None:
 def test_an_identifier_s_inputs_are_evidence_identifiers() -> None:
     with pytest.raises(ValueError, match="evidence identifier"):
         calculation_id("atp.quant.spread", "1.0", [], ["not-an-identifier"])
+    with pytest.raises(ValueError, match="evidence identifier"):
+        calculation_id("atp.quant.spread", "1.0", [], ["a" * 64 + "\n"])
+    first, second = "a" * 64, "b" * 64
+    assert calculation_id("a", "1.0", [], [first, second]) != calculation_id(
+        "a", "1.0", [], [second, first]
+    )
     assert calculation_id("a", "1.0", [], []) != calculation_id("b", "1.0", [], [])
 
 
@@ -1026,3 +1040,191 @@ def test_each_result_survives_its_written_form() -> None:
     assert [type(result) for result in results] == list(kinds)
     for result in results:
         assert type(result).from_json(result.to_json()) == result
+
+
+# Gate 3's run 3: arguments checked whatever the data (F-17), and a zero's sign (F-15).
+
+
+@pytest.mark.parametrize("increment", ["0", "-1"])
+def test_an_increment_not_above_zero_is_refused_whatever_the_data(
+    increment: str,
+) -> None:
+    # A sell limited above the best bid fills nothing, and a ticker without a bid has no spread:
+    # neither reaches the division that refuses such an increment.
+    with pytest.raises(ValueError, match="increment is above zero"):
+        walk_book(
+            validated(book()),
+            TakerSide.SELL,
+            amount("1"),
+            amount(increment),
+            amount("100.5"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+    with pytest.raises(ValueError, match="increment is above zero"):
+        spread_metrics(
+            validated(ticker(None, "101")),
+            amount(increment),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+
+
+@pytest.mark.parametrize(
+    ("rate", "side"),
+    [("-0.0002", PositionSide.LONG), ("0.0002", PositionSide.SHORT)],
+)
+def test_a_zero_funding_cost_has_no_sign(rate: str, side: PositionSide) -> None:
+    result = estimate_funding(
+        validated(funding(rate)), side, amount("0"), now_ns=NOW, limits=LIMITS
+    )
+    assert result.cost == 0 and not result.cost.is_signed()
+
+
+# The class search of Gate 3's run 3 (F-15): calls removed or replaced, and what else survived.
+
+
+class _Forged(Validated[BookSnapshot]):  # type: ignore[misc]
+    """Data passed off as validated: a subclass that skips the validator's check."""
+
+    def __post_init__(self, creator: object) -> None:
+        pass
+
+
+class _Limits(ValidationLimits):
+    contract_id = "test.limits"
+    contract_version = ValidationLimits.contract_version
+
+
+class _Venue(VenueSettings):
+    contract_id = "test.venue"
+    contract_version = VenueSettings.contract_version
+
+
+class _Market(MarketRef):
+    contract_id = "test.market"
+    contract_version = MarketRef.contract_version
+
+
+class _Amount(Decimal):
+    """A `Decimal` that `atp.numeric.amount` did not build."""
+
+
+class _Text(str):
+    """Text in the shape of an evidence identifier, of another type."""
+
+    __slots__ = ()
+
+
+def test_data_settings_amounts_and_names_of_a_subclass_are_refused() -> None:
+    # Each is checked as its exact type: a subclass could skip the validator's check, or change
+    # what a value means.
+    data = validated(book())
+    forged = _Forged(data.item, data.assessment, creator=None)
+    with pytest.raises(TypeError, match="only as atp.marketdata's Validated"):
+        depth_metrics(forged, amount("0.01"), now_ns=NOW, limits=LIMITS)
+    limits = _Limits.from_json(LIMITS.model_dump_json())
+    with pytest.raises(TypeError, match="ValidationLimits"):
+        depth_metrics(data, amount("0.01"), now_ns=NOW, limits=limits)
+    with pytest.raises(TypeError, match="built with atp.numeric.amount"):
+        depth_metrics(data, _Amount("0.01"), now_ns=NOW, limits=LIMITS)
+    settings = _Venue.from_json(venue().model_dump_json())
+    other = _Market.from_json(market().model_dump_json())
+    for given_venue, given_market in ((settings, market()), (venue(), other)):
+        with pytest.raises(TypeError, match="venue's settings and one of its markets"):
+            estimate_fee(given_venue, given_market, LiquidityRole.TAKER, amount("1"))
+    with pytest.raises(ValueError, match="evidence identifier"):
+        calculation_id("atp.quant.spread", "1.0", [], [_Text("a" * 64)])
+    with pytest.raises(TypeError, match="built with atp.numeric.amount"):
+        divide(_Amount("1"), amount("3"), amount("0.01"), Rounding.TOWARD_ZERO)
+
+
+def _digest(calculation: str, parameters: list[list[str]], inputs: list[str]) -> str:
+    form = json.dumps(
+        [CALCULATION_FORM, calculation, "1.0", parameters, inputs],
+        ensure_ascii=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(form.encode("ascii")).hexdigest()
+
+
+def test_each_result_s_identifier_has_the_form_the_specification_gives() -> None:
+    # The calculation's name and version, each parameter as its name and its text, and the
+    # inputs, in that order (`atp.calculation/1`; the spread's is checked above).
+    data = validated(book())
+    source = [data.item.evidence_id]
+    depth = depth_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS)
+    assert depth.evidence_id == _digest("atp.quant.depth", [["band", "0.01"]], source)
+    walk = walk_book(
+        data,
+        TakerSide.BUY,
+        amount("2"),
+        amount("0.01"),
+        amount("102"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert walk.evidence_id == _digest(
+        "atp.quant.slippage",
+        [
+            ["side", "buy"],
+            ["quantity", "2"],
+            ["increment", "0.01"],
+            ["limit_price", "102"],
+        ],
+        source,
+    )
+    fee = estimate_fee(
+        venue(), market(), LiquidityRole.TAKER, amount("1500"), (walk.evidence_id,)
+    )
+    assert fee.evidence_id == _digest(
+        "atp.quant.fee",
+        [
+            ["venue", "example"],
+            ["market", "BTC/USDT"],
+            ["instrument_type", "spot"],
+            ["role", "taker"],
+            ["tier", "base"],
+            ["rate", "0.002"],
+            ["source", "https://example.test/fees"],
+            ["as_of", "2026-11-01"],
+            ["notional", "1500"],
+        ],
+        [walk.evidence_id],
+    )
+    rate = validated(funding("0.0001"))
+    paid = estimate_funding(
+        rate, PositionSide.LONG, amount("1000"), now_ns=NOW, limits=LIMITS
+    )
+    assert paid.evidence_id == _digest(
+        "atp.quant.funding",
+        [["side", "long"], ["notional", "1000"]],
+        [rate.item.evidence_id],
+    )
+
+
+def test_a_sell_takes_a_level_at_its_limit() -> None:
+    # A level worse than the limit stops the walk; a level at it does not.
+    result = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("2"),
+        amount("0.01"),
+        amount("99.5"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert (result.filled, result.levels) == (amount("2"), 2)
+
+
+def test_a_side_without_a_level_inside_the_band_shows_no_depth() -> None:
+    # The mid is 50.5, so neither best level lies within 1% of it.
+    wide = validated(book(bids=[("1", "1")], asks=[("100", "1")]))
+    result = depth_metrics(wide, amount("0.01"), now_ns=NOW, limits=LIMITS)
+    assert (
+        result.bid_quantity,
+        result.bid_notional,
+        result.ask_quantity,
+        result.ask_notional,
+    ) == (amount("0"),) * 4
+    assert result.bid_complete and result.ask_complete

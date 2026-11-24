@@ -45,11 +45,12 @@ def walk_book(
     the order is filled, the side ends, or the next level is worse than `limit_price` where one
     is given (above it for a buy, below it for a sell). Every sum and product is exact; the
     average price, the value filled divided by the quantity filled, is rounded against the
-    taker to a multiple of `increment` (`atp.numeric.divide`: up for a buy, down for a sell), so
-    it is never better than the exact one, which is never better than the best price. Slippage
-    against the best price and impact against the mid are exact. A side without levels is
-    refused (MISSING_INPUT), as is a snapshot not VALID when validated or at `now_ns`, the time
-    of use, under `limits`; an order that fills nothing has no average or worst price.
+    taker to a multiple of `increment`, above zero (`atp.numeric.divide`: up for a buy, down
+    for a sell), so it is never better than the exact one, which is never better than the best
+    price. Slippage against the best price and impact against the mid are exact. A side without
+    levels is refused (MISSING_INPUT), as is a snapshot not VALID when validated or at
+    `now_ns`, the time of use, under `limits`; an order that fills nothing has no average or
+    worst price.
     """
     book = require_current(data, "book snapshot", now_ns, limits)
     if type(book) is not BookSnapshot:
@@ -62,6 +63,9 @@ def walk_book(
     check_amount(increment, "increment")
     if quantity <= 0:
         msg = "the quantity is above zero"
+        raise ValueError(msg)
+    if increment <= 0:
+        msg = "the increment is above zero"
         raise ValueError(msg)
     if limit_price is not None:
         check_amount(limit_price, "limit price")

@@ -132,6 +132,18 @@ def _finite(value: float) -> float:
     return value
 
 
+def _log_ratio(later: float, earlier: float) -> float:
+    """The natural logarithm of `later` over `earlier`. A ratio below what a float holds reads as
+    zero, whose logarithm is not defined, and is refused; one above reads as infinite, and the
+    result it gives is refused as beyond what a float holds (`_finite`)."""
+    ratio = later / earlier
+    if ratio == 0:
+        raise CalculationRefused(
+            RefusalCause.UNDEFINED, "a ratio of prices is beyond what a float holds"
+        )
+    return math.log(ratio)
+
+
 def _indicator(
     kind: IndicatorKind,
     periods: tuple[int, ...],
@@ -335,12 +347,12 @@ def log_return(
     close over the close `period` bars before it."""
     _check_period(period)
     series = _ends(bars, period, now_ns, limits)
-    value = math.log(_price(series[-1].close) / _price(series[0].close))
+    value = _log_ratio(_price(series[-1].close), _price(series[0].close))
     return _indicator(IndicatorKind.LOG_RETURN, (period,), value, series)
 
 
 def _log_returns(series: Sequence[OhlcvBar]) -> list[float]:
-    return [math.log(later / earlier) for earlier, later in pairwise(_closes(series))]
+    return [_log_ratio(later, earlier) for earlier, later in pairwise(_closes(series))]
 
 
 def volatility(
