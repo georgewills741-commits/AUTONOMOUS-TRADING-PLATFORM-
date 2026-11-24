@@ -120,8 +120,8 @@ Every test module, with its test functions and how many of them name a requireme
 | [`tests/numeric/test_context.py`](../../tests/numeric/test_context.py) | 16 | 3 | 13 |
 | [`tests/numeric/test_division.py`](../../tests/numeric/test_division.py) | 12 | 2 | 10 |
 | [`tests/numeric/test_rounding.py`](../../tests/numeric/test_rounding.py) | 10 | 2 | 8 |
-| [`tests/quant/test_exact.py`](../../tests/quant/test_exact.py) | 47 | 15 | 32 |
-| [`tests/quant/test_indicators.py`](../../tests/quant/test_indicators.py) | 39 | 12 | 27 |
+| [`tests/quant/test_exact.py`](../../tests/quant/test_exact.py) | 51 | 15 | 36 |
+| [`tests/quant/test_indicators.py`](../../tests/quant/test_indicators.py) | 44 | 12 | 32 |
 | [`tests/repository/test_no_secrets.py`](../../tests/repository/test_no_secrets.py) | 13 | 2 | 11 |
 | [`tests/repository/test_project.py`](../../tests/repository/test_project.py) | 3 | 3 | 0 |
 | [`tests/repository/test_structure.py`](../../tests/repository/test_structure.py) | 38 | 9 | 29 |

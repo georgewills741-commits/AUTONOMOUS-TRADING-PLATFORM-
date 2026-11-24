@@ -7,6 +7,7 @@ import hashlib
 import itertools
 import json
 import math
+import sys
 from collections.abc import Callable, Sequence
 from decimal import Decimal
 
@@ -598,8 +599,8 @@ def test_a_correlation_s_identifier_digests_the_order_of_its_series() -> None:
 
 
 def test_a_sum_is_rounded_once() -> None:
-    # These closes' sum rounded once (`math.fsum`) is 134086961822059250; Python's own `sum`,
-    # whose compensation is not exact, gives 134086961822059230.
+    # These closes' sum rounded once (`math.fsum`) is 134086961822059248; Python's own `sum`,
+    # whose compensation is not exact, gives 134086961822059232.
     closes = ["4.216507376378148e-19", "3.1896766332234296e16", "1.0219019548982494e17"]
     value = sma(series(closes), 3, now_ns=USE, limits=LIMITS).value
     assert value == math.fsum(float(close) for close in closes) / 3
@@ -618,21 +619,29 @@ CLOSES = st.builds(
 def test_every_indicator_gives_a_finite_value_or_a_refusal(
     closes: list[str], data: st.DataObject
 ) -> None:
-    # Gate 3's F-14: an indicator raised ValueError on validated bars; no exception but a
-    # refusal leaves an indicator, and no value it gives is infinite or not a number.
+    # Gate 3's F-14 and F-21: at every period its bars allow, no exception but a refusal leaves
+    # an indicator, and no value it gives is infinite or not a number.
     others = data.draw(st.lists(CLOSES, min_size=len(closes), max_size=len(closes)))
     bars, other = series(closes), series(others, base="ETH")
-    last = len(bars) - 1
+    count = len(bars)
+
+    def period(low: int, high: int) -> int:
+        return data.draw(st.integers(low, high))
+
+    slow = period(2, count)
+    fast, signal = period(1, slow - 1), period(1, count - slow + 1)
     calls: list[Callable[[], object]] = [
-        lambda: sma(bars, 2, now_ns=USE, limits=LIMITS),
-        lambda: ema(bars, 2, now_ns=USE, limits=LIMITS),
-        lambda: rsi(bars, 2, now_ns=USE, limits=LIMITS),
-        lambda: macd(bars, 1, 2, 2, now_ns=USE, limits=LIMITS),
-        lambda: atr(bars, 2, now_ns=USE, limits=LIMITS),
-        lambda: simple_return(bars, last, now_ns=USE, limits=LIMITS),
-        lambda: log_return(bars, last, now_ns=USE, limits=LIMITS),
-        lambda: volatility(bars, 2, now_ns=USE, limits=LIMITS),
-        lambda: correlation(bars, other, 2, now_ns=USE, limits=LIMITS),
+        lambda: sma(bars, period(1, count), now_ns=USE, limits=LIMITS),
+        lambda: ema(bars, period(1, count), now_ns=USE, limits=LIMITS),
+        lambda: rsi(bars, period(1, count - 1), now_ns=USE, limits=LIMITS),
+        lambda: macd(bars, fast, slow, signal, now_ns=USE, limits=LIMITS),
+        lambda: atr(bars, period(1, count - 1), now_ns=USE, limits=LIMITS),
+        lambda: simple_return(bars, period(1, count - 1), now_ns=USE, limits=LIMITS),
+        lambda: log_return(bars, period(1, count - 1), now_ns=USE, limits=LIMITS),
+        lambda: volatility(bars, period(2, count - 1), now_ns=USE, limits=LIMITS),
+        lambda: correlation(
+            bars, other, period(2, count - 1), now_ns=USE, limits=LIMITS
+        ),
     ]
     for call in calls:
         try:
@@ -739,3 +748,131 @@ def test_a_correlation_s_time_is_the_end_of_its_last_bars() -> None:
     btc, eth = series(_closes(1, 2, 3)), series(_closes(3, 5, 4), base="ETH")
     pair = correlation(btc, eth, 2, now_ns=USE, limits=LIMITS)
     assert pair.time_ns == START + 3 * INTERVAL * SECOND
+
+
+# Gate 3's run 4: ratios and prices outside a float's normal range (F-21, F-25), closes read as
+# closes (F-22), and the interval a result carries (F-23).
+
+
+@pytest.mark.parametrize(
+    ("first", "second", "period"),
+    [
+        (["1", "2", "1e-200", "1e200"], ["1", "2", "1", "1"], 3),
+        (["1", "2", "1", "1"], ["1", "2", "1e-200", "1e200"], 3),
+        (["1", "2", "3", "1e-200", "1e200"], ["1", "2", "3", "1", "1"], 4),
+    ],
+)
+def test_a_correlation_over_a_ratio_beyond_a_float_is_refused_at_any_period(
+    first: list[str], second: list[str], period: int
+) -> None:
+    # An infinite log return made the mean infinite, and its products with the other series'
+    # deviations of both signs gave math.fsum both infinities, which it refuses with ValueError.
+    with pytest.raises(CalculationRefused) as refused:
+        correlation(
+            series(first), series(second, base="ETH"), period, now_ns=USE, limits=LIMITS
+        )
+    assert refused.value.cause is RefusalCause.UNDEFINED
+
+
+def test_a_ratio_of_closes_below_a_float_s_normal_range_is_refused() -> None:
+    # 7e-170 over 1e154 is held as 5e-324, one bit, whose logarithm is -744.44 against -744.09.
+    with pytest.raises(CalculationRefused) as refused:
+        log_return(series(["1e154", "7e-170"]), 1, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.UNDEFINED
+    with pytest.raises(CalculationRefused):
+        log_return(series(["2", "4.4e-308"]), 1, now_ns=USE, limits=LIMITS)
+    # The smallest normal float, and the largest, are ratios a float holds in full.
+    lowest = log_return(
+        series(["2", "4.450147717014403e-308"]), 1, now_ns=USE, limits=LIMITS
+    )
+    assert lowest.value == math.log(sys.float_info.min)
+    highest = log_return(
+        series(["1", "1.7976931348623157e308"]), 1, now_ns=USE, limits=LIMITS
+    )
+    assert highest.value == math.log(sys.float_info.max)
+
+
+def test_a_price_below_a_float_s_normal_range_is_refused() -> None:
+    with pytest.raises(CalculationRefused) as refused:
+        sma(series(["2.2e-308"]), 1, now_ns=USE, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.UNDEFINED
+    lowest = sma(series(["2.2250738585072014e-308"]), 1, now_ns=USE, limits=LIMITS)
+    assert lowest.value == sys.float_info.min
+
+
+# Bars whose open, high, and low differ from their close, each by its own amount.
+_OFFSETS = [
+    ("-0.5", "1", "1"),
+    ("0.25", "1.5", "0.5"),
+    ("-0.75", "1.25", "1.5"),
+    ("0.5", "2", "1.25"),
+    ("-0.25", "1.75", "0.75"),
+    ("0.75", "1.1", "2"),
+]
+
+
+def _ohlc(closes: Sequence[int]) -> list[Ohlc]:
+    return [
+        (
+            str(close + Decimal(opened)),
+            str(close + Decimal(high)),
+            str(close - Decimal(low)),
+            str(close),
+        )
+        for close, (opened, high, low) in zip(closes, _OFFSETS, strict=True)
+    ]
+
+
+def test_an_indicator_of_closes_reads_the_closes() -> None:
+    first, second = [10, 11, 13, 12, 14, 13], [20, 22, 21, 25, 24, 26]
+    bars, other = series(_ohlc(first)), series(_ohlc(second), base="ETH")
+    plain = series([str(close) for close in first])
+    plain_other = series([str(close) for close in second], base="ETH")
+    calls: dict[
+        str,
+        Callable[
+            [Sequence[Validated[OhlcvBar]], Sequence[Validated[OhlcvBar]]], object
+        ],
+    ] = {
+        "sma": lambda b, o: sma(b, 3, now_ns=USE, limits=LIMITS),
+        "ema": lambda b, o: ema(b, 3, now_ns=USE, limits=LIMITS),
+        "rsi": lambda b, o: rsi(b, 3, now_ns=USE, limits=LIMITS),
+        "macd": lambda b, o: macd(b, 2, 3, 2, now_ns=USE, limits=LIMITS),
+        "simple_return": lambda b, o: simple_return(b, 5, now_ns=USE, limits=LIMITS),
+        "log_return": lambda b, o: log_return(b, 5, now_ns=USE, limits=LIMITS),
+        "volatility": lambda b, o: volatility(b, 3, now_ns=USE, limits=LIMITS),
+        "correlation": lambda b, o: correlation(b, o, 3, now_ns=USE, limits=LIMITS),
+    }
+    for name, call in calls.items():
+        results, expected = call(bars, other), call(plain, plain_other)
+        values = results if isinstance(results, tuple) else (results,)
+        wanted = expected if isinstance(expected, tuple) else (expected,)
+        assert [item.value for item in values] == [item.value for item in wanted], name
+
+
+def _hourly(closes: Sequence[str], base: str = "BTC") -> list[Validated[OhlcvBar]]:
+    # `_bar` opens bar `index` at `index` minutes, so every sixtieth index opens an hour apart.
+    validator = MarketDataValidator(LIMITS)
+    result: list[Validated[OhlcvBar]] = []
+    for index, price in enumerate(closes):
+        item = _bar(
+            (price, price, price, price), 60 * index, base, closed=True, interval=3600
+        )
+        checked = validator.validate(
+            item,
+            now_ns=START + (index + 1) * 3600 * SECOND,
+            drifting_venues=frozenset(),
+        )
+        assert isinstance(checked, Validated), checked
+        result.append(checked)
+    return result
+
+
+def test_an_indicator_and_a_correlation_carry_their_bars_interval() -> None:
+    first, second = _hourly(["1", "2", "3"]), _hourly(["3", "5", "4"], base="ETH")
+    use = START + 3 * 3600 * SECOND
+    assert sma(first, 2, now_ns=use, limits=LIMITS).interval_seconds == 3600
+    assert (
+        correlation(first, second, 2, now_ns=use, limits=LIMITS).interval_seconds
+        == 3600
+    )

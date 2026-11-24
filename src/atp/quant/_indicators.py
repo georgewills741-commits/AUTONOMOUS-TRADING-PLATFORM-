@@ -5,8 +5,9 @@ This is the one module of the engine that computes in floats, and it builds no a
 reaches the platform only through the names the structure test lists for it, none of which
 builds one, so never `atp.numeric`, which alone builds amounts; and `atp.numeric.amount` and
 every amount field of a contract refuse a float. A bar's prices become floats as they are read
-(`_price`), each the float nearest its exact value; sums are taken with `math.fsum`, rounded
-once. The results are the same for the same bars on the same platform; across platforms the
+(`_price`), each the float nearest its exact value, and a price outside a float's normal
+range, where a float holds it with fewer bits or not at all, is refused, as is such a ratio of
+prices (`_log_ratio`); sums are taken with `math.fsum`, rounded once. The results are the same for the same bars on the same platform; across platforms the
 last digits can differ (the Stage 2 plan's risks), so a result's evidence identifier digests its
 inputs and parameters, never its value.
 
@@ -44,6 +45,9 @@ INDICATOR_VERSION: Final = "1.0"
 """The version of this module's definitions; a change to any of them is a new version."""
 
 _NANOSECONDS_PER_SECOND: Final = 1_000_000_000
+_SMALLEST_NORMAL: Final = 2.2250738585072014e-308
+"""The smallest normal float, `sys.float_info.min`, which this module may not import (the
+structure test): below it a float holds a value with fewer bits."""
 
 
 def _check_period(period: int, what: str = "period", minimum: int = 1) -> None:
@@ -102,7 +106,7 @@ def _series(
 
 def _price(value: Decimal) -> float:
     number = float(value)
-    if not math.isfinite(number) or number <= 0:
+    if not math.isfinite(number) or number < _SMALLEST_NORMAL:
         raise CalculationRefused(
             RefusalCause.UNDEFINED, "a price is beyond what a float holds"
         )
@@ -133,11 +137,12 @@ def _finite(value: float) -> float:
 
 
 def _log_ratio(later: float, earlier: float) -> float:
-    """The natural logarithm of `later` over `earlier`. A ratio below what a float holds reads as
-    zero, whose logarithm is not defined, and is refused; one above reads as infinite, and the
-    result it gives is refused as beyond what a float holds (`_finite`)."""
+    """The natural logarithm of `later` over `earlier`. A ratio outside a float's normal range is
+    refused: below it, a float holds the ratio with fewer bits or reads it as zero, whose
+    logarithm is not defined; above it, a float reads it as infinite, and the sums an
+    indicator takes of such logarithms are not defined either."""
     ratio = later / earlier
-    if ratio == 0:
+    if ratio < _SMALLEST_NORMAL or not math.isfinite(ratio):
         raise CalculationRefused(
             RefusalCause.UNDEFINED, "a ratio of prices is beyond what a float holds"
         )

@@ -1228,3 +1228,87 @@ def test_a_side_without_a_level_inside_the_band_shows_no_depth() -> None:
         result.ask_notional,
     ) == (amount("0"),) * 4
     assert result.bid_complete and result.ask_complete
+
+
+# Gate 3's run 4: each side's completeness, the schedule of the market's type (F-22), the
+# arguments a result repeats (F-23), and every input of an identifier (F-24).
+
+
+def test_each_side_s_completeness_is_counted_on_that_side() -> None:
+    # Every level inside the band: neither side is complete, whatever the other side's count.
+    for bids, asks in (
+        ([("100", "1"), ("99.9", "1"), ("99.8", "1")], [("101", "1"), ("101.1", "1")]),
+        ([("100", "1"), ("99.9", "1")], [("101", "1"), ("101.1", "1"), ("101.2", "1")]),
+    ):
+        data = validated(book(bids=bids, asks=asks))
+        result = depth_metrics(data, amount("0.05"), now_ns=NOW, limits=LIMITS)
+        assert (result.bid_complete, result.ask_complete) == (False, False)
+
+
+def test_a_fee_takes_the_schedule_of_its_market_s_type() -> None:
+    settings = VenueSettings.from_json(
+        json.dumps(
+            {
+                "venue": "example",
+                "instrument_types": ["spot", "perpetual"],
+                "fees": [
+                    {
+                        "instrument_type": "spot",
+                        "maker": "0.001",
+                        "taker": "0.002",
+                        "source": "https://example.test/fees",
+                        "as_of": "2026-11-01",
+                    },
+                    {
+                        "instrument_type": "perpetual",
+                        "maker": "0.0002",
+                        "taker": "0.0005",
+                        "source": "https://example.test/perpetual-fees",
+                        "as_of": "2026-10-15",
+                    },
+                ],
+            }
+        )
+    )
+    result = estimate_fee(
+        settings, market("perpetual"), LiquidityRole.TAKER, amount("1000")
+    )
+    assert result.schedule == settings.fees[1]
+    assert (result.rate, str(result.fee)) == (amount("0.0005"), "0.5000")
+
+
+def test_each_result_repeats_the_arguments_it_was_given() -> None:
+    # Each argument given a value that no other field of its result holds.
+    walk = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("10"),
+        amount("0.5"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert (walk.side, walk.quantity, walk.increment) == (
+        TakerSide.SELL,
+        amount("10"),
+        amount("0.5"),
+    )
+    assert walk.filled == amount("8")
+    cost = estimate_funding(
+        validated(funding("0.0001")),
+        PositionSide.SHORT,
+        amount("5000"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert (cost.side, cost.notional) == (PositionSide.SHORT, amount("5000"))
+    fee = estimate_fee(venue(), market(), LiquidityRole.MAKER, amount("1000"))
+    assert (fee.role, fee.notional) == (LiquidityRole.MAKER, amount("1000"))
+    spread = spread_metrics(
+        validated(ticker("100", "101")), amount("0.0001"), now_ns=NOW, limits=LIMITS
+    )
+    assert spread.increment == amount("0.0001")
+
+
+def test_every_input_of_an_identifier_is_checked() -> None:
+    with pytest.raises(ValueError, match="evidence identifier"):
+        calculation_id("atp.quant.spread", "1.0", [], ["a" * 64, "not-an-identifier"])
