@@ -377,6 +377,29 @@ def test_bars_out_of_order_mixed_or_open_are_wrong_arguments() -> None:
         sma(bars, 0, now_ns=USE, limits=LIMITS)
 
 
+def test_a_bar_given_twice_or_within_its_interval_is_a_wrong_argument() -> None:
+    # Gate 3's F-26: each bar opens one interval after the bar before, so a bar given twice,
+    # and one that opens half an interval after the bar before, are wrong arguments.
+    bars = series(_closes(1, 2, 3))
+    with pytest.raises(ValueError, match="one per interval"):
+        sma([bars[0], bars[0], bars[1]], 3, now_ns=USE, limits=LIMITS)
+    # Bars of two minutes, which `_bar` opens a minute apart.
+    validator = MarketDataValidator(LIMITS)
+    halves: list[Validated[OhlcvBar]] = []
+    for index in (0, 1):
+        half = validator.validate(
+            _bar(
+                ("1", "1", "1", "1"), index, "BTC", closed=True, interval=2 * INTERVAL
+            ),
+            now_ns=START + (index + 2) * INTERVAL * SECOND,
+            drifting_venues=frozenset(),
+        )
+        assert isinstance(half, Validated) and half.eligible
+        halves.append(half)
+    with pytest.raises(ValueError, match="one per interval"):
+        sma(halves, 2, now_ns=USE, limits=LIMITS)
+
+
 def test_a_first_bar_of_another_market_or_interval_is_a_wrong_argument() -> None:
     bars = series(_closes(1, 2, 3))
     first = series(_closes(1, 2, 3), base="ETH")[0]
@@ -851,8 +874,10 @@ def test_a_ratio_of_closes_below_a_float_s_normal_range_is_refused() -> None:
     with pytest.raises(CalculationRefused) as refused:
         log_return(series(["1e154", "7e-170"]), 1, now_ns=USE, limits=LIMITS)
     assert refused.value.cause is RefusalCause.UNDEFINED
-    with pytest.raises(CalculationRefused):
-        log_return(series(["2", "4.4e-308"]), 1, now_ns=USE, limits=LIMITS)
+    # Ratios below the smallest normal float: one well below, and the float just below it.
+    for closes in (["2", "4.4e-308"], ["2", "4.450147717014402e-308"]):
+        with pytest.raises(CalculationRefused):
+            log_return(series(closes), 1, now_ns=USE, limits=LIMITS)
     # The smallest normal float, and the largest, are ratios a float holds in full.
     lowest = log_return(
         series(["2", "4.450147717014403e-308"]), 1, now_ns=USE, limits=LIMITS
@@ -864,10 +889,30 @@ def test_a_ratio_of_closes_below_a_float_s_normal_range_is_refused() -> None:
     assert highest.value == math.log(sys.float_info.max)
 
 
-def test_a_price_below_a_float_s_normal_range_is_refused() -> None:
+@pytest.mark.parametrize("name", ["volatility", "correlation"])
+def test_a_one_bar_ratio_is_the_later_close_over_the_earlier(name: str) -> None:
+    # Gate 3's F-27: a one-bar ratio of 1e-307 over 10, below a float's normal range, is
+    # refused, and one of 1e308 over 1, within it, is not; their inverses are the opposite.
+    other = series(["1", "2", "1", "3"], base="ETH")
+
+    def call(closes: list[str]) -> float:
+        bars = series(closes)
+        if name == "volatility":
+            return volatility(bars, 3, now_ns=USE, limits=LIMITS).value
+        return correlation(bars, other, 3, now_ns=USE, limits=LIMITS).value
+
     with pytest.raises(CalculationRefused) as refused:
-        sma(series(["2.2e-308"]), 1, now_ns=USE, limits=LIMITS)
+        call(["10", "1e-307", "1e-307", "1.5e-307"])
     assert refused.value.cause is RefusalCause.UNDEFINED
+    assert math.isfinite(call(["1", "1e308", "1e308", "1.5e308"]))
+
+
+def test_a_price_below_a_float_s_normal_range_is_refused() -> None:
+    # A price well below the smallest normal float, and the float just below it.
+    for close in ("2.2e-308", "2.225073858507201e-308"):
+        with pytest.raises(CalculationRefused) as refused:
+            sma(series([close]), 1, now_ns=USE, limits=LIMITS)
+        assert refused.value.cause is RefusalCause.UNDEFINED
     lowest = sma(series(["2.2250738585072014e-308"]), 1, now_ns=USE, limits=LIMITS)
     assert lowest.value == sys.float_info.min
 
