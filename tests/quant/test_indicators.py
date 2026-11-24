@@ -876,3 +876,40 @@ def test_an_indicator_and_a_correlation_carry_their_bars_interval() -> None:
         correlation(first, second, 2, now_ns=use, limits=LIMITS).interval_seconds
         == 3600
     )
+
+
+# The class search of Gate 3's run 4 (F-22): each indicator's kind and periods, and MACD's signal
+# over its own period.
+
+
+def test_each_indicator_reports_its_kind_and_periods() -> None:
+    bars = series(_closes(1, 2, 4, 3, 5, 6))
+    results = {
+        IndicatorKind.SMA: sma(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.EMA: ema(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.RSI: rsi(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.ATR: atr(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.SIMPLE_RETURN: simple_return(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.LOG_RETURN: log_return(bars, 3, now_ns=USE, limits=LIMITS),
+        IndicatorKind.VOLATILITY: volatility(bars, 3, now_ns=USE, limits=LIMITS),
+    }
+    for kind, result in results.items():
+        assert (result.indicator, result.periods) == (kind, (3,))
+    parts = macd(bars, 1, 3, 2, now_ns=USE, limits=LIMITS)
+    assert [(part.indicator, part.periods) for part in parts] == [
+        (IndicatorKind.MACD_LINE, (1, 3, 2)),
+        (IndicatorKind.MACD_SIGNAL, (1, 3, 2)),
+        (IndicatorKind.MACD_HISTOGRAM, (1, 3, 2)),
+    ]
+
+
+def test_macd_s_signal_smooths_the_line_over_its_own_period() -> None:
+    # Fast, slow, and signal periods all different. The fast EMA of period 1 is the closes; the
+    # slow one of period 3 starts at 7/3 and gives 8/3, 23/6, and 59/12; so the line is 5/3,
+    # 1/3, 7/6, and 13/12; the signal of period 2 starts at 1 and gives 10/9 and 59/54.
+    line, signal, histogram = macd(
+        series(_closes(1, 2, 4, 3, 5, 6)), 1, 3, 2, now_ns=USE, limits=LIMITS
+    )
+    assert line.value == pytest.approx(13 / 12)
+    assert signal.value == pytest.approx(59 / 54)
+    assert histogram.value == pytest.approx(-1 / 108)

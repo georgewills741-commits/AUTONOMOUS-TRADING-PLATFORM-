@@ -1312,3 +1312,71 @@ def test_each_result_repeats_the_arguments_it_was_given() -> None:
 def test_every_input_of_an_identifier_is_checked() -> None:
     with pytest.raises(ValueError, match="evidence identifier"):
         calculation_id("atp.quant.spread", "1.0", [], ["a" * 64, "not-an-identifier"])
+
+
+# The class search of Gate 3's run 4 (F-22): a book missing a side, and the walk's quantity and
+# limit price.
+
+
+@pytest.mark.parametrize("side", ["bids", "asks"])
+def test_a_book_without_one_side_has_no_spread_and_no_depth(side: str) -> None:
+    data = validated(book(bids=[]) if side == "bids" else book(asks=[]))
+    with pytest.raises(CalculationRefused) as refused:
+        spread_metrics(data, amount("0.0001"), now_ns=NOW, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+    with pytest.raises(CalculationRefused) as refused:
+        depth_metrics(data, amount("0.01"), now_ns=NOW, limits=LIMITS)
+    assert refused.value.cause is RefusalCause.MISSING_INPUT
+
+
+def test_a_sell_on_a_book_without_asks_has_no_mid_and_no_impact() -> None:
+    result = walk_book(
+        validated(book(asks=[])),
+        TakerSide.SELL,
+        amount("1"),
+        amount("0.01"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert result.mid is None and result.impact is None
+
+
+def test_a_walk_s_identifier_digests_the_quantity_asked() -> None:
+    # Both orders, on one book, exceed its bids' 8 and fill 8 at 3 levels: only the quantity
+    # asked differs.
+    data = validated(book())
+    first, second = (
+        walk_book(
+            data,
+            TakerSide.SELL,
+            amount(quantity),
+            amount("0.01"),
+            now_ns=NOW,
+            limits=LIMITS,
+        )
+        for quantity in ("10", "20")
+    )
+    assert (first.filled, first.levels) == (second.filled, second.levels)
+    assert first.evidence_id != second.evidence_id
+
+
+def test_a_walk_repeats_its_limit_price() -> None:
+    limited = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("10"),
+        amount("0.01"),
+        amount("99"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert (limited.limit_price, limited.worst) == (amount("99"), amount("99.5"))
+    free = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("10"),
+        amount("0.01"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert free.limit_price is None
