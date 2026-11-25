@@ -13,6 +13,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
+import atp.quant
 from atp.config import VenueSettings
 from atp.contracts import Contract
 from atp.marketdata import (
@@ -1164,6 +1165,11 @@ def test_data_settings_amounts_and_names_of_a_subclass_are_refused() -> None:
         calculation_id("atp.quant.spread", "1.0", [], [_Text("a" * 64)])
     with pytest.raises(TypeError, match="built with atp.numeric.amount"):
         divide(_Amount("1"), amount("3"), amount("0.01"), Rounding.TOWARD_ZERO)
+
+
+def test_every_name_the_package_exports_exists() -> None:
+    # The class search of Gate 3's run 7: the names `atp.quant` exports, each one it has.
+    assert all(hasattr(atp.quant, name) for name in atp.quant.__all__)
 
 
 def test_each_refusal_cause_and_rounding_direction_has_its_text() -> None:

@@ -50,6 +50,7 @@ _U7_SPREAD = "src/atp/quant/_spread.py"
 _U7_SLIPPAGE = "src/atp/quant/_slippage.py"
 _U7_FEES = "src/atp/quant/_fees.py"
 _U7_INDICATORS = "src/atp/quant/_indicators.py"
+_U7_PACKAGE = "src/atp/quant/__init__.py"
 # The structure test's sets of names, in their order there: each entry that drops one is made
 # from these.
 _CCXT_CREDENTIALS = (
@@ -7262,6 +7263,13 @@ MUTATIONS: list[Mutation] = [
         _U7_ROUNDING,
         '    TOWARD_ZERO = "toward zero"\n',
         '    TOWARD_ZERO = "toward-zero"\n',
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 package: an exported name that does not exist",
+        _U7_PACKAGE,
+        '    "sma",\n',
+        '    "sma~",\n',
         TESTS,
     ),
     Mutation(
