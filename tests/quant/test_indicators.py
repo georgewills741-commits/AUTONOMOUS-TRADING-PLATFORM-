@@ -797,6 +797,15 @@ def test_an_indicator_s_and_a_correlation_s_identifiers_have_their_form() -> Non
         [["period", "2"]],
         [bar.item.evidence_id for bar in (*btc, *eth)],
     )
+    # Gate 3's F-30: an indicator's several periods, joined by commas, as MACD's are, so that
+    # MACD(1, 2, 34) and MACD(1, 23, 4) cannot share one identifier.
+    bars = series(_closes(1, 3, 2, 5))
+    line, _, _ = macd(bars, 2, 3, 2, now_ns=USE, limits=LIMITS)
+    assert line.evidence_id == digest(
+        "atp.quant.indicator",
+        [["indicator", "macd-line"], ["periods", "2,3,2"]],
+        [bar.item.evidence_id for bar in bars],
+    )
 
 
 def test_a_close_beyond_what_a_float_holds_is_refused_not_read_as_infinite() -> None:

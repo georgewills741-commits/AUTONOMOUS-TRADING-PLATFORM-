@@ -7230,6 +7230,13 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U7 identifier: an indicator's periods joined without a separator",
+        _U7_INDICATORS,
+        '        ("periods", ",".join(str(period) for period in periods)),\n',
+        '        ("periods", "".join(str(period) for period in periods)),\n',
+        TESTS,
+    ),
+    Mutation(
         "S2-U7 correlation: the time of the bar before the last",
         _U7_INDICATORS,
         "        time_ns=bar_end_ns(first[-1]),\n",
