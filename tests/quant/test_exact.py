@@ -823,6 +823,8 @@ def test_parameters_that_are_not_finite_amounts_are_refused() -> None:
 
 @pytest.mark.req("MKD-005", "MKD-010")
 def test_a_result_s_identifier_digests_its_calculation_parameters_and_inputs() -> None:
+    # The form the specification names, and the tests below build their digests from (F-33).
+    assert CALCULATION_FORM == "atp.calculation/1"
     data = validated(ticker("100", "101"))
     result = spread_metrics(data, amount("0.0001"), now_ns=NOW, limits=LIMITS)
     form = json.dumps(
@@ -956,6 +958,8 @@ def test_the_walk_funding_and_depth_identifiers_digest_their_parameters() -> Non
         walk(TakerSide.BUY, "2", "0.01", None),
         walk(TakerSide.BUY, "1", "0.001", None),
         walk(TakerSide.BUY, "1", "0.01", "200"),
+        # A limit of 1, whose text a walk without a limit must not digest (Gate 3's F-32).
+        walk(TakerSide.BUY, "1", "0.01", "1"),
     ):
         assert other != first
     assert walk(TakerSide.BUY, "1", "0.01", "300") != walk(
@@ -1162,6 +1166,23 @@ def test_data_settings_amounts_and_names_of_a_subclass_are_refused() -> None:
         divide(_Amount("1"), amount("3"), amount("0.01"), Rounding.TOWARD_ZERO)
 
 
+def test_each_refusal_cause_and_rounding_direction_has_its_text() -> None:
+    # Gate 3's F-34: the texts a refusal's message carries, and the directions of rounding's.
+    assert {cause.name: cause.value for cause in RefusalCause} == {
+        "INELIGIBLE_INPUT": "ineligible-input",
+        "MISSING_INPUT": "missing-input",
+        "INSUFFICIENT_DATA": "insufficient-data",
+        "GAP": "gap",
+        "UNDEFINED": "undefined",
+    }
+    assert {direction.name: direction.value for direction in Rounding} == {
+        "TOWARD_ZERO": "toward zero",
+        "AWAY_FROM_ZERO": "away from zero",
+        "TOWARD_NEGATIVE_INFINITY": "toward negative infinity",
+        "TOWARD_POSITIVE_INFINITY": "toward positive infinity",
+    }
+
+
 def _digest(calculation: str, parameters: list[list[str]], inputs: list[str]) -> str:
     form = json.dumps(
         [CALCULATION_FORM, calculation, "1.0", parameters, inputs],
@@ -1194,6 +1215,26 @@ def test_each_result_s_identifier_has_the_form_the_specification_gives() -> None
             ["quantity", "2"],
             ["increment", "0.01"],
             ["limit_price", "102"],
+        ],
+        source,
+    )
+    # Gate 3's F-32: a walk without a limit price digests the text none, which no price reads as.
+    free = walk_book(
+        data,
+        TakerSide.BUY,
+        amount("2"),
+        amount("0.01"),
+        None,
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert free.evidence_id == _digest(
+        "atp.quant.slippage",
+        [
+            ["side", "buy"],
+            ["quantity", "2"],
+            ["increment", "0.01"],
+            ["limit_price", "none"],
         ],
         source,
     )
