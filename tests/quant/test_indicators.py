@@ -7,6 +7,7 @@ import hashlib
 import itertools
 import json
 import math
+import statistics
 import sys
 from collections.abc import Callable, Sequence
 from decimal import Decimal
@@ -220,8 +221,10 @@ def test_macd_needs_slow_plus_signal_less_one_bars_and_a_fast_below_the_slow() -
     with pytest.raises(CalculationRefused) as refused:
         macd(series(_closes(1, 3, 2)), 2, 3, 2, now_ns=USE, limits=LIMITS)
     assert refused.value.cause is RefusalCause.INSUFFICIENT_DATA
-    with pytest.raises(ValueError, match="fast period is below"):
-        macd(series(_closes(1, 3, 2, 5)), 3, 3, 2, now_ns=USE, limits=LIMITS)
+    # A fast period equal to the slow one, and one above it.
+    for fast in (3, 4):
+        with pytest.raises(ValueError, match="fast period is below"):
+            macd(series(_closes(1, 3, 2, 5, 4)), fast, 3, 2, now_ns=USE, limits=LIMITS)
 
 
 @pytest.mark.req("QNT-002")
@@ -295,6 +298,15 @@ def test_correlation_needs_returns_that_vary_and_aligned_bars() -> None:
     shifted = series(_closes(1, 2, 4, 8), base="ETH")[1:]
     with pytest.raises(ValueError, match="open at the same times"):
         correlation(series(_closes(1, 2, 4)), shifted, 2, now_ns=USE, limits=LIMITS)
+    # The first series opening later than the second, as well as earlier.
+    with pytest.raises(ValueError, match="open at the same times"):
+        correlation(
+            series(_closes(1, 2, 4, 8))[1:],
+            series(_closes(1, 2, 4), base="ETH"),
+            2,
+            now_ns=USE,
+            limits=LIMITS,
+        )
 
 
 @pytest.mark.req("MKD-012")
@@ -514,6 +526,22 @@ def test_values_beyond_what_a_float_holds_are_refused(
     with pytest.raises(CalculationRefused) as refused:
         calculate(series(prices))
     assert refused.value.cause is RefusalCause.UNDEFINED
+
+
+def test_a_correlation_reads_each_market_s_returns_against_its_own_mean() -> None:
+    # The class search of Gate 3's run 5: two markets whose returns' means differ, and whose
+    # correlation lies between the bounds, against Python's own Pearson correlation.
+    first, second = ["100", "110", "99", "105", "100"], ["50", "51", "53", "52", "55"]
+
+    def returns(closes: list[str]) -> list[float]:
+        return [math.log(float(b) / float(a)) for a, b in itertools.pairwise(closes)]
+
+    pair = correlation(
+        series(first), series(second, base="ETH"), 4, now_ns=USE, limits=LIMITS
+    )
+    expected = statistics.correlation(returns(first), returns(second))
+    assert pair.value == pytest.approx(expected, rel=1e-12)
+    assert -1 < pair.value < 0
 
 
 def test_a_correlation_rounded_below_minus_one_is_minus_one() -> None:

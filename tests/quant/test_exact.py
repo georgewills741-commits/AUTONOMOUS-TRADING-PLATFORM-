@@ -46,6 +46,7 @@ from atp.quant import (
     depth_metrics,
     estimate_fee,
     estimate_funding,
+    sma,
     spread_metrics,
     walk_book,
 )
@@ -332,6 +333,18 @@ def test_a_limit_price_below_one_is_a_limit() -> None:
     )
     assert result.filled == amount("1")
     assert result.complete
+    # A limit price no higher than the increment is still a limit above zero.
+    at_increment = walk_book(
+        validated(book()),
+        TakerSide.SELL,
+        amount("1"),
+        amount("0.01"),
+        amount("0.01"),
+        now_ns=NOW,
+        limits=LIMITS,
+    )
+    assert at_increment.filled == amount("1")
+    assert at_increment.limit_price == amount("0.01")
 
 
 def test_a_limit_price_stops_the_walk() -> None:
@@ -532,9 +545,19 @@ def test_a_fee_without_a_schedule_is_refused_never_zero() -> None:
     assert refused.value.cause is RefusalCause.MISSING_INPUT
 
 
+def test_an_indicator_given_a_validated_item_other_than_a_bar_raises() -> None:
+    # The class search of Gate 3's run 5: a ticker, though validated, is not a bar.
+    item: object = validated(ticker("99", "101"))
+    with pytest.raises(TypeError, match="bars validated by atp.marketdata"):
+        sma([item], 1, now_ns=NOW, limits=LIMITS)  # type: ignore[list-item]
+
+
 def test_a_fee_for_another_venue_s_market_or_a_negative_notional_is_refused() -> None:
     with pytest.raises(ValueError, match="not of the venue"):
         estimate_fee(venue(), market(venue="other"), LiquidityRole.TAKER, amount("1"))
+    # A venue named before the settings' venue, as well as one named after it.
+    with pytest.raises(ValueError, match="not of the venue"):
+        estimate_fee(venue(), market(venue="another"), LiquidityRole.TAKER, amount("1"))
     with pytest.raises(ValueError, match="zero or above"):
         estimate_fee(venue(), market(), LiquidityRole.TAKER, amount("-1"))
 
