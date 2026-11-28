@@ -7357,6 +7357,20 @@ MUTATIONS: list[Mutation] = [
         TESTS,
     ),
     Mutation(
+        "S2-U7 RSI: the first average gain from the second change on",
+        _U7_INDICATORS,
+        "    average_gain = _sum(gains[:period]) / period\n",
+        "    average_gain = _sum(gains[1:period]) / period\n",
+        TESTS,
+    ),
+    Mutation(
+        "S2-U7 RSI: the first average loss from the second change on",
+        _U7_INDICATORS,
+        "    average_loss = _sum(losses[:period]) / period\n",
+        "    average_loss = _sum(losses[1:period]) / period\n",
+        TESTS,
+    ),
+    Mutation(
         "S2-U7 correlation: the time of the bar before the last",
         _U7_INDICATORS,
         "        time_ns=bar_end_ns(first[-1]),\n",

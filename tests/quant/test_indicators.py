@@ -191,6 +191,11 @@ def test_wilder_s_rsi() -> None:
     ).value == pytest.approx(75.0, rel=1e-12)
     # No loss at all: 100.
     assert rsi(series(_closes(1, 2, 3)), 2, now_ns=USE, limits=LIMITS).value == 100.0
+    # A first change that is a loss, so the first averages read it too: changes -1, +2. Period 2:
+    # gain (0 + 2) / 2 = 1, loss (1 + 0) / 2 = 0.5; RS = 2, RSI = 100 - 100 / 3.
+    assert rsi(
+        series(_closes(11, 10, 12)), 2, now_ns=USE, limits=LIMITS
+    ).value == pytest.approx(200 / 3, rel=1e-12)
 
 
 def test_the_rsi_of_prices_that_never_moved_is_refused() -> None:
