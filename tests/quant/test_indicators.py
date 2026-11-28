@@ -163,6 +163,11 @@ def test_the_exponential_moving_average_starts_from_the_simple_one() -> None:
     result = ema(bars, 3, now_ns=USE, limits=LIMITS)
     assert result.value == 8.0
     assert result.inputs == tuple(bar.item.evidence_id for bar in bars)
+    # Closes 2, 4, 6, 12, 6: from 4, then 4 + (12 - 4) × 0.5 = 8, and 8 + (6 - 8) × 0.5 = 7,
+    # where the last three closes alone average 8.
+    assert (
+        ema(series(_closes(2, 4, 6, 12, 6)), 3, now_ns=USE, limits=LIMITS).value == 7.0
+    )
 
 
 @pytest.mark.req("QNT-002")
@@ -307,6 +312,86 @@ def test_correlation_needs_returns_that_vary_and_aligned_bars() -> None:
             now_ns=USE,
             limits=LIMITS,
         )
+
+
+@pytest.mark.req("QNT-002")
+def test_volatility_and_correlation_read_the_last_period_returns() -> None:
+    # Gate 3's F-35: bars before the last period + 1 change neither value nor inputs.
+    bars = series(["100", "100", "110", "99", "108.9"])
+    result = volatility(bars, 3, now_ns=USE, limits=LIMITS)
+    assert result.value == pytest.approx(math.log(11 / 9) / math.sqrt(3), rel=1e-12)
+    assert result.inputs == tuple(b.item.evidence_id for b in bars[-4:])
+    first = series(["100", "100", "110", "99", "108.9"], base="BTC")
+    second = series(["60", "50", "45", "49.5", "44.55"], base="ETH")
+    paired = correlation(first, second, 3, now_ns=USE, limits=LIMITS)
+    assert paired.value == pytest.approx(-1.0, abs=1e-12)
+    assert paired.inputs == tuple(
+        b.item.evidence_id for b in (*first[-4:], *second[-4:])
+    )
+
+
+# The class search of Gate 3's run 8 (F-35): every indicator given more bars than its periods
+# need, compared with its definition, inputs included. Those defined over the last bars read
+# those alone; those defined over all the bars given read them all.
+
+_FIRST = ["100", "120", "90", "104", "99", "108", "95"]
+_SECOND = ["50", "47", "52", "55", "49", "51", "58"]
+
+
+def _log_returns_of(closes: Sequence[str]) -> list[float]:
+    return [
+        math.log(float(later) / float(earlier))
+        for earlier, later in itertools.pairwise(closes)
+    ]
+
+
+@pytest.mark.req("QNT-002")
+@pytest.mark.parametrize("period", [2, 3])
+@pytest.mark.parametrize("extra", [1, 2, 3])
+def test_an_indicator_of_the_last_bars_given_more_reads_those_alone(
+    period: int, extra: int
+) -> None:
+    # `extra` bars before the period + 1 the returns read, one more before the SMA's period.
+    closes, others = _FIRST[: period + 1 + extra], _SECOND[: period + 1 + extra]
+    bars, other = series(closes), series(others, base="ETH")
+    ends = closes[-(period + 1) :]
+    definitions = {
+        sma: (math.fsum(map(float, closes[-period:])) / period, period),
+        simple_return: (float(ends[-1]) / float(ends[0]) - 1, period + 1),
+        log_return: (math.log(float(ends[-1]) / float(ends[0])), period + 1),
+        volatility: (statistics.stdev(_log_returns_of(ends)), period + 1),
+    }
+    for calculation, (value, read) in definitions.items():
+        result = calculation(bars, period, now_ns=USE, limits=LIMITS)
+        assert result.value == pytest.approx(value, rel=1e-12)
+        assert result.inputs == tuple(b.item.evidence_id for b in bars[-read:])
+        assert result == calculation(bars[-read:], period, now_ns=USE, limits=LIMITS)
+    paired = correlation(bars, other, period, now_ns=USE, limits=LIMITS)
+    assert paired.value == pytest.approx(
+        statistics.correlation(
+            _log_returns_of(ends), _log_returns_of(others[-(period + 1) :])
+        ),
+        rel=1e-12,
+    )
+    assert paired.inputs == tuple(
+        b.item.evidence_id for b in (*bars[-(period + 1) :], *other[-(period + 1) :])
+    )
+    assert paired == correlation(
+        bars[-(period + 1) :], other[-(period + 1) :], period, now_ns=USE, limits=LIMITS
+    )
+
+
+@pytest.mark.req("QNT-002")
+def test_an_indicator_of_all_the_bars_given_names_them_all_as_its_inputs() -> None:
+    bars = series(_FIRST)
+    every = tuple(b.item.evidence_id for b in bars)
+    for result in (
+        ema(bars, 2, now_ns=USE, limits=LIMITS),
+        rsi(bars, 2, now_ns=USE, limits=LIMITS),
+        atr(bars, 2, now_ns=USE, limits=LIMITS),
+        *macd(bars, 2, 3, 2, now_ns=USE, limits=LIMITS),
+    ):
+        assert result.inputs == every
 
 
 @pytest.mark.req("MKD-012")
